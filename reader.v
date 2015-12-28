@@ -101,8 +101,6 @@ module reader(
         4: regarray[regAddress[3:0]] <= regValue + regValue2; // add reg, reg
       endcase
 
-      debug <= ram[18];
-
       // Move the instruction pointer along
       ipointer <= ipointer + 4;
 
@@ -113,6 +111,7 @@ module reader(
 
     r0 <= regarray[0];
     r1 <= regarray[1];
+    debug <= ram[18];
 
   end
 
