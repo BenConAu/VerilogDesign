@@ -35,8 +35,8 @@ module reader(
 
   always @(posedge clk)
   begin
-    if (mode == 3)
-    begin
+    case (mode)
+    3: begin
       // RAM init mode
 
       case (opAddress)
@@ -71,44 +71,47 @@ module reader(
         mode = 0;
       end
     end
-    else
-    begin
-      if (mode == 0) 
-      begin
-        // Start a new instruction, save away the instruction opcode and addresses
-        opCode = ram[ipointer];
-        regAddress = ram[ipointer + 1];
-        opAddress[7 : 0] = ram[ipointer + 2];
-        opAddress[15 : 8] = ram[ipointer + 3];
-        
-        // Read values from ram or register as needed
-        ramValue = ram[opAddress];
-        regValue = regarray[regAddress[3:0]];
-        regValue2 = regarray[opAddress[3:0]];
 
-        //$monitor("opCode = %h, regAddress = %h, opAddress = %h, ramValue = %h", opCode, regAddress, opAddress, ramValue);
-      end
-      else 
-      begin
-        // Now we can do writes
-        case (opCode)
-          1: regarray[regAddress[3:0]] <= opAddress;            // mov reg, const
-          2: regarray[regAddress[3:0]] <= ramValue;             // mov reg, [addr]
-          3: ram[opAddress] = regValue;                        // mov [addr], reg
-          4: regarray[regAddress[3:0]] <= regValue + regValue2; // add reg, reg
-        endcase
+    0: begin
+      // Start a new instruction, save away the instruction opcode and addresses
+      opCode = ram[ipointer];
+      regAddress = ram[ipointer + 1];
+      opAddress[7 : 0] = ram[ipointer + 2];
+      opAddress[15 : 8] = ram[ipointer + 3];
+      
+      // Read values from ram or register as needed
+      ramValue = ram[opAddress];
+      regValue = regarray[regAddress[3:0]];
+      regValue2 = regarray[opAddress[3:0]];
 
-        debug = ram[18];
+      //$monitor("opCode = %h, regAddress = %h, opAddress = %h, ramValue = %h", opCode, regAddress, opAddress, ramValue);
 
-        // Move the instruction pointer along
-        ipointer <= ipointer + 4;
-      end
-
-      r0 <= regarray[0];
-      r1 <= regarray[1];
-
-      mode <= !mode;
+      // Mode change
+      mode <= 2;      
     end
+
+    2: begin
+      // Now we can do writes
+      case (opCode)
+        1: regarray[regAddress[3:0]] <= opAddress;            // mov reg, const
+        2: regarray[regAddress[3:0]] <= ramValue;             // mov reg, [addr]
+        3: ram[opAddress] = regValue;                        // mov [addr], reg
+        4: regarray[regAddress[3:0]] <= regValue + regValue2; // add reg, reg
+      endcase
+
+      debug = ram[18];
+
+      // Move the instruction pointer along
+      ipointer <= ipointer + 4;
+
+      // Mode change
+      mode <= 0;      
+    end
+    endcase
+
+    r0 <= regarray[0];
+    r1 <= regarray[1];
+
   end
 
   always @(posedge reset)
