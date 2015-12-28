@@ -103,7 +103,8 @@ module reader(
           13: ram[13] <= 0;
           14: ram[14] <= 0;
           15: ram[15] <= 0;
-          default: ram[opAddress] <= opAddress;
+          16: ram[16] <= 16;
+          17: ram[17] <= 17;
         endcase
   
         opAddress <= opAddress + 1;
