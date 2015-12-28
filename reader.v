@@ -30,9 +30,6 @@ module reader(
   reg        [15 : 0] opAddress;
   reg        [7 : 0]  regAddress;
 
-  // Local variables
-  integer i;
-
   always @(posedge clk or posedge reset)
   begin
     if (reset)
@@ -70,8 +67,9 @@ module reader(
         case (opCode)
           1: regarray[regAddress[3:0]] <= opAddress;            // mov reg, const
           2: regarray[regAddress[3:0]] <= ramValue;             // mov reg, [addr]
-          3: ram[opAddress] = regValue;                        // mov [addr], reg
+          3: ram[opAddress] <= regValue;                        // mov [addr], reg
           4: regarray[regAddress[3:0]] <= regValue + regValue2; // add reg, reg
+          5: debug <= regValue;                                 // setdebug reg
         endcase
   
         // Move the instruction pointer along
@@ -100,10 +98,10 @@ module reader(
           9:  ram[9] <= 0;
           10: ram[10] <= 1;
           11: ram[11] <= 0;
-          //  Store in 18 ram
-          12: ram[12] <= 3;
+          //  Set debug to r0
+          12: ram[12] <= 5;
           13: ram[13] <= 0;
-          14: ram[14] <= 18;
+          14: ram[14] <= 0;
           15: ram[15] <= 0;
           default: ram[opAddress] <= opAddress;
         endcase
@@ -121,7 +119,6 @@ module reader(
   
       r0 <= regarray[0];
       r1 <= regarray[1];
-      debug <= ram[18];
     end
   end
 
