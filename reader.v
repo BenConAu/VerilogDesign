@@ -45,6 +45,42 @@ module reader(
     else
     begin
       case (mode)
+      0: begin
+        // Start a new instruction, pull away the instruction data from RAM
+        opCode <= ram[ipointer];
+        regAddress <= ram[ipointer + 1];
+        opAddress[7 : 0] <= ram[ipointer + 2];
+        opAddress[15 : 8] <= ram[ipointer + 3];
+  
+        mode <= 1;
+      end
+        
+      1: begin
+        // Read values from ram or register as needed
+        ramValue <= ram[opAddress];
+        regValue <= regarray[regAddress[3:0]];
+        regValue2 <= regarray[opAddress[3:0]];
+  
+        // Mode change
+        mode <= 2;      
+      end
+  
+      2: begin
+        // Now we can do writes
+        case (opCode)
+          1: regarray[regAddress[3:0]] <= opAddress;            // mov reg, const
+          2: regarray[regAddress[3:0]] <= ramValue;             // mov reg, [addr]
+          3: ram[opAddress] = regValue;                        // mov [addr], reg
+          4: regarray[regAddress[3:0]] <= regValue + regValue2; // add reg, reg
+        endcase
+  
+        // Move the instruction pointer along
+        ipointer <= ipointer + 4;
+  
+        // Mode change
+        mode <= 0;      
+      end
+
       3: begin
         // RAM init mode
   
@@ -81,41 +117,6 @@ module reader(
         end
       end
   
-      0: begin
-        // Start a new instruction, pull away the instruction data from RAM
-        opCode <= ram[ipointer];
-        regAddress <= ram[ipointer + 1];
-        opAddress[7 : 0] <= ram[ipointer + 2];
-        opAddress[15 : 8] <= ram[ipointer + 3];
-  
-        mode <= 1;
-      end
-        
-      1: begin
-        // Read values from ram or register as needed
-        ramValue <= ram[opAddress];
-        regValue <= regarray[regAddress[3:0]];
-        regValue2 <= regarray[opAddress[3:0]];
-  
-        // Mode change
-        mode <= 2;      
-      end
-  
-      2: begin
-        // Now we can do writes
-        case (opCode)
-          1: regarray[regAddress[3:0]] <= opAddress;            // mov reg, const
-          2: regarray[regAddress[3:0]] <= ramValue;             // mov reg, [addr]
-          3: ram[opAddress] = regValue;                        // mov [addr], reg
-          4: regarray[regAddress[3:0]] <= regValue + regValue2; // add reg, reg
-        endcase
-  
-        // Move the instruction pointer along
-        ipointer <= ipointer + 4;
-  
-        // Mode change
-        mode <= 0;      
-      end
       endcase
   
       r0 <= regarray[0];
