@@ -73,12 +73,16 @@ module reader(
     end
 
     0: begin
-      // Start a new instruction, save away the instruction opcode and addresses
+      // Start a new instruction, pull away the instruction data from RAM
       opCode = ram[ipointer];
       regAddress = ram[ipointer + 1];
       opAddress[7 : 0] = ram[ipointer + 2];
       opAddress[15 : 8] = ram[ipointer + 3];
+
+      mode <= 1;
+    end
       
+    1: begin
       // Read values from ram or register as needed
       ramValue = ram[opAddress];
       regValue = regarray[regAddress[3:0]];
