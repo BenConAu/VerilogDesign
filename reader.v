@@ -74,21 +74,19 @@ module reader(
 
     0: begin
       // Start a new instruction, pull away the instruction data from RAM
-      opCode = ram[ipointer];
-      regAddress = ram[ipointer + 1];
-      opAddress[7 : 0] = ram[ipointer + 2];
-      opAddress[15 : 8] = ram[ipointer + 3];
+      opCode <= ram[ipointer];
+      regAddress <= ram[ipointer + 1];
+      opAddress[7 : 0] <= ram[ipointer + 2];
+      opAddress[15 : 8] <= ram[ipointer + 3];
 
       mode <= 1;
     end
       
     1: begin
       // Read values from ram or register as needed
-      ramValue = ram[opAddress];
-      regValue = regarray[regAddress[3:0]];
-      regValue2 = regarray[opAddress[3:0]];
-
-      //$monitor("opCode = %h, regAddress = %h, opAddress = %h, ramValue = %h", opCode, regAddress, opAddress, ramValue);
+      ramValue <= ram[opAddress];
+      regValue <= regarray[regAddress[3:0]];
+      regValue2 <= regarray[opAddress[3:0]];
 
       // Mode change
       mode <= 2;      
