@@ -41,26 +41,26 @@ module reader(
 
       case (opAddress)
         // Move memory from 16 in ram to r0
-        0:  ram[0] = 2;
-        1:  ram[1] = 0;
-        2:  ram[2] = 16;
-        3:  ram[3] = 0;
+        0:  ram[0] <= 2;
+        1:  ram[1] <= 0;
+        2:  ram[2] <= 16;
+        3:  ram[3] <= 0;
         //  Move memory from 17 in ram to r1
-        4:  ram[4] = 2;
-        5:  ram[5] = 1;
-        6:  ram[6] = 17;
-        7:  ram[7] = 0;        
+        4:  ram[4] <= 2;
+        5:  ram[5] <= 1;
+        6:  ram[6] <= 17;
+        7:  ram[7] <= 0;        
         //  Add r1 to r0
-        8:  ram[8] = 4;
-        9:  ram[9] = 0;
-        10: ram[10] = 1;
-        11: ram[11] = 0;
+        8:  ram[8] <= 4;
+        9:  ram[9] <= 0;
+        10: ram[10] <= 1;
+        11: ram[11] <= 0;
         //  Store in 18 ram
-        12: ram[12] = 3;
-        13: ram[13] = 0;
-        14: ram[14] = 18;
-        15: ram[15] = 0;
-        default: ram[opAddress] = opAddress;
+        12: ram[12] <= 3;
+        13: ram[13] <= 0;
+        14: ram[14] <= 18;
+        15: ram[15] <= 0;
+        default: ram[opAddress] <= opAddress;
       endcase
 
       opAddress <= opAddress + 1;
@@ -68,7 +68,7 @@ module reader(
       if (opAddress == RAMSIZE)
       begin
         // Start doing real processing
-        mode = 0;
+        mode <= 0;
       end
     end
 
@@ -101,7 +101,7 @@ module reader(
         4: regarray[regAddress[3:0]] <= regValue + regValue2; // add reg, reg
       endcase
 
-      debug = ram[18];
+      debug <= ram[18];
 
       // Move the instruction pointer along
       ipointer <= ipointer + 4;
