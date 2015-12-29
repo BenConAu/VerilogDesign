@@ -15,12 +15,15 @@ module floating(out, debug, clk, reset);
 
   reg [23 : 0] aPrimeMant;
 
+  reg [31 : 0] totalMant;
+
   always @(posedge clk or posedge reset)
   begin
     if (reset)
     begin
-      a = 'h42000000;
-      b = 'h40a00000;
+      a = 'h42000000; // 32
+      //b = 'h40a00000; // 5
+      b = 'h42000000;
 
       if (a[30 : 23] < b[30 : 23])      
       begin
@@ -43,6 +46,7 @@ module floating(out, debug, clk, reset);
         bMant[22:0] = a[22: 0];
       end
 
+      // We need these 1's to do the addition
       aMant[23:23] = 1;
       bMant[23:23] = 1;
 
@@ -50,11 +54,19 @@ module floating(out, debug, clk, reset);
 
       // Calculate the shifted mantissa of the bigger number
       aPrimeMant = aMant >> (bExp - aExp);
+      totalMant = aPrimeMant + bMant;
 
-      // Ignore sign
+      // Compensate the exponent if need be
+      if (totalMant[24 : 24] == 1)
+      begin
+        totalMant = totalMant >> 1;
+        bExp++;
+      end
+
+      // Ignore sign for now
       out[31:31] <= bSign;
       out[30:23] <= bExp;
-      out[22:0] <= aPrimeMant + bMant;
+      out[22:0] <= totalMant[22:0];
     end
     else
     begin
