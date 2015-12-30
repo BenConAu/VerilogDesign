@@ -10,14 +10,11 @@ module delay(out, debug, clk, reset);
     end
   endtask
 
-  reg [31 : 0] aMant;
-
   always @(posedge clk or posedge reset)
   begin
-    UnpackMantissa(aMant);
+    UnpackMantissa(out);
 
     debug <= 'h11;
-    out <= aMant;
   end
   
 endmodule // floating
