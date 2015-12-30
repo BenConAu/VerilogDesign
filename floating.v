@@ -52,7 +52,6 @@ module floating(out, debug, clk, reset);
         begin
           aExp <= a[30 : 23];
           UnpackMantissa(a, aMant);
-          UnpackMantissa(a, debug);
 
           bExp <= b[30 : 23];
           UnpackMantissa(b, bMant);
@@ -67,7 +66,7 @@ module floating(out, debug, clk, reset);
 
         end
 
-//        debug <= 'h11;
+        debug <= 'h11;
         out <= aMant;
         mode <= 1;
       end
@@ -75,7 +74,7 @@ module floating(out, debug, clk, reset);
       1: begin
         // Calculate the total from the shifted mantissa of the bigger number
         totalMant <= (aMant >> (bExp - aExp)) + bMant;
-        debug <= aMant;
+        debug <= 'h22;
 
         out <= totalMant;
         mode <= 2;
@@ -85,13 +84,13 @@ module floating(out, debug, clk, reset);
         // Figure out sign of total
         if (totalMant[25:25] == 1)
         begin
-          sign = 1;
-          finalMant = !(totalMant - 1);
+          sign <= 1;
+          finalMant <= !(totalMant - 1);
         end
         else
         begin
-          sign = 0;
-          finalMant = totalMant;
+          sign <= 0;
+          finalMant <= totalMant;
         end
 
         // Compensate the exponent if need be
