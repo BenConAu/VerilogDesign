@@ -10,12 +10,13 @@ module floating(a, b, negate, out, debug, clk);
   `include "FloatingHelper.v"
 
   reg [1:0] sign;
-  reg [7 : 0] aExp;
-  reg [7 : 0] bExp;
-  reg [31 : 0] aMant;
-  reg [31 : 0] bMant;
-  reg [31 : 0] aPrimeMant;
-  reg [31 : 0] totalMant;
+  reg [7:0] aExp;
+  reg [7:0] bExp;
+  reg [31:0] aMant;
+  reg [31:0] bMant;
+  reg [31:0] aPrimeMant;
+  reg [31:0] totalMant;
+  reg [31:0] normMant;
   reg [31:0] clz;
 
   always @(posedge clk)
@@ -53,14 +54,11 @@ module floating(a, b, negate, out, debug, clk);
     CLZ(totalMant, clz);
 
     // Leading zeros should be 8, so shift to that
-    if (clz > 8)
-      totalMant = totalMant << (clz - 8);
-    else
-      totalMant = totalMant >> (8 - clz);
+    NormalizeMantissa(totalMant, clz, normMant);
 
     out[31:31] = sign;
     out[30:23] = bExp + (8 - clz);
-    out[22:0] = totalMant[22:0];
+    out[22:0] = normMant[22:0];
   end
   
 endmodule // floating

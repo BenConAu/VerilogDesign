@@ -79,3 +79,14 @@ task CLZ;
     end
   end
 endtask
+
+task NormalizeMantissa;
+  input [31:0] nmMant;
+  input [31:0] nmClz;
+  output [31:0] nmNorm;
+  // Leading zeros should be 8, so shift to that
+  if (nmClz > 8)
+    nmNorm = nmMant << (nmClz - 8);
+  else
+    nmNorm = nmMant >> (8 - nmClz);  
+endtask

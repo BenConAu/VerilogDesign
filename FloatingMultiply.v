@@ -15,6 +15,7 @@ module FloatingMultiply(a, b, out, debug, clk);
   reg [31:0] aMant;
   reg [31:0] bMant;
   reg [31:0] aPrimeMant;
+  reg [31:0] aNormMant;
   reg [63:0] totalMant;
   reg [31:0] clz;
 
@@ -34,18 +35,15 @@ module FloatingMultiply(a, b, out, debug, clk);
     // Figure out leading zero count
     CLZ(aPrimeMant, clz);
 
-    // Leading zeros should be 8, so shift to that
-    if (clz > 8)
-      aPrimeMant = aPrimeMant << (clz - 8);
-    else
-      aPrimeMant = aPrimeMant >> (8 - clz);
+    // Normalize to 8 leading zeros
+    NormalizeMantissa(aPrimeMant, clz, aNormMant);
 
     totalExp = aExp + bExp + (8 - clz) - 127;
     debug = totalExp;
 
     out[31:31] = sign;
     out[30:23] = totalExp[7:0];
-    out[22:0] = aPrimeMant[22:0];
+    out[22:0] = aNormMant[22:0];
   end
   
 endmodule // floating
