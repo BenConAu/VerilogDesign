@@ -22,7 +22,7 @@ module test;
 
   wire [31:0] value;
   wire [31:0] debug;
-  FloatingMultiply c1 (a, b, value, debug, clk);
+  FloatingDivide c1 (a, b, value, debug, clk);
 
   initial
      $monitor("At time %t, value = %h, debug = %h",
