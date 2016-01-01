@@ -30,7 +30,7 @@ module floating(a, b, out, debug, clk);
     reg [31:0] leading;
     begin
       // Figure out the value to lead with based on high bit
-      if (ssin[0:0] == 1)
+      if (ssin[31:31] == 1)
         leading = 'hffffffff;
       else
         leading = 0;
@@ -39,7 +39,46 @@ module floating(a, b, out, debug, clk);
       mask = 'hffffffff << (32 - ssshift);
 
       // Blend together
-      ssout = (mask & leading) | (!mask & ssin >> ssshift);
+      ssout = (mask & leading) | (~mask & ssin >> ssshift);
+    end
+  endtask
+
+  task CLZ;
+    input [31:0] num;
+    output [31:0] res;
+    reg [31:0] inter;
+    begin
+      inter = num;
+      res = 0;
+      if (inter[31:16] == 'h0000)
+      begin
+        res = res + 16;
+        inter[31:16] = inter[15:0];
+      end
+      if (inter[31:24] == 'h00)
+      begin
+        res = res + 8;
+        inter[31:24] = inter[25:16];
+      end
+      if (inter[31:28] == 'h0)
+      begin
+        res = res + 4;
+        inter[31:28] = inter[27:24];
+      end
+      if (inter[31:30] == 2'b00)
+      begin
+        res = res + 2;
+        inter[31:30] = inter[29:28];
+      end
+      if (inter[31] == 0)
+      begin
+        res = res + 1;
+        inter[31] = inter[30];
+      end
+      if (inter[31] == 0)
+      begin
+        res = res + 1;
+      end
     end
   endtask
 
@@ -50,7 +89,7 @@ module floating(a, b, out, debug, clk);
   reg [31 : 0] bMant;
   reg [31 : 0] aPrimeMant;
   reg [31 : 0] totalMant;
-  reg [31 : 0] finalMant;
+  reg [31:0] clz;
 
   always @(posedge clk)
   begin
@@ -73,34 +112,32 @@ module floating(a, b, out, debug, clk);
     end
 
     // Add the mantissas together, shifting the smaller exp one
-    totalMant = (aMant << (bExp - aExp)) + bMant;
-    debug = totalMant;
+    SignedShiftRight(aMant, bExp - aExp, totalMant);
+    totalMant = totalMant + bMant;
 
     // Figure out sign of total
-    if (totalMant[25:25] == 1)
+    if (totalMant[31:31] == 1)
     begin
       sign = 1;
-      finalMant = ~(totalMant - 1);
+      totalMant = ~(totalMant - 1);
     end
     else
     begin
       sign = 0;
-      finalMant = totalMant;
     end
 
-    // Compensate the exponent if need be
-    if (finalMant[24 : 24] == 1)
-    begin
-      out[30:23] = bExp + 1;
-      out[22:0] = finalMant[23:1];
-    end
+    // Figure out leading zero count
+    CLZ(totalMant, clz);
+
+    // Leading zeros should be 8, so shift to that
+    if (clz > 8)
+      totalMant = totalMant << (clz - 8);
     else
-    begin
-      out[30:23] = bExp;
-      out[22:0] = finalMant[22:0];
-    end
-  
+      totalMant = totalMant >> (8 - clz);
+
     out[31:31] = sign;
+    out[30:23] = bExp + (8 - clz);
+    out[22:0] = totalMant[22:0];
   end
   
 endmodule // floating
