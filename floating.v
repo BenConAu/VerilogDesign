@@ -4,29 +4,51 @@ module floating(a, b, out, debug, clk);
   input wire clk;
   input wire [31:0] a;
   input wire [31:0] b;
+  integer i;
 
   task UnpackMantissa;
     input [31:0] num;
-    output [25:0] mant;
+    output [31:0] mant;
+    reg [31:0] unsignedMant;
     begin
-      // Pull sign bit to the front
-      mant[25:25] = num[31:31];
-      mant[24:24] = num[31:31];
-    
-      // Create 2s complement of the 23 bits
+      // Make an unsigned representation of the mantissa in 9.23 form
+      unsignedMant = {9'b000000001, num[22:0]};
+
+      // Create 2s complement of that
       if (num[31:31] == 1)
-        mant[23:0] = 1 + !{1'b1, num[22:0]};
+        mant[31:0] = 1 + ~unsignedMant;
       else
-        mant[23:0] = {1'b1, num[22:0]};
+        mant[31:0] = unsignedMant;
+    end
+  endtask
+
+  task SignedShiftRight;
+    input [31:0] ssin;
+    input [31:0] ssshift;
+    output [31:0] ssout;
+    reg [31:0] mask;
+    reg [31:0] leading;
+    begin
+      // Figure out the value to lead with based on high bit
+      if (ssin[0:0] == 1)
+        leading = 'hffffffff;
+      else
+        leading = 0;
+
+      // Calculate mask for leading bits
+      mask = 'hffffffff << (32 - ssshift);
+
+      // Blend together
+      ssout = (mask & leading) | (!mask & ssin >> ssshift);
     end
   endtask
 
   reg [1:0] sign;
   reg [7 : 0] aExp;
   reg [7 : 0] bExp;
-  reg [25 : 0] aMant;
-  reg [25 : 0] bMant;
-  reg [25 : 0] aPrimeMant;
+  reg [31 : 0] aMant;
+  reg [31 : 0] bMant;
+  reg [31 : 0] aPrimeMant;
   reg [31 : 0] totalMant;
   reg [31 : 0] finalMant;
 
@@ -50,16 +72,15 @@ module floating(a, b, out, debug, clk);
       UnpackMantissa(a, bMant);
     end
 
-    debug = aMant;
-
     // Add the mantissas together, shifting the smaller exp one
-    totalMant = (aMant >> (bExp - aExp)) + bMant;
+    totalMant = (aMant << (bExp - aExp)) + bMant;
+    debug = totalMant;
 
     // Figure out sign of total
     if (totalMant[25:25] == 1)
     begin
       sign = 1;
-      finalMant = !(totalMant - 1);
+      finalMant = ~(totalMant - 1);
     end
     else
     begin
