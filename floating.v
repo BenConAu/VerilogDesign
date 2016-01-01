@@ -9,6 +9,7 @@ module floating(a, b, out, debug, clk);
   task UnpackMantissa;
     input [31:0] num;
     output [31:0] mant;
+    output [7:0] exp;
     reg [31:0] unsignedMant;
     begin
       // Make an unsigned representation of the mantissa in 9.23 form
@@ -19,6 +20,9 @@ module floating(a, b, out, debug, clk);
         mant[31:0] = 1 + ~unsignedMant;
       else
         mant[31:0] = unsignedMant;
+      
+      // Just copy exponent across
+      exp = num[30:23];
     end
   endtask
 
@@ -96,19 +100,13 @@ module floating(a, b, out, debug, clk);
     // Unpack the mantissa, make b the one with larger exponent
     if (a[30 : 23] < b[30 : 23])      
     begin
-      aExp = a[30 : 23];
-      UnpackMantissa(a, aMant);
-
-      bExp = b[30 : 23];
-      UnpackMantissa(b, bMant);
+      UnpackMantissa(a, aMant, aExp);
+      UnpackMantissa(b, bMant, bExp);
     end
     else
     begin
-      aExp = b[30 : 23];
-      UnpackMantissa(b, aMant);
-      
-      bExp = a[30 : 23];
-      UnpackMantissa(a, bMant);
+      UnpackMantissa(b, aMant, aExp);
+      UnpackMantissa(a, bMant, bExp);
     end
 
     // Add the mantissas together, shifting the smaller exp one
