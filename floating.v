@@ -1,13 +1,15 @@
-module floating(a, b, out, debug, clk);
+module floating(a, b, negate, out, debug, clk);
   output reg [31 : 0] out;
   output reg [31 : 0] debug;
   input wire clk;
   input wire [31:0] a;
   input wire [31:0] b;
+  input wire [0:0] negate;
   integer i;
 
-  task UnpackMantissa;
+  task UnpackFloat;
     input [31:0] num;
+    input [0:0] neg;
     output [31:0] mant;
     output [7:0] exp;
     reg [31:0] unsignedMant;
@@ -16,7 +18,7 @@ module floating(a, b, out, debug, clk);
       unsignedMant = {9'b000000001, num[22:0]};
 
       // Create 2s complement of that
-      if (num[31:31] == 1)
+      if ((num[31:31] ^ neg) == 1)
         mant[31:0] = 1 + ~unsignedMant;
       else
         mant[31:0] = unsignedMant;
@@ -98,15 +100,17 @@ module floating(a, b, out, debug, clk);
   always @(posedge clk)
   begin
     // Unpack the mantissa, make b the one with larger exponent
+    // Always negate b if negation is asked for since it is the
+    // second operand.
     if (a[30 : 23] < b[30 : 23])      
     begin
-      UnpackMantissa(a, aMant, aExp);
-      UnpackMantissa(b, bMant, bExp);
+      UnpackFloat(a, 0, aMant, aExp);
+      UnpackFloat(b, negate, bMant, bExp);
     end
     else
     begin
-      UnpackMantissa(b, aMant, aExp);
-      UnpackMantissa(a, bMant, bExp);
+      UnpackFloat(b, negate, aMant, aExp);
+      UnpackFloat(a, 0, bMant, bExp);
     end
 
     // Add the mantissas together, shifting the smaller exp one
