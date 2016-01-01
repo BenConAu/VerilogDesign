@@ -3,23 +3,27 @@
 module test;
 
 
-  /* Make a reset that pulses once. */
-  reg reset = 0;
-  initial begin
-     # 17 reset = 1;
-     # 11 reset = 0;
-     # 240 $finish;
-  end
-
   /* Make a regular pulsing clock. */
   reg clk = 0;
   always #5 clk = !clk;
 
-  wire [31:0] value;
-  wire [31:0] debug;
-  floating c1 (value, debug, clk, reset);
+  reg[31:0] a;
+  reg[31:0] b;
 
   initial
-     $monitor("At time %t, value = %h, debug = %h, reset = %h",
-              $time, value, debug, reset);
+  begin
+    a <= 'h42000000; // 32
+    //b = 'h40a00000; // 5
+    //b <= 'h42000000; // 32
+    b <= 'hc1200000;
+    #20 $finish;
+  end
+
+  wire [31:0] value;
+  wire [31:0] debug;
+  floating c1 (a, b, value, debug, clk);
+
+  initial
+     $monitor("At time %t, value = %h, debug = %h",
+              $time, value, debug);
 endmodule // test
