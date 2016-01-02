@@ -18,10 +18,10 @@ module test;
   wire [7:0] iPointer;
   wire [7:0] opCode;
 
-  wire [15:0] r0;
-  wire [15:0] r1;
+  wire [31:0] r0;
+  wire [31:0] r1;
 
-  wire [15:0] debug;
+  wire [31:0] debug;
 
   reader reader1 (iPointer, opCode, clk, reset, r0, r1, debug);
 

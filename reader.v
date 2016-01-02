@@ -13,22 +13,28 @@ module reader(
   parameter RAMSIZE = 64;
 
   // Input / output
-  output reg [7 : 0]  ipointer;
-  output reg [7 : 0]  opCode;
-  output reg [15 : 0] r0;
-  output reg [15 : 0] r1;
-  output reg [15 : 0] debug;
-  input  wire	        clk, reset;
+  output reg [7:0]  ipointer;
+  output reg [7:0]  opCode;
+  output reg [31:0] r0;
+  output reg [31:0] r1;
+  output reg [31:0] debug;
+  input  wire	      clk, reset;
 
   // Local registers
-  reg        [7 : 0]  ram[0 : RAMSIZE - 1];
-  reg        [15 : 0] regarray[0 : 15];
-  reg        [1 : 0]  mode;
-  reg        [7 : 0]  ramValue;
-  reg        [15 : 0] regValue;
-  reg        [15 : 0] regValue2;
-  reg        [15 : 0] opAddress;
-  reg        [7 : 0]  regAddress;
+  reg        [7:0]  ram[0:RAMSIZE - 1];
+  reg        [31:0] regarray[0:15];
+  reg        [1:0]  mode;
+  reg        [31:0] ramValue;
+  reg        [31:0] regValue;
+  reg        [31:0] regValue2;
+  reg        [15:0] opAddress;
+  reg        [7:0]  regAddress;
+  reg        [0:0]  fAddEnable;
+  
+  wire       [31:0] floatResult;
+  wire       [31:0] floatDebug;
+
+  floating fAdd(regValue, regValue2, 1'b1, floatResult, floatDebug, clk, fAddEnable);
 
   always @(posedge clk or posedge reset)
   begin
@@ -38,6 +44,7 @@ module reader(
       opCode <= 0;
       opAddress <= 0;
       mode <= 3;
+      fAddEnable <= 0;
     end
     else
     begin
@@ -49,17 +56,26 @@ module reader(
         opAddress[7 : 0] <= ram[ipointer + 2];
         opAddress[15 : 8] <= ram[ipointer + 3];
   
+        fAddEnable <= 0;
         mode <= 1;
       end
         
       1: begin
-        // Read values from ram or register as needed
-        ramValue <= ram[opAddress];
+        // Read values from ram
+        ramValue[7:0] <= ram[opAddress];
+        ramValue[15:8] <= ram[opAddress + 1];
+        ramValue[23:16] <= ram[opAddress + 2];
+        ramValue[31:24] <= ram[opAddress + 3];
+
+        // Read values from registers
         regValue <= regarray[regAddress[3:0]];
         regValue2 <= regarray[opAddress[3:0]];
   
         // Mode change
-        mode <= 2;      
+        mode <= 2;
+
+        // Enable fAdder
+        if (opCode == 6) fAddEnable <= 1;
       end
   
       2: begin
@@ -70,6 +86,7 @@ module reader(
           3: ram[opAddress] <= regValue;                        // mov [addr], reg
           4: regarray[regAddress[3:0]] <= regValue + regValue2; // add reg, reg
           5: debug <= regValue;                                 // setdebug reg
+          6: regarray[regAddress[3:0]] <= floatResult;          // fadd reg, reg
         endcase
   
         // Move the instruction pointer along
@@ -88,13 +105,13 @@ module reader(
           1:  ram[1] <= 0;
           2:  ram[2] <= 16;
           3:  ram[3] <= 0;
-          //  Move memory from 17 in ram to r1
+          //  Move memory from 20 in ram to r1
           4:  ram[4] <= 2;
           5:  ram[5] <= 1;
-          6:  ram[6] <= 17;
+          6:  ram[6] <= 20;
           7:  ram[7] <= 0;        
-          //  Add r1 to r0
-          8:  ram[8] <= 4;
+          //  fAdd r1 to r0
+          8:  ram[8] <= 6;
           9:  ram[9] <= 0;
           10: ram[10] <= 1;
           11: ram[11] <= 0;
@@ -103,8 +120,15 @@ module reader(
           13: ram[13] <= 0;
           14: ram[14] <= 0;
           15: ram[15] <= 0;
-          16: ram[16] <= 16;
-          17: ram[17] <= 17;
+          // Other RAM needed 447a0000 and c1200000
+          16: ram[16] <= 'h00;
+          17: ram[17] <= 'h00;
+          18: ram[18] <= 'h7a;
+          19: ram[19] <= 'h44;
+          20: ram[20] <= 'h00;
+          21: ram[21] <= 'h00;
+          22: ram[22] <= 'h20;
+          23: ram[23] <= 'hc1;
         endcase
   
         opAddress <= opAddress + 1;
