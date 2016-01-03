@@ -1,4 +1,4 @@
-module floating(a, b, negate, out, debug, clk, enable);
+module FloatingAdd(a, b, negate, out, debug, clk, enable);
   output reg [31 : 0] out;
   output reg [31 : 0] debug;
   input wire clk;

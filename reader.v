@@ -29,14 +29,16 @@ module reader(
   reg        [31:0] regValue2;
   reg        [15:0] opAddress;
   reg        [7:0]  regAddress;
-  reg        [1:0]  fOpEnable;
+  reg        [2:0]  fOpEnable;
   
   wire       [31:0] fAddResult;
   wire       [31:0] fSubResult;
   wire       [31:0] floatDebug;
+  wire       [31:0] fConvResult;
 
-  floating fAdd(regValue, regValue2, 1'b0, fAddResult, floatDebug, clk, fOpEnable[0:0]);
-  floating fSub(regValue, regValue2, 1'b1, fSubResult, floatDebug, clk, fOpEnable[1:1]);
+  FloatingAdd     fAdd(regValue, regValue2, 1'b0, fAddResult, floatDebug, clk, fOpEnable[0:0]);
+  FloatingAdd     fSub(regValue, regValue2, 1'b1, fSubResult, floatDebug, clk, fOpEnable[1:1]);
+  FloatingFromInt fConv(regValue, fConvResult, floatDebug, clk, fOpEnable[2:2]);
 
   always @(posedge clk or posedge reset)
   begin
@@ -46,7 +48,7 @@ module reader(
       opCode <= 0;
       opAddress <= 0;
       mode <= 3;
-      fOpEnable <= 2'b00;
+      fOpEnable <= 3'b000;
     end
     else
     begin
@@ -58,7 +60,7 @@ module reader(
         opAddress[7 : 0] <= ram[ipointer + 2];
         opAddress[15 : 8] <= ram[ipointer + 3];
   
-        fOpEnable <= 2'b00;
+        fOpEnable <= 3'b000;
         mode <= 1;
       end
         
@@ -79,6 +81,7 @@ module reader(
         // Enable operation for module
         if (opCode == 6) fOpEnable[0:0] <= 1;
         if (opCode == 7) fOpEnable[1:1] <= 1;
+        if (opCode == 8) fOpEnable[2:2] <= 1;
       end
   
       2: begin
@@ -91,6 +94,7 @@ module reader(
           5: debug <= regValue;                                 // setdebug reg
           6: regarray[regAddress[3:0]] <= fAddResult;           // fadd reg, reg
           7: regarray[regAddress[3:0]] <= fSubResult;           // fsub reg, reg
+          8: regarray[regAddress[3:0]] <= fConvResult;          // fconv reg
         endcase
   
         // Move the instruction pointer along
@@ -104,35 +108,40 @@ module reader(
         // RAM init mode
   
         case (opAddress)
-          // Move memory from 16 in ram to r0
-          0:  ram[0] <= 2;
+          // Load 21 to r0
+          0:  ram[0] <= 1;
           1:  ram[1] <= 0;
-          2:  ram[2] <= 16;
+          2:  ram[2] <= 21;
           3:  ram[3] <= 0;
-          //  Move memory from 20 in ram to r1
-          4:  ram[4] <= 2;
+          // Load 35 to r1
+          4:  ram[4] <= 1;
           5:  ram[5] <= 1;
-          6:  ram[6] <= 20;
+          6:  ram[6] <= 35;
           7:  ram[7] <= 0;        
-          //  fAdd r1 to r0
-          8:  ram[8] <= 6;
+          // Convert r0 to float
+          8:  ram[8] <= 8;
           9:  ram[9] <= 0;
-          10: ram[10] <= 1;
+          10: ram[10] <= 0;
           11: ram[11] <= 0;
-          //  Set debug to r0
-          12: ram[12] <= 5;
-          13: ram[13] <= 0;
+          // Convert r1 to float
+          12: ram[12] <= 8;
+          13: ram[13] <= 1;
           14: ram[14] <= 0;
           15: ram[15] <= 0;
+          // fadd r0, r1
+          16: ram[16] <= 6;
+          17: ram[17] <= 0;
+          18: ram[18] <= 1;
+          19: ram[19] <= 0;
           // Other RAM needed 447a0000 and c1200000
-          16: ram[16] <= 'h00;
-          17: ram[17] <= 'h00;
-          18: ram[18] <= 'h7a;
-          19: ram[19] <= 'h44;
           20: ram[20] <= 'h00;
           21: ram[21] <= 'h00;
-          22: ram[22] <= 'h20;
-          23: ram[23] <= 'hc1;
+          22: ram[22] <= 'h7a;
+          23: ram[23] <= 'h44;
+          24: ram[24] <= 'h00;
+          25: ram[25] <= 'h00;
+          26: ram[26] <= 'h20;
+          27: ram[27] <= 'hc1;
         endcase
   
         opAddress <= opAddress + 1;
