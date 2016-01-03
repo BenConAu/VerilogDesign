@@ -87,14 +87,18 @@ module reader(
       2: begin
         // Now we can do writes
         case (opCode)
-          1: regarray[regAddress[3:0]] <= opAddress;            // mov reg, const
-          2: regarray[regAddress[3:0]] <= ramValue;             // mov reg, [addr]
-          3: ram[opAddress] <= regValue;                        // mov [addr], reg
-          4: regarray[regAddress[3:0]] <= regValue + regValue2; // add reg, reg
-          5: debug <= regValue;                                 // setdebug reg
-          6: regarray[regAddress[3:0]] <= fAddResult;           // fadd reg, reg
-          7: regarray[regAddress[3:0]] <= fSubResult;           // fsub reg, reg
-          8: regarray[regAddress[3:0]] <= fConvResult;          // fconv reg
+          1:  regarray[regAddress[3:0]] <= opAddress;            // mov reg, const
+          2:  regarray[regAddress[3:0]] <= ramValue;             // mov reg, [addr]
+          3:  regarray[regAddress[3:0]] <= regValue2;            // mov reg, reg
+          4:  ram[opAddress] <= regValue;                        // mov [addr], reg
+
+          10: regarray[regAddress[3:0]] <= regValue + regValue2; // add reg, reg
+
+          20: regarray[regAddress[3:0]] <= fAddResult;           // fadd reg, reg
+          21: regarray[regAddress[3:0]] <= fSubResult;           // fsub reg, reg
+          22: regarray[regAddress[3:0]] <= fConvResult;          // fconv reg
+          
+          30: debug <= regValue;                                 // setdebug reg
         endcase
   
         // Move the instruction pointer along
