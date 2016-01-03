@@ -46,7 +46,7 @@ module floating(a, b, negate, out, debug, clk, enable);
       if (totalMant[31:31] == 1)
       begin
         sign = 1;
-        totalMant = ~(totalMant - 1);
+        totalMant = (~totalMant) + 1;
       end
       else
       begin

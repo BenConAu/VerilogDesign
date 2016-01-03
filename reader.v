@@ -29,12 +29,14 @@ module reader(
   reg        [31:0] regValue2;
   reg        [15:0] opAddress;
   reg        [7:0]  regAddress;
-  reg        [0:0]  fAddEnable;
+  reg        [1:0]  fOpEnable;
   
-  wire       [31:0] floatResult;
+  wire       [31:0] fAddResult;
+  wire       [31:0] fSubResult;
   wire       [31:0] floatDebug;
 
-  floating fAdd(regValue, regValue2, 1'b1, floatResult, floatDebug, clk, fAddEnable);
+  floating fAdd(regValue, regValue2, 1'b0, fAddResult, floatDebug, clk, fOpEnable[0:0]);
+  floating fSub(regValue, regValue2, 1'b1, fSubResult, floatDebug, clk, fOpEnable[1:1]);
 
   always @(posedge clk or posedge reset)
   begin
@@ -44,7 +46,7 @@ module reader(
       opCode <= 0;
       opAddress <= 0;
       mode <= 3;
-      fAddEnable <= 0;
+      fOpEnable <= 2'b00;
     end
     else
     begin
@@ -56,7 +58,7 @@ module reader(
         opAddress[7 : 0] <= ram[ipointer + 2];
         opAddress[15 : 8] <= ram[ipointer + 3];
   
-        fAddEnable <= 0;
+        fOpEnable <= 2'b00;
         mode <= 1;
       end
         
@@ -74,8 +76,9 @@ module reader(
         // Mode change
         mode <= 2;
 
-        // Enable fAdder
-        if (opCode == 6) fAddEnable <= 1;
+        // Enable operation for module
+        if (opCode == 6) fOpEnable[0:0] <= 1;
+        if (opCode == 7) fOpEnable[1:1] <= 1;
       end
   
       2: begin
@@ -86,7 +89,8 @@ module reader(
           3: ram[opAddress] <= regValue;                        // mov [addr], reg
           4: regarray[regAddress[3:0]] <= regValue + regValue2; // add reg, reg
           5: debug <= regValue;                                 // setdebug reg
-          6: regarray[regAddress[3:0]] <= floatResult;          // fadd reg, reg
+          6: regarray[regAddress[3:0]] <= fAddResult;           // fadd reg, reg
+          7: regarray[regAddress[3:0]] <= fSubResult;           // fsub reg, reg
         endcase
   
         // Move the instruction pointer along

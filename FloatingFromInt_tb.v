@@ -12,17 +12,14 @@ module test;
 
   initial
   begin
-    a <= 'h447a0000; // 1000
-    //a <= 'h42000000; // 32
-    //b = 'h40a00000; // 5
-    //b <= 'h42000000; // 32
-    b <= 'hc1200000; // -10
+    #5 a <= 49;
+    #15 a <= 'hfffffff9;
     #20 $finish;
   end
 
   wire [31:0] value;
   wire [31:0] debug;
-  floating c1 (b, a, 1'b1, value, debug, clk, 1'b1);
+  FloatingFromInt ffi (a, value, debug, clk, 1'b1);
 
   initial
      $monitor("At time %t, value = %h, debug = %h",
