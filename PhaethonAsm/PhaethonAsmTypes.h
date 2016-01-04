@@ -5,7 +5,9 @@ namespace Instructions
     enum Enum
     {
         Unknown = 0,
-        Mov = 1    
+        Mov = 1,
+        Fconv = 2,
+        Fadd = 3    
     };
 }
 

@@ -47,7 +47,7 @@ instruction_list:
 
   instruction:
       INSTR_TOKEN_2 argument COMMA_TOKEN argument   { OutputInstruction($1, $2, $4); }
-    | INSTR_TOKEN_1 argument                        { cout << "1 reg instruction" << endl; }
+    | INSTR_TOKEN_1 argument                        { OutputInstruction($1, $2); }
     ;
 
   argument:

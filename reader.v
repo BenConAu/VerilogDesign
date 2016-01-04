@@ -5,12 +5,15 @@ module reader(
   reset,
   r0,
   r1,
-  debug
+  debug,
+  ramAddress,
+  ramIn,
+  run
   );
 
   // Constants
-  parameter WIDTH = 8;
   parameter RAMSIZE = 64;
+  parameter WIDTH = 8;
 
   // Input / output
   output reg [7:0]  ipointer;
@@ -18,10 +21,14 @@ module reader(
   output reg [31:0] r0;
   output reg [31:0] r1;
   output reg [31:0] debug;
-  input  wire	      clk, reset;
+  input  wire	      clk;
+  input  wire       reset;
+  input  wire       run;
+  input  wire [7:0] ramAddress;
+  input  wire [7:0] ramIn;
 
   // Local registers
-  reg        [7:0]  ram[0:RAMSIZE - 1];
+  reg        [7:0] ram[0:255];
   reg        [31:0] regarray[0:15];
   reg        [1:0]  mode;
   reg        [31:0] ramValue;
@@ -62,6 +69,7 @@ module reader(
   
         fOpEnable <= 3'b000;
         mode <= 1;
+        debug <= ram[ipointer];
       end
         
       1: begin
@@ -97,7 +105,7 @@ module reader(
           20: regarray[regAddress[3:0]] <= fAddResult;           // fadd reg, reg
           21: regarray[regAddress[3:0]] <= fSubResult;           // fsub reg, reg
           22: regarray[regAddress[3:0]] <= fConvResult;          // fconv reg
-          
+
           30: debug <= regValue;                                 // setdebug reg
         endcase
   
@@ -109,52 +117,17 @@ module reader(
       end
 
       3: begin
-        // RAM init mode
-  
-        case (opAddress)
-          // Load 21 to r0
-          0:  ram[0] <= 1;
-          1:  ram[1] <= 0;
-          2:  ram[2] <= 21;
-          3:  ram[3] <= 0;
-          // Load 35 to r1
-          4:  ram[4] <= 1;
-          5:  ram[5] <= 1;
-          6:  ram[6] <= 35;
-          7:  ram[7] <= 0;        
-          // Convert r0 to float
-          8:  ram[8] <= 8;
-          9:  ram[9] <= 0;
-          10: ram[10] <= 0;
-          11: ram[11] <= 0;
-          // Convert r1 to float
-          12: ram[12] <= 8;
-          13: ram[13] <= 1;
-          14: ram[14] <= 0;
-          15: ram[15] <= 0;
-          // fadd r0, r1
-          16: ram[16] <= 6;
-          17: ram[17] <= 0;
-          18: ram[18] <= 1;
-          19: ram[19] <= 0;
-          // Other RAM needed 447a0000 and c1200000
-          20: ram[20] <= 'h00;
-          21: ram[21] <= 'h00;
-          22: ram[22] <= 'h7a;
-          23: ram[23] <= 'h44;
-          24: ram[24] <= 'h00;
-          25: ram[25] <= 'h00;
-          26: ram[26] <= 'h20;
-          27: ram[27] <= 'hc1;
-        endcase
-  
-        opAddress <= opAddress + 1;
-  
-        if (opAddress == RAMSIZE)
+        // Until run bit is set, read ram values in
+        if (run == 1)
         begin
-          // Start doing real processing
           mode <= 0;
         end
+        else
+        begin
+          ram[ramAddress] <= ramIn;
+        end
+
+        debug <= ram[0];
       end
   
       endcase
