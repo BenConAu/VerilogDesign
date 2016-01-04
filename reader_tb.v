@@ -4,12 +4,10 @@ module test;
 
   /* Make a reset that pulses once. */
   reg reset = 0;
-  reg run = 0;
-  reg [7:0] ramAddress = 0;
   initial begin
     # 0 reset = 1;
     # 1 reset = 0;
-    # 1000 $finish;
+    # 400 $finish;
   end
 
   reg [7:0] fileRam[0:255];
@@ -22,17 +20,22 @@ module test;
   /* Make a regular pulsing clock. */
   reg clk = 0;
   always #5 clk = !clk;
-  reg [7:0] ramValue;
+  reg [31:0] ramValue;
 
   wire [7:0] iPointer;
   wire [7:0] opCode;
   wire [31:0] r0;
   wire [31:0] r1;
   wire [31:0] debug;
+  wire [7:0] ramAddress;
+
+  reg [7:0] reqAddress;
+  reg [0:0] readAck;
+  reg [7:0] mode = 0;
 
   parameter RAMSIZE = 64;
 
-  reader reader1 (iPointer, opCode, clk, reset, r0, r1, debug, ramAddress, ramValue, run);
+  reader reader1 (iPointer, opCode, clk, reset, r0, r1, debug, ramAddress, ramValue, readReq, readAck);
 
   initial
      $monitor("At time %t, ramAddress = %h, ip = %h, opCode = %h, reset = %h, r[0:1] = %h:%h, debug = %h",
@@ -40,11 +43,24 @@ module test;
 
   always @(posedge clk)
   begin
-    ramValue = fileRam[ramAddress];
-    ramAddress = ramAddress + 1;
-    if (ramAddress == 21)
+    // If ready to fill request
+    if (readReq == 1 && mode == 0)
     begin
-      run = 1;
+      reqAddress <= ramAddress;
+      mode <= 1;
+      readAck <= 0;
     end
+
+    if (readReq == 1 && mode == 1)
+    begin
+      ramValue[7:0] <= fileRam[ramAddress];
+      ramValue[15:8] <= fileRam[ramAddress + 1];
+      ramValue[23:16] <= fileRam[ramAddress + 2];
+      ramValue[31:24] <= fileRam[ramAddress + 3];
+      readAck <= 1;
+      mode <= 0;
+    end
+
   end
+
 endmodule // test

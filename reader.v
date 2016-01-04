@@ -8,7 +8,8 @@ module reader(
   debug,
   ramAddress,
   ramIn,
-  run
+  readReq,
+  readAck
   );
 
   // Constants
@@ -16,21 +17,21 @@ module reader(
   parameter WIDTH = 8;
 
   // Input / output
-  output reg [7:0]  ipointer;
-  output reg [7:0]  opCode;
-  output reg [31:0] r0;
-  output reg [31:0] r1;
-  output reg [31:0] debug;
-  input  wire	      clk;
-  input  wire       reset;
-  input  wire       run;
-  input  wire [7:0] ramAddress;
-  input  wire [7:0] ramIn;
+  output reg [7:0]   ipointer;
+  output reg [7:0]   opCode;
+  output reg [31:0]  r0;
+  output reg [31:0]  r1;
+  output reg [31:0]  debug;
+  output reg [0:0]   readReq;
+  output reg [7:0]   ramAddress;
+  input  wire	       clk;
+  input  wire        reset;
+  input  wire        readAck;
+  input  wire [31:0] ramIn;
 
   // Local registers
-  reg        [7:0] ram[0:255];
   reg        [31:0] regarray[0:15];
-  reg        [1:0]  mode;
+  reg        [2:0]  mode;
   reg        [31:0] ramValue;
   reg        [31:0] regValue;
   reg        [31:0] regValue2;
@@ -47,58 +48,106 @@ module reader(
   FloatingAdd     fSub(regValue, regValue2, 1'b1, fSubResult, floatDebug, clk, fOpEnable[1:1]);
   FloatingFromInt fConv(regValue, fConvResult, floatDebug, clk, fOpEnable[2:2]);
 
+
+  //initial
+  //   $monitor("%t, ram = %h, %h, %h, %h : %h, %h, %h, %h", 
+  //     $time, ramIn[7:0], ramIn[15:8], ramIn[23:16], ramIn[31:24], ramAddress, ramIn, opAddress, ramValue);
+
   always @(posedge clk or posedge reset)
   begin
     if (reset)
     begin
       ipointer <= 0;
       opCode <= 0;
-      opAddress <= 0;
-      mode <= 3;
+      opAddress <= 'hffff;
+      mode <= 0;
+      readReq <= 0;
       fOpEnable <= 3'b000;
     end
     else
     begin
       case (mode)
       0: begin
-        // Start a new instruction, pull away the instruction data from RAM
-        opCode <= ram[ipointer];
-        regAddress <= ram[ipointer + 1];
-        opAddress[7 : 0] <= ram[ipointer + 2];
-        opAddress[15 : 8] <= ram[ipointer + 3];
-  
+        // Begin RAM read for instruction data
+        readReq <= 1;
+        ramAddress <= ipointer;
+        
+        debug[23:0] <= ipointer;
+        debug[31:24] <= mode;
+
+        // Clear out stuff for the pipeline 
         fOpEnable <= 3'b000;
         mode <= 1;
-        debug <= ram[ipointer];
+      end
+
+      1: begin
+        // If ram is ready, read it and get the next instruction
+        if (readAck)
+        begin
+          // Stop request
+          readReq <= 0;
+
+          opCode <= ramIn[7:0];
+          regAddress <= ramIn[15:8];
+          opAddress[7 : 0] <= ramIn[23:16];
+          opAddress[15 : 8] <= ramIn[31:24];
+
+          debug[23:0] <= ramIn[7:0];
+          debug[31:24] <= mode;
+
+          // Safe to move to next mode now
+          mode <= 2;
+        end
       end
         
-      1: begin
-        // Read values from ram
-        ramValue[7:0] <= ram[opAddress];
-        ramValue[15:8] <= ram[opAddress + 1];
-        ramValue[23:16] <= ram[opAddress + 2];
-        ramValue[31:24] <= ram[opAddress + 3];
+      2: begin
+        // Read values from ram requested by instruction
+        readReq <= 1;
+        ramAddress <= opAddress;
 
         // Read values from registers
         regValue <= regarray[regAddress[3:0]];
         regValue2 <= regarray[opAddress[3:0]];
   
-        // Mode change
-        mode <= 2;
+        debug[23:0] <= opCode;
+        debug[31:24] <= mode;
 
-        // Enable operation for module
-        if (opCode == 6) fOpEnable[0:0] <= 1;
-        if (opCode == 7) fOpEnable[1:1] <= 1;
-        if (opCode == 8) fOpEnable[2:2] <= 1;
+        // Move to next mode        
+        mode <= 3;
+      end
+
+      3: begin
+        if (readAck)
+        begin
+          // Stop request
+          readReq <= 0;
+
+          // Store ram values requested
+          ramValue[7:0] <= ramIn[7:0];
+          ramValue[15:8] <= ramIn[15:8];
+          ramValue[23:16] <= ramIn[23:16];
+          ramValue[31:24] <= ramIn[31:24];
+  
+          debug[23:0] <= ramIn[7:0];
+          debug[31:24] <= mode;
+
+          // Enable operation for module
+          if (opCode == 20) fOpEnable[0:0] <= 1;
+          if (opCode == 21) fOpEnable[1:1] <= 1;
+          if (opCode == 22) fOpEnable[2:2] <= 1;
+
+          // Mode change
+          mode <= 4;
+        end
       end
   
-      2: begin
+      4: begin
         // Now we can do writes
         case (opCode)
           1:  regarray[regAddress[3:0]] <= opAddress;            // mov reg, const
           2:  regarray[regAddress[3:0]] <= ramValue;             // mov reg, [addr]
           3:  regarray[regAddress[3:0]] <= regValue2;            // mov reg, reg
-          4:  ram[opAddress] <= regValue;                        // mov [addr], reg
+          //4:  ram[opAddress] <= regValue;                        // mov [addr], reg
 
           10: regarray[regAddress[3:0]] <= regValue + regValue2; // add reg, reg
 
@@ -116,20 +165,6 @@ module reader(
         mode <= 0;      
       end
 
-      3: begin
-        // Until run bit is set, read ram values in
-        if (run == 1)
-        begin
-          mode <= 0;
-        end
-        else
-        begin
-          ram[ramAddress] <= ramIn;
-        end
-
-        debug <= ram[0];
-      end
-  
       endcase
   
       r0 <= regarray[0];
