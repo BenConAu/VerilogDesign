@@ -35,7 +35,19 @@ module test;
 
   parameter RAMSIZE = 64;
 
-  reader reader1 (iPointer, opCode, clk, reset, r0, r1, debug, ramAddress, ramValue, readReq, readAck);
+  ALU alu(
+    clk, 
+    reset, 
+    ramValue, 
+    readAck, 
+    ramAddress, 
+    readReq, 
+    iPointer, 
+    opCode, 
+    r0, 
+    r1, 
+    debug
+    );
 
   initial
      $monitor("At time %t, ramAddress = %h, ip = %h, opCode = %h, reset = %h, r[0:1] = %h:%h, debug = %h",

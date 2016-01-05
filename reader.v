@@ -1,15 +1,15 @@
-module reader(
-  ipointer, 
-  opCode, 
-  clk, 
-  reset,
-  r0,
-  r1,
-  debug,
-  ramAddress,
-  ramIn,
-  readReq,
-  readAck
+module ALU(
+  clk,         // [Input]  Clock driving the ALU
+  reset,       // [Input]  Reset pin
+  ramIn,       // [Input]  RAM at requested address
+  readAck,     // [Input]  RAM read acknowledge
+  ramAddress,  // [Output] RAM address requested
+  readReq,     // [Output] RAM read request
+  ipointer,    // [Debug]  Instruction pointer value
+  opCode,      // [Debug]  current opCode value
+  r0,          // [Debug]  current r0 value
+  r1,          // [Debug]  current r1 value
+  debug        // [Output] Debug port
   );
 
   // Constants
@@ -17,17 +17,17 @@ module reader(
   parameter WIDTH = 8;
 
   // Input / output
+  input  wire        clk;
+  input  wire        reset;
+  input  wire [31:0] ramIn;
+  input  wire        readAck;
+  output reg [7:0]   ramAddress;
+  output reg [0:0]   readReq;
   output reg [7:0]   ipointer;
   output reg [7:0]   opCode;
   output reg [31:0]  r0;
   output reg [31:0]  r1;
   output reg [31:0]  debug;
-  output reg [0:0]   readReq;
-  output reg [7:0]   ramAddress;
-  input  wire	       clk;
-  input  wire        reset;
-  input  wire        readAck;
-  input  wire [31:0] ramIn;
 
   // Local registers
   reg        [31:0] regarray[0:15];
@@ -39,15 +39,15 @@ module reader(
   reg        [7:0]  regAddress;
   reg        [2:0]  fOpEnable;
   
+  // Wire up the results from the floating units
   wire       [31:0] fAddResult;
   wire       [31:0] fSubResult;
-  wire       [31:0] floatDebug;
   wire       [31:0] fConvResult;
+  wire       [31:0] floatDebug;
 
   FloatingAdd     fAdd(regValue, regValue2, 1'b0, fAddResult, floatDebug, clk, fOpEnable[0:0]);
   FloatingAdd     fSub(regValue, regValue2, 1'b1, fSubResult, floatDebug, clk, fOpEnable[1:1]);
   FloatingFromInt fConv(regValue, fConvResult, floatDebug, clk, fOpEnable[2:2]);
-
 
   //initial
   //   $monitor("%t, ram = %h, %h, %h, %h : %h, %h, %h, %h", 
