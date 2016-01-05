@@ -3,8 +3,11 @@ module ALU(
   reset,       // [Input]  Reset pin
   ramIn,       // [Input]  RAM at requested address
   readAck,     // [Input]  RAM read acknowledge
+  writeAck,    // [Input]  RAM write acknowledge
   ramAddress,  // [Output] RAM address requested
+  ramOut,      // [Output] RAM to write
   readReq,     // [Output] RAM read request
+  writeReq,    // [Output] RAM write request
   ipointer,    // [Debug]  Instruction pointer value
   opCode,      // [Debug]  current opCode value
   r0,          // [Debug]  current r0 value
@@ -21,8 +24,11 @@ module ALU(
   input  wire        reset;
   input  wire [31:0] ramIn;
   input  wire        readAck;
+  input  wire        writeAck;
   output reg [7:0]   ramAddress;
+  output reg [31:0]  ramOut;
   output reg [0:0]   readReq;
+  output reg [0:0]   writeReq;
   output reg [7:0]   ipointer;
   output reg [7:0]   opCode;
   output reg [31:0]  r0;
@@ -137,17 +143,51 @@ module ALU(
           if (opCode == 22) fOpEnable[2:2] <= 1;
 
           // Mode change
-          mode <= 4;
+          if (opCode == 4)
+            mode <= 4; // Need to write ram
+          else
+            mode <= 6; // Skip ahead, no ram write needed
         end
       end
   
       4: begin
-        // Now we can do writes
+        // Write values to ram requested by instruction
+        writeReq <= 1;
+        ramAddress <= opAddress;
+
+        // Store ram values requested
+        ramOut[7:0] <= regValue[7:0];
+        ramOut[15:8] <= regValue[15:8];
+        ramOut[23:16] <= regValue[23:16];
+        ramOut[31:24] <= regValue[31:24];
+
+        debug[23:0] <= opAddress;
+        debug[31:24] <= mode;
+
+        // Move to next mode        
+        mode <= 5;        
+      end
+
+      5: begin
+        if (writeAck == 1)
+        begin
+          // Stop request
+          writeReq <= 0;
+          
+          debug[23:0] <= opAddress;
+          debug[31:24] <= mode;
+
+          // Now you can move along
+          mode <= 6;
+        end
+      end
+
+      6: begin
+        // Now we can do writes to non-ram things
         case (opCode)
           1:  regarray[regAddress[3:0]] <= opAddress;            // mov reg, const
           2:  regarray[regAddress[3:0]] <= ramValue;             // mov reg, [addr]
           3:  regarray[regAddress[3:0]] <= regValue2;            // mov reg, reg
-          //4:  ram[opAddress] <= regValue;                        // mov [addr], reg
 
           10: regarray[regAddress[3:0]] <= regValue + regValue2; // add reg, reg
 

@@ -4,7 +4,7 @@
 
 void OutputBytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned char b4)
 {
-	printf("%02x%02x%02x%02x\n", b1, b2, b3, b4);
+	printf("%02x %02x %02x %02x\n", b1, b2, b3, b4);
 }
 
 void OutputInstruction(Instructions::Enum instr, Argument a1, Argument a2)
@@ -24,6 +24,13 @@ void OutputInstruction(Instructions::Enum instr, Argument a1, Argument a2)
 			else if (a1._type == Argument::Register && a2._type == Argument::Register)
 			{
 				opCode = 3;
+			}
+			else if (a1._type == Argument::Address && a2._type == Argument::Register)
+			{
+				opCode = 4;
+				Argument t = a1;
+				a1 = a2;
+				a2 = t;
 			}
 
 			OutputBytes(opCode, a1._value, a2._value, 0);				

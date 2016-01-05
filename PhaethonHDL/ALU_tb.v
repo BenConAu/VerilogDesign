@@ -7,14 +7,14 @@ module test;
   initial begin
     # 0 reset = 1;
     # 1 reset = 0;
-    # 400 $finish;
+    # 1000 $finish;
   end
 
   reg [7:0] fileRam[0:255];
 
   initial
   begin
-    $readmemh("test.pao", fileRam, 0, 19);
+    $readmemh("test.pao", fileRam, 0, 31);
   end
 
   /* Make a regular pulsing clock. */
@@ -28,9 +28,13 @@ module test;
   wire [31:0] r1;
   wire [31:0] debug;
   wire [7:0] ramAddress;
+  wire [31:0] ramOut;
+  wire [0:0] readReq;
+  wire [0:0] writeReq;
 
   reg [7:0] reqAddress;
   reg [0:0] readAck;
+  reg [0:0] writeAck;
   reg [7:0] mode = 0;
 
   parameter RAMSIZE = 64;
@@ -39,9 +43,12 @@ module test;
     clk, 
     reset, 
     ramValue, 
-    readAck, 
-    ramAddress, 
+    readAck,
+    writeAck,
+    ramAddress,
+    ramOut,
     readReq, 
+    writeReq,
     iPointer, 
     opCode, 
     r0, 
@@ -56,21 +63,42 @@ module test;
   always @(posedge clk)
   begin
     // If ready to fill request
-    if (readReq == 1 && mode == 0)
+    if (readReq == 1)
     begin
-      reqAddress <= ramAddress;
-      mode <= 1;
-      readAck <= 0;
+      if (mode == 0)
+      begin
+        reqAddress <= ramAddress;
+        mode <= 1;
+        readAck <= 0;
+      end
+      else
+      begin
+        ramValue[7:0] <= fileRam[ramAddress];
+        ramValue[15:8] <= fileRam[ramAddress + 1];
+        ramValue[23:16] <= fileRam[ramAddress + 2];
+        ramValue[31:24] <= fileRam[ramAddress + 3];
+        readAck <= 1;
+        mode <= 0;
+      end
     end
 
-    if (readReq == 1 && mode == 1)
+    if (writeReq == 1)
     begin
-      ramValue[7:0] <= fileRam[ramAddress];
-      ramValue[15:8] <= fileRam[ramAddress + 1];
-      ramValue[23:16] <= fileRam[ramAddress + 2];
-      ramValue[31:24] <= fileRam[ramAddress + 3];
-      readAck <= 1;
-      mode <= 0;
+      if (mode == 0)
+      begin
+        reqAddress <= ramAddress;
+        mode <= 1;
+        writeAck <= 0;
+      end
+      else
+      begin
+        fileRam[ramAddress] <= ramOut[7:0];
+        fileRam[ramAddress + 1] <= ramOut[15:8];
+        fileRam[ramAddress + 2] <= ramOut[23:16];
+        fileRam[ramAddress + 3] <= ramOut[31:24];
+        writeAck <= 1;
+        mode <= 0;
+      end
     end
 
   end
