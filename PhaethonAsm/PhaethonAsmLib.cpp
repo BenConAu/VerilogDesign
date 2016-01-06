@@ -51,6 +51,28 @@ int GetSymbolAddress(int symIndex)
 	return -1;
 }
 
+struct InstructionData
+{
+	Instructions::Enum instr;
+	unsigned char opCode;
+	Argument::Type arg1;
+	Argument::Type arg2;
+	bool swapArgs;
+};
+
+InstructionData g_data[] = {
+	{ Instructions::Mov,    1, Argument::Register, Argument::Constant, false },
+	{ Instructions::Mov,    2, Argument::Register, Argument::Address,  false },
+	{ Instructions::Mov,    3, Argument::Register, Argument::Constant, false },
+	{ Instructions::Mov,    4, Argument::Address,  Argument::Register, true  },
+
+	{ Instructions::Cmp,    5, Argument::Register, Argument::Register, false },
+	{ Instructions::Jmp,    6, Argument::Address,  Argument::None,     false },
+
+	{ Instructions::Fadd,  20, Argument::Register, Argument::Register, false },
+	{ Instructions::Fconv, 22, Argument::Register, Argument::None,     false },
+};
+
 void OutputBytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned char b4)
 {
 	printf("%02x %02x %02x %02x\n", b1, b2, b3, b4);
@@ -58,76 +80,24 @@ void OutputBytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned 
 
 void OutputInstruction(Instructions::Enum instr, Argument a1, Argument a2)
 {
-	switch(instr)
+	for (int i = 0; i < sizeof(g_data) / sizeof(g_data[0]); i++)
 	{
-		case Instructions::Mov:
-			unsigned char opCode;
-			if (a1._type == Argument::Register && a2._type == Argument::Constant)
+		if (g_data[i].instr == instr && 
+			g_data[i].arg1 == a1._type && 
+			g_data[i].arg2 == a2._type)
+		{
+			if (g_data[i].swapArgs)
 			{
-				opCode = 1;
+				OutputBytes(g_data[i].opCode, a2._value, a1._value, 0);
 			}
-			else if (a1._type == Argument::Register && a2._type == Argument::Address)
+			else
 			{
-				opCode = 2;
-			}
-			else if (a1._type == Argument::Register && a2._type == Argument::Register)
-			{
-				opCode = 3;
-			}
-			else if (a1._type == Argument::Address && a2._type == Argument::Register)
-			{
-				opCode = 4;
-				Argument t = a1;
-				a1 = a2;
-				a2 = t;
+				OutputBytes(g_data[i].opCode, a1._value, a2._value, 0);
 			}
 
-			OutputBytes(opCode, a1._value, a2._value, 0);				
-			break;
-
-		case Instructions::Cmp:
-        	if (a1._type != Argument::Register || a2._type != Argument::Register)
-        	{
-        		std::cout << "Invalid argument for fconv" << std::endl;
-        	}
-        	OutputBytes(5, a1._value, a2._value, 0);
-
-		case Instructions::Fadd:
-        	if (a1._type != Argument::Register || a2._type != Argument::Register)
-        	{
-        		std::cout << "Invalid argument for fadd" << std::endl;
-        	}
-
-        	OutputBytes(20, a1._value, a2._value, 0);
-        	break;
-
-		default:
-			std::cout << "Unknown instruction" << instr << std::endl;
+			return;
+		}
 	}
-}
 
-void OutputInstruction(Instructions::Enum instr, Argument a1)
-{
-	switch(instr)
-	{
-        case Instructions::Fconv:
-        	if (a1._type != Argument::Register)
-        	{
-        		std::cout << "Invalid argument for fconv" << std::endl;
-        	}
-
-        	OutputBytes(22, a1._value, 0, 0);
-        	break;
-
-        case Instructions::Jmp:
-        	if (a1._type != Argument::Address)
-        	{
-        		std::cout << "Invalid argument for jmp" << std::endl;
-        	}
-        	OutputBytes(6, a1._value, 0, 0);
-        	break;
-
-		default:
-			std::cout << "Unknown instruction" << std::endl;
-	}
+	std::cout << "Unknown instruction" << instr << std::endl;
 }

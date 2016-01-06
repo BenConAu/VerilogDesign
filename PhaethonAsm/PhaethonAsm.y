@@ -55,7 +55,7 @@ assembler_unit:
 
 instruction:
       INSTR_TOKEN_2 argument COMMA_TOKEN argument   { OutputInstruction($1, $2, $4); }
-    | INSTR_TOKEN_1 argument                        { OutputInstruction($1, $2); }
+    | INSTR_TOKEN_1 argument                        { OutputInstruction($1, $2, Argument::ConstructNone()); }
     ;
 
 argument:

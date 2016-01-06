@@ -1241,7 +1241,7 @@ yyreduce:
 
   case 7:
 #line 58 "PhaethonAsm.y" /* yacc.c:1646  */
-    { OutputInstruction((yyvsp[-1].instrIndex), (yyvsp[0].arg)); }
+    { OutputInstruction((yyvsp[-1].instrIndex), (yyvsp[0].arg), Argument::ConstructNone()); }
 #line 1246 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 

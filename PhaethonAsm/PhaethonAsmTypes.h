@@ -18,6 +18,7 @@ class Argument
 public:
 	enum Type
 	{
+		None,
 		Constant,
         Register,
         Address
@@ -30,6 +31,13 @@ public:
 
 		a._type = t;
 		a._value = v;
+
+		return a;
+	}
+
+	static Argument ConstructNone()
+	{
+		Argument a = { Argument::None, 0 };
 
 		return a;
 	}
