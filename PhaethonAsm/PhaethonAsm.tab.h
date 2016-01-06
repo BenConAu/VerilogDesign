@@ -51,7 +51,9 @@ extern int yydebug;
     REG_TOKEN = 261,
     COMMA_TOKEN = 262,
     ADDR_LEFT = 263,
-    ADDR_RIGHT = 264
+    ADDR_RIGHT = 264,
+    COLON_TOKEN = 265,
+    SYMBOL_TOKEN = 266
   };
 #endif
 
@@ -65,9 +67,10 @@ union YYSTYPE
 	int intVal;
 	Instructions::Enum instrIndex;
 	int regIndex;
+	int symIndex;
 	Argument arg;
 
-#line 71 "PhaethonAsm.tab.h" /* yacc.c:1909  */
+#line 74 "PhaethonAsm.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

@@ -7,7 +7,9 @@ namespace Instructions
         Unknown = 0,
         Mov = 1,
         Fconv = 2,
-        Fadd = 3    
+        Fadd = 3,
+        Cmp = 4,
+        Jmp = 5 
     };
 }
 

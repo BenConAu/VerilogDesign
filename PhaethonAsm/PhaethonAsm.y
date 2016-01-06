@@ -24,6 +24,7 @@ void yyerror(const char *s);
 	int intVal;
 	Instructions::Enum instrIndex;
 	int regIndex;
+	int symIndex;
 	Argument arg;
 }
 
@@ -36,25 +37,36 @@ void yyerror(const char *s);
 %token COMMA_TOKEN
 %token ADDR_LEFT
 %token ADDR_RIGHT
+%token COLON_TOKEN
+%token <symIndex> SYMBOL_TOKEN
 %type <arg> argument
 
 %%
 
-instruction_list:
-      instruction instruction_list
-    | instruction
+assembler_unit_list:
+      assembler_unit assembler_unit_list
+    | assembler_unit
     ;
 
-  instruction:
+assembler_unit:
+      instruction
+    | label
+    ;
+
+instruction:
       INSTR_TOKEN_2 argument COMMA_TOKEN argument   { OutputInstruction($1, $2, $4); }
     | INSTR_TOKEN_1 argument                        { OutputInstruction($1, $2); }
     ;
 
-  argument:
+argument:
       REG_TOKEN                                     { $$ = Argument::Construct(Argument::Register, $1); }
     | ADDR_LEFT INT_TOKEN ADDR_RIGHT                { $$ = Argument::Construct(Argument::Address, $2);  }
     | INT_TOKEN                                     { $$ = Argument::Construct(Argument::Constant, $1); }
+    | SYMBOL_TOKEN                                  { $$ = Argument::Construct(Argument::Address, GetSymbolAddress($1)); }
     ;
+
+label:
+      SYMBOL_TOKEN COLON_TOKEN                      { AddLabel($1); }
 
 %%
 

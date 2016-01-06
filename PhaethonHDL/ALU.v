@@ -36,7 +36,7 @@ module ALU(
   output reg [31:0]  debug;
 
   // Local registers
-  reg        [31:0] regarray[0:15];
+  reg        [31:0] regarray[0:31];
   reg        [2:0]  mode;
   reg        [31:0] ramValue;
   reg        [31:0] regValue;
@@ -185,21 +185,28 @@ module ALU(
       6: begin
         // Now we can do writes to non-ram things
         case (opCode)
-          1:  regarray[regAddress[3:0]] <= opAddress;            // mov reg, const
-          2:  regarray[regAddress[3:0]] <= ramValue;             // mov reg, [addr]
-          3:  regarray[regAddress[3:0]] <= regValue2;            // mov reg, reg
-
-          10: regarray[regAddress[3:0]] <= regValue + regValue2; // add reg, reg
-
-          20: regarray[regAddress[3:0]] <= fAddResult;           // fadd reg, reg
-          21: regarray[regAddress[3:0]] <= fSubResult;           // fsub reg, reg
-          22: regarray[regAddress[3:0]] <= fConvResult;          // fconv reg
-
-          30: debug <= regValue;                                 // setdebug reg
+          1:  regarray[regAddress[3:0]] <= opAddress;              // mov reg, const
+          2:  regarray[regAddress[3:0]] <= ramValue;               // mov reg, [addr]
+          3:  regarray[regAddress[3:0]] <= regValue2;              // mov reg, reg
+          // 4 is done above
+          5: begin                                                 // cmp reg, reg
+            regarray[31][0:0] <= (regValue == regValue2 ? 1 : 0);
+            regarray[31][1:1] <= (regValue < regValue2 ? 1 : 0);
+            regarray[31][2:2] <= (regValue > regValue2 ? 1 : 0);
+          end
+          6:  ipointer <= opAddress;                               // jmp address
+          10: regarray[regAddress[3:0]] <= regValue + regValue2;   // add reg, reg
+  
+          20: regarray[regAddress[3:0]] <= fAddResult;             // fadd reg, reg
+          21: regarray[regAddress[3:0]] <= fSubResult;             // fsub reg, reg
+          22: regarray[regAddress[3:0]] <= fConvResult;            // fconv reg
+  
+          30: debug <= regValue;                                   // setdebug reg
         endcase
   
         // Move the instruction pointer along
-        ipointer <= ipointer + 4;
+        if (opCode != 6)
+          ipointer <= ipointer + 4;
   
         // Mode change
         mode <= 0;      
