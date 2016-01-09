@@ -23,6 +23,7 @@ using namespace std;
 "mov"                { yylval.instrIndex = Instructions::Mov; return INSTR_TOKEN_2; }
 "fconv"              { yylval.instrIndex = Instructions::Fconv; return INSTR_TOKEN_1; }
 "fadd"               { yylval.instrIndex = Instructions::Fadd; return INSTR_TOKEN_2; }
+"fmul"               { yylval.instrIndex = Instructions::Fmul; return INSTR_TOKEN_2; }
 "cmp"                { yylval.instrIndex = Instructions::Cmp; return INSTR_TOKEN_2; }
 "jmp"                { yylval.instrIndex = Instructions::Jmp; return INSTR_TOKEN_1; }
 "r"[0-9]+            { yylval.regIndex = atoi(yytext + 1); return REG_TOKEN; }

@@ -9,7 +9,8 @@ namespace Instructions
         Fconv = 2,
         Fadd = 3,
         Cmp = 4,
-        Jmp = 5 
+        Jmp = 5,
+        Fmul = 6
     };
 }
 

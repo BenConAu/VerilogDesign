@@ -43,17 +43,19 @@ module ALU(
   reg        [31:0] regValue2;
   reg        [15:0] opAddress;
   reg        [7:0]  regAddress;
-  reg        [2:0]  fOpEnable;
+  reg        [3:0]  fOpEnable;
   
   // Wire up the results from the floating units
   wire       [31:0] fAddResult;
   wire       [31:0] fSubResult;
   wire       [31:0] fConvResult;
+  wire       [31:0] fMulResult;
   wire       [31:0] floatDebug;
 
-  FloatingAdd     fAdd(regValue, regValue2, 1'b0, fAddResult, floatDebug, clk, fOpEnable[0:0]);
-  FloatingAdd     fSub(regValue, regValue2, 1'b1, fSubResult, floatDebug, clk, fOpEnable[1:1]);
-  FloatingFromInt fConv(regValue, fConvResult, floatDebug, clk, fOpEnable[2:2]);
+  FloatingAdd      fAdd(regValue, regValue2, 1'b0, fAddResult, floatDebug, clk, fOpEnable[0:0]);
+  FloatingAdd      fSub(regValue, regValue2, 1'b1, fSubResult, floatDebug, clk, fOpEnable[1:1]);
+  FloatingFromInt  fConv(regValue, fConvResult, floatDebug, clk, fOpEnable[2:2]);
+  FloatingMultiply fMul(regValue, regValue2, fMulResult, floatDebug, clk, fOpEnable[3:3]);
 
   //initial
   //   $monitor("%t, ram = %h, %h, %h, %h : %h, %h, %h, %h", 
@@ -68,7 +70,7 @@ module ALU(
       opAddress <= 'hffff;
       mode <= 0;
       readReq <= 0;
-      fOpEnable <= 3'b000;
+      fOpEnable <= 4'b0000;
     end
     else
     begin
@@ -82,7 +84,7 @@ module ALU(
         debug[31:24] <= mode;
 
         // Clear out stuff for the pipeline 
-        fOpEnable <= 3'b000;
+        fOpEnable <= 4'b0000;
         mode <= 1;
       end
 
@@ -141,6 +143,7 @@ module ALU(
           if (opCode == 20) fOpEnable[0:0] <= 1;
           if (opCode == 21) fOpEnable[1:1] <= 1;
           if (opCode == 22) fOpEnable[2:2] <= 1;
+          if (opCode == 23) fOpEnable[3:3] <= 1;
 
           // Mode change
           if (opCode == 4)
@@ -200,6 +203,7 @@ module ALU(
           20: regarray[regAddress[3:0]] <= fAddResult;             // fadd reg, reg
           21: regarray[regAddress[3:0]] <= fSubResult;             // fsub reg, reg
           22: regarray[regAddress[3:0]] <= fConvResult;            // fconv reg
+          23: regarray[regAddress[3:0]] <= fMulResult;             // fmul reg, reg
   
           30: debug <= regValue;                                   // setdebug reg
         endcase
