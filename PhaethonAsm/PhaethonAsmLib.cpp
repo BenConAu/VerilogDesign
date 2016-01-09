@@ -57,21 +57,23 @@ struct InstructionData
 	unsigned char opCode;
 	Argument::Type arg1;
 	Argument::Type arg2;
+	Argument::Type arg3;
 	bool swapArgs;
 };
 
 InstructionData g_data[] = {
-	{ Instructions::Mov,    1, Argument::Register, Argument::Constant, false },
-	{ Instructions::Mov,    2, Argument::Register, Argument::Address,  false },
-	{ Instructions::Mov,    3, Argument::Register, Argument::Constant, false },
-	{ Instructions::Mov,    4, Argument::Address,  Argument::Register, true  },
-
-	{ Instructions::Cmp,    5, Argument::Register, Argument::Register, false },
-	{ Instructions::Jmp,    6, Argument::Address,  Argument::None,     false },
-
-	{ Instructions::Fadd,  20, Argument::Register, Argument::Register, false },
-	{ Instructions::Fconv, 22, Argument::Register, Argument::None,     false },
-	{ Instructions::Fmul,  23, Argument::Register, Argument::Register, false },
+	{ Instructions::Mov,      1, Argument::Register, Argument::Constant, Argument::None,     false },
+	{ Instructions::Mov,      2, Argument::Register, Argument::Address,  Argument::None,     false },
+	{ Instructions::Mov,      3, Argument::Register, Argument::Constant, Argument::None,     false },
+	{ Instructions::Mov,      4, Argument::Address,  Argument::Register, Argument::None,     true  },
+    
+	{ Instructions::Cmp,      5, Argument::Register, Argument::Register, Argument::None,     false },
+	{ Instructions::Jmp,      6, Argument::Address,  Argument::None,     Argument::None,     false },
+    
+	{ Instructions::Fadd,    20, Argument::Register, Argument::Register, Argument::None,     false },
+	{ Instructions::Fconv,   22, Argument::Register, Argument::None,     Argument::None,     false },
+	{ Instructions::Fmul,    23, Argument::Register, Argument::Register, Argument::None,     false },
+	{ Instructions::Fmuladd, 24, Argument::Register, Argument::Register, Argument::Register, false },
 };
 
 void OutputBytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned char b4)
@@ -79,21 +81,22 @@ void OutputBytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned 
 	printf("%02x %02x %02x %02x\n", b1, b2, b3, b4);
 }
 
-void OutputInstruction(Instructions::Enum instr, Argument a1, Argument a2)
+void OutputInstruction(Instructions::Enum instr, Argument a1, Argument a2, Argument a3)
 {
 	for (int i = 0; i < sizeof(g_data) / sizeof(g_data[0]); i++)
 	{
 		if (g_data[i].instr == instr && 
 			g_data[i].arg1 == a1._type && 
-			g_data[i].arg2 == a2._type)
+			g_data[i].arg2 == a2._type &&
+			g_data[i].arg3 == a3._type)
 		{
 			if (g_data[i].swapArgs)
 			{
-				OutputBytes(g_data[i].opCode, a2._value, a1._value, 0);
+				OutputBytes(g_data[i].opCode, a2._value, a1._value, a3._value);
 			}
 			else
 			{
-				OutputBytes(g_data[i].opCode, a1._value, a2._value, 0);
+				OutputBytes(g_data[i].opCode, a1._value, a2._value, a3._value);
 			}
 
 			return;

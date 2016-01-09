@@ -33,6 +33,7 @@ void yyerror(const char *s);
 %token <intVal> INT_TOKEN
 %token <instrIndex> INSTR_TOKEN_1
 %token <instrIndex> INSTR_TOKEN_2
+%token <instrIndex> INSTR_TOKEN_3
 %token <regIndex> REG_TOKEN
 %token COMMA_TOKEN
 %token ADDR_LEFT
@@ -54,19 +55,22 @@ assembler_unit:
     ;
 
 instruction:
-      INSTR_TOKEN_2 argument COMMA_TOKEN argument   { OutputInstruction($1, $2, $4); }
-    | INSTR_TOKEN_1 argument                        { OutputInstruction($1, $2, Argument::ConstructNone()); }
+      INSTR_TOKEN_3 argument COMMA_TOKEN argument COMMA_TOKEN argument { OutputInstruction($1, $2, $4, $6); }
+    | INSTR_TOKEN_2 argument COMMA_TOKEN argument                      { OutputInstruction($1, $2, $4, Argument::ConstructNone()); }
+    | INSTR_TOKEN_1 argument                                           { 
+    	OutputInstruction($1, $2, Argument::ConstructNone(), Argument::ConstructNone()); 
+    }
     ;
 
-argument:
-      REG_TOKEN                                     { $$ = Argument::Construct(Argument::Register, $1); }
-    | ADDR_LEFT INT_TOKEN ADDR_RIGHT                { $$ = Argument::Construct(Argument::Address, $2);  }
-    | INT_TOKEN                                     { $$ = Argument::Construct(Argument::Constant, $1); }
-    | SYMBOL_TOKEN                                  { $$ = Argument::Construct(Argument::Address, GetSymbolAddress($1)); }
+argument:                   
+      REG_TOKEN                                                        { $$ = Argument::Construct(Argument::Register, $1); }
+    | ADDR_LEFT INT_TOKEN ADDR_RIGHT                                   { $$ = Argument::Construct(Argument::Address, $2);  }
+    | INT_TOKEN                                                        { $$ = Argument::Construct(Argument::Constant, $1); }
+    | SYMBOL_TOKEN                                                     { $$ = Argument::Construct(Argument::Address, GetSymbolAddress($1)); }
     ;
 
-label:
-      SYMBOL_TOKEN COLON_TOKEN                      { AddLabel($1); }
+label:                   
+      SYMBOL_TOKEN COLON_TOKEN                                         { AddLabel($1); }
 
 %%
 

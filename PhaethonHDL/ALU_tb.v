@@ -14,7 +14,7 @@ module test;
 
   initial
   begin
-    $readmemh("test.pao", fileRam, 0, 35);
+    $readmemh("test.pao", fileRam, 0, 43);
   end
 
   /* Make a regular pulsing clock. */

@@ -48,12 +48,13 @@ extern int yydebug;
     INT_TOKEN = 258,
     INSTR_TOKEN_1 = 259,
     INSTR_TOKEN_2 = 260,
-    REG_TOKEN = 261,
-    COMMA_TOKEN = 262,
-    ADDR_LEFT = 263,
-    ADDR_RIGHT = 264,
-    COLON_TOKEN = 265,
-    SYMBOL_TOKEN = 266
+    INSTR_TOKEN_3 = 261,
+    REG_TOKEN = 262,
+    COMMA_TOKEN = 263,
+    ADDR_LEFT = 264,
+    ADDR_RIGHT = 265,
+    COLON_TOKEN = 266,
+    SYMBOL_TOKEN = 267
   };
 #endif
 
@@ -70,7 +71,7 @@ union YYSTYPE
 	int symIndex;
 	Argument arg;
 
-#line 74 "PhaethonAsm.tab.h" /* yacc.c:1909  */
+#line 75 "PhaethonAsm.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

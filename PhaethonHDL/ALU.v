@@ -15,10 +15,6 @@ module ALU(
   debug        // [Output] Debug port
   );
 
-  // Constants
-  parameter RAMSIZE = 64;
-  parameter WIDTH = 8;
-
   // Input / output
   input  wire        clk;
   input  wire        reset;
@@ -41,21 +37,24 @@ module ALU(
   reg        [31:0] ramValue;
   reg        [31:0] regValue;
   reg        [31:0] regValue2;
+  reg        [31:0] regValue3;
   reg        [15:0] opAddress;
   reg        [7:0]  regAddress;
-  reg        [3:0]  fOpEnable;
+  reg        [4:0]  fOpEnable;
   
   // Wire up the results from the floating units
   wire       [31:0] fAddResult;
   wire       [31:0] fSubResult;
   wire       [31:0] fConvResult;
   wire       [31:0] fMulResult;
+  wire       [31:0] fMulAddResult;
   wire       [31:0] floatDebug;
 
-  FloatingAdd      fAdd(regValue, regValue2, 1'b0, fAddResult, floatDebug, clk, fOpEnable[0:0]);
-  FloatingAdd      fSub(regValue, regValue2, 1'b1, fSubResult, floatDebug, clk, fOpEnable[1:1]);
-  FloatingFromInt  fConv(regValue, fConvResult, floatDebug, clk, fOpEnable[2:2]);
-  FloatingMultiply fMul(regValue, regValue2, fMulResult, floatDebug, clk, fOpEnable[3:3]);
+  FloatingAdd         fAdd(regValue, regValue2, 1'b0, fAddResult, floatDebug, clk, fOpEnable[0:0]);
+  FloatingAdd         fSub(regValue, regValue2, 1'b1, fSubResult, floatDebug, clk, fOpEnable[1:1]);
+  FloatingFromInt     fConv(regValue, fConvResult, floatDebug, clk, fOpEnable[2:2]);
+  FloatingMultiply    fMul(regValue, regValue2, fMulResult, floatDebug, clk, fOpEnable[3:3]);
+  FloatingMultiplyAdd fMulAdd(regValue, regValue2, regValue3, fMulAddResult, floatDebug, clk, fOpEnable[4:4]);
 
   //initial
   //   $monitor("%t, ram = %h, %h, %h, %h : %h, %h, %h, %h", 
@@ -70,7 +69,7 @@ module ALU(
       opAddress <= 'hffff;
       mode <= 0;
       readReq <= 0;
-      fOpEnable <= 4'b0000;
+      fOpEnable <= 5'b00000;
     end
     else
     begin
@@ -84,7 +83,7 @@ module ALU(
         debug[31:24] <= mode;
 
         // Clear out stuff for the pipeline 
-        fOpEnable <= 4'b0000;
+        fOpEnable <= 5'b00000;
         mode <= 1;
       end
 
@@ -116,6 +115,7 @@ module ALU(
         // Read values from registers
         regValue <= regarray[regAddress[3:0]];
         regValue2 <= regarray[opAddress[3:0]];
+        regValue3 <= regarray[opAddress[11:8]];
   
         debug[23:0] <= opCode;
         debug[31:24] <= mode;
@@ -144,6 +144,7 @@ module ALU(
           if (opCode == 21) fOpEnable[1:1] <= 1;
           if (opCode == 22) fOpEnable[2:2] <= 1;
           if (opCode == 23) fOpEnable[3:3] <= 1;
+          if (opCode == 24) fOpEnable[4:4] <= 1;
 
           // Mode change
           if (opCode == 4)
@@ -204,10 +205,13 @@ module ALU(
           21: regarray[regAddress[3:0]] <= fSubResult;             // fsub reg, reg
           22: regarray[regAddress[3:0]] <= fConvResult;            // fconv reg
           23: regarray[regAddress[3:0]] <= fMulResult;             // fmul reg, reg
+          24: regarray[regAddress[3:0]] <= fMulAddResult;          // fmul reg, reg
   
           30: debug <= regValue;                                   // setdebug reg
         endcase
   
+        //debug <= floatDebug;
+
         // Move the instruction pointer along
         if (opCode != 6)
           ipointer <= ipointer + 4;

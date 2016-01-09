@@ -10,7 +10,8 @@ namespace Instructions
         Fadd = 3,
         Cmp = 4,
         Jmp = 5,
-        Fmul = 6
+        Fmul = 6,
+        Fmuladd = 7
     };
 }
 

@@ -117,12 +117,13 @@ extern int yydebug;
     INT_TOKEN = 258,
     INSTR_TOKEN_1 = 259,
     INSTR_TOKEN_2 = 260,
-    REG_TOKEN = 261,
-    COMMA_TOKEN = 262,
-    ADDR_LEFT = 263,
-    ADDR_RIGHT = 264,
-    COLON_TOKEN = 265,
-    SYMBOL_TOKEN = 266
+    INSTR_TOKEN_3 = 261,
+    REG_TOKEN = 262,
+    COMMA_TOKEN = 263,
+    ADDR_LEFT = 264,
+    ADDR_RIGHT = 265,
+    COLON_TOKEN = 266,
+    SYMBOL_TOKEN = 267
   };
 #endif
 
@@ -139,7 +140,7 @@ union YYSTYPE
 	int symIndex;
 	Argument arg;
 
-#line 143 "PhaethonAsm.tab.c" /* yacc.c:355  */
+#line 144 "PhaethonAsm.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -156,7 +157,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 160 "PhaethonAsm.tab.c" /* yacc.c:358  */
+#line 161 "PhaethonAsm.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -396,23 +397,23 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  15
+#define YYFINAL  17
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   16
+#define YYLAST   23
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  12
+#define YYNTOKENS  13
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  6
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  12
+#define YYNRULES  13
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  21
+#define YYNSTATES  27
 
 /* YYTRANSLATE[YYX] -- Symbol number corresponding to YYX as returned
    by yylex, with out-of-bounds checking.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   266
+#define YYMAXUTOK   267
 
 #define YYTRANSLATE(YYX)                                                \
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -447,15 +448,15 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5,     6,     7,     8,     9,    10,    11
+       5,     6,     7,     8,     9,    10,    11,    12
 };
 
 #if YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    47,    47,    48,    52,    53,    57,    58,    62,    63,
-      64,    65,    69
+       0,    48,    48,    49,    53,    54,    58,    59,    60,    66,
+      67,    68,    69,    73
 };
 #endif
 
@@ -465,9 +466,10 @@ static const yytype_uint8 yyrline[] =
 static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "INT_TOKEN", "INSTR_TOKEN_1",
-  "INSTR_TOKEN_2", "REG_TOKEN", "COMMA_TOKEN", "ADDR_LEFT", "ADDR_RIGHT",
-  "COLON_TOKEN", "SYMBOL_TOKEN", "$accept", "assembler_unit_list",
-  "assembler_unit", "instruction", "argument", "label", YY_NULLPTR
+  "INSTR_TOKEN_2", "INSTR_TOKEN_3", "REG_TOKEN", "COMMA_TOKEN",
+  "ADDR_LEFT", "ADDR_RIGHT", "COLON_TOKEN", "SYMBOL_TOKEN", "$accept",
+  "assembler_unit_list", "assembler_unit", "instruction", "argument",
+  "label", YY_NULLPTR
 };
 #endif
 
@@ -477,14 +479,14 @@ static const char *const yytname[] =
 static const yytype_uint16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
-     265,   266
+     265,   266,   267
 };
 # endif
 
-#define YYPACT_NINF -10
+#define YYPACT_NINF -9
 
 #define yypact_value_is_default(Yystate) \
-  (!!((Yystate) == (-10)))
+  (!!((Yystate) == (-9)))
 
 #define YYTABLE_NINF -1
 
@@ -495,9 +497,9 @@ static const yytype_uint16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-       4,    -1,    -1,    -9,     3,     4,   -10,   -10,   -10,   -10,
-       1,   -10,   -10,     5,   -10,   -10,   -10,    -3,    -1,   -10,
-     -10
+       8,    -1,    -1,    -1,    -8,     4,     8,    -9,    -9,    -9,
+      -9,     2,    -9,    -9,     1,     7,    -9,    -9,    -9,    -3,
+      -1,    -1,    -9,    -9,     9,    -1,    -9
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -505,21 +507,21 @@ static const yytype_int8 yypact[] =
      means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       0,     0,     0,     0,     0,     3,     4,     5,    10,     8,
-       0,    11,     7,     0,    12,     1,     2,     0,     0,     9,
-       6
+       0,     0,     0,     0,     0,     0,     3,     4,     5,    11,
+       9,     0,    12,     8,     0,     0,    13,     1,     2,     0,
+       0,     0,    10,     7,     0,     0,     6
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -10,     6,   -10,   -10,    -2,   -10
+      -9,    10,    -9,    -9,    -2,    -9
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     4,     5,     6,    12,     7
+      -1,     5,     6,     7,    13,     8
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -527,37 +529,39 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_uint8 yytable[] =
 {
-      13,    14,     8,    15,    17,     9,    19,    10,     1,     2,
-      11,    16,    18,     0,     0,     3,    20
+      14,    15,     9,    16,    17,    19,    10,    22,    11,    20,
+       0,    12,     1,     2,     3,    21,    18,    25,    23,    24,
+       4,     0,     0,    26
 };
 
 static const yytype_int8 yycheck[] =
 {
-       2,    10,     3,     0,     3,     6,     9,     8,     4,     5,
-      11,     5,     7,    -1,    -1,    11,    18
+       2,     3,     3,    11,     0,     3,     7,    10,     9,     8,
+      -1,    12,     4,     5,     6,     8,     6,     8,    20,    21,
+      12,    -1,    -1,    25
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,     4,     5,    11,    13,    14,    15,    17,     3,     6,
-       8,    11,    16,    16,    10,     0,    13,     3,     7,     9,
-      16
+       0,     4,     5,     6,    12,    14,    15,    16,    18,     3,
+       7,     9,    12,    17,    17,    17,    11,     0,    14,     3,
+       8,     8,    10,    17,    17,     8,    17
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    12,    13,    13,    14,    14,    15,    15,    16,    16,
-      16,    16,    17
+       0,    13,    14,    14,    15,    15,    16,    16,    16,    17,
+      17,    17,    17,    18
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     2,     1,     1,     1,     4,     2,     1,     3,
-       1,     1,     2
+       0,     2,     2,     1,     1,     1,     6,     4,     2,     1,
+       3,     1,     1,     2
 };
 
 
@@ -1234,49 +1238,57 @@ yyreduce:
   switch (yyn)
     {
         case 6:
-#line 57 "PhaethonAsm.y" /* yacc.c:1646  */
-    { OutputInstruction((yyvsp[-3].instrIndex), (yyvsp[-2].arg), (yyvsp[0].arg)); }
-#line 1240 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+#line 58 "PhaethonAsm.y" /* yacc.c:1646  */
+    { OutputInstruction((yyvsp[-5].instrIndex), (yyvsp[-4].arg), (yyvsp[-2].arg), (yyvsp[0].arg)); }
+#line 1244 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 58 "PhaethonAsm.y" /* yacc.c:1646  */
-    { OutputInstruction((yyvsp[-1].instrIndex), (yyvsp[0].arg), Argument::ConstructNone()); }
-#line 1246 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+#line 59 "PhaethonAsm.y" /* yacc.c:1646  */
+    { OutputInstruction((yyvsp[-3].instrIndex), (yyvsp[-2].arg), (yyvsp[0].arg), Argument::ConstructNone()); }
+#line 1250 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 62 "PhaethonAsm.y" /* yacc.c:1646  */
-    { (yyval.arg) = Argument::Construct(Argument::Register, (yyvsp[0].regIndex)); }
-#line 1252 "PhaethonAsm.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 9:
-#line 63 "PhaethonAsm.y" /* yacc.c:1646  */
-    { (yyval.arg) = Argument::Construct(Argument::Address, (yyvsp[-1].intVal));  }
+#line 60 "PhaethonAsm.y" /* yacc.c:1646  */
+    { 
+    	OutputInstruction((yyvsp[-1].instrIndex), (yyvsp[0].arg), Argument::ConstructNone(), Argument::ConstructNone()); 
+    }
 #line 1258 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
-  case 10:
-#line 64 "PhaethonAsm.y" /* yacc.c:1646  */
-    { (yyval.arg) = Argument::Construct(Argument::Constant, (yyvsp[0].intVal)); }
+  case 9:
+#line 66 "PhaethonAsm.y" /* yacc.c:1646  */
+    { (yyval.arg) = Argument::Construct(Argument::Register, (yyvsp[0].regIndex)); }
 #line 1264 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
-  case 11:
-#line 65 "PhaethonAsm.y" /* yacc.c:1646  */
-    { (yyval.arg) = Argument::Construct(Argument::Address, GetSymbolAddress((yyvsp[0].symIndex))); }
+  case 10:
+#line 67 "PhaethonAsm.y" /* yacc.c:1646  */
+    { (yyval.arg) = Argument::Construct(Argument::Address, (yyvsp[-1].intVal));  }
 #line 1270 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 11:
+#line 68 "PhaethonAsm.y" /* yacc.c:1646  */
+    { (yyval.arg) = Argument::Construct(Argument::Constant, (yyvsp[0].intVal)); }
+#line 1276 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
 #line 69 "PhaethonAsm.y" /* yacc.c:1646  */
+    { (yyval.arg) = Argument::Construct(Argument::Address, GetSymbolAddress((yyvsp[0].symIndex))); }
+#line 1282 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 13:
+#line 73 "PhaethonAsm.y" /* yacc.c:1646  */
     { AddLabel((yyvsp[-1].symIndex)); }
-#line 1276 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+#line 1288 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1280 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+#line 1292 "PhaethonAsm.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1504,7 +1516,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 71 "PhaethonAsm.y" /* yacc.c:1906  */
+#line 75 "PhaethonAsm.y" /* yacc.c:1906  */
 
 
 int main(int, char**) {
