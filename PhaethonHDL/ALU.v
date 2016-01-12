@@ -173,6 +173,14 @@ module ALU(
           ramAddress <= opDataWord;        
         end
 
+        if (opCode == 4)
+        begin
+          // Write values to ram requested by instruction
+          writeReq <= 1;
+          ramAddress <= opDataWord;
+          ramOut <= regValue2;
+        end
+
         debug[23:0] <= opDataWord;
         debug[31:24] <= mode;
 
@@ -196,6 +204,17 @@ module ALU(
             mode <= 6;
           end
         end
+        else if (opCode == 4)
+        begin
+          // Stop request
+          writeReq <= 0;
+
+          if (writeAck == 1)
+          begin
+            // Can move to next mode
+            mode <= 6;
+          end
+        end
         else
           mode <= 6;
 
@@ -205,43 +224,6 @@ module ALU(
       end
 
       6: begin
-        if (opCode == 4)
-        begin
-          // Write values to ram requested by instruction
-          writeReq <= 1;
-          ramAddress <= opDataWord;
-  
-          // Store ram values requested
-          ramOut <= regValue2;
-        end
-
-        debug[23:0] <= regValue2;
-        debug[31:24] <= mode;
-
-        // Move to next mode        
-        mode <= 7;        
-      end
-
-      7: begin
-        if (opCode == 4)
-        begin
-          // Stop request
-          writeReq <= 0;
-
-          if (writeAck == 1)
-          begin
-            // Can move to next mode
-            mode <= 8;
-          end
-        end
-        else
-          mode <= 8;
-
-        debug[23:0] <= opDataWord;
-        debug[31:24] <= mode;
-      end
-
-      8: begin
         // Now we can do writes to non-ram things
         case (opCode)
           1:  regarray[regAddress[3:0]] <= opDataWord;             // mov reg, const
