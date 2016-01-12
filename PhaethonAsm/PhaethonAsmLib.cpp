@@ -55,25 +55,23 @@ struct InstructionData
 {
 	Instructions::Enum instr;
 	unsigned char opCode;
-	Argument::Type arg1;
-	Argument::Type arg2;
-	Argument::Type arg3;
-	bool swapArgs;
+	Argument::Type args[3];
+	int wordArg;
 };
 
 InstructionData g_data[] = {
-	{ Instructions::Mov,      1, Argument::Register, Argument::Constant, Argument::None,     false },
-	{ Instructions::Mov,      2, Argument::Register, Argument::Address,  Argument::None,     false },
-	{ Instructions::Mov,      3, Argument::Register, Argument::Constant, Argument::None,     false },
-	{ Instructions::Mov,      4, Argument::Address,  Argument::Register, Argument::None,     true  },
-    
-	{ Instructions::Cmp,      5, Argument::Register, Argument::Register, Argument::None,     false },
-	{ Instructions::Jmp,      6, Argument::Address,  Argument::None,     Argument::None,     false },
-    
-	{ Instructions::Fadd,    20, Argument::Register, Argument::Register, Argument::None,     false },
-	{ Instructions::Fconv,   22, Argument::Register, Argument::None,     Argument::None,     false },
-	{ Instructions::Fmul,    23, Argument::Register, Argument::Register, Argument::None,     false },
-	{ Instructions::Fmuladd, 24, Argument::Register, Argument::Register, Argument::Register, false },
+	{ Instructions::Mov,      1, { Argument::Register, Argument::Constant, Argument::None     },     1  },
+	{ Instructions::Mov,      2, { Argument::Register, Argument::Address,  Argument::None     },     1  },
+	{ Instructions::Mov,      3, { Argument::Register, Argument::Register, Argument::None     },     -1 },
+	{ Instructions::Mov,      4, { Argument::Address,  Argument::Register, Argument::None     },     0  },
+
+	{ Instructions::Cmp,      5, { Argument::Register, Argument::Register, Argument::None     },     -1 },
+	{ Instructions::Jmp,      6, { Argument::Address,  Argument::None,     Argument::None     },     0 },
+ 
+	{ Instructions::Fadd,    20, { Argument::Register, Argument::Register, Argument::None     },     -1 },
+	{ Instructions::Fconv,   22, { Argument::Register, Argument::None,     Argument::None     },     -1 },
+	{ Instructions::Fmul,    23, { Argument::Register, Argument::Register, Argument::None     },     -1 },
+	{ Instructions::Fmuladd, 24, { Argument::Register, Argument::Register, Argument::Register }, -1 },
 };
 
 void OutputBytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned char b4)
@@ -86,17 +84,24 @@ void OutputInstruction(Instructions::Enum instr, Argument a1, Argument a2, Argum
 	for (int i = 0; i < sizeof(g_data) / sizeof(g_data[0]); i++)
 	{
 		if (g_data[i].instr == instr && 
-			g_data[i].arg1 == a1._type && 
-			g_data[i].arg2 == a2._type &&
-			g_data[i].arg3 == a3._type)
+			g_data[i].args[0] == a1._type && 
+			g_data[i].args[1] == a2._type &&
+			g_data[i].args[2] == a3._type)
 		{
-			if (g_data[i].swapArgs)
+			OutputBytes(g_data[i].opCode, a1._value, a2._value, a3._value);
+
+			if (g_data[i].wordArg != -1)
 			{
-				OutputBytes(g_data[i].opCode, a2._value, a1._value, a3._value);
-			}
-			else
-			{
-				OutputBytes(g_data[i].opCode, a1._value, a2._value, a3._value);
+                Argument args[3] = { a1, a2, a3 };
+
+				unsigned int opDataWord = args[g_data[i].wordArg]._value;
+
+				OutputBytes(
+					static_cast<unsigned char>(opDataWord & 0xFF),
+					static_cast<unsigned char>(opDataWord >> 8 & 0xFF),
+					static_cast<unsigned char>(opDataWord >> 16 & 0xFF),
+					static_cast<unsigned char>(opDataWord >> 24 & 0xFF)
+					);
 			}
 
 			return;

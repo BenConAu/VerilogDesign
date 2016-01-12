@@ -7,14 +7,14 @@ module test;
   initial begin
     # 0 reset = 1;
     # 1 reset = 0;
-    # 2000 $finish;
+    # 3000 $finish;
   end
 
   reg [7:0] fileRam[0:255];
 
   initial
   begin
-    $readmemh("test.pao", fileRam, 0, 43);
+    $readmemh("test.pao", fileRam, 0, 103);
   end
 
   /* Make a regular pulsing clock. */
@@ -27,12 +27,12 @@ module test;
   wire [31:0] r0;
   wire [31:0] r1;
   wire [31:0] debug;
-  wire [7:0] ramAddress;
+  wire [31:0] ramAddress;
   wire [31:0] ramOut;
   wire [0:0] readReq;
   wire [0:0] writeReq;
 
-  reg [7:0] reqAddress;
+  reg [31:0] reqAddress;
   reg [0:0] readAck;
   reg [0:0] writeAck;
   reg [7:0] mode = 0;
@@ -57,50 +57,55 @@ module test;
     );
 
   initial
-     $monitor("At time %t, ramAddress = %h, ip = %h, opCode = %h, reset = %h, r[0:1] = %h:%h, debug = %h",
-              $time, ramAddress, iPointer, opCode, reset, r0, r1, debug);
+     $monitor("At time %t, mode = %h, reqAddress = %h, ramValue = %h, ip = %h, opCode = %h, reset = %h, r[0:1] = %h:%h, debug = %h",
+              $time, mode, reqAddress, ramValue, iPointer, opCode, reset, r0, r1, debug);
 
   always @(posedge clk)
   begin
-    // If ready to fill request
-    if (readReq == 1)
+    // Mode zero means ready to fill a request (so that you can't file
+    // a new request in the middle of another one)
+    if (mode == 0)
     begin
-      if (mode == 0)
+      // Ack bits are only set when read or write is done
+      readAck <= 0;
+      writeAck <= 0;
+
+      if (readReq == 1)
       begin
         reqAddress <= ramAddress;
         mode <= 1;
-        readAck <= 0;
       end
-      else
-      begin
-        ramValue[7:0] <= fileRam[ramAddress];
-        ramValue[15:8] <= fileRam[ramAddress + 1];
-        ramValue[23:16] <= fileRam[ramAddress + 2];
-        ramValue[31:24] <= fileRam[ramAddress + 3];
-        readAck <= 1;
-        mode <= 0;
-      end
-    end
 
-    if (writeReq == 1)
-    begin
-      if (mode == 0)
+      if (writeReq == 1)
       begin
         reqAddress <= ramAddress;
-        mode <= 1;
-        writeAck <= 0;
-      end
-      else
-      begin
-        fileRam[ramAddress] <= ramOut[7:0];
-        fileRam[ramAddress + 1] <= ramOut[15:8];
-        fileRam[ramAddress + 2] <= ramOut[23:16];
-        fileRam[ramAddress + 3] <= ramOut[31:24];
-        writeAck <= 1;
-        mode <= 0;
+        mode <= 2;
       end
     end
 
+    // Mode one means the request from the outside is understood and
+    // the read will be processed and the acknowledgement sent back
+    if (mode == 1)
+    begin
+      //$display("Retrieving address %h", reqAddress);
+      ramValue[7:0] <= fileRam[reqAddress];
+      ramValue[15:8] <= fileRam[reqAddress + 1];
+      ramValue[23:16] <= fileRam[reqAddress + 2];
+      ramValue[31:24] <= fileRam[reqAddress + 3];
+      readAck <= 1;
+      mode <= 0;
+    end
+
+    if (mode == 2)
+    begin
+      //$display("Writing %h into %h", ramOut, reqAddress);
+      fileRam[reqAddress] <= ramOut[7:0];
+      fileRam[reqAddress + 1] <= ramOut[15:8];
+      fileRam[reqAddress + 2] <= ramOut[23:16];
+      fileRam[reqAddress + 3] <= ramOut[31:24];
+      writeAck <= 1;
+      mode <= 0;
+    end
   end
 
 endmodule // test

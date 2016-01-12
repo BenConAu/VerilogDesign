@@ -46,5 +46,5 @@ public:
 
 public:
 	int _type;
-	int _value;
+	unsigned int _value;
 };
