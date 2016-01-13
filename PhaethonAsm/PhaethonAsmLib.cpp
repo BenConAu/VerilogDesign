@@ -71,7 +71,8 @@ InstructionData g_data[] = {
 	{ Instructions::Fadd,    20, { Argument::Register, Argument::Register, Argument::None     },     -1 },
 	{ Instructions::Fconv,   22, { Argument::Register, Argument::None,     Argument::None     },     -1 },
 	{ Instructions::Fmul,    23, { Argument::Register, Argument::Register, Argument::None     },     -1 },
-	{ Instructions::Fmuladd, 24, { Argument::Register, Argument::Register, Argument::Register }, -1 },
+	{ Instructions::Fmuladd, 24, { Argument::Register, Argument::Register, Argument::Register },     -1 },
+	{ Instructions::Fmin,    25, { Argument::Register, Argument::Register, Argument::Register },     -1 },
 };
 
 void OutputBytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned char b4)

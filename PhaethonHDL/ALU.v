@@ -42,7 +42,7 @@ module ALU(
   reg        [7:0]  regAddress;
   reg        [7:0]  regAddress2;
   reg        [7:0]  regAddress3;
-  reg        [4:0]  fOpEnable;
+  reg        [5:0]  fOpEnable;
   
   // Wire up the results from the floating units
   wire       [31:0] fAddResult;
@@ -51,12 +51,14 @@ module ALU(
   wire       [31:0] fMulResult;
   wire       [31:0] fMulAddResult;
   wire       [31:0] floatDebug;
+  wire       [1:0]  fCompareResult;
 
   FloatingAdd         fAdd(regValue, regValue2, 1'b0, fAddResult, floatDebug, clk, fOpEnable[0:0]);
   FloatingAdd         fSub(regValue, regValue2, 1'b1, fSubResult, floatDebug, clk, fOpEnable[1:1]);
   FloatingFromInt     fConv(regValue, fConvResult, floatDebug, clk, fOpEnable[2:2]);
   FloatingMultiply    fMul(regValue, regValue2, fMulResult, floatDebug, clk, fOpEnable[3:3]);
   FloatingMultiplyAdd fMulAdd(regValue, regValue2, regValue3, fMulAddResult, floatDebug, clk, fOpEnable[4:4]);
+  FloatingCompare     fComp(regValue2, regValue3, fCompareResult, floatDebug, clk, fOpEnable[5:5]);
 
   //initial
   //   $monitor("%t, ram = %h, %h, %h, %h : %h, %h, %h, %h", 
@@ -71,7 +73,7 @@ module ALU(
       opDataWord <= 'hffffffff;
       mode <= 0;
       readReq <= 0;
-      fOpEnable <= 5'b00000;
+      fOpEnable <= 6'b000000;
     end
     else
     begin
@@ -88,7 +90,7 @@ module ALU(
         debug[31:24] <= mode;
 
         // Clear out stuff for the pipeline 
-        fOpEnable <= 5'b00000;
+        fOpEnable <= 6'b000000;
         mode <= 1;
       end
 
@@ -132,6 +134,7 @@ module ALU(
         if (opCode == 22) fOpEnable[2:2] <= 1;
         if (opCode == 23) fOpEnable[3:3] <= 1;
         if (opCode == 24) fOpEnable[4:4] <= 1;
+        if (opCode == 25) fOpEnable[5:5] <= 1;
 
         if (opCode == 1 || opCode == 2 || opCode == 4 || opCode == 6)
         begin
@@ -187,7 +190,9 @@ module ALU(
         begin
           // Read values from address encoded in code
           readReq <= 1;
-          ramAddress <= opDataWord;        
+          ramAddress <= opDataWord;
+
+          $display("Requesting read from %h", ramAddress);
         end
 
         if (opCode == 4)
@@ -196,6 +201,8 @@ module ALU(
           writeReq <= 1;
           ramAddress <= opDataWord;
           ramOut <= regValue2;
+
+          $display("Reqesting write %h to address value %h", regValue2, opDataWord);
         end
 
         debug[23:0] <= opDataWord;
@@ -268,6 +275,12 @@ module ALU(
           22: regarray[regAddress[3:0]] <= fConvResult;            // fconv reg
           23: regarray[regAddress[3:0]] <= fMulResult;             // fmul reg, reg
           24: regarray[regAddress[3:0]] <= fMulAddResult;          // fmul reg, reg
+          25: begin
+            $display("fmin to regAddress %h", regAddress[3:0]);
+            $display("input is %h, %h", regValue2, regValue3);
+
+            regarray[regAddress[3:0]] <= (fCompareResult == 'b01 ? regValue3 : regValue2);
+          end 
   
           30: debug <= regValue;                                   // setdebug reg
         endcase

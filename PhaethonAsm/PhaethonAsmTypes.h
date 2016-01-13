@@ -11,7 +11,8 @@ namespace Instructions
         Cmp = 4,
         Jmp = 5,
         Fmul = 6,
-        Fmuladd = 7
+        Fmuladd = 7,
+        Fmin = 8,
     };
 }
 
