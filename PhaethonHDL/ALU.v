@@ -76,9 +76,9 @@ module ALU(
     else
     begin
       case (mode)
+      // Mode 0: Schedule read of code at instruction pointer and clear
+      //         out enable bits for auxillary modules.
       0: begin
-        //$display("Requesting address %h", ipointer);
-
         // Begin RAM read for instruction data
         readReq <= 1;
         ramAddress <= ipointer;
@@ -92,6 +92,9 @@ module ALU(
         mode <= 1;
       end
 
+      // Mode 1: Handle ack of instruction pointer read request and
+      //         decode the instruction data, including the opCode
+      //         of the instruction and the affected registers.
       1: begin
         // Stop request
         readReq <= 0;
@@ -114,15 +117,10 @@ module ALU(
         debug[31:24] <= mode;
       end
         
+      // Mode 2: Schedule read of additional code for opCodes that
+      //         store word data. Read in register values for
+      //         registers referenced by the instruction. 
       2: begin
-        if (opCode == 1 || opCode == 2 || opCode == 4 || opCode == 6)
-        begin
-          // Read values from ram requested by instruction
-          readReq <= 1;
-          ramAddress <= ipointer + 4;
-          //$display("Requesting address %h", ipointer + 4);
-        end
-
         // Read values from registers
         regValue <= regarray[regAddress[3:0]];
         regValue2 <= regarray[regAddress2[3:0]];
@@ -135,36 +133,55 @@ module ALU(
         if (opCode == 23) fOpEnable[3:3] <= 1;
         if (opCode == 24) fOpEnable[4:4] <= 1;
 
-        debug[23:0] <= regAddress;
-        debug[31:24] <= mode;
-
-        mode <= 3;
-      end
-
-      3: begin
         if (opCode == 1 || opCode == 2 || opCode == 4 || opCode == 6)
         begin
-          // Stop request
-          readReq <= 0;
-  
-          if (readAck == 1)
-          begin
-            $display("Receiving opWordData value %h", ramIn);
+          // Read values from ram requested by instruction
+          readReq <= 1;
+          ramAddress <= ipointer + 4;
 
-            // Store ram values requested
-            opDataWord <= ramIn;
-
-            // Move to next mode
-            mode <= 4;
-          end
+          // We need to move into further modes
+          mode <= 3;
         end
         else
-          mode <= 4;
+        begin
+          // Since there is no word data, there is no need
+          // to wait for that word data to come back, and there
+          // can be no further reads or writes since the word
+          // data is where the address would go
+          mode <= 6;
+        end
+
+        debug[23:0] <= regAddress;
+        debug[31:24] <= mode;
+      end
+
+      // Mode 3: Complete read of additional code for opCodes that
+      //         store word data. We only end up in this mode if
+      //         the appropriate opCode is set, so no need to check
+      //         the opCode.
+      3: begin
+        // Stop request
+        readReq <= 0;
+  
+        if (readAck == 1)
+        begin
+          // Store ram values requested
+          opDataWord <= ramIn;
+
+          // Move to next mode - only progress to data read / write
+          // for opCodes that actually need it.
+          if (opCode == 2 || opCode == 4)
+            mode <= 4;
+          else
+            mode <= 6;
+        end
 
         debug[23:0] <= ramIn;
         debug[31:24] <= mode;
       end
   
+      // Mode 4: Initiate data read or write if the instruction
+      //         requires it.
       4: begin
         if (opCode == 2)
         begin
@@ -187,6 +204,8 @@ module ALU(
         mode <= 5;
       end
 
+      // Mode 5: Complete data read or write if the instruction
+      //         requires it.
       5: begin
         if (opCode == 2)
         begin
@@ -223,6 +242,9 @@ module ALU(
 
       end
 
+      // Mode 6: Finalize the instruction operation, by performing
+      //         the writes that are needed and moving the
+      //         instruction pointer along.
       6: begin
         // Now we can do writes to non-ram things
         case (opCode)
