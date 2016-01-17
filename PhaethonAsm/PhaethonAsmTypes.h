@@ -16,6 +16,7 @@ namespace Instructions
         Fmuladd = 7,
         Fmin = 8,
         Fsub = 9,
+        Dout = 10,
     };
 }
 

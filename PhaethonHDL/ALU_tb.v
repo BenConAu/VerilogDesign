@@ -7,14 +7,14 @@ module test;
   initial begin
     # 0 reset = 1;
     # 1 reset = 0;
-    # 3000 $finish;
+    # 1200 $finish;
   end
 
   reg [7:0] fileRam[0:255];
 
   initial
   begin
-    $readmemh("test.pao", fileRam, 0, 75);
+    $readmemh("test.pao", fileRam, 0, 79);
   end
 
   /* Make a regular pulsing clock. */
@@ -26,6 +26,7 @@ module test;
   wire [7:0] opCode;
   wire [31:0] r0;
   wire [31:0] r1;
+  wire [31:0] r2;
   wire [31:0] debug;
   wire [31:0] ramAddress;
   wire [31:0] ramOut;
@@ -53,12 +54,13 @@ module test;
     opCode,
     r0,
     r1,
+    r2,
     debug
     );
 
   initial
-     $monitor("At time %t, mode = %h, reqAddress = %h, ramValue = %h, ip = %h, opCode = %h, reset = %h, r[0:1] = %h:%h, debug = %h",
-              $time, mode, reqAddress, ramValue, iPointer, opCode, reset, r0, r1, debug);
+     $monitor("At time %t, ip = %h, opCode = %h, reset = %h, r[0:1:2] = %h:%h:%h, debug = %h",
+              $time, iPointer, opCode, reset, r0, r1, r2, debug);
 
   always @(posedge clk)
   begin

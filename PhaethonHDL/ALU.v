@@ -12,6 +12,7 @@ module ALU(
   opCode,      // [Debug]  current opCode value
   r0,          // [Debug]  current r0 value
   r1,          // [Debug]  current r1 value
+  r2,          // [Debug]  current r2 value
   debug        // [Output] Debug port
   );
 
@@ -29,6 +30,7 @@ module ALU(
   output reg [7:0]   opCode;
   output reg [31:0]  r0;
   output reg [31:0]  r1;
+  output reg [31:0]  r2;
   output reg [31:0]  debug;
 
   // Local registers
@@ -192,7 +194,7 @@ module ALU(
           readReq <= 1;
           ramAddress <= opDataWord;
 
-          $display("Requesting read from %h", opDataWord);
+          //$display("Requesting read from %h", opDataWord);
         end
 
         if (opCode == 7)
@@ -201,7 +203,7 @@ module ALU(
           readReq <= 1;
           ramAddress <= opDataWord + regValue2;
 
-          $display("Requesting read from %h", opDataWord + regValue2);
+          //$display("Requesting read from %h", opDataWord + regValue2);
         end
 
         if (opCode == 4)
@@ -211,7 +213,7 @@ module ALU(
           ramAddress <= opDataWord;
           ramOut <= regValue2;
 
-          $display("Reqesting write %h to address value %h", regValue2, opDataWord);
+          //$display("Reqesting write %h to address value %h", regValue2, opDataWord);
         end
 
         if (opCode == 8)
@@ -221,7 +223,7 @@ module ALU(
           ramAddress <= opDataWord + regValue;
           ramOut <= regValue3;
 
-          $display("Reqesting write %h to address value %h", regValue3, opDataWord + regValue);
+          //$display("Reqesting write %h to address value %h", regValue3, opDataWord + regValue);
         end
 
         debug[23:0] <= opDataWord;
@@ -240,7 +242,7 @@ module ALU(
 
           if (readAck)
           begin
-            $display("Receiving read address value %h", ramIn);
+//            $display("Receiving read address value %h", ramIn);
 
             // Store ram values requested
             ramValue <= ramIn;
@@ -278,7 +280,7 @@ module ALU(
           2:  regarray[regAddress[3:0]] <= ramValue;               // mov reg, [addr]
           3:  regarray[regAddress[3:0]] <= regValue2;              // mov reg, reg
 
-          // 4 and 8 is done above
+          // 4 and 8 are done above
 
           5: begin                                                 // cmp reg, reg
             regarray[31][0:0] <= (regValue == regValue2 ? 1 : 0);
@@ -295,14 +297,11 @@ module ALU(
           22: regarray[regAddress[3:0]] <= fConvResult;            // fconv reg
           23: regarray[regAddress[3:0]] <= fMulResult;             // fmul reg, reg
           24: regarray[regAddress[3:0]] <= fMulAddResult;          // fmul reg, reg
-          25: begin
-            $display("fmin to regAddress %h", regAddress[3:0]);
-            $display("input is %h, %h", regValue2, regValue3);
+          25: regarray[regAddress[3:0]] <= (fCompareResult == 'b01 ? regValue3 : regValue2);
 
-            regarray[regAddress[3:0]] <= (fCompareResult == 'b01 ? regValue3 : regValue2);
+          99: begin
+            $display("DebugOut %h", regValue);
           end
-
-          30: debug <= regValue;                                   // setdebug reg
         endcase
 
         debug[23:0] <= regAddress;
@@ -317,7 +316,7 @@ module ALU(
             ipointer <= ipointer + 4;
         end
 
-        $display("Finished instruction %h", opCode);
+//        $display("Finished instruction %h", opCode);
 
         // Mode change
         mode <= 0;
@@ -327,6 +326,7 @@ module ALU(
 
       r0 <= regarray[0];
       r1 <= regarray[1];
+      r2 <= regarray[2];
     end
   end
 

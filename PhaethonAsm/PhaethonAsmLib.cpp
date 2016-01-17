@@ -66,7 +66,7 @@ InstructionData g_data[] = {
 	{ Instructions::Mov,      2, { Argument::Register,     Argument::ConstAddress,  Argument::None     },     1  },
 	{ Instructions::Mov,      3, { Argument::Register,     Argument::Register,      Argument::None     },     -1 },
 	{ Instructions::Mov,      4, { Argument::ConstAddress, Argument::Register,      Argument::None     },     0  },
-	
+
 	{ Instructions::Mov,      7, { Argument::Register,     Argument::RegAddress,    Argument::Constant },     2  },
 	{ Instructions::Mov,      8, { Argument::RegAddress,   Argument::Constant,      Argument::Register },     1  },
 
@@ -79,6 +79,8 @@ InstructionData g_data[] = {
 	{ Instructions::Fmul,    23, { Argument::Register,     Argument::Register,      Argument::None     },     -1 },
 	{ Instructions::Fmuladd, 24, { Argument::Register,     Argument::Register,      Argument::Register },     -1 },
 	{ Instructions::Fmin,    25, { Argument::Register,     Argument::Register,      Argument::Register },     -1 },
+
+	{ Instructions::Dout,    99, { Argument::Register,     Argument::None,          Argument::None     },     -1 },
 };
 
 void OutputBytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned char b4)

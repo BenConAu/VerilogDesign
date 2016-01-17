@@ -31,6 +31,7 @@ using namespace std;
 "fmul"               { yylval.instrIndex = Instructions::Fmul; return INSTR_TOKEN_2; }
 "cmp"                { yylval.instrIndex = Instructions::Cmp; return INSTR_TOKEN_2; }
 "jmp"                { yylval.instrIndex = Instructions::Jmp; return INSTR_TOKEN_1; }
+"dout"               { yylval.instrIndex = Instructions::Dout; return INSTR_TOKEN_1; }
 "struct"             { return STRUCT_TOKEN; }
 "ends"               { return ENDS_TOKEN; }
 "r"[0-9]+            { yylval.regIndex = atoi(yytext + 1); return REG_TOKEN; }
