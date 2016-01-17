@@ -1,4 +1,4 @@
-PhaethonAsm: lex.yy.c PhaethonAsm.tab.c PhaethonAsmLib.cpp
+PhaethonAsm: lex.yy.c PhaethonAsm.tab.c PhaethonAsmLib.cpp PhaethonAsmTypes.h
 	g++ lex.yy.c PhaethonAsm.tab.c PhaethonAsmLib.cpp -o PhaethonAsm
 
 lex.yy.c: PhaethonAsm.l

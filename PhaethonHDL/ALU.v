@@ -43,7 +43,7 @@ module ALU(
   reg        [7:0]  regAddress2;
   reg        [7:0]  regAddress3;
   reg        [5:0]  fOpEnable;
-  
+
   // Wire up the results from the floating units
   wire       [31:0] fAddResult;
   wire       [31:0] fSubResult;
@@ -61,7 +61,7 @@ module ALU(
   FloatingCompare     fComp(regValue2, regValue3, fCompareResult, floatDebug, clk, fOpEnable[5:5]);
 
   //initial
-  //   $monitor("%t, ram = %h, %h, %h, %h : %h, %h, %h, %h", 
+  //   $monitor("%t, ram = %h, %h, %h, %h : %h, %h, %h, %h",
   //     $time, ramIn[7:0], ramIn[15:8], ramIn[23:16], ramIn[31:24], ramAddress, ramIn, opAddress, ramValue);
 
   always @(posedge clk or posedge reset)
@@ -85,11 +85,11 @@ module ALU(
         readReq <= 1;
         ramAddress <= ipointer;
         opDataWord <= 'h0badf00d;
-        
+
         debug[23:0] <= ipointer;
         debug[31:24] <= mode;
 
-        // Clear out stuff for the pipeline 
+        // Clear out stuff for the pipeline
         fOpEnable <= 6'b000000;
         mode <= 1;
       end
@@ -118,16 +118,16 @@ module ALU(
         debug[23:0] <= ramIn[23:0];
         debug[31:24] <= mode;
       end
-        
+
       // Mode 2: Schedule read of additional code for opCodes that
       //         store word data. Read in register values for
-      //         registers referenced by the instruction. 
+      //         registers referenced by the instruction.
       2: begin
         // Read values from registers
         regValue <= regarray[regAddress[3:0]];
         regValue2 <= regarray[regAddress2[3:0]];
         regValue3 <= regarray[regAddress3[3:0]];
-  
+
         // Enable operation for module
         if (opCode == 20) fOpEnable[0:0] <= 1;
         if (opCode == 21) fOpEnable[1:1] <= 1;
@@ -136,7 +136,7 @@ module ALU(
         if (opCode == 24) fOpEnable[4:4] <= 1;
         if (opCode == 25) fOpEnable[5:5] <= 1;
 
-        if (opCode == 1 || opCode == 2 || opCode == 4 || opCode == 6)
+        if (opCode == 1 || opCode == 2 || opCode == 4 || opCode == 6 || opCode == 7 || opCode == 8)
         begin
           // Read values from ram requested by instruction
           readReq <= 1;
@@ -165,7 +165,7 @@ module ALU(
       3: begin
         // Stop request
         readReq <= 0;
-  
+
         if (readAck == 1)
         begin
           // Store ram values requested
@@ -173,7 +173,7 @@ module ALU(
 
           // Move to next mode - only progress to data read / write
           // for opCodes that actually need it.
-          if (opCode == 2 || opCode == 4)
+          if (opCode == 2 || opCode == 4 || opCode == 7 || opCode == 8)
             mode <= 4;
           else
             mode <= 6;
@@ -182,7 +182,7 @@ module ALU(
         debug[23:0] <= ramIn;
         debug[31:24] <= mode;
       end
-  
+
       // Mode 4: Initiate data read or write if the instruction
       //         requires it.
       4: begin
@@ -192,7 +192,16 @@ module ALU(
           readReq <= 1;
           ramAddress <= opDataWord;
 
-          $display("Requesting read from %h", ramAddress);
+          $display("Requesting read from %h", opDataWord);
+        end
+
+        if (opCode == 7)
+        begin
+          // Read values from address encoded in code
+          readReq <= 1;
+          ramAddress <= opDataWord + regValue2;
+
+          $display("Requesting read from %h", opDataWord + regValue2);
         end
 
         if (opCode == 4)
@@ -205,6 +214,16 @@ module ALU(
           $display("Reqesting write %h to address value %h", regValue2, opDataWord);
         end
 
+        if (opCode == 8)
+        begin
+          // Write values to ram requested by instruction
+          writeReq <= 1;
+          ramAddress <= opDataWord + regValue;
+          ramOut <= regValue3;
+
+          $display("Reqesting write %h to address value %h", regValue3, opDataWord + regValue);
+        end
+
         debug[23:0] <= opDataWord;
         debug[31:24] <= mode;
 
@@ -214,11 +233,11 @@ module ALU(
       // Mode 5: Complete data read or write if the instruction
       //         requires it.
       5: begin
-        if (opCode == 2)
+        if (opCode == 2 || opCode == 7)
         begin
           // Stop request
           readReq <= 0;
-  
+
           if (readAck)
           begin
             $display("Receiving read address value %h", ramIn);
@@ -230,7 +249,7 @@ module ALU(
             mode <= 6;
           end
         end
-        else if (opCode == 4)
+        else if (opCode == 4 || opCode == 8)
         begin
           // Stop request
           writeReq <= 0;
@@ -259,17 +278,18 @@ module ALU(
           2:  regarray[regAddress[3:0]] <= ramValue;               // mov reg, [addr]
           3:  regarray[regAddress[3:0]] <= regValue2;              // mov reg, reg
 
-          // 4 is done above
-          
+          // 4 and 8 is done above
+
           5: begin                                                 // cmp reg, reg
             regarray[31][0:0] <= (regValue == regValue2 ? 1 : 0);
             regarray[31][1:1] <= (regValue < regValue2 ? 1 : 0);
             regarray[31][2:2] <= (regValue > regValue2 ? 1 : 0);
           end
-          
+
           6:  ipointer <= opDataWord;                              // jmp address
+          7:  regarray[regAddress[3:0]] <= ramValue;               // mov reg, [reg + const]
           10: regarray[regAddress[3:0]] <= regValue + regValue2;   // add reg, reg
-  
+
           20: regarray[regAddress[3:0]] <= fAddResult;             // fadd reg, reg
           21: regarray[regAddress[3:0]] <= fSubResult;             // fsub reg, reg
           22: regarray[regAddress[3:0]] <= fConvResult;            // fconv reg
@@ -280,31 +300,31 @@ module ALU(
             $display("input is %h, %h", regValue2, regValue3);
 
             regarray[regAddress[3:0]] <= (fCompareResult == 'b01 ? regValue3 : regValue2);
-          end 
-  
+          end
+
           30: debug <= regValue;                                   // setdebug reg
         endcase
-  
+
         debug[23:0] <= regAddress;
         debug[31:24] <= mode;
 
         // Move the instruction pointer along
         if (opCode != 6)
         begin
-          if (opCode == 1 || opCode == 2 || opCode == 4)
+          if (opCode == 1 || opCode == 2 || opCode == 4 || opCode == 7 || opCode == 8)
             ipointer <= ipointer + 8;
           else
             ipointer <= ipointer + 4;
         end
-  
+
         $display("Finished instruction %h", opCode);
 
         // Mode change
-        mode <= 0;      
+        mode <= 0;
       end
 
       endcase
-  
+
       r0 <= regarray[0];
       r1 <= regarray[1];
     end

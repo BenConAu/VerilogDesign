@@ -54,7 +54,13 @@ extern int yydebug;
     ADDR_LEFT = 264,
     ADDR_RIGHT = 265,
     COLON_TOKEN = 266,
-    SYMBOL_TOKEN = 267
+    STRUCT_TOKEN = 267,
+    ENDS_TOKEN = 268,
+    LEFT_PAREN_TOKEN = 269,
+    RIGHT_PAREN_TOKEN = 270,
+    MEMBEROF_TOKEN = 271,
+    DEREF_TOKEN = 272,
+    SYMBOL_TOKEN = 273
   };
 #endif
 
@@ -70,8 +76,9 @@ union YYSTYPE
 	int regIndex;
 	int symIndex;
 	Argument arg;
+	int structIndex;
 
-#line 75 "PhaethonAsm.tab.h" /* yacc.c:1909  */
+#line 82 "PhaethonAsm.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

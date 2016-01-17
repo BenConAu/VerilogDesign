@@ -7,14 +7,14 @@ module test;
   initial begin
     # 0 reset = 1;
     # 1 reset = 0;
-    # 1000 $finish;
+    # 3000 $finish;
   end
 
   reg [7:0] fileRam[0:255];
 
   initial
   begin
-    $readmemh("test.pao", fileRam, 0, 35);
+    $readmemh("test.pao", fileRam, 0, 75);
   end
 
   /* Make a regular pulsing clock. */
@@ -40,19 +40,19 @@ module test;
   parameter RAMSIZE = 64;
 
   ALU alu(
-    clk, 
-    reset, 
-    ramValue, 
+    clk,
+    reset,
+    ramValue,
     readAck,
     writeAck,
     ramAddress,
     ramOut,
-    readReq, 
+    readReq,
     writeReq,
-    iPointer, 
-    opCode, 
-    r0, 
-    r1, 
+    iPointer,
+    opCode,
+    r0,
+    r1,
     debug
     );
 
