@@ -3,7 +3,11 @@
 #include <iostream>
 #include <vector>
 
-std::vector<StructDef> StructDef::s_defs;
+std::vector<std::unique_ptr<StructDef> > StructDef::s_defs;
+std::vector<std::unique_ptr<StructMember> > StructMember::s_defs;
+std::vector<std::unique_ptr<DataSegmentDef> > DataSegmentDef::s_defs;
+std::vector<std::unique_ptr<DataSegmentItemDef> > DataSegmentItemDef::s_defs;
+std::vector<std::unique_ptr<DataSegmentItemEntry> > DataSegmentItemEntry::s_defs;
 
 struct LabelData
 {
@@ -86,6 +90,18 @@ InstructionData g_data[] = {
 void OutputBytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned char b4)
 {
 	printf("%02x %02x %02x %02x\n", b1, b2, b3, b4);
+
+	g_byteCount += 4;
+}
+
+void OutputWord(unsigned int w)
+{
+	OutputBytes(
+		static_cast<unsigned char>(w & 0xFF),
+		static_cast<unsigned char>(w >> 8 & 0xFF),
+		static_cast<unsigned char>(w >> 16 & 0xFF),
+		static_cast<unsigned char>(w >> 24 & 0xFF)
+		);
 }
 
 void OutputInstruction(Instructions::Enum instr, Argument a1, Argument a2, Argument a3)
@@ -105,12 +121,7 @@ void OutputInstruction(Instructions::Enum instr, Argument a1, Argument a2, Argum
 
 				unsigned int opDataWord = args[g_data[i].wordArg]._value;
 
-				OutputBytes(
-					static_cast<unsigned char>(opDataWord & 0xFF),
-					static_cast<unsigned char>(opDataWord >> 8 & 0xFF),
-					static_cast<unsigned char>(opDataWord >> 16 & 0xFF),
-					static_cast<unsigned char>(opDataWord >> 24 & 0xFF)
-					);
+				OutputWord(opDataWord);
 			}
 
 			return;
@@ -118,4 +129,29 @@ void OutputInstruction(Instructions::Enum instr, Argument a1, Argument a2, Argum
 	}
 
 	std::cout << "Unknown instruction" << instr << std::endl;
+}
+
+void OutputDataSegment()
+{
+	int startByte = DataSegmentDef::s_defs[0]->GetAddress();
+
+	for (int i = g_byteCount; i < startByte; i += 4)
+	{
+		OutputBytes(0x1a, 0x2b, 0x3c, 0x4d);
+	}
+
+	for (int i = 0; i < DataSegmentDef::s_defs[0]->GetItemCount(); i++)
+	{
+//		printf("Doing item %d in Data segment\n", i);
+
+		DataSegmentItemDef* itemDef = DataSegmentDef::s_defs[0]->GetItem(i);
+//		printf("Item %d has count %d\n", i, itemDef->GetItemCount());
+
+		for (int j = 0; j < itemDef->GetItemCount(); j++)
+		{
+			DataSegmentItemEntry* entry = itemDef->GetItem(j);
+
+			OutputWord(entry->_value);
+		}
+	}
 }

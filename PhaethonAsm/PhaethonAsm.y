@@ -22,11 +22,16 @@ void yyerror(const char *s);
 // use that union instead of "int" for the definition of "yystype":
 %union {
 	int intVal;
+	float floatVal;
 	Instructions::Enum instrIndex;
 	int regIndex;
 	int symIndex;
 	Argument arg;
-	int structIndex;
+	StructDef* structDef;
+	StructMember* structMember;
+	DataSegmentDef* dataSegmentDef;
+	DataSegmentItemDef* dataSegmentItemDef;
+	DataSegmentItemEntry* dataSegmentItemEntry;
 }
 
 // define the "terminal symbol" token types I'm going to use (in CAPS
@@ -42,13 +47,20 @@ void yyerror(const char *s);
 %token COLON_TOKEN
 %token STRUCT_TOKEN
 %token ENDS_TOKEN
+%token DATASEGMENT_TOKEN
+%token ENDDATA_TOKEN
 %token LEFT_PAREN_TOKEN
 %token RIGHT_PAREN_TOKEN
 %token MEMBEROF_TOKEN
 %token DEREF_TOKEN
 %token <symIndex> SYMBOL_TOKEN
 %type <arg> argument
-%type <structIndex> struct_member_list
+%type <structDef> struct_member_list
+%type <structMember> struct_member;
+%type <dataSegmentDef> datasegment_item_list
+%type <dataSegmentItemDef> datasegment_item
+%type <dataSegmentItemDef> constant_list
+%type <dataSegmentItemEntry> constant_item
 
 %%
 
@@ -61,16 +73,43 @@ assembler_unit:
       instruction
     | label
     | struct_definition
+	| datasegment_definition
     ;
 
+datasegment_definition:
+      DATASEGMENT_TOKEN INT_TOKEN datasegment_item_list ENDDATA_TOKEN  { $3->SetAddress($2); }
+	;
+
+datasegment_item_list:
+      datasegment_item datasegment_item_list                           { $2->AddMember($1); $$ = $2; }
+	| datasegment_item                                                 { $$ = DataSegmentDef::Construct($1); }
+	;
+
+datasegment_item:
+      SYMBOL_TOKEN constant_list                                       { $2->SetName($1); $$ = $2; }
+	;
+
+constant_list:
+      constant_item constant_list                                      { $2->AddMember($1); $$ = $2; }
+	| constant_item                                                    { $$ = DataSegmentItemDef::Construct($1); }
+	;
+
+constant_item:
+      INT_TOKEN                                                        { $$ = DataSegmentItemEntry::Construct($1); }
+	;
+
 struct_definition:
-      STRUCT_TOKEN SYMBOL_TOKEN struct_member_list ENDS_TOKEN          { StructDef::SetStructName($3, $2); }
+      STRUCT_TOKEN SYMBOL_TOKEN struct_member_list ENDS_TOKEN          { $3->SetName($2); }
     ;
 
 struct_member_list:
-      SYMBOL_TOKEN struct_member_list                                  { $$ = StructDef::AddMember($2, $1); }
-    | SYMBOL_TOKEN                                                     { $$ = StructDef::Construct($1); }
+      struct_member struct_member_list                                 { $2->AddMember($1); $$ = $2; }
+    | struct_member                                                    { $$ = StructDef::Construct($1); }
     ;
+
+struct_member:
+      SYMBOL_TOKEN                                                     { $$ = StructMember::Construct($1); }
+	;
 
 instruction:
       INSTR_TOKEN_3 argument COMMA_TOKEN argument COMMA_TOKEN argument { OutputInstruction($1, $2, $4, $6); }
@@ -113,6 +152,8 @@ int main(int, char**) {
 		yyparse();
 	} while (!feof(yyin));
 
+    // Spit out the data segment
+	OutputDataSegment();
 }
 
 void yyerror(const char *s) {

@@ -22,6 +22,7 @@ using namespace std;
 "]"                  { return ADDR_RIGHT; }
 "->"                 { return DEREF_TOKEN; }
 [0-9]+               { yylval.intVal = atoi(yytext); return INT_TOKEN; }
+"f"[0-9]+"\."[0-9]*  { yylval.floatVal = (float)atof(yytext + 1); return INT_TOKEN; }
 "mov"                { yylval.instrIndex = Instructions::Mov; return INSTR_TOKEN_2; }
 "fconv"              { yylval.instrIndex = Instructions::Fconv; return INSTR_TOKEN_1; }
 "fadd"               { yylval.instrIndex = Instructions::Fadd; return INSTR_TOKEN_2; }
@@ -34,6 +35,8 @@ using namespace std;
 "dout"               { yylval.instrIndex = Instructions::Dout; return INSTR_TOKEN_1; }
 "struct"             { return STRUCT_TOKEN; }
 "ends"               { return ENDS_TOKEN; }
+"datasegment"        { return DATASEGMENT_TOKEN; }
+"enddata"            { return ENDDATA_TOKEN; }
 "r"[0-9]+            { yylval.regIndex = atoi(yytext + 1); return REG_TOKEN; }
 [A-Za-z][A-Za-z0-9]* { yylval.symIndex = AddSymbol(yytext); return SYMBOL_TOKEN; }
 .                    ;

@@ -56,11 +56,13 @@ extern int yydebug;
     COLON_TOKEN = 266,
     STRUCT_TOKEN = 267,
     ENDS_TOKEN = 268,
-    LEFT_PAREN_TOKEN = 269,
-    RIGHT_PAREN_TOKEN = 270,
-    MEMBEROF_TOKEN = 271,
-    DEREF_TOKEN = 272,
-    SYMBOL_TOKEN = 273
+    DATASEGMENT_TOKEN = 269,
+    ENDDATA_TOKEN = 270,
+    LEFT_PAREN_TOKEN = 271,
+    RIGHT_PAREN_TOKEN = 272,
+    MEMBEROF_TOKEN = 273,
+    DEREF_TOKEN = 274,
+    SYMBOL_TOKEN = 275
   };
 #endif
 
@@ -72,13 +74,18 @@ union YYSTYPE
 #line 23 "PhaethonAsm.y" /* yacc.c:1909  */
 
 	int intVal;
+	float floatVal;
 	Instructions::Enum instrIndex;
 	int regIndex;
 	int symIndex;
 	Argument arg;
-	int structIndex;
+	StructDef* structDef;
+	StructMember* structMember;
+	DataSegmentDef* dataSegmentDef;
+	DataSegmentItemDef* dataSegmentItemDef;
+	DataSegmentItemEntry* dataSegmentItemEntry;
 
-#line 82 "PhaethonAsm.tab.h" /* yacc.c:1909  */
+#line 89 "PhaethonAsm.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

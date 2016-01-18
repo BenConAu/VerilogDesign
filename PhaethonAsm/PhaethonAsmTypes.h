@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 
 namespace Instructions
 {
@@ -20,64 +21,120 @@ namespace Instructions
     };
 }
 
-struct StructMember
-{
-    int nameSym;
-};
-
-class StructDef
+template<typename DefType, typename ChildDefType>
+class ListDef
 {
 public:
-    static int Construct(int firstSym)
+    static DefType* Construct(ChildDefType* pFirstItem)
     {
-        StructDef newDef;
-        StructMember firstMember;
-        firstMember.nameSym = firstSym;
-        newDef.members.push_back(firstMember);
-        s_defs.push_back(newDef);
-
-        return s_defs.size() - 1;
+        DefType* pNewList = new DefType;
+        std::unique_ptr<DefType> newList(pNewList);
+        newList->AddMember(pFirstItem);
+        DefType::GlobalList().push_back(std::move(newList));
+        return pNewList;
     }
 
-    static void SetStructName(int structIndex, int nameIndex)
+    void SetName(int nameIndex)
     {
-    	s_defs[structIndex].nameSym = nameIndex;
+    	nameSym = nameIndex;
     }
 
-    static int AddMember(int structIndex, int nameIndex)
+    void AddMember(ChildDefType* newMember)
     {
-        StructMember nextMember;
-        nextMember.nameSym = nameIndex;
-
-        //printf("Adding to %d\n", structIndex);
-
-        s_defs[structIndex].members.insert(s_defs[structIndex].members.begin(), nextMember);
-
-        return structIndex;
+        members.insert(members.begin(), newMember);
     }
 
-    static int CalcOffset(int structIndex, int memberSymIndex)
+    int Find(int memberSymIndex)
     {
-//        printf("Searching for %d\n", memberSymIndex);
-
-        for (size_t j = 0; j < s_defs[structIndex].members.size(); j++)
+        for (size_t j = 0; j < members.size(); j++)
         {
-//            printf("Def %d is %d\n", j, s_defs[structIndex].members[j].nameSym);
-
-            if (s_defs[structIndex].members[j].nameSym == memberSymIndex)
+            if (DefType::Match(members[j], memberSymIndex))
             {
-                return j * 4;
+                return j;
             }
         }
 
         return -1;
     }
 
-private:
-	int nameSym;
-    std::vector<StructMember> members;
+    ChildDefType* GetItem(int item) { return members[item]; }
+    int GetItemCount() const { return members.size(); }
 
-    static std::vector<StructDef> s_defs;
+protected:
+	int nameSym;
+    std::vector<ChildDefType*> members;
+};
+
+struct StructMember
+{
+    static StructMember* Construct(int value)
+    {
+        StructMember* pNewEntry = new StructMember;
+        pNewEntry->nameSym = value;
+        std::unique_ptr<StructMember> newEntry(pNewEntry);
+        s_defs.push_back(std::move(newEntry));
+        return pNewEntry;
+    }
+
+    int nameSym;
+
+    static std::vector<std::unique_ptr<StructMember> > s_defs;
+};
+
+class StructDef : public ListDef<StructDef, StructMember>
+{
+public:
+    static bool Match(StructMember* member, int name)
+    {
+        return (member->nameSym == name);
+    }
+
+    static int CalcOffset(int structIndex, int memberSymIndex)
+    {
+        return s_defs[structIndex]->Find(memberSymIndex) * 4;
+    }
+
+    static std::vector<std::unique_ptr<StructDef> > s_defs;
+    static std::vector<std::unique_ptr<StructDef> >& GlobalList() { return s_defs; }
+};
+
+struct DataSegmentItemEntry
+{
+    static DataSegmentItemEntry* Construct(int value)
+    {
+        DataSegmentItemEntry* pNewEntry = new DataSegmentItemEntry;
+        pNewEntry->_value = value;
+        std::unique_ptr<DataSegmentItemEntry> newEntry(pNewEntry);
+        s_defs.push_back(std::move(newEntry));
+        return pNewEntry;
+    }
+
+    static std::vector<std::unique_ptr<DataSegmentItemEntry> > s_defs;
+    int _value;
+};
+
+class DataSegmentItemDef : public ListDef<DataSegmentItemDef,DataSegmentItemEntry>
+{
+public:
+    static std::vector<std::unique_ptr<DataSegmentItemDef> > s_defs;
+    static std::vector<std::unique_ptr<DataSegmentItemDef> >& GlobalList() { return s_defs; }
+};
+
+class DataSegmentDef : public ListDef<DataSegmentDef, DataSegmentItemDef>
+{
+public:
+    void SetAddress(int address)
+    {
+        _address = address;
+    }
+
+    int GetAddress() { return _address; }
+
+    static std::vector<std::unique_ptr<DataSegmentDef> > s_defs;
+    static std::vector<std::unique_ptr<DataSegmentDef> >& GlobalList() { return s_defs; }
+
+private:
+    int _address;
 };
 
 class Argument
