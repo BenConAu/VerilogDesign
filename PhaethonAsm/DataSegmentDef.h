@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ListDef.h"
+#include "AssemblerListNode.h"
 
 struct DataSegmentItemEntry
 {
