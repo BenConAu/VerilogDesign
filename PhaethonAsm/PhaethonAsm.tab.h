@@ -71,7 +71,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 23 "PhaethonAsm.y" /* yacc.c:1909  */
+#line 25 "PhaethonAsm.y" /* yacc.c:1909  */
 
 	int intVal;
 	float floatVal;

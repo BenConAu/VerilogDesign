@@ -5,8 +5,8 @@ struct Vector
 ends
 
 datasegment 128
-  Vector 3 6 9
-  Vector f1.5 f2.57 f1.04
+  Vector v1 3 6 9
+  Vector v2 f1.5 f2.57 f1.04
 enddata
 
 begin:

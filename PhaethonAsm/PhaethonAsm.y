@@ -6,6 +6,8 @@ using namespace std;
 
 #include "PhaethonAsmTypes.h"
 #include "PhaethonAsmLib.h"
+#include "StructDef.h"
+#include "DataSegmentDef.h"
 
 // stuff from flex that bison needs to know about:
 extern "C" int yylex();
@@ -86,7 +88,7 @@ datasegment_item_list:
 	;
 
 datasegment_item:
-      SYMBOL_TOKEN constant_list                                       { $2->SetName($1); $$ = $2; }
+      SYMBOL_TOKEN SYMBOL_TOKEN constant_list                          { $3->SetSymbolProperty("type", $1); $3->SetSymbolProperty("name", $2); $$ = $3; }
 	;
 
 constant_list:
@@ -99,7 +101,7 @@ constant_item:
 	;
 
 struct_definition:
-      STRUCT_TOKEN SYMBOL_TOKEN struct_member_list ENDS_TOKEN          { $3->SetName($2); }
+      STRUCT_TOKEN SYMBOL_TOKEN struct_member_list ENDS_TOKEN          { $3->SetSymbolProperty("name", $2); }
     ;
 
 struct_member_list:

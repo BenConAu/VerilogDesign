@@ -1,5 +1,8 @@
 #include "PhaethonAsmLib.h"
+#include "StructDef.h"
+#include "DataSegmentDef.h"
 #include "PhaethonAsm.tab.h"
+#include "PhaethonAsmTypes.h"
 #include <iostream>
 #include <vector>
 
