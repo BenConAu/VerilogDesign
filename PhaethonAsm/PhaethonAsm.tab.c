@@ -133,7 +133,8 @@ extern int yydebug;
     RIGHT_PAREN_TOKEN = 272,
     MEMBEROF_TOKEN = 273,
     DEREF_TOKEN = 274,
-    SYMBOL_TOKEN = 275
+    ADDRESSOF_TOKEN = 275,
+    SYMBOL_TOKEN = 276
   };
 #endif
 
@@ -156,7 +157,7 @@ union YYSTYPE
 	DataSegmentItemDef* dataSegmentItemDef;
 	DataSegmentItemEntry* dataSegmentItemEntry;
 
-#line 160 "PhaethonAsm.tab.c" /* yacc.c:355  */
+#line 161 "PhaethonAsm.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -173,7 +174,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 177 "PhaethonAsm.tab.c" /* yacc.c:358  */
+#line 178 "PhaethonAsm.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -413,23 +414,23 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  23
+#define YYFINAL  24
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   49
+#define YYLAST   50
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  21
+#define YYNTOKENS  22
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  14
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  30
+#define YYNRULES  31
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  58
+#define YYNSTATES  60
 
 /* YYTRANSLATE[YYX] -- Symbol number corresponding to YYX as returned
    by yylex, with out-of-bounds checking.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   275
+#define YYMAXUTOK   276
 
 #define YYTRANSLATE(YYX)                                                \
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -465,17 +466,17 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15,    16,    17,    18,    19,    20
+      15,    16,    17,    18,    19,    20,    21
 };
 
 #if YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    70,    70,    71,    75,    76,    77,    78,    82,    86,
-      87,    91,    95,    96,   100,   104,   108,   109,   113,   117,
-     118,   119,   120,   121,   127,   128,   129,   130,   131,   132,
-     136
+       0,    71,    71,    72,    76,    77,    78,    79,    83,    87,
+      88,    92,    96,    97,   101,   105,   109,   110,   114,   118,
+     119,   120,   121,   122,   128,   129,   130,   131,   132,   133,
+     134,   138
 };
 #endif
 
@@ -488,8 +489,8 @@ static const char *const yytname[] =
   "INSTR_TOKEN_2", "INSTR_TOKEN_3", "REG_TOKEN", "COMMA_TOKEN",
   "ADDR_LEFT", "ADDR_RIGHT", "COLON_TOKEN", "STRUCT_TOKEN", "ENDS_TOKEN",
   "DATASEGMENT_TOKEN", "ENDDATA_TOKEN", "LEFT_PAREN_TOKEN",
-  "RIGHT_PAREN_TOKEN", "MEMBEROF_TOKEN", "DEREF_TOKEN", "SYMBOL_TOKEN",
-  "$accept", "assembler_unit_list", "assembler_unit",
+  "RIGHT_PAREN_TOKEN", "MEMBEROF_TOKEN", "DEREF_TOKEN", "ADDRESSOF_TOKEN",
+  "SYMBOL_TOKEN", "$accept", "assembler_unit_list", "assembler_unit",
   "datasegment_definition", "datasegment_item_list", "datasegment_item",
   "constant_list", "constant_item", "struct_definition",
   "struct_member_list", "struct_member", "instruction", "argument",
@@ -504,14 +505,14 @@ static const yytype_uint16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
-     275
+     275,   276
 };
 # endif
 
-#define YYPACT_NINF -17
+#define YYPACT_NINF -18
 
 #define yypact_value_is_default(Yystate) \
-  (!!((Yystate) == (-17)))
+  (!!((Yystate) == (-18)))
 
 #define YYTABLE_NINF -1
 
@@ -522,12 +523,12 @@ static const yytype_uint16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-       9,    -1,    -1,    -1,   -16,     6,     1,    10,     9,   -17,
-     -17,   -17,   -17,   -17,   -17,     0,    -7,   -17,    -3,    12,
-       2,     4,   -17,   -17,   -17,     7,     8,     5,    -1,    -1,
-      -1,   -17,    17,     2,    11,    18,     4,   -17,   -17,   -17,
-      13,    26,    27,   -17,   -17,    33,   -17,   -17,    -1,    -1,
-      -1,   -17,   -17,    33,   -17,   -17,   -17,   -17
+      10,    -1,    -1,    -1,   -17,     6,    -6,    11,    10,   -18,
+     -18,   -18,   -18,   -18,   -18,     0,    -9,    -5,   -18,     2,
+       9,    -3,     4,   -18,   -18,   -18,    13,    16,   -18,    12,
+      -1,    -1,    -1,   -18,    14,    -3,    15,    17,     4,   -18,
+     -18,   -18,    18,    26,    27,   -18,   -18,    35,   -18,   -18,
+      -1,    -1,    -1,   -18,   -18,    35,   -18,   -18,   -18,   -18
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -536,25 +537,25 @@ static const yytype_int8 yypact[] =
 static const yytype_uint8 yydefact[] =
 {
        0,     0,     0,     0,     0,     0,     0,     0,     3,     7,
-       6,     4,     5,    27,    24,     0,    29,    23,     0,     0,
-       0,     0,    30,     1,     2,     0,     0,     0,     0,     0,
-       0,    18,     0,    17,     0,     0,    10,    25,    26,    28,
-      22,     0,     0,    15,    16,     0,     8,     9,     0,     0,
-       0,    14,    11,    13,    20,    21,    19,    12
+       6,     4,     5,    27,    24,     0,     0,    29,    23,     0,
+       0,     0,     0,    31,     1,     2,     0,     0,    30,     0,
+       0,     0,     0,    18,     0,    17,     0,     0,    10,    25,
+      26,    28,    22,     0,     0,    15,    16,     0,     8,     9,
+       0,     0,     0,    14,    11,    13,    20,    21,    19,    12
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -17,    29,   -17,   -17,     3,   -17,   -15,   -17,   -17,    16,
-     -17,   -17,    -2,   -17
+     -18,    31,   -18,   -18,     3,   -18,   -15,   -18,   -18,     7,
+     -18,   -18,    -2,   -18
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     7,     8,     9,    35,    36,    52,    53,    10,    32,
-      33,    11,    17,    12
+      -1,     7,     8,     9,    37,    38,    54,    55,    10,    34,
+      35,    11,    18,    12
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -562,41 +563,43 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_uint8 yytable[] =
 {
-      18,    19,    13,    25,    20,    28,    14,    26,    15,    21,
-      23,    27,    22,     1,     2,     3,    29,    37,    38,    16,
-      30,     4,    31,     5,    34,    39,    40,    41,    42,     6,
-      43,    45,    48,    46,    49,    50,    51,    24,    57,    47,
-       0,     0,     0,     0,     0,     0,    54,    55,    56,    44
+      19,    20,    13,    26,    21,    23,    14,    27,    15,    22,
+      30,    24,    28,    29,     1,     2,     3,    32,    33,    16,
+      17,    31,     4,    39,     5,    36,    40,    45,    42,    43,
+      44,     6,    48,    41,    51,    52,    47,    50,    53,    25,
+      59,    49,    46,     0,     0,     0,     0,     0,    56,    57,
+      58
 };
 
 static const yytype_int8 yycheck[] =
 {
-       2,     3,     3,     3,    20,     8,     7,     7,     9,     3,
-       0,    18,    11,     4,     5,     6,    19,    10,    10,    20,
-       8,    12,    20,    14,    20,    20,    28,    29,    30,    20,
-      13,    20,    19,    15,     8,     8,     3,     8,    53,    36,
-      -1,    -1,    -1,    -1,    -1,    -1,    48,    49,    50,    33
+       2,     3,     3,     3,    21,    11,     7,     7,     9,     3,
+       8,     0,    21,    18,     4,     5,     6,     8,    21,    20,
+      21,    19,    12,    10,    14,    21,    10,    13,    30,    31,
+      32,    21,    15,    21,     8,     8,    21,    19,     3,     8,
+      55,    38,    35,    -1,    -1,    -1,    -1,    -1,    50,    51,
+      52
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,     4,     5,     6,    12,    14,    20,    22,    23,    24,
-      29,    32,    34,     3,     7,     9,    20,    33,    33,    33,
-      20,     3,    11,     0,    22,     3,     7,    18,     8,    19,
-       8,    20,    30,    31,    20,    25,    26,    10,    10,    20,
-      33,    33,    33,    13,    30,    20,    15,    25,    19,     8,
-       8,     3,    27,    28,    33,    33,    33,    27
+       0,     4,     5,     6,    12,    14,    21,    23,    24,    25,
+      30,    33,    35,     3,     7,     9,    20,    21,    34,    34,
+      34,    21,     3,    11,     0,    23,     3,     7,    21,    18,
+       8,    19,     8,    21,    31,    32,    21,    26,    27,    10,
+      10,    21,    34,    34,    34,    13,    31,    21,    15,    26,
+      19,     8,     8,     3,    28,    29,    34,    34,    34,    28
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    21,    22,    22,    23,    23,    23,    23,    24,    25,
-      25,    26,    27,    27,    28,    29,    30,    30,    31,    32,
-      32,    32,    32,    32,    33,    33,    33,    33,    33,    33,
-      34
+       0,    22,    23,    23,    24,    24,    24,    24,    25,    26,
+      26,    27,    28,    28,    29,    30,    31,    31,    32,    33,
+      33,    33,    33,    33,    34,    34,    34,    34,    34,    34,
+      34,    35
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
@@ -605,7 +608,7 @@ static const yytype_uint8 yyr2[] =
        0,     2,     2,     1,     1,     1,     1,     1,     4,     2,
        1,     3,     2,     1,     1,     4,     2,     1,     1,     6,
        6,     6,     4,     2,     1,     3,     3,     1,     3,     1,
-       2
+       2,     2
 };
 
 
@@ -1282,147 +1285,153 @@ yyreduce:
   switch (yyn)
     {
         case 8:
-#line 82 "PhaethonAsm.y" /* yacc.c:1646  */
+#line 83 "PhaethonAsm.y" /* yacc.c:1646  */
     { (yyvsp[-1].dataSegmentDef)->SetIntProperty("address", (yyvsp[-2].intVal)); }
-#line 1288 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+#line 1291 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 86 "PhaethonAsm.y" /* yacc.c:1646  */
+#line 87 "PhaethonAsm.y" /* yacc.c:1646  */
     { (yyvsp[0].dataSegmentDef)->AddMember((yyvsp[-1].dataSegmentItemDef)); (yyval.dataSegmentDef) = (yyvsp[0].dataSegmentDef); }
-#line 1294 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+#line 1297 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 87 "PhaethonAsm.y" /* yacc.c:1646  */
+#line 88 "PhaethonAsm.y" /* yacc.c:1646  */
     { (yyval.dataSegmentDef) = DataSegmentDef::Construct((yyvsp[0].dataSegmentItemDef)); }
-#line 1300 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+#line 1303 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 91 "PhaethonAsm.y" /* yacc.c:1646  */
+#line 92 "PhaethonAsm.y" /* yacc.c:1646  */
     { (yyvsp[0].dataSegmentItemDef)->SetIntProperty("type", (yyvsp[-2].symIndex)); (yyvsp[0].dataSegmentItemDef)->SetIntProperty("name", (yyvsp[-1].symIndex)); (yyval.dataSegmentItemDef) = (yyvsp[0].dataSegmentItemDef); }
-#line 1306 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+#line 1309 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 95 "PhaethonAsm.y" /* yacc.c:1646  */
+#line 96 "PhaethonAsm.y" /* yacc.c:1646  */
     { (yyvsp[0].dataSegmentItemDef)->AddMember((yyvsp[-1].dataSegmentItemEntry)); (yyval.dataSegmentItemDef) = (yyvsp[0].dataSegmentItemDef); }
-#line 1312 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+#line 1315 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 96 "PhaethonAsm.y" /* yacc.c:1646  */
+#line 97 "PhaethonAsm.y" /* yacc.c:1646  */
     { (yyval.dataSegmentItemDef) = DataSegmentItemDef::Construct((yyvsp[0].dataSegmentItemEntry)); }
-#line 1318 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+#line 1321 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 100 "PhaethonAsm.y" /* yacc.c:1646  */
+#line 101 "PhaethonAsm.y" /* yacc.c:1646  */
     { (yyval.dataSegmentItemEntry) = DataSegmentItemEntry::Construct(); (yyval.dataSegmentItemEntry)->SetIntProperty("value", (yyvsp[0].intVal)); }
-#line 1324 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+#line 1327 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 104 "PhaethonAsm.y" /* yacc.c:1646  */
+#line 105 "PhaethonAsm.y" /* yacc.c:1646  */
     { (yyvsp[-1].structDef)->SetIntProperty("name", (yyvsp[-2].symIndex)); }
-#line 1330 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+#line 1333 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 108 "PhaethonAsm.y" /* yacc.c:1646  */
+#line 109 "PhaethonAsm.y" /* yacc.c:1646  */
     { (yyvsp[0].structDef)->AddMember((yyvsp[-1].structMember)); (yyval.structDef) = (yyvsp[0].structDef); }
-#line 1336 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+#line 1339 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 109 "PhaethonAsm.y" /* yacc.c:1646  */
+#line 110 "PhaethonAsm.y" /* yacc.c:1646  */
     { (yyval.structDef) = StructDef::Construct((yyvsp[0].structMember)); }
-#line 1342 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+#line 1345 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 113 "PhaethonAsm.y" /* yacc.c:1646  */
+#line 114 "PhaethonAsm.y" /* yacc.c:1646  */
     { (yyval.structMember) = StructMember::Construct(); (yyval.structMember)->SetIntProperty("name", (yyvsp[0].symIndex)); }
-#line 1348 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+#line 1351 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 117 "PhaethonAsm.y" /* yacc.c:1646  */
+#line 118 "PhaethonAsm.y" /* yacc.c:1646  */
     { OutputInstruction((yyvsp[-5].instrIndex), (yyvsp[-4].arg), (yyvsp[-2].arg), (yyvsp[0].arg)); }
-#line 1354 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+#line 1357 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 118 "PhaethonAsm.y" /* yacc.c:1646  */
+#line 119 "PhaethonAsm.y" /* yacc.c:1646  */
     { OutputInstruction((yyvsp[-5].instrIndex), (yyvsp[-4].arg), (yyvsp[-2].arg), (yyvsp[0].arg)); }
-#line 1360 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+#line 1363 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 119 "PhaethonAsm.y" /* yacc.c:1646  */
+#line 120 "PhaethonAsm.y" /* yacc.c:1646  */
     { OutputInstruction((yyvsp[-5].instrIndex), (yyvsp[-4].arg), (yyvsp[-2].arg), (yyvsp[0].arg)); }
-#line 1366 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+#line 1369 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 120 "PhaethonAsm.y" /* yacc.c:1646  */
+#line 121 "PhaethonAsm.y" /* yacc.c:1646  */
     { OutputInstruction((yyvsp[-3].instrIndex), (yyvsp[-2].arg), (yyvsp[0].arg), Argument::ConstructNone()); }
-#line 1372 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+#line 1375 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 121 "PhaethonAsm.y" /* yacc.c:1646  */
+#line 122 "PhaethonAsm.y" /* yacc.c:1646  */
     {
     	OutputInstruction((yyvsp[-1].instrIndex), (yyvsp[0].arg), Argument::ConstructNone(), Argument::ConstructNone());
     }
-#line 1380 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+#line 1383 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 127 "PhaethonAsm.y" /* yacc.c:1646  */
+#line 128 "PhaethonAsm.y" /* yacc.c:1646  */
     { (yyval.arg) = Argument::Construct(Argument::Register, (yyvsp[0].regIndex)); }
-#line 1386 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+#line 1389 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 128 "PhaethonAsm.y" /* yacc.c:1646  */
+#line 129 "PhaethonAsm.y" /* yacc.c:1646  */
     { (yyval.arg) = Argument::Construct(Argument::ConstAddress, (yyvsp[-1].intVal));  }
-#line 1392 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+#line 1395 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 129 "PhaethonAsm.y" /* yacc.c:1646  */
+#line 130 "PhaethonAsm.y" /* yacc.c:1646  */
     { (yyval.arg) = Argument::Construct(Argument::RegAddress, (yyvsp[-1].regIndex));  }
-#line 1398 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+#line 1401 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 130 "PhaethonAsm.y" /* yacc.c:1646  */
+#line 131 "PhaethonAsm.y" /* yacc.c:1646  */
     { (yyval.arg) = Argument::Construct(Argument::Constant, (yyvsp[0].intVal)); }
-#line 1404 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+#line 1407 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 131 "PhaethonAsm.y" /* yacc.c:1646  */
+#line 132 "PhaethonAsm.y" /* yacc.c:1646  */
     { (yyval.arg) = Argument::Construct(Argument::Constant, StructDef::CalcOffset((yyvsp[-2].symIndex), (yyvsp[0].symIndex))); }
-#line 1410 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+#line 1413 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 132 "PhaethonAsm.y" /* yacc.c:1646  */
+#line 133 "PhaethonAsm.y" /* yacc.c:1646  */
     { (yyval.arg) = Argument::Construct(Argument::ConstAddress, GetSymbolAddress((yyvsp[0].symIndex))); }
-#line 1416 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+#line 1419 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 136 "PhaethonAsm.y" /* yacc.c:1646  */
+#line 134 "PhaethonAsm.y" /* yacc.c:1646  */
+    { (yyval.arg) = Argument::Construct(Argument::Constant, DataSegmentDef::CalcAddress((yyvsp[0].symIndex))); }
+#line 1425 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 31:
+#line 138 "PhaethonAsm.y" /* yacc.c:1646  */
     { AddLabel((yyvsp[-1].symIndex)); }
-#line 1422 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+#line 1431 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1426 "PhaethonAsm.tab.c" /* yacc.c:1646  */
+#line 1435 "PhaethonAsm.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1650,7 +1659,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 138 "PhaethonAsm.y" /* yacc.c:1906  */
+#line 140 "PhaethonAsm.y" /* yacc.c:1906  */
 
 
 int main(int, char**) {

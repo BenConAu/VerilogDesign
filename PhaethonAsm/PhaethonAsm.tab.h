@@ -62,7 +62,8 @@ extern int yydebug;
     RIGHT_PAREN_TOKEN = 272,
     MEMBEROF_TOKEN = 273,
     DEREF_TOKEN = 274,
-    SYMBOL_TOKEN = 275
+    ADDRESSOF_TOKEN = 275,
+    SYMBOL_TOKEN = 276
   };
 #endif
 
@@ -85,7 +86,7 @@ union YYSTYPE
 	DataSegmentItemDef* dataSegmentItemDef;
 	DataSegmentItemEntry* dataSegmentItemEntry;
 
-#line 89 "PhaethonAsm.tab.h" /* yacc.c:1909  */
+#line 90 "PhaethonAsm.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

@@ -22,6 +22,7 @@ using namespace std;
 ","                  { return COMMA_TOKEN; }
 "["                  { return ADDR_LEFT; }
 "]"                  { return ADDR_RIGHT; }
+"&"                  { return ADDRESSOF_TOKEN; }
 "->"                 { return DEREF_TOKEN; }
 [0-9]+               { yylval.intVal = atoi(yytext); return INT_TOKEN; }
 "f"[0-9]+"\."[0-9]*  { yylval.floatVal = (float)atof(yytext + 1); return INT_TOKEN; }

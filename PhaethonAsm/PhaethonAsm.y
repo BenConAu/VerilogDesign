@@ -55,6 +55,7 @@ void yyerror(const char *s);
 %token RIGHT_PAREN_TOKEN
 %token MEMBEROF_TOKEN
 %token DEREF_TOKEN
+%token ADDRESSOF_TOKEN
 %token <symIndex> SYMBOL_TOKEN
 %type <arg> argument
 %type <structDef> struct_member_list
@@ -130,6 +131,7 @@ argument:
     | INT_TOKEN                                                        { $$ = Argument::Construct(Argument::Constant, $1); }
 	| SYMBOL_TOKEN MEMBEROF_TOKEN SYMBOL_TOKEN                         { $$ = Argument::Construct(Argument::Constant, StructDef::CalcOffset($1, $3)); }
     | SYMBOL_TOKEN                                                     { $$ = Argument::Construct(Argument::ConstAddress, GetSymbolAddress($1)); }
+	| ADDRESSOF_TOKEN SYMBOL_TOKEN                                     { $$ = Argument::Construct(Argument::Constant, DataSegmentDef::CalcAddress($2)); }
     ;
 
 label:

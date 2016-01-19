@@ -11,7 +11,7 @@ public:
     {
         std::unique_ptr<T> newNode(new T);
         T::GlobalList().push_back(std::move(newNode));
-        return newNode.get();
+        return T::GlobalList()[T::GlobalList().size() - 1].get();
     }
 
     void SetIntProperty(const char* pszPropName, int nameIndex)

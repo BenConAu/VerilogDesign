@@ -10,7 +10,7 @@ datasegment 128
 enddata
 
 begin:
-mov r0, 140
+mov r0, &v2
 mov r1, [r0]->Vector::x
 mov r2, [r0]->Vector::y
 fmin r0, r1, r2 // Find min
