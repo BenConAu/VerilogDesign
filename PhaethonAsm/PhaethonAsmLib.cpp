@@ -136,7 +136,7 @@ void OutputInstruction(Instructions::Enum instr, Argument a1, Argument a2, Argum
 
 void OutputDataSegment()
 {
-	int startByte = DataSegmentDef::s_defs[0]->GetAddress();
+	int startByte = DataSegmentDef::s_defs[0]->GetIntProperty("address");
 
 	for (int i = g_byteCount; i < startByte; i += 4)
 	{
@@ -154,7 +154,7 @@ void OutputDataSegment()
 		{
 			DataSegmentItemEntry* entry = itemDef->GetItem(j);
 
-			OutputWord(entry->_value);
+			OutputWord(entry->GetIntProperty("value"));
 		}
 	}
 }

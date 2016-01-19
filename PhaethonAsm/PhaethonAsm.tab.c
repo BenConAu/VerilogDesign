@@ -1283,7 +1283,7 @@ yyreduce:
     {
         case 8:
 #line 82 "PhaethonAsm.y" /* yacc.c:1646  */
-    { (yyvsp[-1].dataSegmentDef)->SetAddress((yyvsp[-2].intVal)); }
+    { (yyvsp[-1].dataSegmentDef)->SetIntProperty("address", (yyvsp[-2].intVal)); }
 #line 1288 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1319,7 +1319,7 @@ yyreduce:
 
   case 14:
 #line 100 "PhaethonAsm.y" /* yacc.c:1646  */
-    { (yyval.dataSegmentItemEntry) = DataSegmentItemEntry::Construct((yyvsp[0].intVal)); }
+    { (yyval.dataSegmentItemEntry) = DataSegmentItemEntry::Construct(); (yyval.dataSegmentItemEntry)->SetIntProperty("value", (yyvsp[0].intVal)); }
 #line 1324 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 

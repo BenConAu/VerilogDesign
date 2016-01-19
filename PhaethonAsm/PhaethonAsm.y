@@ -79,7 +79,7 @@ assembler_unit:
     ;
 
 datasegment_definition:
-      DATASEGMENT_TOKEN INT_TOKEN datasegment_item_list ENDDATA_TOKEN  { $3->SetAddress($2); }
+      DATASEGMENT_TOKEN INT_TOKEN datasegment_item_list ENDDATA_TOKEN  { $3->SetIntProperty("address", $2); }
 	;
 
 datasegment_item_list:
@@ -97,7 +97,7 @@ constant_list:
 	;
 
 constant_item:
-      INT_TOKEN                                                        { $$ = DataSegmentItemEntry::Construct($1); }
+      INT_TOKEN                                                        { $$ = DataSegmentItemEntry::Construct(); $$->SetIntProperty("value", $1); }
 	;
 
 struct_definition:

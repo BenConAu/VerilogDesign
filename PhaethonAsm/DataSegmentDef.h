@@ -2,19 +2,11 @@
 
 #include "AssemblerListNode.h"
 
-struct DataSegmentItemEntry
+class DataSegmentItemEntry : public AssemblerNode<DataSegmentItemEntry>
 {
-    static DataSegmentItemEntry* Construct(int value)
-    {
-        DataSegmentItemEntry* pNewEntry = new DataSegmentItemEntry;
-        pNewEntry->_value = value;
-        std::unique_ptr<DataSegmentItemEntry> newEntry(pNewEntry);
-        s_defs.push_back(std::move(newEntry));
-        return pNewEntry;
-    }
-
+public:
     static std::vector<std::unique_ptr<DataSegmentItemEntry> > s_defs;
-    int _value;
+    static std::vector<std::unique_ptr<DataSegmentItemEntry> >& GlobalList() { return s_defs; }
 };
 
 class DataSegmentItemDef : public AssemblerListNode<DataSegmentItemDef,DataSegmentItemEntry>
@@ -27,16 +19,6 @@ public:
 class DataSegmentDef : public AssemblerListNode<DataSegmentDef, DataSegmentItemDef>
 {
 public:
-    void SetAddress(int address)
-    {
-        _address = address;
-    }
-
-    int GetAddress() { return _address; }
-
     static std::vector<std::unique_ptr<DataSegmentDef> > s_defs;
     static std::vector<std::unique_ptr<DataSegmentDef> >& GlobalList() { return s_defs; }
-
-private:
-    int _address;
 };
