@@ -88,7 +88,7 @@ datasegment_item_list:
 	;
 
 datasegment_item:
-      SYMBOL_TOKEN SYMBOL_TOKEN constant_list                          { $3->SetSymbolProperty("type", $1); $3->SetSymbolProperty("name", $2); $$ = $3; }
+      SYMBOL_TOKEN SYMBOL_TOKEN constant_list                          { $3->SetIntProperty("type", $1); $3->SetIntProperty("name", $2); $$ = $3; }
 	;
 
 constant_list:
@@ -101,7 +101,7 @@ constant_item:
 	;
 
 struct_definition:
-      STRUCT_TOKEN SYMBOL_TOKEN struct_member_list ENDS_TOKEN          { $3->SetSymbolProperty("name", $2); }
+      STRUCT_TOKEN SYMBOL_TOKEN struct_member_list ENDS_TOKEN          { $3->SetIntProperty("name", $2); }
     ;
 
 struct_member_list:
@@ -110,7 +110,7 @@ struct_member_list:
     ;
 
 struct_member:
-      SYMBOL_TOKEN                                                     { $$ = StructMember::Construct($1); }
+      SYMBOL_TOKEN                                                     { $$ = StructMember::Construct(); $$->SetIntProperty("name", $1); }
 	;
 
 instruction:

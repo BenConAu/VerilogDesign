@@ -1301,7 +1301,7 @@ yyreduce:
 
   case 11:
 #line 91 "PhaethonAsm.y" /* yacc.c:1646  */
-    { (yyvsp[0].dataSegmentItemDef)->SetSymbolProperty("type", (yyvsp[-2].symIndex)); (yyvsp[0].dataSegmentItemDef)->SetSymbolProperty("name", (yyvsp[-1].symIndex)); (yyval.dataSegmentItemDef) = (yyvsp[0].dataSegmentItemDef); }
+    { (yyvsp[0].dataSegmentItemDef)->SetIntProperty("type", (yyvsp[-2].symIndex)); (yyvsp[0].dataSegmentItemDef)->SetIntProperty("name", (yyvsp[-1].symIndex)); (yyval.dataSegmentItemDef) = (yyvsp[0].dataSegmentItemDef); }
 #line 1306 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1325,7 +1325,7 @@ yyreduce:
 
   case 15:
 #line 104 "PhaethonAsm.y" /* yacc.c:1646  */
-    { (yyvsp[-1].structDef)->SetSymbolProperty("name", (yyvsp[-2].symIndex)); }
+    { (yyvsp[-1].structDef)->SetIntProperty("name", (yyvsp[-2].symIndex)); }
 #line 1330 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1343,7 +1343,7 @@ yyreduce:
 
   case 18:
 #line 113 "PhaethonAsm.y" /* yacc.c:1646  */
-    { (yyval.structMember) = StructMember::Construct((yyvsp[0].symIndex)); }
+    { (yyval.structMember) = StructMember::Construct(); (yyval.structMember)->SetIntProperty("name", (yyvsp[0].symIndex)); }
 #line 1348 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 

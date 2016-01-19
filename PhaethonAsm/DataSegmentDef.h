@@ -17,14 +17,14 @@ struct DataSegmentItemEntry
     int _value;
 };
 
-class DataSegmentItemDef : public ListDef<DataSegmentItemDef,DataSegmentItemEntry>
+class DataSegmentItemDef : public AssemblerListNode<DataSegmentItemDef,DataSegmentItemEntry>
 {
 public:
     static std::vector<std::unique_ptr<DataSegmentItemDef> > s_defs;
     static std::vector<std::unique_ptr<DataSegmentItemDef> >& GlobalList() { return s_defs; }
 };
 
-class DataSegmentDef : public ListDef<DataSegmentDef, DataSegmentItemDef>
+class DataSegmentDef : public AssemblerListNode<DataSegmentDef, DataSegmentItemDef>
 {
 public:
     void SetAddress(int address)

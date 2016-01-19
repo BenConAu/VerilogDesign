@@ -1,24 +1,16 @@
 #pragma once
 
-#include <map>
-#include <string>
+#include "AssemblerNode.h"
 
 template<typename DefType, typename ChildDefType>
-class ListDef
+class AssemblerListNode : public AssemblerNode<DefType>
 {
 public:
     static DefType* Construct(ChildDefType* pFirstItem)
     {
-        DefType* pNewList = new DefType;
-        std::unique_ptr<DefType> newList(pNewList);
-        newList->AddMember(pFirstItem);
-        DefType::GlobalList().push_back(std::move(newList));
+        DefType* pNewList = AssemblerNode<DefType>::Construct();
+        pNewList->AddMember(pFirstItem);
         return pNewList;
-    }
-
-    void SetSymbolProperty(const char* pszPropName, int nameIndex)
-    {
-        props[pszPropName] = nameIndex;
     }
 
     void AddMember(ChildDefType* newMember)
@@ -43,6 +35,5 @@ public:
     int GetItemCount() const { return members.size(); }
 
 protected:
-    std::map<std::string, int> props;
     std::vector<ChildDefType*> members;
 };
