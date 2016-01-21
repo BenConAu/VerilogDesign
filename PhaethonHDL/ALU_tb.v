@@ -7,14 +7,14 @@ module test;
   initial begin
     # 0 reset = 1;
     # 1 reset = 0;
-    # 1200 $finish;
+    # 5000 $finish;
   end
 
-  reg [7:0] fileRam[0:255];
+  reg [7:0] fileRam[0:2047];
 
   initial
   begin
-    $readmemh("test.pao", fileRam, 0, 151);
+    $readmemh("test.pao", fileRam, 0, 76 * 4 - 1);
   end
 
   /* Make a regular pulsing clock. */

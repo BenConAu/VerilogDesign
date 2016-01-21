@@ -16,6 +16,8 @@ public:
 
     void SetIntProperty(const char* pszPropName, int nameIndex)
     {
+        //printf("Setting %s to %d\n", pszPropName, nameIndex);
+
         props[pszPropName] = nameIndex;
     }
 

@@ -12,6 +12,8 @@ std::vector<std::unique_ptr<DataSegmentDef> > DataSegmentDef::s_defs;
 std::vector<std::unique_ptr<DataSegmentItemDef> > DataSegmentItemDef::s_defs;
 std::vector<std::unique_ptr<DataSegmentItemEntry> > DataSegmentItemEntry::s_defs;
 
+StructDef::StructDefInfo StructDef::s_defInfo;
+
 struct LabelData
 {
 	int symIndex;
@@ -20,20 +22,25 @@ struct LabelData
 
 int g_byteCount = 0;
 std::vector<LabelData> g_labels;
-std::vector<std::string> g_symbols;
 
 int AddSymbol(const char* pszSymbol)
 {
+	static std::vector<std::string> g_symbols;
+
+	//printf("AddSymbol size is now %d\n", (int)g_symbols.size());
+
 	for (size_t i = 0; i < g_symbols.size(); i++)
 	{
+		//printf("  Comparing %d:%s to %s\n", (int)i, g_symbols[i].c_str(), pszSymbol);
+
 		if (g_symbols[i].compare(pszSymbol) == 0)
 		{
-			// Already there!
+			//printf("Already there\n");
 			return i;
 		}
 	}
 
-	//printf("Adding symbol %s at %d\n", pszSymbol, g_symbols.size());
+	//printf("Adding symbol %s at %d\n", pszSymbol, (int)g_symbols.size());
 	g_symbols.push_back(pszSymbol);
 	return (g_symbols.size() - 1);
 }
@@ -76,9 +83,15 @@ InstructionData g_data[] = {
 
 	{ Instructions::Mov,      7, { Argument::Register,     Argument::RegAddress,    Argument::Constant },     2  },
 	{ Instructions::Mov,      8, { Argument::RegAddress,   Argument::Constant,      Argument::Register },     1  },
+	{ Instructions::Mov,      9, { Argument::Register,     Argument::RegAddress,    Argument::None     },     -1 },
 
 	{ Instructions::Cmp,      5, { Argument::Register,     Argument::Register,      Argument::None     },     -1 },
-	{ Instructions::Jmp,      6, { Argument::ConstAddress, Argument::None,          Argument::None     },     0 },
+	{ Instructions::Cmp,     10, { Argument::Register,     Argument::Constant,      Argument::None     },     1  },
+	{ Instructions::Jmp,      6, { Argument::ConstAddress, Argument::None,          Argument::None     },     0  },
+	{ Instructions::Jne,     11, { Argument::ConstAddress, Argument::None,          Argument::None     },     0  },
+
+	{ Instructions::Add,     30, { Argument::Register,     Argument::Constant,      Argument::None     },     1  },
+	{ Instructions::Dec,     31, { Argument::Register,     Argument::None,          Argument::None     },     -1 },
 
 	{ Instructions::Fadd,    20, { Argument::Register,     Argument::Register,      Argument::None     },     -1 },
 	{ Instructions::Fsub,    21, { Argument::Register,     Argument::Register,      Argument::None     },     -1 },
@@ -86,6 +99,7 @@ InstructionData g_data[] = {
 	{ Instructions::Fmul,    23, { Argument::Register,     Argument::Register,      Argument::None     },     -1 },
 	{ Instructions::Fmuladd, 24, { Argument::Register,     Argument::Register,      Argument::Register },     -1 },
 	{ Instructions::Fmin,    25, { Argument::Register,     Argument::Register,      Argument::Register },     -1 },
+	{ Instructions::Fmax,    26, { Argument::Register,     Argument::Register,      Argument::Register },     -1 },
 
 	{ Instructions::Dout,    99, { Argument::Register,     Argument::None,          Argument::None     },     -1 },
 };
@@ -109,6 +123,8 @@ void OutputWord(unsigned int w)
 
 void OutputInstruction(Instructions::Enum instr, Argument a1, Argument a2, Argument a3)
 {
+	//printf("Processing instruction\n");
+
 	for (int i = 0; i < sizeof(g_data) / sizeof(g_data[0]); i++)
 	{
 		if (g_data[i].instr == instr &&
@@ -131,30 +147,33 @@ void OutputInstruction(Instructions::Enum instr, Argument a1, Argument a2, Argum
 		}
 	}
 
-	std::cout << "Unknown instruction" << instr << std::endl;
+	std::cout << "Unknown instruction instr = " << instr << ", " << a1._type << ", " << a2._type << ", " << a3._type << std::endl;
 }
 
 void OutputDataSegment()
 {
-	int startByte = DataSegmentDef::s_defs[0]->GetIntProperty("address");
-
-	for (int i = g_byteCount; i < startByte; i += 4)
+	if (DataSegmentDef::s_defs.size() != 0)
 	{
-		OutputBytes(0x1a, 0x2b, 0x3c, 0x4d);
-	}
+		int startByte = DataSegmentDef::s_defs[0]->GetIntProperty("address");
 
-	for (int i = 0; i < DataSegmentDef::s_defs[0]->GetItemCount(); i++)
-	{
-//		printf("Doing item %d in Data segment\n", i);
-
-		DataSegmentItemDef* itemDef = DataSegmentDef::s_defs[0]->GetItem(i);
-//		printf("Item %d has count %d\n", i, itemDef->GetItemCount());
-
-		for (int j = 0; j < itemDef->GetItemCount(); j++)
+		for (int i = g_byteCount; i < startByte; i += 4)
 		{
-			DataSegmentItemEntry* entry = itemDef->GetItem(j);
+			OutputBytes(0x1a, 0x2b, 0x3c, 0x4d);
+		}
 
-			OutputWord(entry->GetIntProperty("value"));
+		for (int i = 0; i < DataSegmentDef::s_defs[0]->GetItemCount(); i++)
+		{
+			//		printf("Doing item %d in Data segment\n", i);
+
+			DataSegmentItemDef* itemDef = DataSegmentDef::s_defs[0]->GetItem(i);
+			//		printf("Item %d has count %d\n", i, itemDef->GetItemCount());
+
+			for (int j = 0; j < itemDef->GetItemCount(); j++)
+			{
+				DataSegmentItemEntry* entry = itemDef->GetItem(j);
+
+				OutputWord(entry->GetIntProperty("value"));
+			}
 		}
 	}
 }

@@ -56,6 +56,7 @@ void yyerror(const char *s);
 %token MEMBEROF_TOKEN
 %token DEREF_TOKEN
 %token ADDRESSOF_TOKEN
+%token SIZEOF_TOKEN
 %token <symIndex> SYMBOL_TOKEN
 %type <arg> argument
 %type <structDef> struct_member_list
@@ -90,6 +91,7 @@ datasegment_item_list:
 
 datasegment_item:
       SYMBOL_TOKEN SYMBOL_TOKEN constant_list                          { $3->SetIntProperty("type", $1); $3->SetIntProperty("name", $2); $$ = $3; }
+	| SYMBOL_TOKEN constant_list                                       { $2->SetIntProperty("type", $1); $2->SetIntProperty("name", -1); $$ = $2; }
 	;
 
 constant_list:
@@ -132,6 +134,7 @@ argument:
 	| SYMBOL_TOKEN MEMBEROF_TOKEN SYMBOL_TOKEN                         { $$ = Argument::Construct(Argument::Constant, StructDef::CalcOffset($1, $3)); }
     | SYMBOL_TOKEN                                                     { $$ = Argument::Construct(Argument::ConstAddress, GetSymbolAddress($1)); }
 	| ADDRESSOF_TOKEN SYMBOL_TOKEN                                     { $$ = Argument::Construct(Argument::Constant, DataSegmentDef::CalcAddress($2)); }
+	| SIZEOF_TOKEN LEFT_PAREN_TOKEN SYMBOL_TOKEN RIGHT_PAREN_TOKEN     { $$ = Argument::Construct(Argument::Constant, StructDef::GetSize($3)); }
     ;
 
 label:
@@ -139,20 +142,24 @@ label:
 
 %%
 
-int main(int, char**) {
+int main(int argc, char** argv)
+{
 	//yydebug = 1;
 	// open a file handle to a particular file:
-	FILE *myfile = fopen("test.asm", "r");
+	FILE *myfile = fopen(argv[1], "r");
 	// make sure it is valid:
-	if (!myfile) {
+	if (!myfile)
+	{
 		cout << "I can't open a.snazzle.file!" << endl;
 		return -1;
 	}
+
 	// set flex to read from it instead of defaulting to STDIN:
 	yyin = myfile;
 
 	// parse through the input until there is no more:
-	do {
+	do
+	{
 		yyparse();
 	} while (!feof(yyin));
 

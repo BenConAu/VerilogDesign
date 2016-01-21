@@ -33,6 +33,8 @@ public:
                     return startByte;
                 }
 
+                //printf("Type of item %d is %d\n", i, itemDef->GetIntProperty("type"));
+
                 startByte += StructDef::GetSize(itemDef->GetIntProperty("type"));
         	}
         }

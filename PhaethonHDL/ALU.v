@@ -45,6 +45,7 @@ module ALU(
   reg        [7:0]  regAddress2;
   reg        [7:0]  regAddress3;
   reg        [5:0]  fOpEnable;
+  reg        [0:0]  condJump;
 
   // Wire up the results from the floating units
   wire       [31:0] fAddResult;
@@ -76,6 +77,7 @@ module ALU(
       mode <= 0;
       readReq <= 0;
       fOpEnable <= 6'b000000;
+      condJump <= 1'b0;
     end
     else
     begin
@@ -93,6 +95,7 @@ module ALU(
 
         // Clear out stuff for the pipeline
         fOpEnable <= 6'b000000;
+        condJump <= 1'b0;
         mode <= 1;
       end
 
@@ -137,8 +140,12 @@ module ALU(
         if (opCode == 23) fOpEnable[3:3] <= 1;
         if (opCode == 24) fOpEnable[4:4] <= 1;
         if (opCode == 25) fOpEnable[5:5] <= 1;
+        if (opCode == 26) fOpEnable[5:5] <= 1;
 
-        if (opCode == 1 || opCode == 2 || opCode == 4 || opCode == 6 || opCode == 7 || opCode == 8)
+        // Determine if a conditional jump needs to happen
+        if (opCode == 11 && regarray[31][0:0] == 1'b0) condJump <= 1'b1;
+
+        if (opCode == 1 || opCode == 2 || opCode == 4 || opCode == 6 || opCode == 7 || opCode == 8 || opCode == 30 || opCode == 10 || opCode == 11)
         begin
           // Read values from ram requested by instruction
           readReq <= 1;
@@ -146,6 +153,11 @@ module ALU(
 
           // We need to move into further modes
           mode <= 3;
+        end
+        else if (opCode == 9)
+        begin
+          // Read from register alone, no constant needed
+          mode <= 4;
         end
         else
         begin
@@ -206,6 +218,15 @@ module ALU(
           //$display("Requesting read from %h", opDataWord + regValue2);
         end
 
+        if (opCode == 9)
+        begin
+          // Read values from address encoded in code
+          readReq <= 1;
+          ramAddress <= regValue2;
+
+          //$display("Requesting read from %h", opDataWord + regValue2);
+        end
+
         if (opCode == 4)
         begin
           // Write values to ram requested by instruction
@@ -235,7 +256,7 @@ module ALU(
       // Mode 5: Complete data read or write if the instruction
       //         requires it.
       5: begin
-        if (opCode == 2 || opCode == 7)
+        if (opCode == 2 || opCode == 7 || opCode == 9)
         begin
           // Stop request
           readReq <= 0;
@@ -288,9 +309,15 @@ module ALU(
             regarray[31][2:2] <= (regValue > regValue2 ? 1 : 0);
           end
 
+          10: begin
+            regarray[31][0:0] <= (regValue == opDataWord ? 1 : 0);
+            regarray[31][1:1] <= (regValue < opDataWord ? 1 : 0);
+            regarray[31][2:2] <= (regValue > opDataWord ? 1 : 0);
+          end
+
           6:  ipointer <= opDataWord;                              // jmp address
           7:  regarray[regAddress[3:0]] <= ramValue;               // mov reg, [reg + const]
-          10: regarray[regAddress[3:0]] <= regValue + regValue2;   // add reg, reg
+          9:  regarray[regAddress[3:0]] <= ramValue;               // mov reg, [reg]
 
           20: regarray[regAddress[3:0]] <= fAddResult;             // fadd reg, reg
           21: regarray[regAddress[3:0]] <= fSubResult;             // fsub reg, reg
@@ -298,19 +325,33 @@ module ALU(
           23: regarray[regAddress[3:0]] <= fMulResult;             // fmul reg, reg
           24: regarray[regAddress[3:0]] <= fMulAddResult;          // fmul reg, reg
           25: regarray[regAddress[3:0]] <= (fCompareResult == 'b01 ? regValue3 : regValue2);
+          26: regarray[regAddress[3:0]] <= (fCompareResult == 'b11 ? regValue3 : regValue2);
+
+          30: regarray[regAddress[3:0]] <= regValue + opDataWord;  // add reg, const
+          31: regarray[regAddress[3:0]] <= regValue - 1;           // dec reg
 
           99: begin
             $display("DebugOut %h", regValue);
           end
+
+          default: $display("Unknown instruction %h", opCode);
         endcase
+
+        //$display("opDataWord == %h", opDataWord);
 
         debug[23:0] <= regAddress;
         debug[31:24] <= mode;
 
         // Move the instruction pointer along
-        if (opCode != 6)
+        if (condJump == 1'b1)
         begin
-          if (opCode == 1 || opCode == 2 || opCode == 4 || opCode == 7 || opCode == 8)
+          ipointer <= opDataWord;
+        end
+        else if (opCode != 6)
+        begin
+          //$display("Incrementing ip");
+
+          if (opCode == 1 || opCode == 2 || opCode == 4 || opCode == 7 || opCode == 8 || opCode == 30 || opCode == 10 || opCode == 11)
             ipointer <= ipointer + 8;
           else
             ipointer <= ipointer + 4;

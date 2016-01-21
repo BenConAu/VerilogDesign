@@ -18,6 +18,11 @@ namespace Instructions
         Fmin = 8,
         Fsub = 9,
         Dout = 10,
+        Inc = 11,
+        Add = 12,
+        Dec = 13,
+        Fmax = 14,
+        Jne = 15,
     };
 }
 
@@ -26,11 +31,11 @@ class Argument
 public:
 	enum Type
 	{
-		None,
-		Constant,
-        Register,
-        ConstAddress,
-        RegAddress,
+		None = 0,
+		Constant = 1,
+        Register = 2,
+        ConstAddress = 3,
+        RegAddress = 4,
 	};
 
 public:

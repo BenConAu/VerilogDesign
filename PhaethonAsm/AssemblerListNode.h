@@ -9,7 +9,11 @@ public:
     static DefType* Construct(ChildDefType* pFirstItem)
     {
         DefType* pNewList = AssemblerNode<DefType>::Construct();
-        pNewList->AddMember(pFirstItem);
+        if (pFirstItem != nullptr)
+        {
+            pNewList->AddMember(pFirstItem);
+        }
+        
         return pNewList;
     }
 
