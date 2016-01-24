@@ -16,12 +16,17 @@ module ALU(
   debug        // [Output] Debug port
   );
 
+  `define MovRC 1
+  `define MovRcA 2
+  `define MovRR 3
+  `define MovcAR 4
+
   function [0:0] Is8ByteOpcode;
     input [7:0] opCodeParam;
 
-    if (opCodeParam == 1 ||
-        opCodeParam == 2 ||
-        opCodeParam == 4 ||
+    if (opCodeParam == `MovRC ||
+        opCodeParam == `MovRcA  ||
+        opCodeParam == `MovcAR ||
         opCodeParam == 6 ||
         opCodeParam == 7 ||
         opCodeParam == 8 ||
@@ -37,8 +42,8 @@ module ALU(
   function [0:0] IsRAMOpcode;
     input [7:0] opCodeParam;
 
-    if (opCodeParam == 2 ||
-        opCodeParam == 4 ||
+    if (opCodeParam == `MovRcA ||
+        opCodeParam == `MovcAR ||
         opCodeParam == 7 ||
         opCodeParam == 8 ||
         opCodeParam == 9
@@ -233,7 +238,7 @@ module ALU(
       // Mode 4: Initiate data read or write if the instruction
       //         requires it.
       4: begin
-        if (opCode == 2)
+        if (opCode == `MovRcA)
         begin
           // Read values from address encoded in code
           readReq <= 1;
@@ -260,7 +265,7 @@ module ALU(
           //$display("Requesting read from %h", opDataWord + regValue2);
         end
 
-        if (opCode == 4)
+        if (opCode == `MovcAR)
         begin
           // Write values to ram requested by instruction
           writeReq <= 1;
@@ -289,7 +294,7 @@ module ALU(
       // Mode 5: Complete data read or write if the instruction
       //         requires it.
       5: begin
-        if (opCode == 2 || opCode == 7 || opCode == 9)
+        if (opCode == `MovRcA || opCode == 7 || opCode == 9)
         begin
           // Stop request
           readReq <= 0;
@@ -305,7 +310,7 @@ module ALU(
             mode <= 6;
           end
         end
-        else if (opCode == 4 || opCode == 8)
+        else if (opCode == `MovcAR || opCode == 8)
         begin
           // Stop request
           writeReq <= 0;
@@ -330,11 +335,9 @@ module ALU(
       6: begin
         // Now we can do writes to non-ram things
         case (opCode)
-          1:  regarray[regAddress[3:0]] <= opDataWord;             // mov reg, const
-          2:  regarray[regAddress[3:0]] <= ramValue;               // mov reg, [addr]
-          3:  regarray[regAddress[3:0]] <= regValue2;              // mov reg, reg
-
-          // 4 and 8 are done above
+          `MovRC:  regarray[regAddress[3:0]] <= opDataWord;             // mov reg, const
+          `MovRcA: regarray[regAddress[3:0]] <= ramValue;               // mov reg, [addr]
+          `MovRR:  regarray[regAddress[3:0]] <= regValue2;              // mov reg, reg
 
           5: begin                                                 // cmp reg, reg
             regarray[31][0:0] <= (regValue == regValue2 ? 1 : 0);
@@ -384,7 +387,7 @@ module ALU(
         begin
           //$display("Incrementing ip");
 
-          if (opCode == 1 || opCode == 2 || opCode == 4 || opCode == 7 || opCode == 8 || opCode == 30 || opCode == 10 || opCode == 11)
+          if (Is8ByteOpcode(opCode) == 1)
             ipointer <= ipointer + 8;
           else
             ipointer <= ipointer + 4;
