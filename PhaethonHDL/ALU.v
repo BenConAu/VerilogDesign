@@ -27,6 +27,8 @@ module ALU(
   `define CmpRC 10
   `define JmpC 6
   `define JneC 11
+  `define AddRC 30
+  `define DecR 31
 
   function [0:0] Is8ByteOpcode;
     input [7:0] opCodeParam;
@@ -37,7 +39,7 @@ module ALU(
         opCodeParam == `JmpC ||
         opCodeParam == `MovRrAC ||
         opCodeParam == `MovrACR ||
-        opCodeParam == 30 ||
+        opCodeParam == `AddRC ||
         opCodeParam == `CmpRC ||
         opCodeParam == `JneC
         )
@@ -370,8 +372,8 @@ module ALU(
           25: regarray[regAddress[3:0]] <= (fCompareResult == 'b01 ? regValue3 : regValue2);
           26: regarray[regAddress[3:0]] <= (fCompareResult == 'b11 ? regValue3 : regValue2);
 
-          30: regarray[regAddress[3:0]] <= regValue + opDataWord;  // add reg, const
-          31: regarray[regAddress[3:0]] <= regValue - 1;           // dec reg
+          `AddRC: regarray[regAddress[3:0]] <= regValue + opDataWord;  // add reg, const
+          `DecR:  regarray[regAddress[3:0]] <= regValue - 1;           // dec reg
 
           99: begin
             $display("DebugOut %h", regValue);
