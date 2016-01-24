@@ -68,6 +68,7 @@
 #include <cstdio>
 #include <iostream>
 #include "PACodeGenLib.h"
+#include "../Argument.h"
 
 using namespace std;
 
@@ -78,7 +79,7 @@ extern "C" FILE *yyin;
 
 void yyerror(const char *s);
 
-#line 82 "PACodeGen.tab.c" /* yacc.c:339  */
+#line 83 "PACodeGen.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -127,12 +128,12 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 18 "PACodeGen.y" /* yacc.c:355  */
+#line 19 "PACodeGen.y" /* yacc.c:355  */
 
     int symIndex;
     int argIndex;
 
-#line 136 "PACodeGen.tab.c" /* yacc.c:355  */
+#line 137 "PACodeGen.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -149,7 +150,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 153 "PACodeGen.tab.c" /* yacc.c:358  */
+#line 154 "PACodeGen.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -447,7 +448,7 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    34,    34,    35,    39,    43,    44,    45,    46,    47
+       0,    35,    35,    36,    40,    44,    45,    46,    47,    48
 };
 #endif
 
@@ -1217,13 +1218,43 @@ yyreduce:
   switch (yyn)
     {
         case 4:
-#line 39 "PACodeGen.y" /* yacc.c:1646  */
+#line 40 "PACodeGen.y" /* yacc.c:1646  */
     { StoreInstruction((yyvsp[-3].symIndex), (yyvsp[-2].argIndex), (yyvsp[-1].argIndex), (yyvsp[0].argIndex)); }
-#line 1223 "PACodeGen.tab.c" /* yacc.c:1646  */
+#line 1224 "PACodeGen.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 5:
+#line 44 "PACodeGen.y" /* yacc.c:1646  */
+    { (yyval.argIndex) = Argument::Register; }
+#line 1230 "PACodeGen.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 6:
+#line 45 "PACodeGen.y" /* yacc.c:1646  */
+    { (yyval.argIndex) = Argument::RegAddress; }
+#line 1236 "PACodeGen.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 7:
+#line 46 "PACodeGen.y" /* yacc.c:1646  */
+    { (yyval.argIndex) = Argument::Constant; }
+#line 1242 "PACodeGen.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 8:
+#line 47 "PACodeGen.y" /* yacc.c:1646  */
+    { (yyval.argIndex) = Argument::ConstAddress; }
+#line 1248 "PACodeGen.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 9:
+#line 48 "PACodeGen.y" /* yacc.c:1646  */
+    { (yyval.argIndex) = Argument::None; }
+#line 1254 "PACodeGen.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1227 "PACodeGen.tab.c" /* yacc.c:1646  */
+#line 1258 "PACodeGen.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1451,7 +1482,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 50 "PACodeGen.y" /* yacc.c:1906  */
+#line 51 "PACodeGen.y" /* yacc.c:1906  */
 
 int main(int, char**) {
 	//yydebug = 1;

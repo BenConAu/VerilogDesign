@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <iostream>
 #include "PACodeGenLib.h"
+#include "../Argument.h"
 
 using namespace std;
 
@@ -40,11 +41,11 @@ instruction_set:
     ;
 
   argument:
-      REGISTER_TOKEN
-    | REGADDRESS_TOKEN
-    | CONSTANT_TOKEN
-    | CONSTADDRESS_TOKEN
-    | NONE_TOKEN
+      REGISTER_TOKEN                                { $$ = Argument::Register; }
+    | REGADDRESS_TOKEN                              { $$ = Argument::RegAddress; }
+    | CONSTANT_TOKEN                                { $$ = Argument::Constant; }
+    | CONSTADDRESS_TOKEN                            { $$ = Argument::ConstAddress; }
+    | NONE_TOKEN                                    { $$ = Argument::None; }
     ;
 
 %%
