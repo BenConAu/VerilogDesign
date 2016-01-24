@@ -25,6 +25,8 @@ module ALU(
   `define MovRrA 9
   `define CmpRR 5
   `define CmpRC 10
+  `define JmpC 6
+  `define JneC 11
 
   function [0:0] Is8ByteOpcode;
     input [7:0] opCodeParam;
@@ -32,12 +34,12 @@ module ALU(
     if (opCodeParam == `MovRC ||
         opCodeParam == `MovRcA  ||
         opCodeParam == `MovcAR ||
-        opCodeParam == 6 ||
+        opCodeParam == `JmpC ||
         opCodeParam == `MovRrAC ||
         opCodeParam == `MovrACR ||
         opCodeParam == 30 ||
         opCodeParam == `CmpRC ||
-        opCodeParam == 11
+        opCodeParam == `JneC
         )
       Is8ByteOpcode = 1;
     else
@@ -186,7 +188,7 @@ module ALU(
         if (opCode == 26) fOpEnable[5:5] <= 1;
 
         // Determine if a conditional jump needs to happen
-        if (opCode == 11 && regarray[31][0:0] == 1'b0) condJump <= 1'b1;
+        if (opCode == `JneC && regarray[31][0:0] == 1'b0) condJump <= 1'b1;
 
         if (Is8ByteOpcode(opCode) == 1)
         begin
@@ -358,7 +360,7 @@ module ALU(
             regarray[31][2:2] <= (regValue > opDataWord ? 1 : 0);
           end
 
-          6:  ipointer <= opDataWord;                              // jmp address
+          `JmpC:  ipointer <= opDataWord;                              // jmp address
 
           20: regarray[regAddress[3:0]] <= fAddResult;             // fadd reg, reg
           21: regarray[regAddress[3:0]] <= fSubResult;             // fsub reg, reg
@@ -388,7 +390,7 @@ module ALU(
         begin
           ipointer <= opDataWord;
         end
-        else if (opCode != 6)
+        else if (opCode != `JmpC)
         begin
           //$display("Incrementing ip");
 
