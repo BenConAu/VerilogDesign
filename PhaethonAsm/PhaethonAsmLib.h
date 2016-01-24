@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PhaethonAsmTypes.h"
+#include "CodeGen/PhaethonOpCode.h"
 #include "Argument.h"
 
 void OutputInstruction(Instructions::Enum instr, Argument a1, Argument a2, Argument a3);

@@ -82,6 +82,8 @@ void OutputInstructions()
 {
     FILE* fhfile = ::fopen("PhaethonOpCode.h", "w");
 
+    ::fprintf(fhfile, "#pragma once\n\n");
+
     // First the enum of Instructions
     ::fprintf(fhfile, "namespace Instructions\n{\n    enum Enum\n    {\n        Unknown,\n");
     for (size_t i = 0; i < g_symbols.size(); i++)
@@ -104,8 +106,10 @@ void OutputInstructions()
 
     FILE* fcppfile = ::fopen("PhaethonOpCode.cpp", "w");
 
+    ::fprintf(fcppfile, "#include \"../InstructionData.h\"\n\n");
+
     // Now the collection of instruction data
-    ::fprintf(fcppfile, "InstructionData g_data[] = {\n");
+    ::fprintf(fcppfile, "InstructionData InstructionData::s_data[] = {\n");
     for (size_t i = 0; i < g_instructionData.size(); i++)
     {
         InstructionData& data = g_instructionData[i];
@@ -118,7 +122,9 @@ void OutputInstructions()
             data.constIndex
         );
     }
-    ::fprintf(fcppfile, "};\n");
+    ::fprintf(fcppfile, "};\n\n");
+
+    ::fprintf(fcppfile, "int InstructionData::s_dataCount = sizeof(InstructionData::s_data) / sizeof(InstructionData::s_data[0]);\n\n");
 
     ::fclose(fcppfile);
 

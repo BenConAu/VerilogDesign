@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AssemblerNode.h"
+#include <vector>
 
 template<typename DefType, typename ChildDefType>
 class AssemblerListNode : public AssemblerNode<DefType>
@@ -13,7 +14,7 @@ public:
         {
             pNewList->AddMember(pFirstItem);
         }
-        
+
         return pNewList;
     }
 

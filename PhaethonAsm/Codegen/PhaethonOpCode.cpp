@@ -1,4 +1,6 @@
-InstructionData g_data[] = {
+#include "../InstructionData.h"
+
+InstructionData InstructionData::s_data[] = {
     { Instructions::Mov       , OpCodes::MovRC          , { Argument::Register       , Argument::Constant       , Argument::None            }, 1 },
     { Instructions::Mov       , OpCodes::MovRcA         , { Argument::Register       , Argument::ConstAddress   , Argument::None            }, 1 },
     { Instructions::Mov       , OpCodes::MovRR          , { Argument::Register       , Argument::Register       , Argument::None            }, -1 },
@@ -22,3 +24,6 @@ InstructionData g_data[] = {
     { Instructions::Fmax      , OpCodes::FmaxRRR        , { Argument::Register       , Argument::Register       , Argument::Register        }, -1 },
     { Instructions::Dout      , OpCodes::DoutR          , { Argument::Register       , Argument::None           , Argument::None            }, -1 },
 };
+
+int InstructionData::s_dataCount = sizeof(InstructionData::s_data) / sizeof(InstructionData::s_data[0]);
+

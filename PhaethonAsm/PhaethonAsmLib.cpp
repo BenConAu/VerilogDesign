@@ -2,7 +2,8 @@
 #include "StructDef.h"
 #include "DataSegmentDef.h"
 #include "PhaethonAsm.tab.h"
-#include "PhaethonAsmTypes.h"
+#include "CodeGen/PhaethonOpCode.h"
+#include "InstructionData.h"
 #include <iostream>
 #include <vector>
 
@@ -67,39 +68,6 @@ int GetSymbolAddress(int symIndex)
 	return -1;
 }
 
-struct InstructionData
-{
-	Instructions::Enum instr;
-	OpCodes::Enum opCode;
-	Argument::Type args[3];
-	int wordArg;
-};
-
-InstructionData g_data[] = {
-    { Instructions::Mov       , OpCodes::MovRC          , { Argument::Register       , Argument::Constant       , Argument::None            }, 1 },
-    { Instructions::Mov       , OpCodes::MovRcA         , { Argument::Register       , Argument::ConstAddress   , Argument::None            }, 1 },
-    { Instructions::Mov       , OpCodes::MovRR          , { Argument::Register       , Argument::Register       , Argument::None            }, -1 },
-    { Instructions::Mov       , OpCodes::MovcAR         , { Argument::ConstAddress   , Argument::Register       , Argument::None            }, 0 },
-    { Instructions::Mov       , OpCodes::MovRrAC        , { Argument::Register       , Argument::RegAddress     , Argument::Constant        }, 2 },
-    { Instructions::Mov       , OpCodes::MovrACR        , { Argument::RegAddress     , Argument::Constant       , Argument::Register        }, 1 },
-    { Instructions::Mov       , OpCodes::MovRrA         , { Argument::Register       , Argument::RegAddress     , Argument::None            }, -1 },
-    { Instructions::Cmp       , OpCodes::CmpRR          , { Argument::Register       , Argument::Register       , Argument::None            }, -1 },
-    { Instructions::Cmp       , OpCodes::CmpRC          , { Argument::Register       , Argument::Constant       , Argument::None            }, 1 },
-    { Instructions::Jmp       , OpCodes::JmpC           , { Argument::Constant       , Argument::None           , Argument::None            }, 0 },
-    { Instructions::Jne       , OpCodes::JneC           , { Argument::Constant       , Argument::None           , Argument::None            }, 0 },
-    { Instructions::Add       , OpCodes::AddRC          , { Argument::Register       , Argument::Constant       , Argument::None            }, 1 },
-    { Instructions::Inc       , OpCodes::IncR           , { Argument::Register       , Argument::None           , Argument::None            }, -1 },
-    { Instructions::Dec       , OpCodes::DecR           , { Argument::Register       , Argument::None           , Argument::None            }, -1 },
-    { Instructions::Fadd      , OpCodes::FaddRR         , { Argument::Register       , Argument::Register       , Argument::None            }, -1 },
-    { Instructions::Fsub      , OpCodes::FsubRR         , { Argument::Register       , Argument::Register       , Argument::None            }, -1 },
-    { Instructions::Fconv     , OpCodes::FconvR         , { Argument::Register       , Argument::None           , Argument::None            }, -1 },
-    { Instructions::Fmul      , OpCodes::FmulRR         , { Argument::Register       , Argument::Register       , Argument::None            }, -1 },
-    { Instructions::Fmuladd   , OpCodes::FmuladdRRR     , { Argument::Register       , Argument::Register       , Argument::Register        }, -1 },
-    { Instructions::Fmin      , OpCodes::FminRRR        , { Argument::Register       , Argument::Register       , Argument::Register        }, -1 },
-    { Instructions::Fmax      , OpCodes::FmaxRRR        , { Argument::Register       , Argument::Register       , Argument::Register        }, -1 },
-    { Instructions::Dout      , OpCodes::DoutR          , { Argument::Register       , Argument::None           , Argument::None            }, -1 },
-};
-
 void OutputBytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned char b4)
 {
 	printf("%02x %02x %02x %02x\n", b1, b2, b3, b4);
@@ -121,20 +89,20 @@ void OutputInstruction(Instructions::Enum instr, Argument a1, Argument a2, Argum
 {
 	//printf("Processing instruction\n");
 
-	for (int i = 0; i < sizeof(g_data) / sizeof(g_data[0]); i++)
+	for (int i = 0; i < InstructionData::s_dataCount; i++)
 	{
-		if (g_data[i].instr == instr &&
-			g_data[i].args[0] == a1._type &&
-			g_data[i].args[1] == a2._type &&
-			g_data[i].args[2] == a3._type)
+		if (InstructionData::s_data[i].instr == instr &&
+			InstructionData::s_data[i].args[0] == a1._type &&
+			InstructionData::s_data[i].args[1] == a2._type &&
+			InstructionData::s_data[i].args[2] == a3._type)
 		{
-			OutputBytes(g_data[i].opCode, a1._value, a2._value, a3._value);
+			OutputBytes(InstructionData::s_data[i].opCode, a1._value, a2._value, a3._value);
 
-			if (g_data[i].wordArg != -1)
+			if (InstructionData::s_data[i].wordArg != -1)
 			{
                 Argument args[3] = { a1, a2, a3 };
 
-				unsigned int opDataWord = args[g_data[i].wordArg]._value;
+				unsigned int opDataWord = args[InstructionData::s_data[i].wordArg]._value;
 
 				OutputWord(opDataWord);
 			}

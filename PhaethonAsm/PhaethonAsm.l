@@ -4,7 +4,7 @@
 using namespace std;
 #define YY_DECL extern "C" int yylex()
 
-#include "PhaethonAsmTypes.h"
+#include "CodeGen/PhaethonOpCode.h"
 #include "PhaethonAsmLib.h"
 #include "StructDef.h"
 #include "DataSegmentDef.h"
