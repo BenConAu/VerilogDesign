@@ -20,6 +20,9 @@ module ALU(
   `define MovRcA 2
   `define MovRR 3
   `define MovcAR 4
+  `define MovRrAC 7
+  `define MovrACR 8
+  `define MovRrA 9
 
   function [0:0] Is8ByteOpcode;
     input [7:0] opCodeParam;
@@ -28,8 +31,8 @@ module ALU(
         opCodeParam == `MovRcA  ||
         opCodeParam == `MovcAR ||
         opCodeParam == 6 ||
-        opCodeParam == 7 ||
-        opCodeParam == 8 ||
+        opCodeParam == `MovRrAC ||
+        opCodeParam == `MovrACR ||
         opCodeParam == 30 ||
         opCodeParam == 10 ||
         opCodeParam == 11
@@ -44,9 +47,9 @@ module ALU(
 
     if (opCodeParam == `MovRcA ||
         opCodeParam == `MovcAR ||
-        opCodeParam == 7 ||
-        opCodeParam == 8 ||
-        opCodeParam == 9
+        opCodeParam == `MovRrAC ||
+        opCodeParam == `MovrACR ||
+        opCodeParam == `MovRrA
         )
       IsRAMOpcode = 1;
     else
@@ -192,7 +195,7 @@ module ALU(
           // We need to move into further modes
           mode <= 3;
         end
-        else if (opCode == 9)
+        else if (opCode == `MovRrA)
         begin
           // Read from register alone, no constant needed
           mode <= 4;
@@ -247,7 +250,7 @@ module ALU(
           //$display("Requesting read from %h", opDataWord);
         end
 
-        if (opCode == 7)
+        if (opCode == `MovRrAC)
         begin
           // Read values from address encoded in code
           readReq <= 1;
@@ -256,7 +259,7 @@ module ALU(
           //$display("Requesting read from %h", opDataWord + regValue2);
         end
 
-        if (opCode == 9)
+        if (opCode == `MovRrA)
         begin
           // Read values from address encoded in code
           readReq <= 1;
@@ -275,7 +278,7 @@ module ALU(
           //$display("Reqesting write %h to address value %h", regValue2, opDataWord);
         end
 
-        if (opCode == 8)
+        if (opCode == `MovrACR)
         begin
           // Write values to ram requested by instruction
           writeReq <= 1;
@@ -294,7 +297,7 @@ module ALU(
       // Mode 5: Complete data read or write if the instruction
       //         requires it.
       5: begin
-        if (opCode == `MovRcA || opCode == 7 || opCode == 9)
+        if (opCode == `MovRcA || opCode == `MovRrAC || opCode == `MovRrA)
         begin
           // Stop request
           readReq <= 0;
@@ -310,7 +313,7 @@ module ALU(
             mode <= 6;
           end
         end
-        else if (opCode == `MovcAR || opCode == 8)
+        else if (opCode == `MovcAR || opCode == `MovrACR)
         begin
           // Stop request
           writeReq <= 0;
@@ -335,9 +338,11 @@ module ALU(
       6: begin
         // Now we can do writes to non-ram things
         case (opCode)
-          `MovRC:  regarray[regAddress[3:0]] <= opDataWord;             // mov reg, const
-          `MovRcA: regarray[regAddress[3:0]] <= ramValue;               // mov reg, [addr]
-          `MovRR:  regarray[regAddress[3:0]] <= regValue2;              // mov reg, reg
+          `MovRC:    regarray[regAddress[3:0]] <= opDataWord;             // mov reg, const
+          `MovRcA:   regarray[regAddress[3:0]] <= ramValue;               // mov reg, [addr]
+          `MovRR:    regarray[regAddress[3:0]] <= regValue2;              // mov reg, reg
+          `MovRrAC:  regarray[regAddress[3:0]] <= ramValue;               // mov reg, [reg + const]
+          `MovRrA:   regarray[regAddress[3:0]] <= ramValue;               // mov reg, [reg]
 
           5: begin                                                 // cmp reg, reg
             regarray[31][0:0] <= (regValue == regValue2 ? 1 : 0);
@@ -352,8 +357,6 @@ module ALU(
           end
 
           6:  ipointer <= opDataWord;                              // jmp address
-          7:  regarray[regAddress[3:0]] <= ramValue;               // mov reg, [reg + const]
-          9:  regarray[regAddress[3:0]] <= ramValue;               // mov reg, [reg]
 
           20: regarray[regAddress[3:0]] <= fAddResult;             // fadd reg, reg
           21: regarray[regAddress[3:0]] <= fSubResult;             // fsub reg, reg
