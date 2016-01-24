@@ -328,6 +328,7 @@ module ALU(
           `FmaxRRR:    regarray[regAddress[3:0]] <= (fCompareResult == 'b11 ? regValue3 : regValue2);
 
           `AddRC: regarray[regAddress[3:0]] <= regValue + opDataWord;  // add reg, const
+          `IncR:  regarray[regAddress[3:0]] <= regValue + 1;           // dec reg          
           `DecR:  regarray[regAddress[3:0]] <= regValue - 1;           // dec reg
 
           `DoutR: begin
