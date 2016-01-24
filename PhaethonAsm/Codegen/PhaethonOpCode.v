@@ -23,15 +23,15 @@
 
 function [0:0] Is8ByteOpcode;
   input [7:0] opCodeParam;
-  if (opCodeParam == MovRC,
-      opCodeParam == MovRcA,
-      opCodeParam == MovcAR,
-      opCodeParam == MovRrAC,
-      opCodeParam == MovrACR,
-      opCodeParam == CmpRC,
-      opCodeParam == JmpC,
-      opCodeParam == JneC,
-      opCodeParam == AddRC)
+  if (opCodeParam == `MovRC ||
+      opCodeParam == `MovRcA ||
+      opCodeParam == `MovcAR ||
+      opCodeParam == `MovRrAC ||
+      opCodeParam == `MovrACR ||
+      opCodeParam == `CmpRC ||
+      opCodeParam == `JmpC ||
+      opCodeParam == `JneC ||
+      opCodeParam == `AddRC)
     Is8ByteOpcode = 1;
   else
     Is8ByteOpcode = 0;

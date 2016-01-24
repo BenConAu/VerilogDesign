@@ -151,10 +151,10 @@ void OutputInstructions()
         {
             if (!fFirst)
             {
-                fprintf(fvfile, ",\n      ");
+                fprintf(fvfile, " ||\n      ");
             }
 
-            ::fprintf(fvfile, "opCodeParam == %s", data.opCode.c_str());
+            ::fprintf(fvfile, "opCodeParam == `%s", data.opCode.c_str());
 
             fFirst = false;
         }
