@@ -36,3 +36,16 @@ function [0:0] Is8ByteOpcode;
   else
     Is8ByteOpcode = 0;
 endfunction
+
+function [0:0] IsRAMOpcode;
+  input [7:0] opCodeParam;
+  if (opCodeParam == `MovRcA ||
+      opCodeParam == `MovcAR ||
+      opCodeParam == `MovRrAC ||
+      opCodeParam == `MovrACR ||
+      opCodeParam == `MovRrA)
+    IsRAMOpcode = 1;
+  else
+    IsRAMOpcode = 0;
+endfunction
+

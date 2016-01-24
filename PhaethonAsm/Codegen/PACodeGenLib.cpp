@@ -18,6 +18,7 @@ struct InstructionData
         args[2] = a3;
 
         constIndex = -1;
+        fRAM = false;
         opCode = g_symbols[symIndex];
 
         for (int i = 0; i < 3; i++)
@@ -34,6 +35,11 @@ struct InstructionData
                 }
             }
 
+            if (args[i] == Argument::RegAddress || args[i] == Argument::ConstAddress)
+            {
+                fRAM = true;
+            }
+
             opCode.append(Argument::ppszShortTypeText[args[i]]);
         }
     }
@@ -41,6 +47,7 @@ struct InstructionData
     int symIndex;
     int args[3];
     int constIndex;
+    bool fRAM;
     std::string opCode;
 };
 
@@ -159,7 +166,29 @@ void OutputInstructions()
             fFirst = false;
         }
     }
-    ::fprintf(fvfile, ")\n    Is8ByteOpcode = 1;\n  else\n    Is8ByteOpcode = 0;\nendfunction\n");
+    ::fprintf(fvfile, ")\n    Is8ByteOpcode = 1;\n  else\n    Is8ByteOpcode = 0;\nendfunction\n\n");
+
+    // Verilog function to tell opCodes that read or write RAM
+    ::fprintf(fvfile, "function [0:0] IsRAMOpcode;\n  input [7:0] opCodeParam;\n  if (");
+    fFirst = true;
+    for (size_t i = 0; i < g_instructionData.size(); i++)
+    {
+        InstructionData& data = g_instructionData[i];
+
+        if (data.fRAM)
+        {
+            if (!fFirst)
+            {
+                fprintf(fvfile, " ||\n      ");
+            }
+
+            ::fprintf(fvfile, "opCodeParam == `%s", data.opCode.c_str());
+
+            fFirst = false;
+        }
+    }
+    ::fprintf(fvfile, ")\n    IsRAMOpcode = 1;\n  else\n    IsRAMOpcode = 0;\nendfunction\n\n");
+
 
     ::fclose(fvfile);
 }
