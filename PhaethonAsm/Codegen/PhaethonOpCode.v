@@ -10,15 +10,16 @@
 `define JmpC 10
 `define JneC 11
 `define AddRC 12
-`define DecR 13
-`define FaddRR 14
-`define FsubRR 15
-`define FconvR 16
-`define FmulRR 17
-`define FmuladdRRR 18
-`define FminRRR 19
-`define FmaxRRR 20
-`define DoutR 21
+`define IncR 13
+`define DecR 14
+`define FaddRR 15
+`define FsubRR 16
+`define FconvR 17
+`define FmulRR 18
+`define FmuladdRRR 19
+`define FminRRR 20
+`define FmaxRRR 21
+`define DoutR 22
 
 function [0:0] Is8ByteOpcode;
   input [7:0] opCodeParam;

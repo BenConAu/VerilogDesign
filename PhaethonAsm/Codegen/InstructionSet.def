@@ -10,6 +10,7 @@ Cmp      Register      Constant       None
 Jmp      Constant      None           None
 Jne      Constant      None           None
 Add      Register      Constant       None
+Inc      Register      None           None
 Dec      Register      None           None
 Fadd     Register      Register       None
 Fsub     Register      Register       None

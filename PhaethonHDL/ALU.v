@@ -20,37 +20,36 @@ module ALU(
   `define MovRcA 2
   `define MovRR 3
   `define MovcAR 4
-  `define MovRrAC 7
-  `define MovrACR 8
-  `define MovRrA 9
-  `define CmpRR 5
-  `define CmpRC 10
-  `define JmpC 6
+  `define MovRrAC 5
+  `define MovrACR 6
+  `define MovRrA 7
+  `define CmpRR 8
+  `define CmpRC 9
+  `define JmpC 10
   `define JneC 11
-  `define AddRC 30
-  `define DecR 31
-  `define FaddRR 20
-  `define FsubRR 21
-  `define FconvR 22
-  `define FmulRR 23
-  `define FmuladdRRR 24
-  `define FminRRR 25
-  `define FmaxRRR 26
-  `define DoutR 99
+  `define AddRC 12
+  `define IncR 13
+  `define DecR 14
+  `define FaddRR 15
+  `define FsubRR 16
+  `define FconvR 17
+  `define FmulRR 18
+  `define FmuladdRRR 19
+  `define FminRRR 20
+  `define FmaxRRR 21
+  `define DoutR 22
 
   function [0:0] Is8ByteOpcode;
     input [7:0] opCodeParam;
-
     if (opCodeParam == `MovRC ||
-        opCodeParam == `MovRcA  ||
+        opCodeParam == `MovRcA ||
         opCodeParam == `MovcAR ||
-        opCodeParam == `JmpC ||
         opCodeParam == `MovRrAC ||
         opCodeParam == `MovrACR ||
-        opCodeParam == `AddRC ||
         opCodeParam == `CmpRC ||
-        opCodeParam == `JneC
-        )
+        opCodeParam == `JmpC ||
+        opCodeParam == `JneC ||
+        opCodeParam == `AddRC)
       Is8ByteOpcode = 1;
     else
       Is8ByteOpcode = 0;

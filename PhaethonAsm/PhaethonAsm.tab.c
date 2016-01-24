@@ -1424,7 +1424,7 @@ yyreduce:
 
   case 30:
 #line 135 "PhaethonAsm.y" /* yacc.c:1646  */
-    { (yyval.arg) = Argument::Construct(Argument::ConstAddress, GetSymbolAddress((yyvsp[0].symIndex))); }
+    { (yyval.arg) = Argument::Construct(Argument::Constant, GetSymbolAddress((yyvsp[0].symIndex))); }
 #line 1429 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 

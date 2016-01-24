@@ -70,38 +70,34 @@ int GetSymbolAddress(int symIndex)
 struct InstructionData
 {
 	Instructions::Enum instr;
-	unsigned char opCode;
+	OpCodes::Enum opCode;
 	Argument::Type args[3];
 	int wordArg;
 };
 
 InstructionData g_data[] = {
-	{ Instructions::Mov,      1, { Argument::Register,     Argument::Constant,      Argument::None     },     1  },
-	{ Instructions::Mov,      2, { Argument::Register,     Argument::ConstAddress,  Argument::None     },     1  },
-	{ Instructions::Mov,      3, { Argument::Register,     Argument::Register,      Argument::None     },     -1 },
-	{ Instructions::Mov,      4, { Argument::ConstAddress, Argument::Register,      Argument::None     },     0  },
-
-	{ Instructions::Mov,      7, { Argument::Register,     Argument::RegAddress,    Argument::Constant },     2  },
-	{ Instructions::Mov,      8, { Argument::RegAddress,   Argument::Constant,      Argument::Register },     1  },
-	{ Instructions::Mov,      9, { Argument::Register,     Argument::RegAddress,    Argument::None     },     -1 },
-
-	{ Instructions::Cmp,      5, { Argument::Register,     Argument::Register,      Argument::None     },     -1 },
-	{ Instructions::Cmp,     10, { Argument::Register,     Argument::Constant,      Argument::None     },     1  },
-	{ Instructions::Jmp,      6, { Argument::ConstAddress, Argument::None,          Argument::None     },     0  },
-	{ Instructions::Jne,     11, { Argument::ConstAddress, Argument::None,          Argument::None     },     0  },
-
-	{ Instructions::Add,     30, { Argument::Register,     Argument::Constant,      Argument::None     },     1  },
-	{ Instructions::Dec,     31, { Argument::Register,     Argument::None,          Argument::None     },     -1 },
-
-	{ Instructions::Fadd,    20, { Argument::Register,     Argument::Register,      Argument::None     },     -1 },
-	{ Instructions::Fsub,    21, { Argument::Register,     Argument::Register,      Argument::None     },     -1 },
-	{ Instructions::Fconv,   22, { Argument::Register,     Argument::None,          Argument::None     },     -1 },
-	{ Instructions::Fmul,    23, { Argument::Register,     Argument::Register,      Argument::None     },     -1 },
-	{ Instructions::Fmuladd, 24, { Argument::Register,     Argument::Register,      Argument::Register },     -1 },
-	{ Instructions::Fmin,    25, { Argument::Register,     Argument::Register,      Argument::Register },     -1 },
-	{ Instructions::Fmax,    26, { Argument::Register,     Argument::Register,      Argument::Register },     -1 },
-
-	{ Instructions::Dout,    99, { Argument::Register,     Argument::None,          Argument::None     },     -1 },
+    { Instructions::Mov       , OpCodes::MovRC          , { Argument::Register       , Argument::Constant       , Argument::None            }, 1 },
+    { Instructions::Mov       , OpCodes::MovRcA         , { Argument::Register       , Argument::ConstAddress   , Argument::None            }, 1 },
+    { Instructions::Mov       , OpCodes::MovRR          , { Argument::Register       , Argument::Register       , Argument::None            }, -1 },
+    { Instructions::Mov       , OpCodes::MovcAR         , { Argument::ConstAddress   , Argument::Register       , Argument::None            }, 0 },
+    { Instructions::Mov       , OpCodes::MovRrAC        , { Argument::Register       , Argument::RegAddress     , Argument::Constant        }, 2 },
+    { Instructions::Mov       , OpCodes::MovrACR        , { Argument::RegAddress     , Argument::Constant       , Argument::Register        }, 1 },
+    { Instructions::Mov       , OpCodes::MovRrA         , { Argument::Register       , Argument::RegAddress     , Argument::None            }, -1 },
+    { Instructions::Cmp       , OpCodes::CmpRR          , { Argument::Register       , Argument::Register       , Argument::None            }, -1 },
+    { Instructions::Cmp       , OpCodes::CmpRC          , { Argument::Register       , Argument::Constant       , Argument::None            }, 1 },
+    { Instructions::Jmp       , OpCodes::JmpC           , { Argument::Constant       , Argument::None           , Argument::None            }, 0 },
+    { Instructions::Jne       , OpCodes::JneC           , { Argument::Constant       , Argument::None           , Argument::None            }, 0 },
+    { Instructions::Add       , OpCodes::AddRC          , { Argument::Register       , Argument::Constant       , Argument::None            }, 1 },
+    { Instructions::Inc       , OpCodes::IncR           , { Argument::Register       , Argument::None           , Argument::None            }, -1 },
+    { Instructions::Dec       , OpCodes::DecR           , { Argument::Register       , Argument::None           , Argument::None            }, -1 },
+    { Instructions::Fadd      , OpCodes::FaddRR         , { Argument::Register       , Argument::Register       , Argument::None            }, -1 },
+    { Instructions::Fsub      , OpCodes::FsubRR         , { Argument::Register       , Argument::Register       , Argument::None            }, -1 },
+    { Instructions::Fconv     , OpCodes::FconvR         , { Argument::Register       , Argument::None           , Argument::None            }, -1 },
+    { Instructions::Fmul      , OpCodes::FmulRR         , { Argument::Register       , Argument::Register       , Argument::None            }, -1 },
+    { Instructions::Fmuladd   , OpCodes::FmuladdRRR     , { Argument::Register       , Argument::Register       , Argument::Register        }, -1 },
+    { Instructions::Fmin      , OpCodes::FminRRR        , { Argument::Register       , Argument::Register       , Argument::Register        }, -1 },
+    { Instructions::Fmax      , OpCodes::FmaxRRR        , { Argument::Register       , Argument::Register       , Argument::Register        }, -1 },
+    { Instructions::Dout      , OpCodes::DoutR          , { Argument::Register       , Argument::None           , Argument::None            }, -1 },
 };
 
 void OutputBytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned char b4)

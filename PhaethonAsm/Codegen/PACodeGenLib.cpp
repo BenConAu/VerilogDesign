@@ -109,8 +109,9 @@ void OutputInstructions()
     for (size_t i = 0; i < g_instructionData.size(); i++)
     {
         InstructionData& data = g_instructionData[i];
-        ::fprintf(fcppfile, "    { Instructions::%s, { Argument::%s, Argument::%s, Argument::%s }, %d },\n",
+        ::fprintf(fcppfile, "    { Instructions::%s, OpCodes::%s, { Argument::%s, Argument::%s, Argument::%s }, %d },\n",
             Pad(g_symbols[data.symIndex], 10).c_str(),
+            Pad(data.opCode, 15).c_str(),
             Pad(Argument::ppszTypeText[data.args[0]], 15).c_str(),
             Pad(Argument::ppszTypeText[data.args[1]], 15).c_str(),
             Pad(Argument::ppszTypeText[data.args[2]], 15).c_str(),

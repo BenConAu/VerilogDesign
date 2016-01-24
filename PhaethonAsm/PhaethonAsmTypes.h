@@ -7,21 +7,51 @@ namespace Instructions
 {
     enum Enum
     {
+        Unknown,
+        Mov,
+        Cmp,
+        Jmp,
+        Jne,
+        Add,
+        Inc,
+        Dec,
+        Fadd,
+        Fsub,
+        Fconv,
+        Fmul,
+        Fmuladd,
+        Fmin,
+        Fmax,
+        Dout,
+    };
+}
+
+namespace OpCodes
+{
+    enum Enum
+    {
         Unknown = 0,
-        Mov = 1,
-        Fconv = 2,
-        Fadd = 3,
-        Cmp = 4,
-        Jmp = 5,
-        Fmul = 6,
-        Fmuladd = 7,
-        Fmin = 8,
-        Fsub = 9,
-        Dout = 10,
-        Inc = 11,
-        Add = 12,
-        Dec = 13,
-        Fmax = 14,
-        Jne = 15,
+        MovRC = 1,
+        MovRcA = 2,
+        MovRR = 3,
+        MovcAR = 4,
+        MovRrAC = 5,
+        MovrACR = 6,
+        MovRrA = 7,
+        CmpRR = 8,
+        CmpRC = 9,
+        JmpC = 10,
+        JneC = 11,
+        AddRC = 12,
+        IncR = 13,
+        DecR = 14,
+        FaddRR = 15,
+        FsubRR = 16,
+        FconvR = 17,
+        FmulRR = 18,
+        FmuladdRRR = 19,
+        FminRRR = 20,
+        FmaxRRR = 21,
+        DoutR = 22,
     };
 }
