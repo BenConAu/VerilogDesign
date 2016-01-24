@@ -23,6 +23,8 @@ module ALU(
   `define MovRrAC 7
   `define MovrACR 8
   `define MovRrA 9
+  `define CmpRR 5
+  `define CmpRC 10
 
   function [0:0] Is8ByteOpcode;
     input [7:0] opCodeParam;
@@ -34,7 +36,7 @@ module ALU(
         opCodeParam == `MovRrAC ||
         opCodeParam == `MovrACR ||
         opCodeParam == 30 ||
-        opCodeParam == 10 ||
+        opCodeParam == `CmpRC ||
         opCodeParam == 11
         )
       Is8ByteOpcode = 1;
@@ -344,13 +346,13 @@ module ALU(
           `MovRrAC:  regarray[regAddress[3:0]] <= ramValue;               // mov reg, [reg + const]
           `MovRrA:   regarray[regAddress[3:0]] <= ramValue;               // mov reg, [reg]
 
-          5: begin                                                 // cmp reg, reg
+          `CmpRR: begin                                                   // cmp reg, reg
             regarray[31][0:0] <= (regValue == regValue2 ? 1 : 0);
             regarray[31][1:1] <= (regValue < regValue2 ? 1 : 0);
             regarray[31][2:2] <= (regValue > regValue2 ? 1 : 0);
           end
 
-          10: begin
+          `CmpRC: begin
             regarray[31][0:0] <= (regValue == opDataWord ? 1 : 0);
             regarray[31][1:1] <= (regValue < opDataWord ? 1 : 0);
             regarray[31][2:2] <= (regValue > opDataWord ? 1 : 0);
