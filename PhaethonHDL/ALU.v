@@ -36,6 +36,7 @@ module ALU(
   `define FmuladdRRR 24
   `define FminRRR 25
   `define FmaxRRR 26
+  `define DoutR 99
 
   function [0:0] Is8ByteOpcode;
     input [7:0] opCodeParam;
@@ -382,7 +383,7 @@ module ALU(
           `AddRC: regarray[regAddress[3:0]] <= regValue + opDataWord;  // add reg, const
           `DecR:  regarray[regAddress[3:0]] <= regValue - 1;           // dec reg
 
-          99: begin
+          `DoutR: begin
             $display("DebugOut %h", regValue);
           end
 
