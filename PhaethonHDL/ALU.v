@@ -16,6 +16,39 @@ module ALU(
   debug        // [Output] Debug port
   );
 
+  function [0:0] Is8ByteOpcode;
+    input [7:0] opCodeParam;
+
+    if (opCodeParam == 1 ||
+        opCodeParam == 2 ||
+        opCodeParam == 4 ||
+        opCodeParam == 6 ||
+        opCodeParam == 7 ||
+        opCodeParam == 8 ||
+        opCodeParam == 30 ||
+        opCodeParam == 10 ||
+        opCodeParam == 11
+        )
+      Is8ByteOpcode = 1;
+    else
+      Is8ByteOpcode = 0;
+  endfunction
+
+  function [0:0] IsRAMOpcode;
+    input [7:0] opCodeParam;
+
+    if (opCodeParam == 2 ||
+        opCodeParam == 4 ||
+        opCodeParam == 7 ||
+        opCodeParam == 8 ||
+        opCodeParam == 9
+        )
+      IsRAMOpcode = 1;
+    else
+      IsRAMOpcode = 0;
+  endfunction
+
+
   // Input / output
   input  wire        clk;
   input  wire        reset;
@@ -145,7 +178,7 @@ module ALU(
         // Determine if a conditional jump needs to happen
         if (opCode == 11 && regarray[31][0:0] == 1'b0) condJump <= 1'b1;
 
-        if (opCode == 1 || opCode == 2 || opCode == 4 || opCode == 6 || opCode == 7 || opCode == 8 || opCode == 30 || opCode == 10 || opCode == 11)
+        if (Is8ByteOpcode(opCode) == 1)
         begin
           // Read values from ram requested by instruction
           readReq <= 1;
@@ -187,7 +220,7 @@ module ALU(
 
           // Move to next mode - only progress to data read / write
           // for opCodes that actually need it.
-          if (opCode == 2 || opCode == 4 || opCode == 7 || opCode == 8)
+          if (IsRAMOpcode(opCode) == 1)
             mode <= 4;
           else
             mode <= 6;
