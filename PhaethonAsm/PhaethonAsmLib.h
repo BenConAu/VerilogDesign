@@ -1,6 +1,7 @@
 #pragma once
 
 #include "PhaethonAsmTypes.h"
+#include "Argument.h"
 
 void OutputInstruction(Instructions::Enum instr, Argument a1, Argument a2, Argument a3);
 int AddSymbol(const char* pszSymbol);
