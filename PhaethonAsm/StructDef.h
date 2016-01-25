@@ -31,9 +31,9 @@ public:
             if (s_defs[i]->GetIntProperty("name") == typeSymbol)
             {
                 int storedSize = s_defs[i]->GetIntProperty("size");
-
                 if (storedSize != 0)
                 {
+                    // This is a built-in type, so return the size
                     return storedSize;
                 }
                 else

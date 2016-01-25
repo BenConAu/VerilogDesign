@@ -86,7 +86,10 @@ datasegment_item_list:
 	;
 
 datasegment_item:
-      SYMBOL_TOKEN SYMBOL_TOKEN constant_list                          { $3->SetIntProperty("type", $1); $3->SetIntProperty("name", $2); $$ = $3; }
+      SYMBOL_TOKEN SYMBOL_TOKEN ADDR_LEFT INT_TOKEN ADDR_RIGHT         {
+		  $$ = DataSegmentItemDef::Construct(nullptr); $$->SetIntProperty("type", $1); $$->SetIntProperty("name", $2); $$->SetIntProperty("arraySize", $4);
+	}
+    | SYMBOL_TOKEN SYMBOL_TOKEN constant_list                          { $3->SetIntProperty("type", $1); $3->SetIntProperty("name", $2); $$ = $3; }
 	| SYMBOL_TOKEN constant_list                                       { $2->SetIntProperty("type", $1); $2->SetIntProperty("name", -1); $$ = $2; }
 	;
 
@@ -109,7 +112,7 @@ struct_member_list:
     ;
 
 struct_member:
-      SYMBOL_TOKEN                                                     { $$ = StructMember::Construct(); $$->SetIntProperty("name", $1); }
+	  SYMBOL_TOKEN                                                     { $$ = StructMember::Construct(); $$->SetIntProperty("name", $1); }
 	;
 
 instruction:

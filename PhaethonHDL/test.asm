@@ -23,6 +23,12 @@ datasegment
   Triangle t3     1 2 3
 enddata
 
+datasegment
+  word     stack[64]
+enddata
+
+// Init stack
+mov rsp, &stack
 begin:
 // First find extent of first box
 mov r0, &vcount

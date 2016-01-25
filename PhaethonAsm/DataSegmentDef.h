@@ -15,6 +15,22 @@ public:
 class DataSegmentItemDef : public AssemblerListNode<DataSegmentItemDef,DataSegmentItemEntry>
 {
 public:
+    int CalcSize()
+    {
+        // Calculate size of the base type
+        int baseSize = StructDef::GetSize(GetIntProperty("type"));
+
+        // If the item is an array then use the size
+        int arraySize = GetIntProperty("arraySize");
+        if (arraySize != 0)
+        {
+            baseSize *= arraySize;
+        }
+
+        return baseSize;
+    }
+
+public:
     static std::vector<std::unique_ptr<DataSegmentItemDef> > s_defs;
     static std::vector<std::unique_ptr<DataSegmentItemDef> >& GlobalList() { return s_defs; }
 };
@@ -36,12 +52,23 @@ public:
     		DataSegmentItemDef* itemDef = GetItem(i);
     		//		printf("Item %d has count %d\n", i, itemDef->GetItemCount());
 
-    		for (int j = 0; j < itemDef->GetItemCount(); j++)
-    		{
-    			DataSegmentItemEntry* entry = itemDef->GetItem(j);
+            int arraySize = itemDef->GetIntProperty("arraySize");
+            if (arraySize != 0)
+            {
+                for (int j = 0; j < arraySize; j++)
+                {
+                    OutputWord(0x13371337);
+                }
+            }
+            else
+            {
+    		    for (int j = 0; j < itemDef->GetItemCount(); j++)
+    		    {
+    			    DataSegmentItemEntry* entry = itemDef->GetItem(j);
 
-    			OutputWord(entry->GetIntProperty("value"));
-    		}
+    	            OutputWord(entry->GetIntProperty("value"));
+    		    }
+            }
     	}
     }
 
@@ -51,7 +78,7 @@ public:
 
         for (int i = 0; i < GetItemCount(); i++)
         {
-            size += StructDef::GetSize(GetItem(i)->GetIntProperty("type"));
+            size += GetItem(i)->CalcSize();
         }
 
         return size;
@@ -93,7 +120,7 @@ public:
 
                 //printf("Type of item %d is %d\n", i, itemDef->GetIntProperty("type"));
 
-                startByte += StructDef::GetSize(itemDef->GetIntProperty("type"));
+                startByte += itemDef->CalcSize();
         	}
         }
 
