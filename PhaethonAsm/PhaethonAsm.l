@@ -33,8 +33,8 @@ using namespace std;
 "fadd"               { yylval.instrIndex = Instructions::Fadd; return INSTR_TOKEN_2; }
 "fsub"               { yylval.instrIndex = Instructions::Fadd; return INSTR_TOKEN_2; }
 "fmuladd"            { yylval.instrIndex = Instructions::Fmuladd; return INSTR_TOKEN_3; }
-"fmin"               { yylval.instrIndex = Instructions::Fmin; return INSTR_TOKEN_3; }
-"fmax"               { yylval.instrIndex = Instructions::Fmax; return INSTR_TOKEN_3; }
+"fmin"               { yylval.instrIndex = Instructions::Fmin; return INSTR_TOKEN_2; }
+"fmax"               { yylval.instrIndex = Instructions::Fmax; return INSTR_TOKEN_2; }
 "fmul"               { yylval.instrIndex = Instructions::Fmul; return INSTR_TOKEN_2; }
 "cmp"                { yylval.instrIndex = Instructions::Cmp; return INSTR_TOKEN_2; }
 "jmp"                { yylval.instrIndex = Instructions::Jmp; return INSTR_TOKEN_1; }

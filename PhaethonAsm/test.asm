@@ -44,7 +44,6 @@ fmin r2, r2, r8
 fmin r3, r3, r9
 fmin r4, r4, r10
 fmax r5, r5, r8
-dout r5
 fmax r6, r6, r9
 fmax r7, r7, r10
 add r0, sizeof(Vector)

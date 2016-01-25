@@ -916,12 +916,12 @@ YY_RULE_SETUP
 case 19:
 YY_RULE_SETUP
 #line 36 "PhaethonAsm.l"
-{ yylval.instrIndex = Instructions::Fmin; return INSTR_TOKEN_3; }
+{ yylval.instrIndex = Instructions::Fmin; return INSTR_TOKEN_2; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
 #line 37 "PhaethonAsm.l"
-{ yylval.instrIndex = Instructions::Fmax; return INSTR_TOKEN_3; }
+{ yylval.instrIndex = Instructions::Fmax; return INSTR_TOKEN_2; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP

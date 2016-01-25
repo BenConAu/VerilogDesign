@@ -20,8 +20,8 @@ InstructionData InstructionData::s_data[] = {
     { Instructions::Fconv     , OpCodes::FconvR         , { Argument::Register       , Argument::None           , Argument::None            }, -1 },
     { Instructions::Fmul      , OpCodes::FmulRR         , { Argument::Register       , Argument::Register       , Argument::None            }, -1 },
     { Instructions::Fmuladd   , OpCodes::FmuladdRRR     , { Argument::Register       , Argument::Register       , Argument::Register        }, -1 },
-    { Instructions::Fmin      , OpCodes::FminRRR        , { Argument::Register       , Argument::Register       , Argument::Register        }, -1 },
-    { Instructions::Fmax      , OpCodes::FmaxRRR        , { Argument::Register       , Argument::Register       , Argument::Register        }, -1 },
+    { Instructions::Fmin      , OpCodes::FminRR         , { Argument::Register       , Argument::Register       , Argument::None            }, -1 },
+    { Instructions::Fmax      , OpCodes::FmaxRR         , { Argument::Register       , Argument::Register       , Argument::None            }, -1 },
     { Instructions::Dout      , OpCodes::DoutR          , { Argument::Register       , Argument::None           , Argument::None            }, -1 },
 };
 

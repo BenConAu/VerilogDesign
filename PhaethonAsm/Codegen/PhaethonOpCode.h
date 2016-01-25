@@ -46,8 +46,8 @@ namespace OpCodes
         FconvR = 17,
         FmulRR = 18,
         FmuladdRRR = 19,
-        FminRRR = 20,
-        FmaxRRR = 21,
+        FminRR = 20,
+        FmaxRR = 21,
         DoutR = 22,
     };
 }

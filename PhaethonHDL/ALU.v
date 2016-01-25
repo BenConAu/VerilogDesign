@@ -63,7 +63,7 @@ module ALU(
   FloatingFromInt     fConv(regValue, fConvResult, floatDebug, clk, fOpEnable[2:2]);
   FloatingMultiply    fMul(regValue, regValue2, fMulResult, floatDebug, clk, fOpEnable[3:3]);
   FloatingMultiplyAdd fMulAdd(regValue, regValue2, regValue3, fMulAddResult, floatDebug, clk, fOpEnable[4:4]);
-  FloatingCompare     fComp(regValue2, regValue3, fCompareResult, floatDebug, clk, fOpEnable[5:5]);
+  FloatingCompare     fComp(regValue, regValue2, fCompareResult, floatDebug, clk, fOpEnable[5:5]);
 
   //initial
   //   $monitor("%t, ram = %h, %h, %h, %h : %h, %h, %h, %h",
@@ -141,8 +141,8 @@ module ALU(
         if (opCode == `FconvR) fOpEnable[2:2] <= 1;
         if (opCode == `FmulRR) fOpEnable[3:3] <= 1;
         if (opCode == `FmuladdRRR) fOpEnable[4:4] <= 1;
-        if (opCode == `FminRRR) fOpEnable[5:5] <= 1;
-        if (opCode == `FmaxRRR) fOpEnable[5:5] <= 1;
+        if (opCode == `FminRR) fOpEnable[5:5] <= 1;
+        if (opCode == `FmaxRR) fOpEnable[5:5] <= 1;
 
         // Determine if a conditional jump needs to happen
         if (opCode == `JneC && regarray[31][0:0] == 1'b0) condJump <= 1'b1;
@@ -324,11 +324,11 @@ module ALU(
           `FconvR:     regarray[regAddress[3:0]] <= fConvResult;            // fconv reg
           `FmulRR:     regarray[regAddress[3:0]] <= fMulResult;             // fmul reg, reg
           `FmuladdRRR: regarray[regAddress[3:0]] <= fMulAddResult;          // fmul reg, reg
-          `FminRRR:    regarray[regAddress[3:0]] <= (fCompareResult == 'b01 ? regValue3 : regValue2);
-          `FmaxRRR:    regarray[regAddress[3:0]] <= (fCompareResult == 'b11 ? regValue3 : regValue2);
+          `FminRR:     regarray[regAddress[3:0]] <= (fCompareResult == 'b01 ? regValue2 : regValue);
+          `FmaxRR:     regarray[regAddress[3:0]] <= (fCompareResult == 'b11 ? regValue2 : regValue);
 
           `AddRC: regarray[regAddress[3:0]] <= regValue + opDataWord;  // add reg, const
-          `IncR:  regarray[regAddress[3:0]] <= regValue + 1;           // dec reg          
+          `IncR:  regarray[regAddress[3:0]] <= regValue + 1;           // dec reg
           `DecR:  regarray[regAddress[3:0]] <= regValue - 1;           // dec reg
 
           `DoutR: begin

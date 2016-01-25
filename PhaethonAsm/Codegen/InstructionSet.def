@@ -17,6 +17,6 @@ Fsub     Register      Register       None
 Fconv    Register      None           None
 Fmul     Register      Register       None
 Fmuladd  Register      Register       Register
-Fmin     Register      Register       Register
-Fmax     Register      Register       Register
+Fmin     Register      Register       None
+Fmax     Register      Register       None
 Dout     Register      None           None

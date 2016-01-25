@@ -17,8 +17,8 @@
 `define FconvR 17
 `define FmulRR 18
 `define FmuladdRRR 19
-`define FminRRR 20
-`define FmaxRRR 21
+`define FminRR 20
+`define FmaxRR 21
 `define DoutR 22
 
 function [0:0] Is8ByteOpcode;
