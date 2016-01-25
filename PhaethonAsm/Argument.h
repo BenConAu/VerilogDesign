@@ -22,6 +22,18 @@ public:
 
 		a._type = t;
 		a._value = v;
+		a._fDelayed = false;
+
+		return a;
+	}
+
+	static Argument ConstructDelayed(Type t, int symbol)
+	{
+		Argument a;
+
+		a._type = t;
+		a._value = symbol;
+		a._fDelayed = true;
 
 		return a;
 	}
@@ -33,7 +45,10 @@ public:
 		return a;
 	}
 
+	void ResolveSymbol();
+
 public:
 	int _type;
 	unsigned int _value;
+	bool _fDelayed;
 };

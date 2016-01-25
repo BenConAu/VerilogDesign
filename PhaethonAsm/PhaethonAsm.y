@@ -8,6 +8,7 @@ using namespace std;
 #include "PhaethonAsmLib.h"
 #include "StructDef.h"
 #include "DataSegmentDef.h"
+#include "InstructionNode.h"
 
 // stuff from flex that bison needs to know about:
 extern "C" int yylex();
@@ -17,11 +18,6 @@ extern "C" FILE *yyin;
 void yyerror(const char *s);
 %}
 
-// Bison fundamentally works by asking flex to get the next token, which it
-// returns as an object of type "yystype".  But tokens could be of any
-// arbitrary data type!  So we deal with that in Bison by defining a C union
-// holding each of the types of tokens that Flex could return, and have Bison
-// use that union instead of "int" for the definition of "yystype":
 %union {
 	int intVal;
 	float floatVal;
@@ -34,10 +30,9 @@ void yyerror(const char *s);
 	DataSegmentDef* dataSegmentDef;
 	DataSegmentItemDef* dataSegmentItemDef;
 	DataSegmentItemEntry* dataSegmentItemEntry;
+	InstructionNode* instructonNode;
 }
 
-// define the "terminal symbol" token types I'm going to use (in CAPS
-// by convention), and associate each with a field of the union:
 %token <intVal> INT_TOKEN
 %token <instrIndex> INSTR_TOKEN_1
 %token <instrIndex> INSTR_TOKEN_2
@@ -65,6 +60,7 @@ void yyerror(const char *s);
 %type <dataSegmentItemDef> datasegment_item
 %type <dataSegmentItemDef> constant_list
 %type <dataSegmentItemEntry> constant_item
+%type <instructonNode> instruction
 
 %%
 
@@ -81,7 +77,7 @@ assembler_unit:
     ;
 
 datasegment_definition:
-      DATASEGMENT_TOKEN INT_TOKEN datasegment_item_list ENDDATA_TOKEN  { $3->SetIntProperty("address", $2); }
+      DATASEGMENT_TOKEN datasegment_item_list ENDDATA_TOKEN
 	;
 
 datasegment_item_list:
@@ -117,12 +113,12 @@ struct_member:
 	;
 
 instruction:
-      INSTR_TOKEN_3 argument COMMA_TOKEN argument COMMA_TOKEN argument { OutputInstruction($1, $2, $4, $6); }
-	| INSTR_TOKEN_2 argument COMMA_TOKEN argument DEREF_TOKEN argument { OutputInstruction($1, $2, $4, $6); }
-	| INSTR_TOKEN_2 argument DEREF_TOKEN argument COMMA_TOKEN argument { OutputInstruction($1, $2, $4, $6); }
-    | INSTR_TOKEN_2 argument COMMA_TOKEN argument                      { OutputInstruction($1, $2, $4, Argument::ConstructNone()); }
+      INSTR_TOKEN_3 argument COMMA_TOKEN argument COMMA_TOKEN argument { $$ = InstructionNode::Construct(); $$->StoreInstruction($1, $2, $4, $6); }
+	| INSTR_TOKEN_2 argument COMMA_TOKEN argument DEREF_TOKEN argument { $$ = InstructionNode::Construct(); $$->StoreInstruction($1, $2, $4, $6); }
+	| INSTR_TOKEN_2 argument DEREF_TOKEN argument COMMA_TOKEN argument { $$ = InstructionNode::Construct(); $$->StoreInstruction($1, $2, $4, $6); }
+    | INSTR_TOKEN_2 argument COMMA_TOKEN argument                      { $$ = InstructionNode::Construct(); $$->StoreInstruction($1, $2, $4, Argument::ConstructNone()); }
     | INSTR_TOKEN_1 argument                                           {
-    	OutputInstruction($1, $2, Argument::ConstructNone(), Argument::ConstructNone());
+    	$$ = InstructionNode::Construct(); $$->StoreInstruction($1, $2, Argument::ConstructNone(), Argument::ConstructNone());
     }
     ;
 
@@ -132,8 +128,8 @@ argument:
 	| ADDR_LEFT REG_TOKEN ADDR_RIGHT                                   { $$ = Argument::Construct(Argument::RegAddress, $2);  }
     | INT_TOKEN                                                        { $$ = Argument::Construct(Argument::Constant, $1); }
 	| SYMBOL_TOKEN MEMBEROF_TOKEN SYMBOL_TOKEN                         { $$ = Argument::Construct(Argument::Constant, StructDef::CalcOffset($1, $3)); }
-    | SYMBOL_TOKEN                                                     { $$ = Argument::Construct(Argument::Constant, GetSymbolAddress($1)); }
-	| ADDRESSOF_TOKEN SYMBOL_TOKEN                                     { $$ = Argument::Construct(Argument::Constant, DataSegmentDef::CalcAddress($2)); }
+    | SYMBOL_TOKEN                                                     { $$ = Argument::Construct(Argument::Constant, GetLabelAddress($1)); }
+	| ADDRESSOF_TOKEN SYMBOL_TOKEN                                     { $$ = Argument::ConstructDelayed(Argument::Constant, $2); }
 	| SIZEOF_TOKEN LEFT_PAREN_TOKEN SYMBOL_TOKEN RIGHT_PAREN_TOKEN     { $$ = Argument::Construct(Argument::Constant, StructDef::GetSize($3)); }
     ;
 
@@ -163,8 +159,7 @@ int main(int argc, char** argv)
 		yyparse();
 	} while (!feof(yyin));
 
-    // Spit out the data segment
-	OutputDataSegment();
+	OutputCode();
 }
 
 void yyerror(const char *s) {

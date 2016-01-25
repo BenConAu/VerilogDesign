@@ -1,6 +1,9 @@
 #pragma once
 
 #include "AssemblerListNode.h"
+#include "PhaethonAsmLib.h"
+#include "StructDef.h"
+#include "InstructionNode.h"
 
 class DataSegmentItemEntry : public AssemblerNode<DataSegmentItemEntry>
 {
@@ -19,11 +22,66 @@ public:
 class DataSegmentDef : public AssemblerListNode<DataSegmentDef, DataSegmentItemDef>
 {
 public:
+    DataSegmentDef()
+    {
+        _startAddress = -1;
+    }
+
+    void OutputDataSegment()
+    {
+    	for (int i = 0; i < GetItemCount(); i++)
+    	{
+    		//		printf("Doing item %d in Data segment\n", i);
+
+    		DataSegmentItemDef* itemDef = GetItem(i);
+    		//		printf("Item %d has count %d\n", i, itemDef->GetItemCount());
+
+    		for (int j = 0; j < itemDef->GetItemCount(); j++)
+    		{
+    			DataSegmentItemEntry* entry = itemDef->GetItem(j);
+
+    			OutputWord(entry->GetIntProperty("value"));
+    		}
+    	}
+    }
+
+    int GetSize()
+    {
+        int size = 0;
+
+        for (int i = 0; i < GetItemCount(); i++)
+        {
+            size += StructDef::GetSize(GetItem(i)->GetIntProperty("type"));
+        }
+
+        return size;
+    }
+
+    static void ResolveSymbols()
+    {
+        // We know the start position of the data segments - end of code
+        int startByte = InstructionNode::GetCodeSize();
+
+        // Set the start address of each segment
+        for (size_t i = 0; i < DataSegmentDef::s_defs.size(); i++)
+        {
+            //printf("Setting start of segment to %x\n", startByte);
+            s_defs[i]->_startAddress = startByte;
+            startByte += s_defs[i]->GetSize();
+        }
+
+        // Now we can resolve all of the instructions
+        for (size_t i = 0; i < InstructionNode::GlobalList().size(); i++)
+        {
+            InstructionNode::GlobalList()[i]->ResolveSymbols();
+        }
+    }
+
     static int CalcAddress(int symbol)
     {
         for (int ds = 0; ds < DataSegmentDef::s_defs.size(); ds++)
         {
-            int startByte = DataSegmentDef::s_defs[ds]->GetIntProperty("address");
+            int startByte = s_defs[ds]->_startAddress;
 
         	for (int i = 0; i < DataSegmentDef::s_defs[ds]->GetItemCount(); i++)
         	{
@@ -44,4 +102,7 @@ public:
 
     static std::vector<std::unique_ptr<DataSegmentDef> > s_defs;
     static std::vector<std::unique_ptr<DataSegmentDef> >& GlobalList() { return s_defs; }
+
+private:
+    int _startAddress;
 };

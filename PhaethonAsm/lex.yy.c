@@ -542,9 +542,10 @@ using namespace std;
 #include "PhaethonAsmLib.h"
 #include "StructDef.h"
 #include "DataSegmentDef.h"
+#include "InstructionNode.h"
 #include "PhaethonAsm.tab.h"
 
-#line 548 "lex.yy.c"
+#line 549 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -762,9 +763,9 @@ YY_DECL
 		}
 
 	{
-#line 17 "PhaethonAsm.l"
+#line 18 "PhaethonAsm.l"
 
-#line 768 "lex.yy.c"
+#line 769 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -824,191 +825,191 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 18 "PhaethonAsm.l"
+#line 19 "PhaethonAsm.l"
 ;
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 19 "PhaethonAsm.l"
+#line 20 "PhaethonAsm.l"
 ;
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 20 "PhaethonAsm.l"
+#line 21 "PhaethonAsm.l"
 { return MEMBEROF_TOKEN; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 21 "PhaethonAsm.l"
+#line 22 "PhaethonAsm.l"
 { return COLON_TOKEN; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 22 "PhaethonAsm.l"
+#line 23 "PhaethonAsm.l"
 { return COMMA_TOKEN; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 23 "PhaethonAsm.l"
+#line 24 "PhaethonAsm.l"
 { return ADDR_LEFT; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 24 "PhaethonAsm.l"
+#line 25 "PhaethonAsm.l"
 { return ADDR_RIGHT; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 25 "PhaethonAsm.l"
+#line 26 "PhaethonAsm.l"
 { return ADDRESSOF_TOKEN; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 26 "PhaethonAsm.l"
+#line 27 "PhaethonAsm.l"
 { return DEREF_TOKEN; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 27 "PhaethonAsm.l"
+#line 28 "PhaethonAsm.l"
 { return LEFT_PAREN_TOKEN; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 28 "PhaethonAsm.l"
+#line 29 "PhaethonAsm.l"
 { return RIGHT_PAREN_TOKEN; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 29 "PhaethonAsm.l"
+#line 30 "PhaethonAsm.l"
 { yylval.intVal = atoi(yytext); return INT_TOKEN; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 30 "PhaethonAsm.l"
+#line 31 "PhaethonAsm.l"
 { yylval.floatVal = (float)atof(yytext + 1); return INT_TOKEN; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 31 "PhaethonAsm.l"
+#line 32 "PhaethonAsm.l"
 { yylval.instrIndex = Instructions::Mov; return INSTR_TOKEN_2; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 32 "PhaethonAsm.l"
+#line 33 "PhaethonAsm.l"
 { yylval.instrIndex = Instructions::Fconv; return INSTR_TOKEN_1; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 33 "PhaethonAsm.l"
+#line 34 "PhaethonAsm.l"
 { yylval.instrIndex = Instructions::Fadd; return INSTR_TOKEN_2; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 34 "PhaethonAsm.l"
+#line 35 "PhaethonAsm.l"
 { yylval.instrIndex = Instructions::Fadd; return INSTR_TOKEN_2; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 35 "PhaethonAsm.l"
+#line 36 "PhaethonAsm.l"
 { yylval.instrIndex = Instructions::Fmuladd; return INSTR_TOKEN_3; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 36 "PhaethonAsm.l"
+#line 37 "PhaethonAsm.l"
 { yylval.instrIndex = Instructions::Fmin; return INSTR_TOKEN_2; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 37 "PhaethonAsm.l"
+#line 38 "PhaethonAsm.l"
 { yylval.instrIndex = Instructions::Fmax; return INSTR_TOKEN_2; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 38 "PhaethonAsm.l"
+#line 39 "PhaethonAsm.l"
 { yylval.instrIndex = Instructions::Fmul; return INSTR_TOKEN_2; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 39 "PhaethonAsm.l"
+#line 40 "PhaethonAsm.l"
 { yylval.instrIndex = Instructions::Cmp; return INSTR_TOKEN_2; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 40 "PhaethonAsm.l"
+#line 41 "PhaethonAsm.l"
 { yylval.instrIndex = Instructions::Jmp; return INSTR_TOKEN_1; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 41 "PhaethonAsm.l"
+#line 42 "PhaethonAsm.l"
 { yylval.instrIndex = Instructions::Jne; return INSTR_TOKEN_1; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 42 "PhaethonAsm.l"
+#line 43 "PhaethonAsm.l"
 { yylval.instrIndex = Instructions::Dout; return INSTR_TOKEN_1; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 43 "PhaethonAsm.l"
+#line 44 "PhaethonAsm.l"
 { yylval.instrIndex = Instructions::Inc; return INSTR_TOKEN_1; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 44 "PhaethonAsm.l"
+#line 45 "PhaethonAsm.l"
 { yylval.instrIndex = Instructions::Add; return INSTR_TOKEN_2; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 45 "PhaethonAsm.l"
+#line 46 "PhaethonAsm.l"
 { yylval.instrIndex = Instructions::Dec; return INSTR_TOKEN_1; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 46 "PhaethonAsm.l"
+#line 47 "PhaethonAsm.l"
 { return STRUCT_TOKEN; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 47 "PhaethonAsm.l"
+#line 48 "PhaethonAsm.l"
 { return ENDS_TOKEN; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 48 "PhaethonAsm.l"
+#line 49 "PhaethonAsm.l"
 { return DATASEGMENT_TOKEN; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 49 "PhaethonAsm.l"
+#line 50 "PhaethonAsm.l"
 { return ENDDATA_TOKEN; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 50 "PhaethonAsm.l"
+#line 51 "PhaethonAsm.l"
 { return SIZEOF_TOKEN; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 51 "PhaethonAsm.l"
+#line 52 "PhaethonAsm.l"
 { yylval.regIndex = atoi(yytext + 1); return REG_TOKEN; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 52 "PhaethonAsm.l"
+#line 53 "PhaethonAsm.l"
 { yylval.symIndex = AddSymbol(yytext); return SYMBOL_TOKEN; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 53 "PhaethonAsm.l"
+#line 54 "PhaethonAsm.l"
 ;
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 54 "PhaethonAsm.l"
+#line 55 "PhaethonAsm.l"
 ECHO;
 	YY_BREAK
-#line 1012 "lex.yy.c"
+#line 1013 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2009,7 +2010,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 54 "PhaethonAsm.l"
+#line 55 "PhaethonAsm.l"
 
 
 

@@ -73,7 +73,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 25 "PhaethonAsm.y" /* yacc.c:1909  */
+#line 21 "PhaethonAsm.y" /* yacc.c:1909  */
 
 	int intVal;
 	float floatVal;
@@ -86,8 +86,9 @@ union YYSTYPE
 	DataSegmentDef* dataSegmentDef;
 	DataSegmentItemDef* dataSegmentItemDef;
 	DataSegmentItemEntry* dataSegmentItemEntry;
+	InstructionNode* instructonNode;
 
-#line 91 "PhaethonAsm.tab.h" /* yacc.c:1909  */
+#line 92 "PhaethonAsm.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

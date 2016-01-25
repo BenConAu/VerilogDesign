@@ -1,6 +1,7 @@
 #include "PhaethonAsmLib.h"
 #include "StructDef.h"
 #include "DataSegmentDef.h"
+#include "InstructionNode.h"
 #include "PhaethonAsm.tab.h"
 #include "CodeGen/PhaethonOpCode.h"
 #include "InstructionData.h"
@@ -12,6 +13,7 @@ std::vector<std::unique_ptr<StructMember> > StructMember::s_defs;
 std::vector<std::unique_ptr<DataSegmentDef> > DataSegmentDef::s_defs;
 std::vector<std::unique_ptr<DataSegmentItemDef> > DataSegmentItemDef::s_defs;
 std::vector<std::unique_ptr<DataSegmentItemEntry> > DataSegmentItemEntry::s_defs;
+std::vector<std::unique_ptr<InstructionNode> > InstructionNode::s_defs;
 
 StructDef::StructDefInfo StructDef::s_defInfo;
 
@@ -21,7 +23,6 @@ struct LabelData
 	int address;
 };
 
-int g_byteCount = 0;
 std::vector<LabelData> g_labels;
 
 int AddSymbol(const char* pszSymbol)
@@ -49,11 +50,11 @@ int AddSymbol(const char* pszSymbol)
 void AddLabel(int symIndex)
 {
 	//printf("Adding label %d with value %x\n", symIndex, g_byteCount);
-	LabelData d = { symIndex, g_byteCount };
+	LabelData d = { symIndex, InstructionNode::GetCodeSize() };
 	g_labels.push_back(d);
 }
 
-int GetSymbolAddress(int symIndex)
+int GetLabelAddress(int symIndex)
 {
 	for (size_t i = 0; i < g_labels.size(); i++)
 	{
@@ -71,8 +72,6 @@ int GetSymbolAddress(int symIndex)
 void OutputBytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned char b4)
 {
 	printf("%02x %02x %02x %02x\n", b1, b2, b3, b4);
-
-	g_byteCount += 4;
 }
 
 void OutputWord(unsigned int w)
@@ -85,59 +84,20 @@ void OutputWord(unsigned int w)
 		);
 }
 
-void OutputInstruction(Instructions::Enum instr, Argument a1, Argument a2, Argument a3)
+void OutputCode()
 {
-	//printf("Processing instruction\n");
+	// Make sure that the symbols are resolved
+	DataSegmentDef::ResolveSymbols();
 
-	for (int i = 0; i < InstructionData::s_dataCount; i++)
+	// Now output all of the instructions
+	for (size_t i = 0; i < InstructionNode::GlobalList().size(); i++)
 	{
-		if (InstructionData::s_data[i].instr == instr &&
-			InstructionData::s_data[i].args[0] == a1._type &&
-			InstructionData::s_data[i].args[1] == a2._type &&
-			InstructionData::s_data[i].args[2] == a3._type)
-		{
-			OutputBytes(InstructionData::s_data[i].opCode, a1._value, a2._value, a3._value);
-
-			if (InstructionData::s_data[i].wordArg != -1)
-			{
-                Argument args[3] = { a1, a2, a3 };
-
-				unsigned int opDataWord = args[InstructionData::s_data[i].wordArg]._value;
-
-				OutputWord(opDataWord);
-			}
-
-			return;
-		}
+		InstructionNode::GlobalList()[i]->OutputInstruction();
 	}
 
-	std::cout << "Unknown instruction instr = " << instr << ", " << a1._type << ", " << a2._type << ", " << a3._type << std::endl;
-}
-
-void OutputDataSegment()
-{
-	if (DataSegmentDef::s_defs.size() != 0)
+	// Now the data segments can be printed
+	for (size_t ds = 0; ds < DataSegmentDef::GlobalList().size(); ds++)
 	{
-		int startByte = DataSegmentDef::s_defs[0]->GetIntProperty("address");
-
-		for (int i = g_byteCount; i < startByte; i += 4)
-		{
-			OutputBytes(0x1a, 0x2b, 0x3c, 0x4d);
-		}
-
-		for (int i = 0; i < DataSegmentDef::s_defs[0]->GetItemCount(); i++)
-		{
-			//		printf("Doing item %d in Data segment\n", i);
-
-			DataSegmentItemDef* itemDef = DataSegmentDef::s_defs[0]->GetItem(i);
-			//		printf("Item %d has count %d\n", i, itemDef->GetItemCount());
-
-			for (int j = 0; j < itemDef->GetItemCount(); j++)
-			{
-				DataSegmentItemEntry* entry = itemDef->GetItem(j);
-
-				OutputWord(entry->GetIntProperty("value"));
-			}
-		}
+		DataSegmentDef::GlobalList()[ds]->OutputDataSegment();
 	}
 }

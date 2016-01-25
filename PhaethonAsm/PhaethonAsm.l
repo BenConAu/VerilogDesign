@@ -8,6 +8,7 @@ using namespace std;
 #include "PhaethonAsmLib.h"
 #include "StructDef.h"
 #include "DataSegmentDef.h"
+#include "InstructionNode.h"
 #include "PhaethonAsm.tab.h"
 
 %}

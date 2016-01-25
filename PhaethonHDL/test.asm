@@ -10,7 +10,7 @@ struct Triangle
   v2
  ends
 
-datasegment 200
+datasegment
   word     vcount 4
   Vector   v0     f0. f0. f0.
   Vector          f0. f1. f0.

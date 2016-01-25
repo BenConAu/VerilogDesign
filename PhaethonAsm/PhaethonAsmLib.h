@@ -3,8 +3,10 @@
 #include "CodeGen/PhaethonOpCode.h"
 #include "Argument.h"
 
-void OutputInstruction(Instructions::Enum instr, Argument a1, Argument a2, Argument a3);
+void StoreInstruction(Instructions::Enum instr, Argument a1, Argument a2, Argument a3);
 int AddSymbol(const char* pszSymbol);
-int GetSymbolAddress(int symIndex);
+int GetLabelAddress(int symIndex);
 void AddLabel(int symIndex);
-void OutputDataSegment();
+void OutputBytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned char b4);
+void OutputWord(unsigned int w);
+void OutputCode();
