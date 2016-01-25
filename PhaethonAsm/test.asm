@@ -40,12 +40,12 @@ extentloop:
 mov r8, [r0]->Vector::x  // Get the coordinates
 mov r9, [r0]->Vector::y
 mov r10, [r0]->Vector::z
-fmin r2, r2, r8
-fmin r3, r3, r9
-fmin r4, r4, r10
-fmax r5, r5, r8
-fmax r6, r6, r9
-fmax r7, r7, r10
+fmin r2, r8
+fmin r3, r9
+fmin r4, r10
+fmax r5, r8
+fmax r6, r9
+fmax r7, r10
 add r0, sizeof(Vector)
 dec r1
 cmp r1, 0

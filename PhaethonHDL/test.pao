@@ -21,12 +21,12 @@ cc 00 00 00
 04 00 00 00
 05 0a 00 08
 08 00 00 00
-Unknown instruction instr = 13, 2, 2, 2
-Unknown instruction instr = 13, 2, 2, 2
-Unknown instruction instr = 13, 2, 2, 2
-Unknown instruction instr = 14, 2, 2, 2
-Unknown instruction instr = 14, 2, 2, 2
-Unknown instruction instr = 14, 2, 2, 2
+14 02 08 00
+14 03 09 00
+14 04 0a 00
+15 05 08 00
+15 06 09 00
+15 07 0a 00
 0c 00 0c 00
 0c 00 00 00
 0e 01 00 00
@@ -42,12 +42,6 @@ Unknown instruction instr = 14, 2, 2, 2
 16 07 00 00
 0a 00 00 00
 00 00 00 00
-1a 2b 3c 4d
-1a 2b 3c 4d
-1a 2b 3c 4d
-1a 2b 3c 4d
-1a 2b 3c 4d
-1a 2b 3c 4d
 1a 2b 3c 4d
 1a 2b 3c 4d
 1a 2b 3c 4d
