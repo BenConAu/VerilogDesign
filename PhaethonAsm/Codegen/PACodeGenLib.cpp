@@ -9,7 +9,7 @@ static std::vector<std::string> g_symbols;
 
 struct InstructionData
 {
-    InstructionData(int si, int a1, int a2, int a3)
+    InstructionData(int si, int a1, int a2, int a3, int flag)
     {
         symIndex = si;
 
@@ -35,7 +35,7 @@ struct InstructionData
                 }
             }
 
-            if (args[i] == Argument::RegAddress || args[i] == Argument::ConstAddress)
+            if (args[i] == Argument::RegAddress || args[i] == Argument::ConstAddress || flag == 1)
             {
                 fRAM = true;
             }
@@ -53,9 +53,9 @@ struct InstructionData
 
 static std::vector<InstructionData> g_instructionData;
 
-void StoreInstruction(int symIndex, int arg1, int arg2, int arg3)
+void StoreInstruction(int symIndex, int arg1, int arg2, int arg3, int flag)
 {
-    InstructionData data(symIndex, arg1, arg2, arg3);
+    InstructionData data(symIndex, arg1, arg2, arg3, flag);
     g_instructionData.push_back(data);
 }
 

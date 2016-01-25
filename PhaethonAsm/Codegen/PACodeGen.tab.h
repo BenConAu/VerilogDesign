@@ -50,7 +50,9 @@ extern int yydebug;
     REGADDRESS_TOKEN = 260,
     CONSTANT_TOKEN = 261,
     CONSTADDRESS_TOKEN = 262,
-    NONE_TOKEN = 263
+    NONE_TOKEN = 263,
+    RAM_TOKEN = 264,
+    NOFLAGS_TOKEN = 265
   };
 #endif
 
@@ -63,8 +65,9 @@ union YYSTYPE
 
     int symIndex;
     int argIndex;
+    int flags;
 
-#line 68 "PACodeGen.tab.h" /* yacc.c:1909  */
+#line 71 "PACodeGen.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

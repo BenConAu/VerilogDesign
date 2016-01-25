@@ -3,7 +3,7 @@
 #include <cstdio>
 #include <iostream>
 #include "PACodeGenLib.h"
-#include "../Argument.h"
+#include "../ArgumentBase.h"
 
 using namespace std;
 
@@ -19,6 +19,7 @@ void yyerror(const char *s);
 {
     int symIndex;
     int argIndex;
+    int flags;
 }
 
 %token <symIndex> SYMBOL_TOKEN
@@ -27,7 +28,10 @@ void yyerror(const char *s);
 %token <argIndex> CONSTANT_TOKEN
 %token <argIndex> CONSTADDRESS_TOKEN
 %token <argIndex> NONE_TOKEN
+%token <flags> RAM_TOKEN
+%token <flags> NOFLAGS_TOKEN
 %type <argIndex> argument
+%type <flags> flag
 
 %%
 
@@ -37,15 +41,20 @@ instruction_set:
     ;
 
   instruction:
-      SYMBOL_TOKEN argument argument argument       { StoreInstruction($1, $2, $3, $4); }
+      SYMBOL_TOKEN argument argument argument flag  { StoreInstruction($1, $2, $3, $4, $5); }
+    ;
+
+  flag:
+      NOFLAGS_TOKEN                                 { $$ = 0; }
+    | RAM_TOKEN                                     { $$ = 1; }
     ;
 
   argument:
-      REGISTER_TOKEN                                { $$ = Argument::Register; }
-    | REGADDRESS_TOKEN                              { $$ = Argument::RegAddress; }
-    | CONSTANT_TOKEN                                { $$ = Argument::Constant; }
-    | CONSTADDRESS_TOKEN                            { $$ = Argument::ConstAddress; }
-    | NONE_TOKEN                                    { $$ = Argument::None; }
+      REGISTER_TOKEN                                { $$ = ArgumentBase::Register; }
+    | REGADDRESS_TOKEN                              { $$ = ArgumentBase::RegAddress; }
+    | CONSTANT_TOKEN                                { $$ = ArgumentBase::Constant; }
+    | CONSTADDRESS_TOKEN                            { $$ = ArgumentBase::ConstAddress; }
+    | NONE_TOKEN                                    { $$ = ArgumentBase::None; }
     ;
 
 %%

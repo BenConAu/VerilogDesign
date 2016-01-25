@@ -1,22 +1,6 @@
 #include "Argument.h"
 #include "DataSegmentDef.h"
 
-const char* Argument::ppszTypeText[] = {
-    "None",
-    "Constant",
-    "Register",
-    "ConstAddress",
-    "RegAddress",
-};
-
-const char* Argument::ppszShortTypeText[] = {
-    "",
-    "C",
-    "R",
-    "cA",
-    "rA",
-};
-
 void Argument::ResolveSymbol()
 {
     if (_fDelayed)

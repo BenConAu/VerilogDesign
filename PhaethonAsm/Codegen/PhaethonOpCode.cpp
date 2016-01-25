@@ -8,6 +8,8 @@ InstructionData InstructionData::s_data[] = {
     { Instructions::Mov       , OpCodes::MovRrAC        , { Argument::Register       , Argument::RegAddress     , Argument::Constant        }, 2 },
     { Instructions::Mov       , OpCodes::MovrACR        , { Argument::RegAddress     , Argument::Constant       , Argument::Register        }, 1 },
     { Instructions::Mov       , OpCodes::MovRrA         , { Argument::Register       , Argument::RegAddress     , Argument::None            }, -1 },
+    { Instructions::Push      , OpCodes::PushR          , { Argument::Register       , Argument::None           , Argument::None            }, -1 },
+    { Instructions::Pop       , OpCodes::PopR           , { Argument::Register       , Argument::None           , Argument::None            }, -1 },
     { Instructions::Cmp       , OpCodes::CmpRR          , { Argument::Register       , Argument::Register       , Argument::None            }, -1 },
     { Instructions::Cmp       , OpCodes::CmpRC          , { Argument::Register       , Argument::Constant       , Argument::None            }, 1 },
     { Instructions::Jmp       , OpCodes::JmpC           , { Argument::Constant       , Argument::None           , Argument::None            }, 0 },

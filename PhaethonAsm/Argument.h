@@ -1,20 +1,9 @@
 #pragma once
 
-class Argument
+#include "ArgumentBase.h"
+
+class Argument : public ArgumentBase
 {
-public:
-	enum Type
-	{
-		None = 0,
-		Constant = 1,
-        Register = 2,
-        ConstAddress = 3,
-        RegAddress = 4,
-	};
-
-    static const char* ppszTypeText[];
-    static const char* ppszShortTypeText[];
-
 public:
 	static Argument Construct(Type t, int v)
 	{
@@ -40,9 +29,7 @@ public:
 
 	static Argument ConstructNone()
 	{
-		Argument a = { Argument::None, 0 };
-
-		return a;
+		return Construct(Argument::None, 0);
 	}
 
 	void ResolveSymbol();

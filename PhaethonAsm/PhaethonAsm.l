@@ -44,6 +44,8 @@ using namespace std;
 "inc"                { yylval.instrIndex = Instructions::Inc; return INSTR_TOKEN_1; }
 "add"                { yylval.instrIndex = Instructions::Add; return INSTR_TOKEN_2; }
 "dec"                { yylval.instrIndex = Instructions::Dec; return INSTR_TOKEN_1; }
+"push"               { yylval.instrIndex = Instructions::Push; return INSTR_TOKEN_1; }
+"pop"                { yylval.instrIndex = Instructions::Pop; return INSTR_TOKEN_1; }
 "struct"             { return STRUCT_TOKEN; }
 "ends"               { return ENDS_TOKEN; }
 "datasegment"        { return DATASEGMENT_TOKEN; }

@@ -1,22 +1,24 @@
-Mov      Register      Constant       None
-Mov      Register      ConstAddress   None
-Mov      Register      Register       None
-Mov      ConstAddress  Register       None
-Mov      Register      RegAddress     Constant
-Mov      RegAddress    Constant       Register
-Mov      Register      RegAddress     None
-Cmp      Register      Register       None
-Cmp      Register      Constant       None
-Jmp      Constant      None           None
-Jne      Constant      None           None
-Add      Register      Constant       None
-Inc      Register      None           None
-Dec      Register      None           None
-Fadd     Register      Register       None
-Fsub     Register      Register       None
-Fconv    Register      None           None
-Fmul     Register      Register       None
-Fmuladd  Register      Register       Register
-Fmin     Register      Register       None
-Fmax     Register      Register       None
-Dout     Register      None           None
+Mov      Register      Constant       None      NoFlags
+Mov      Register      ConstAddress   None      NoFlags
+Mov      Register      Register       None      NoFlags
+Mov      ConstAddress  Register       None      NoFlags
+Mov      Register      RegAddress     Constant  NoFlags
+Mov      RegAddress    Constant       Register  NoFlags
+Mov      Register      RegAddress     None      NoFlags
+Push     Register      None           None      RAM
+Pop      Register      None           None      RAM
+Cmp      Register      Register       None      NoFlags
+Cmp      Register      Constant       None      NoFlags
+Jmp      Constant      None           None      NoFlags
+Jne      Constant      None           None      NoFlags
+Add      Register      Constant       None      NoFlags
+Inc      Register      None           None      NoFlags
+Dec      Register      None           None      NoFlags
+Fadd     Register      Register       None      NoFlags
+Fsub     Register      Register       None      NoFlags
+Fconv    Register      None           None      NoFlags
+Fmul     Register      Register       None      NoFlags
+Fmuladd  Register      Register       Register  NoFlags
+Fmin     Register      Register       None      NoFlags
+Fmax     Register      Register       None      NoFlags
+Dout     Register      None           None      NoFlags

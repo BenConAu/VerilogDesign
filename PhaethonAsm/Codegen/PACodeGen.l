@@ -18,6 +18,8 @@ using namespace std;
 "ConstAddress"    { return CONSTADDRESS_TOKEN; }
 "RegAddress"      { return REGADDRESS_TOKEN; }
 "None"            { return NONE_TOKEN; }
+"RAM"             { return RAM_TOKEN; }
+"NoFlags"         { return NOFLAGS_TOKEN; }
 [A-Za-z]+         { yylval.symIndex = AddSymbol(yytext); return SYMBOL_TOKEN; }
 .                 ;
 %%
