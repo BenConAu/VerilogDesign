@@ -11,17 +11,19 @@
 `define CmpRC 11
 `define JmpC 12
 `define JneC 13
-`define AddRC 14
-`define IncR 15
-`define DecR 16
-`define FaddRR 17
-`define FsubRR 18
-`define FconvR 19
-`define FmulRR 20
-`define FmuladdRRR 21
-`define FminRR 22
-`define FmaxRR 23
-`define DoutR 24
+`define CallR 14
+`define Ret 15
+`define AddRC 16
+`define IncR 17
+`define DecR 18
+`define FaddRR 19
+`define FsubRR 20
+`define FconvR 21
+`define FmulRR 22
+`define FmuladdRRR 23
+`define FminRR 24
+`define FmaxRR 25
+`define DoutR 26
 
 function [0:0] Is8ByteOpcode;
   input [7:0] opCodeParam;
@@ -47,7 +49,9 @@ function [0:0] IsRAMOpcode;
       opCodeParam == `MovrACR ||
       opCodeParam == `MovRrA ||
       opCodeParam == `PushR ||
-      opCodeParam == `PopR)
+      opCodeParam == `PopR ||
+      opCodeParam == `CallR ||
+      opCodeParam == `Ret)
     IsRAMOpcode = 1;
   else
     IsRAMOpcode = 0;

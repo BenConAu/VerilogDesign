@@ -14,6 +14,8 @@ InstructionData InstructionData::s_data[] = {
     { Instructions::Cmp       , OpCodes::CmpRC          , { Argument::Register       , Argument::Constant       , Argument::None            }, 1 },
     { Instructions::Jmp       , OpCodes::JmpC           , { Argument::Constant       , Argument::None           , Argument::None            }, 0 },
     { Instructions::Jne       , OpCodes::JneC           , { Argument::Constant       , Argument::None           , Argument::None            }, 0 },
+    { Instructions::Call      , OpCodes::CallR          , { Argument::Register       , Argument::None           , Argument::None            }, -1 },
+    { Instructions::Ret       , OpCodes::Ret            , { Argument::None           , Argument::None           , Argument::None            }, -1 },
     { Instructions::Add       , OpCodes::AddRC          , { Argument::Register       , Argument::Constant       , Argument::None            }, 1 },
     { Instructions::Inc       , OpCodes::IncR           , { Argument::Register       , Argument::None           , Argument::None            }, -1 },
     { Instructions::Dec       , OpCodes::DecR           , { Argument::Register       , Argument::None           , Argument::None            }, -1 },

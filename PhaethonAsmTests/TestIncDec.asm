@@ -12,4 +12,4 @@ dout r0
 inc r0
 dout r0
 endlabel:
-jmp endlabel
+jmp @endlabel

@@ -7,4 +7,4 @@ mov r1, f1.0
 fmax r0, r1
 dout r0
 endlabel:
-jmp endlabel
+jmp @endlabel

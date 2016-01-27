@@ -51,6 +51,7 @@ void yyerror(const char *s);
 %token MEMBEROF_TOKEN
 %token DEREF_TOKEN
 %token ADDRESSOF_TOKEN
+%token AT_TOKEN
 %token SIZEOF_TOKEN
 %token <symIndex> SYMBOL_TOKEN
 %type <arg> argument
@@ -122,6 +123,9 @@ instruction:
     | INSTR_TOKEN_2 argument COMMA_TOKEN argument                      { $$ = InstructionNode::Construct(); $$->StoreInstruction($1, $2, $4, Argument::ConstructNone()); }
     | INSTR_TOKEN_1 argument                                           {
     	$$ = InstructionNode::Construct(); $$->StoreInstruction($1, $2, Argument::ConstructNone(), Argument::ConstructNone());
+	}
+	| INSTR_TOKEN_1                                                    {
+    	$$ = InstructionNode::Construct(); $$->StoreInstruction($1, Argument::ConstructNone(), Argument::ConstructNone(), Argument::ConstructNone());
     }
     ;
 
@@ -131,8 +135,8 @@ argument:
 	| ADDR_LEFT REG_TOKEN ADDR_RIGHT                                   { $$ = Argument::Construct(Argument::RegAddress, $2);  }
     | INT_TOKEN                                                        { $$ = Argument::Construct(Argument::Constant, $1); }
 	| SYMBOL_TOKEN MEMBEROF_TOKEN SYMBOL_TOKEN                         { $$ = Argument::Construct(Argument::Constant, StructDef::CalcOffset($1, $3)); }
-    | SYMBOL_TOKEN                                                     { $$ = Argument::Construct(Argument::Constant, GetLabelAddress($1)); }
-	| ADDRESSOF_TOKEN SYMBOL_TOKEN                                     { $$ = Argument::ConstructDelayed(Argument::Constant, $2); }
+    | AT_TOKEN SYMBOL_TOKEN                                            { $$ = Argument::Construct(Argument::Constant, $2, SymbolType::LabelAddress); }
+	| ADDRESSOF_TOKEN SYMBOL_TOKEN                                     { $$ = Argument::Construct(Argument::Constant, $2, SymbolType::VarAddress); }
 	| SIZEOF_TOKEN LEFT_PAREN_TOKEN SYMBOL_TOKEN RIGHT_PAREN_TOKEN     { $$ = Argument::Construct(Argument::Constant, StructDef::GetSize($3)); }
     ;
 

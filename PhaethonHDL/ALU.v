@@ -230,9 +230,9 @@ module ALU(
           //$display("Requesting read from %h", opDataWord + regValue2);
         end
 
-        if (opCode == `PopR)
+        if (opCode == `PopR || opCode == `Ret)
         begin
-          // Read register value from stack
+          // Read value from stack
           readReq <= 1;
           ramAddress <= regarray[30] - 4;
 
@@ -269,6 +269,16 @@ module ALU(
           //$display("Reqesting push %h", regValue);
         end
 
+        if (opCode == `CallR)
+        begin
+          // Write ip to stack
+          writeReq <= 1;
+          ramAddress <= regarray[30];
+          ramOut <= ipointer;
+
+          //$display("Reqesting push %h", regValue);
+        end
+
         debug[23:0] <= opDataWord;
         debug[31:24] <= mode;
 
@@ -278,7 +288,7 @@ module ALU(
       // Mode 5: Complete data read or write if the instruction
       //         requires it.
       5: begin
-        if (opCode == `MovRcA || opCode == `MovRrAC || opCode == `MovRrA || opCode == `PopR)
+        if (opCode == `MovRcA || opCode == `MovRrAC || opCode == `MovRrA || opCode == `PopR || opCode == `Ret)
         begin
           // Stop request
           readReq <= 0;
@@ -294,7 +304,7 @@ module ALU(
             mode <= 6;
           end
         end
-        else if (opCode == `MovcAR || opCode == `MovrACR || opCode == `PushR)
+        else if (opCode == `MovcAR || opCode == `MovrACR || opCode == `PushR || opCode == `CallR)
         begin
           // Stop request
           writeReq <= 0;
@@ -326,12 +336,32 @@ module ALU(
           `MovRrA:   regarray[regAddress[7:0]] <= ramValue;               // mov reg, [reg]
 
           `PushR: begin
-            regarray[30] <= regarray[30] + 4;                         // push reg
+            regarray[30] <= regarray[30] + 4;                             // push reg
           end
 
           `PopR: begin
             regarray[regAddress[7:0]] <= ramValue;                        // pop reg
             regarray[30] <= regarray[30] - 4;
+          end
+
+          `CallR: begin
+            // Stack pointer increases like a push
+            regarray[30] <= regarray[30] + 4;                             // call reg
+
+            // Jump to the function
+            ipointer <= regValue;
+
+            //$display("Doing a call");
+          end
+
+          `Ret: begin
+            // Stack pointer decreases like a pop
+            regarray[30] <= regarray[30] - 4;                             // ret
+
+            // Return to the saved position, after the call
+            ipointer <= ramValue + 4;
+
+            //$display("Doing a ret");
           end
 
           `CmpRR: begin                                                   // cmp reg, reg
@@ -377,7 +407,7 @@ module ALU(
         begin
           ipointer <= opDataWord;
         end
-        else if (opCode != `JmpC)
+        else if (opCode != `JmpC && opCode != `CallR && opCode != `Ret)
         begin
           //$display("Incrementing ip");
 

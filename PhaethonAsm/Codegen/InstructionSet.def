@@ -11,6 +11,8 @@ Cmp      Register      Register       None      NoFlags
 Cmp      Register      Constant       None      NoFlags
 Jmp      Constant      None           None      NoFlags
 Jne      Constant      None           None      NoFlags
+Call     Register      None           None      RAM
+Ret      None          None           None      RAM
 Add      Register      Constant       None      NoFlags
 Inc      Register      None           None      NoFlags
 Dec      Register      None           None      NoFlags

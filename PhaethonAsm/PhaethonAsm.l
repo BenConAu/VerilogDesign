@@ -24,6 +24,7 @@ using namespace std;
 "["                  { return ADDR_LEFT; }
 "]"                  { return ADDR_RIGHT; }
 "&"                  { return ADDRESSOF_TOKEN; }
+"@"                  { return AT_TOKEN; }
 "->"                 { return DEREF_TOKEN; }
 "("                  { return LEFT_PAREN_TOKEN; }
 ")"                  { return RIGHT_PAREN_TOKEN; }
@@ -46,6 +47,8 @@ using namespace std;
 "dec"                { yylval.instrIndex = Instructions::Dec; return INSTR_TOKEN_1; }
 "push"               { yylval.instrIndex = Instructions::Push; return INSTR_TOKEN_1; }
 "pop"                { yylval.instrIndex = Instructions::Pop; return INSTR_TOKEN_1; }
+"call"               { yylval.instrIndex = Instructions::Call; return INSTR_TOKEN_1; }
+"ret"                { yylval.instrIndex = Instructions::Ret; return INSTR_TOKEN_1; }
 "struct"             { return STRUCT_TOKEN; }
 "ends"               { return ENDS_TOKEN; }
 "datasegment"        { return DATASEGMENT_TOKEN; }

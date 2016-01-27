@@ -3,11 +3,18 @@
 
 void Argument::ResolveSymbol()
 {
-    if (_fDelayed)
+    switch (_symType)
     {
-        _value = DataSegmentDef::CalcAddress(_value);
-        _fDelayed = false;
+        case SymbolType::VarAddress:
+           //printf("Resolving symbol to %x\n", _value);
+            _value = DataSegmentDef::CalcAddress(_value);
+            break;
 
-        //printf("Resolving symbol to %x\n", _value);
+        case SymbolType::LabelAddress:
+            _value = GetLabelAddress(_value);
+            break;
+
+        default:;
+          // Nothing to do here
     }
 }
