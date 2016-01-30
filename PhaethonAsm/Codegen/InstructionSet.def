@@ -11,9 +11,11 @@ Cmp      Register      Register       None      NoFlags
 Cmp      Register      Constant       None      NoFlags
 Jmp      Constant      None           None      NoFlags
 Jne      Constant      None           None      NoFlags
+Jnz      Constant      None           None      NoFlags
 Call     Register      None           None      RAM
 Ret      None          None           None      RAM
 Add      Register      Constant       None      NoFlags
+MulAdd   Register      Register       Constant  NoFlags
 Inc      Register      None           None      NoFlags
 Dec      Register      None           None      NoFlags
 Fadd     Register      Register       None      NoFlags
@@ -23,4 +25,5 @@ Fmul     Register      Register       None      NoFlags
 Fmuladd  Register      Register       Register  NoFlags
 Fmin     Register      Register       None      NoFlags
 Fmax     Register      Register       None      NoFlags
+Vfadd    Register      Register       None      NoFlags
 Dout     Register      None           None      NoFlags

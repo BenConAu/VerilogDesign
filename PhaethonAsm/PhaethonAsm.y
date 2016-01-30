@@ -34,6 +34,7 @@ void yyerror(const char *s);
 }
 
 %token <intVal> INT_TOKEN
+%token <instrIndex> INSTR_TOKEN_0
 %token <instrIndex> INSTR_TOKEN_1
 %token <instrIndex> INSTR_TOKEN_2
 %token <instrIndex> INSTR_TOKEN_3
@@ -124,7 +125,7 @@ instruction:
     | INSTR_TOKEN_1 argument                                           {
     	$$ = InstructionNode::Construct(); $$->StoreInstruction($1, $2, Argument::ConstructNone(), Argument::ConstructNone());
 	}
-	| INSTR_TOKEN_1                                                    {
+	| INSTR_TOKEN_0                                                    {
     	$$ = InstructionNode::Construct(); $$->StoreInstruction($1, Argument::ConstructNone(), Argument::ConstructNone(), Argument::ConstructNone());
     }
     ;

@@ -39,8 +39,8 @@ module ALU(
   reg        [31:0] regarray[0:31];
   reg        [3:0]  mode;
   reg        [31:0] ramValue;
-  reg        [31:0] regValue;
-  reg        [31:0] regValue2;
+  reg        [31:0] regValue[0:3];
+  reg        [31:0] regValue2[0:3];
   reg        [31:0] regValue3;
   reg        [31:0] opDataWord;
   reg        [7:0]  regAddress;
@@ -50,7 +50,7 @@ module ALU(
   reg        [0:0]  condJump;
 
   // Wire up the results from the floating units
-  wire       [31:0] fAddResult;
+  wire       [31:0] fAddResult[0:3];
   wire       [31:0] fSubResult;
   wire       [31:0] fConvResult;
   wire       [31:0] fMulResult;
@@ -58,12 +58,15 @@ module ALU(
   wire       [31:0] floatDebug;
   wire       [1:0]  fCompareResult;
 
-  FloatingAdd         fAdd(regValue, regValue2, 1'b0, fAddResult, floatDebug, clk, fOpEnable[0:0]);
-  FloatingAdd         fSub(regValue, regValue2, 1'b1, fSubResult, floatDebug, clk, fOpEnable[1:1]);
-  FloatingFromInt     fConv(regValue, fConvResult, floatDebug, clk, fOpEnable[2:2]);
-  FloatingMultiply    fMul(regValue, regValue2, fMulResult, floatDebug, clk, fOpEnable[3:3]);
-  FloatingMultiplyAdd fMulAdd(regValue, regValue2, regValue3, fMulAddResult, floatDebug, clk, fOpEnable[4:4]);
-  FloatingCompare     fComp(regValue, regValue2, fCompareResult, floatDebug, clk, fOpEnable[5:5]);
+  FloatingAdd         fAdd0(regValue[0], regValue2[0], 1'b0, fAddResult[0], floatDebug, clk, fOpEnable[0:0]);
+  FloatingAdd         fAdd1(regValue[1], regValue2[1], 1'b0, fAddResult[1], floatDebug, clk, fOpEnable[0:0]);
+  FloatingAdd         fAdd2(regValue[2], regValue2[2], 1'b0, fAddResult[2], floatDebug, clk, fOpEnable[0:0]);
+  FloatingAdd         fAdd3(regValue[3], regValue2[3], 1'b0, fAddResult[3], floatDebug, clk, fOpEnable[0:0]);
+  FloatingAdd         fSub(regValue[0], regValue2[0], 1'b1, fSubResult, floatDebug, clk, fOpEnable[1:1]);
+  FloatingFromInt     fConv(regValue[0], fConvResult, floatDebug, clk, fOpEnable[2:2]);
+  FloatingMultiply    fMul(regValue[0], regValue2[0], fMulResult, floatDebug, clk, fOpEnable[3:3]);
+  FloatingMultiplyAdd fMulAdd(regValue[0], regValue2[0], regValue3, fMulAddResult, floatDebug, clk, fOpEnable[4:4]);
+  FloatingCompare     fComp(regValue[0], regValue2[0], fCompareResult, floatDebug, clk, fOpEnable[5:5]);
 
   //initial
   //   $monitor("%t, ram = %h, %h, %h, %h : %h, %h, %h, %h",
@@ -131,12 +134,26 @@ module ALU(
       //         registers referenced by the instruction.
       2: begin
         // Read values from registers
-        regValue <= regarray[regAddress[7:0]];
-        regValue2 <= regarray[regAddress2[7:0]];
+        regValue[0] <= regarray[regAddress[7:0]];
+        if (opCode == `VfaddRR)
+        begin
+          regValue[1] <= regarray[regAddress[7:0] + 1];
+          regValue[2] <= regarray[regAddress[7:0] + 2];
+          regValue[3] <= regarray[regAddress[7:0] + 3];
+        end
+
+        regValue2[0] <= regarray[regAddress2[7:0]];
+        if (opCode == `VfaddRR)
+        begin
+          regValue2[1] <= regarray[regAddress2[7:0] + 1];
+          regValue2[2] <= regarray[regAddress2[7:0] + 2];
+          regValue2[3] <= regarray[regAddress2[7:0] + 3];
+        end
+
         regValue3 <= regarray[regAddress3[7:0]];
 
         // Enable operation for module
-        if (opCode == `FaddRR) fOpEnable[0:0] <= 1;
+        if (opCode == `FaddRR || opCode == `VfaddRR) fOpEnable[0:0] <= 1;
         if (opCode == `FsubRR) fOpEnable[1:1] <= 1;
         if (opCode == `FconvR) fOpEnable[2:2] <= 1;
         if (opCode == `FmulRR) fOpEnable[3:3] <= 1;
@@ -216,7 +233,7 @@ module ALU(
         begin
           // Read values from address encoded in code
           readReq <= 1;
-          ramAddress <= opDataWord + regValue2;
+          ramAddress <= opDataWord + regValue2[0];
 
           //$display("Requesting read from %h", opDataWord + regValue2);
         end
@@ -225,7 +242,7 @@ module ALU(
         begin
           // Read values from address encoded in code
           readReq <= 1;
-          ramAddress <= regValue2;
+          ramAddress <= regValue2[0];
 
           //$display("Requesting read from %h", opDataWord + regValue2);
         end
@@ -244,7 +261,7 @@ module ALU(
           // Write values to ram requested by instruction
           writeReq <= 1;
           ramAddress <= opDataWord;
-          ramOut <= regValue2;
+          ramOut <= regValue2[0];
 
           //$display("Reqesting write %h to address value %h", regValue2, opDataWord);
         end
@@ -253,7 +270,7 @@ module ALU(
         begin
           // Write values to ram requested by instruction
           writeReq <= 1;
-          ramAddress <= opDataWord + regValue;
+          ramAddress <= opDataWord + regValue[0];
           ramOut <= regValue3;
 
           //$display("Reqesting write %h to address value %h", regValue3, opDataWord + regValue);
@@ -264,7 +281,7 @@ module ALU(
           // Write register value to stack
           writeReq <= 1;
           ramAddress <= regarray[30];
-          ramOut <= regValue;
+          ramOut <= regValue[0];
 
           //$display("Reqesting push %h", regValue);
         end
@@ -331,7 +348,7 @@ module ALU(
         case (opCode)
           `MovRC:    regarray[regAddress[7:0]] <= opDataWord;             // mov reg, const
           `MovRcA:   regarray[regAddress[7:0]] <= ramValue;               // mov reg, [addr]
-          `MovRR:    regarray[regAddress[7:0]] <= regValue2;              // mov reg, reg
+          `MovRR:    regarray[regAddress[7:0]] <= regValue2[0];           // mov reg, reg
           `MovRrAC:  regarray[regAddress[7:0]] <= ramValue;               // mov reg, [reg + const]
           `MovRrA:   regarray[regAddress[7:0]] <= ramValue;               // mov reg, [reg]
 
@@ -349,7 +366,7 @@ module ALU(
             regarray[30] <= regarray[30] + 4;                             // call reg
 
             // Jump to the function
-            ipointer <= regValue;
+            ipointer <= regValue[0];
 
             //$display("Doing a call");
           end
@@ -365,33 +382,41 @@ module ALU(
           end
 
           `CmpRR: begin                                                   // cmp reg, reg
-            regarray[31][0:0] <= (regValue == regValue2 ? 1 : 0);
-            regarray[31][1:1] <= (regValue < regValue2 ? 1 : 0);
-            regarray[31][2:2] <= (regValue > regValue2 ? 1 : 0);
+            regarray[31][0:0] <= (regValue[0] == regValue2[0] ? 1 : 0);
+            regarray[31][1:1] <= (regValue[0] < regValue2[0] ? 1 : 0);
+            regarray[31][2:2] <= (regValue[0] > regValue2[0] ? 1 : 0);
           end
 
           `CmpRC: begin
-            regarray[31][0:0] <= (regValue == opDataWord ? 1 : 0);
-            regarray[31][1:1] <= (regValue < opDataWord ? 1 : 0);
-            regarray[31][2:2] <= (regValue > opDataWord ? 1 : 0);
+            regarray[31][0:0] <= (regValue[0] == opDataWord ? 1 : 0);
+            regarray[31][1:1] <= (regValue[0] < opDataWord ? 1 : 0);
+            regarray[31][2:2] <= (regValue[0] > opDataWord ? 1 : 0);
           end
 
           `JmpC:  ipointer <= opDataWord;                              // jmp address
 
-          `FaddRR:     regarray[regAddress[7:0]] <= fAddResult;             // fadd reg, reg
+          `FaddRR:     regarray[regAddress[7:0]] <= fAddResult[0];          // fadd reg, reg
           `FsubRR:     regarray[regAddress[7:0]] <= fSubResult;             // fsub reg, reg
           `FconvR:     regarray[regAddress[7:0]] <= fConvResult;            // fconv reg
           `FmulRR:     regarray[regAddress[7:0]] <= fMulResult;             // fmul reg, reg
           `FmuladdRRR: regarray[regAddress[7:0]] <= fMulAddResult;          // fmul reg, reg
-          `FminRR:     regarray[regAddress[7:0]] <= (fCompareResult == 'b01 ? regValue2 : regValue);
-          `FmaxRR:     regarray[regAddress[7:0]] <= (fCompareResult == 'b11 ? regValue2 : regValue);
+          `FminRR:     regarray[regAddress[7:0]] <= (fCompareResult == 'b01 ? regValue2[0] : regValue[0]);
+          `FmaxRR:     regarray[regAddress[7:0]] <= (fCompareResult == 'b11 ? regValue2[0] : regValue[0]);
 
-          `AddRC: regarray[regAddress[7:0]] <= regValue + opDataWord;  // add reg, const
-          `IncR:  regarray[regAddress[7:0]] <= regValue + 1;           // dec reg
-          `DecR:  regarray[regAddress[7:0]] <= regValue - 1;           // dec reg
+          `VfaddRR: begin
+            regarray[regAddress[7:0]] <= fAddResult[0];
+            regarray[regAddress[7:0] + 1] <= fAddResult[1];
+            regarray[regAddress[7:0] + 2] <= fAddResult[2];
+            regarray[regAddress[7:0] + 3] <= fAddResult[3];
+          end
+
+          `AddRC:      regarray[regAddress[7:0]] <= regValue[0] + opDataWord;  // add reg, const
+          `IncR:       regarray[regAddress[7:0]] <= regValue[0] + 1;           // dec reg
+          `DecR:       regarray[regAddress[7:0]] <= regValue[0] - 1;           // dec reg
+          `MulAddRRC:  regarray[regAddress[7:0]] <= regValue[0] + regValue2[0] * opDataWord;
 
           `DoutR: begin
-            $display("DebugOut %h", regValue);
+            $display("DebugOut %h", regValue[0]);
           end
 
           default: $display("Unknown instruction %h", opCode);

@@ -46,26 +46,27 @@ extern int yydebug;
   enum yytokentype
   {
     INT_TOKEN = 258,
-    INSTR_TOKEN_1 = 259,
-    INSTR_TOKEN_2 = 260,
-    INSTR_TOKEN_3 = 261,
-    REG_TOKEN = 262,
-    COMMA_TOKEN = 263,
-    ADDR_LEFT = 264,
-    ADDR_RIGHT = 265,
-    COLON_TOKEN = 266,
-    STRUCT_TOKEN = 267,
-    ENDS_TOKEN = 268,
-    DATASEGMENT_TOKEN = 269,
-    ENDDATA_TOKEN = 270,
-    LEFT_PAREN_TOKEN = 271,
-    RIGHT_PAREN_TOKEN = 272,
-    MEMBEROF_TOKEN = 273,
-    DEREF_TOKEN = 274,
-    ADDRESSOF_TOKEN = 275,
-    AT_TOKEN = 276,
-    SIZEOF_TOKEN = 277,
-    SYMBOL_TOKEN = 278
+    INSTR_TOKEN_0 = 259,
+    INSTR_TOKEN_1 = 260,
+    INSTR_TOKEN_2 = 261,
+    INSTR_TOKEN_3 = 262,
+    REG_TOKEN = 263,
+    COMMA_TOKEN = 264,
+    ADDR_LEFT = 265,
+    ADDR_RIGHT = 266,
+    COLON_TOKEN = 267,
+    STRUCT_TOKEN = 268,
+    ENDS_TOKEN = 269,
+    DATASEGMENT_TOKEN = 270,
+    ENDDATA_TOKEN = 271,
+    LEFT_PAREN_TOKEN = 272,
+    RIGHT_PAREN_TOKEN = 273,
+    MEMBEROF_TOKEN = 274,
+    DEREF_TOKEN = 275,
+    ADDRESSOF_TOKEN = 276,
+    AT_TOKEN = 277,
+    SIZEOF_TOKEN = 278,
+    SYMBOL_TOKEN = 279
   };
 #endif
 
@@ -89,7 +90,7 @@ union YYSTYPE
 	DataSegmentItemEntry* dataSegmentItemEntry;
 	InstructionNode* instructonNode;
 
-#line 93 "PhaethonAsm.tab.h" /* yacc.c:1909  */
+#line 94 "PhaethonAsm.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

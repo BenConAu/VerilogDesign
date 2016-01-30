@@ -14,7 +14,7 @@ module test;
 
   initial
   begin
-    $readmemh("../PhaethonAsmTests/TestFMax.pao", fileRam, 0, 14 * 4 - 1);
+    $readmemh("../PhaethonAsmTests/TestMulAdd.pao", fileRam, 0, 27 * 4 - 1);
   end
 
   /* Make a regular pulsing clock. */
