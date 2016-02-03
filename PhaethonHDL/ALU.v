@@ -162,6 +162,7 @@ module ALU(
         if (opCode == `FmuladdRRR) fOpEnable[4:4] <= 1;
         if (opCode == `FminRR) fOpEnable[5:5] <= 1;
         if (opCode == `FmaxRR) fOpEnable[5:5] <= 1;
+        if (opCode == `FdivRR) fOpEnable[6:6] <= 1;
 
         // Determine if a conditional jump needs to happen
         if (opCode == `JneC && regarray[31][0:0] == 1'b0) condJump <= 1'b1;
