@@ -1,27 +1,27 @@
-`define MovRC 1
-`define MovRcA 2
-`define MovRR 3
-`define MovcAR 4
-`define MovRrAC 5
-`define MovrACR 6
-`define MovRrA 7
+`define MovRR 1
+`define MovRC 2
+`define MovRdR 3
+`define MovRdRo 4
+`define MovRdC 5
+`define MovdCR 6
+`define MovdRoR 7
 `define PushR 8
 `define PopR 9
 `define CmpRR 10
 `define CmpRC 11
 `define JmpC 12
 `define JneC 13
-`define JnzC 14
-`define CallR 15
-`define Ret 16
-`define AddRC 17
-`define MulAddRRC 18
-`define IncR 19
-`define DecR 20
-`define FaddRR 21
-`define FsubRR 22
-`define FconvR 23
-`define FmulRR 24
+`define CallR 14
+`define Ret 15
+`define AddRC 16
+`define MulAddRRC 17
+`define IncR 18
+`define DecR 19
+`define FaddRR 20
+`define FsubRR 21
+`define FconvR 22
+`define FmulRR 23
+`define FdivRR 24
 `define FmuladdRRR 25
 `define FminRR 26
 `define FmaxRR 27
@@ -31,14 +31,13 @@
 function [0:0] Is8ByteOpcode;
   input [7:0] opCodeParam;
   if (opCodeParam == `MovRC ||
-      opCodeParam == `MovRcA ||
-      opCodeParam == `MovcAR ||
-      opCodeParam == `MovRrAC ||
-      opCodeParam == `MovrACR ||
+      opCodeParam == `MovRdRo ||
+      opCodeParam == `MovRdC ||
+      opCodeParam == `MovdCR ||
+      opCodeParam == `MovdRoR ||
       opCodeParam == `CmpRC ||
       opCodeParam == `JmpC ||
       opCodeParam == `JneC ||
-      opCodeParam == `JnzC ||
       opCodeParam == `AddRC ||
       opCodeParam == `MulAddRRC)
     Is8ByteOpcode = 1;
@@ -48,11 +47,11 @@ endfunction
 
 function [0:0] IsRAMOpcode;
   input [7:0] opCodeParam;
-  if (opCodeParam == `MovRcA ||
-      opCodeParam == `MovcAR ||
-      opCodeParam == `MovRrAC ||
-      opCodeParam == `MovrACR ||
-      opCodeParam == `MovRrA ||
+  if (opCodeParam == `MovRdR ||
+      opCodeParam == `MovRdRo ||
+      opCodeParam == `MovRdC ||
+      opCodeParam == `MovdCR ||
+      opCodeParam == `MovdRoR ||
       opCodeParam == `PushR ||
       opCodeParam == `PopR ||
       opCodeParam == `CallR ||

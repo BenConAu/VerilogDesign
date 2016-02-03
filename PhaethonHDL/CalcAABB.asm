@@ -94,5 +94,5 @@ add r5, 4                      // Move along point list
 dec r4
 dout r4
 cmp r4, 0
-jnz @calcCentroidLoop
+jne @calcCentroidLoop
 ret

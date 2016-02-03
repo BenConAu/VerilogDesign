@@ -5,6 +5,22 @@
 class StructMember : public AssemblerNode<StructMember>
 {
 public:
+    int GetSize()
+    {
+        int arraySize = GetIntProperty("arraySize");
+        if (arraySize == 0)
+        {
+            // Nothing stored means it is not an array
+            return 4;
+        }
+        else
+        {
+            // Array of word
+            return arraySize * 4;
+        }
+    }
+
+public:
     static std::vector<std::unique_ptr<StructMember> > s_defs;
     static std::vector<std::unique_ptr<StructMember> >& GlobalList() { return s_defs; }
 };
@@ -12,14 +28,44 @@ public:
 class StructDef : public AssemblerListNode<StructDef, StructMember>
 {
 public:
-    static bool Match(StructMember* member, int name)
+    int GetSize()
     {
-        return (member->GetIntProperty("name") == name);
+        int storedSize = GetIntProperty("size");
+        if (storedSize != 0)
+        {
+            // This is a built-in type, so return the size
+            return storedSize;
+        }
+        else
+        {
+            //printf("Size of struct %d is %d\n", typeSymbol, (int)(s_defs[i]->GetItemCount() * 4));
+            return GetItemCount() * 4;
+        }
+    }
+
+    int CalcOffset(int memberSymIndex)
+    {
+        int offset = 0;
+
+        for (size_t i = 0; i < GetItemCount(); i++)
+        {
+            StructMember* pMember = GetItem(i);
+            if (pMember->GetIntProperty("name") == memberSymIndex)
+            {
+                //printf("Offset calculated to be %d\n", offset);
+                return offset;
+            }
+
+            offset += pMember->GetSize();
+        }
+
+        printf("Unknown struct member in CalcOffset!\n");
+        return -1;
     }
 
     static int CalcOffset(int structIndex, int memberSymIndex)
     {
-        return s_defs[structIndex]->Find(memberSymIndex) * 4;
+        return s_defs[structIndex]->CalcOffset(memberSymIndex);
     }
 
     static int GetSize(int typeSymbol)
@@ -30,17 +76,7 @@ public:
 
             if (s_defs[i]->GetIntProperty("name") == typeSymbol)
             {
-                int storedSize = s_defs[i]->GetIntProperty("size");
-                if (storedSize != 0)
-                {
-                    // This is a built-in type, so return the size
-                    return storedSize;
-                }
-                else
-                {
-                    //printf("Size of struct %d is %d\n", typeSymbol, (int)(s_defs[i]->GetItemCount() * 4));
-                    return s_defs[i]->GetItemCount() * 4;
-                }
+                return s_defs[i]->GetSize();
             }
         }
 

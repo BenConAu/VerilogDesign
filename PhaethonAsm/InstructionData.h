@@ -1,13 +1,13 @@
 #pragma once
 
 #include "CodeGen/PhaethonOpCode.h"
-#include "Argument.h"
+#include "ArgumentBase.h"
 
 struct InstructionData
 {
 	Instructions::Enum instr;
 	OpCodes::Enum opCode;
-	Argument::Type args[3];
+	ArgumentBase args[3];
 	int wordArg;
 
     static InstructionData s_data[];

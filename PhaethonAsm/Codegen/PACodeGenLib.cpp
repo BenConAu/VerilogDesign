@@ -1,6 +1,5 @@
 #include "PACodeGenLib.h"
 #include "PACodeGen.tab.h"
-#include "../Argument.h"
 #include <string>
 #include <vector>
 #include <map>
@@ -9,7 +8,7 @@ static std::vector<std::string> g_symbols;
 
 struct InstructionData
 {
-    InstructionData(int si, int a1, int a2, int a3, int flag)
+    InstructionData(int si, ArgumentBase a1, ArgumentBase a2, ArgumentBase a3, int flag)
     {
         symIndex = si;
 
@@ -23,7 +22,7 @@ struct InstructionData
 
         for (int i = 0; i < 3; i++)
         {
-            if (args[i] == Argument::Constant || args[i] == Argument::ConstAddress)
+            if (args[i]._type == OperandType::Constant || args[i]._fOffset)
             {
                 if (constIndex == -1)
                 {
@@ -35,17 +34,17 @@ struct InstructionData
                 }
             }
 
-            if (args[i] == Argument::RegAddress || args[i] == Argument::ConstAddress || flag == 1)
+            if (args[i]._modifier == OperandModifier::Deref || flag == 1)
             {
                 fRAM = true;
             }
 
-            opCode.append(Argument::ppszShortTypeText[args[i]]);
+            opCode.append(args[i].GetShortTypeText());
         }
     }
 
     int symIndex;
-    int args[3];
+    ArgumentBase args[3];
     int constIndex;
     bool fRAM;
     std::string opCode;
@@ -53,7 +52,7 @@ struct InstructionData
 
 static std::vector<InstructionData> g_instructionData;
 
-void StoreInstruction(int symIndex, int arg1, int arg2, int arg3, int flag)
+void StoreInstruction(int symIndex, ArgumentBase arg1, ArgumentBase arg2, ArgumentBase arg3, int flag)
 {
     InstructionData data(symIndex, arg1, arg2, arg3, flag);
     g_instructionData.push_back(data);
@@ -120,12 +119,12 @@ void OutputInstructions()
     for (size_t i = 0; i < g_instructionData.size(); i++)
     {
         InstructionData& data = g_instructionData[i];
-        ::fprintf(fcppfile, "    { Instructions::%s, OpCodes::%s, { Argument::%s, Argument::%s, Argument::%s }, %d },\n",
+        ::fprintf(fcppfile, "    { Instructions::%s, OpCodes::%s, { ArgumentBase::%s, ArgumentBase::%s, ArgumentBase::%s }, %d },\n",
             Pad(g_symbols[data.symIndex], 10).c_str(),
             Pad(data.opCode, 15).c_str(),
-            Pad(Argument::ppszTypeText[data.args[0]], 15).c_str(),
-            Pad(Argument::ppszTypeText[data.args[1]], 15).c_str(),
-            Pad(Argument::ppszTypeText[data.args[2]], 15).c_str(),
+            Pad(data.args[0].GetTypeText(), 22).c_str(),
+            Pad(data.args[1].GetTypeText(), 22).c_str(),
+            Pad(data.args[2].GetTypeText(), 12).c_str(),
             data.constIndex
         );
     }

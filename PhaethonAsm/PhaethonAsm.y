@@ -56,6 +56,7 @@ void yyerror(const char *s);
 %token SIZEOF_TOKEN
 %token <symIndex> SYMBOL_TOKEN
 %type <arg> argument
+%type <arg> argExpr
 %type <structDef> struct_member_list
 %type <structMember> struct_member;
 %type <dataSegmentDef> datasegment_item_list
@@ -115,12 +116,11 @@ struct_member_list:
 
 struct_member:
 	  SYMBOL_TOKEN                                                     { $$ = StructMember::Construct(); $$->SetIntProperty("name", $1); }
+	| SYMBOL_TOKEN ADDR_LEFT INT_TOKEN ADDR_RIGHT                      { $$ = StructMember::Construct(); $$->SetIntProperty("name", $1); $$->SetIntProperty("arraySize", $3); }
 	;
 
 instruction:
       INSTR_TOKEN_3 argument COMMA_TOKEN argument COMMA_TOKEN argument { $$ = InstructionNode::Construct(); $$->StoreInstruction($1, $2, $4, $6); }
-	| INSTR_TOKEN_2 argument COMMA_TOKEN argument DEREF_TOKEN argument { $$ = InstructionNode::Construct(); $$->StoreInstruction($1, $2, $4, $6); }
-	| INSTR_TOKEN_2 argument DEREF_TOKEN argument COMMA_TOKEN argument { $$ = InstructionNode::Construct(); $$->StoreInstruction($1, $2, $4, $6); }
     | INSTR_TOKEN_2 argument COMMA_TOKEN argument                      { $$ = InstructionNode::Construct(); $$->StoreInstruction($1, $2, $4, Argument::ConstructNone()); }
     | INSTR_TOKEN_1 argument                                           {
     	$$ = InstructionNode::Construct(); $$->StoreInstruction($1, $2, Argument::ConstructNone(), Argument::ConstructNone());
@@ -131,15 +131,19 @@ instruction:
     ;
 
 argument:
-      REG_TOKEN                                                        { $$ = Argument::Construct(Argument::Register, $1); }
-	| ADDR_LEFT INT_TOKEN ADDR_RIGHT                                   { $$ = Argument::Construct(Argument::ConstAddress, $2);  }
-	| ADDR_LEFT REG_TOKEN ADDR_RIGHT                                   { $$ = Argument::Construct(Argument::RegAddress, $2);  }
-    | INT_TOKEN                                                        { $$ = Argument::Construct(Argument::Constant, $1); }
-	| SYMBOL_TOKEN MEMBEROF_TOKEN SYMBOL_TOKEN                         { $$ = Argument::Construct(Argument::Constant, StructDef::CalcOffset($1, $3)); }
-    | AT_TOKEN SYMBOL_TOKEN                                            { $$ = Argument::Construct(Argument::Constant, $2, SymbolType::LabelAddress); }
-	| ADDRESSOF_TOKEN SYMBOL_TOKEN                                     { $$ = Argument::Construct(Argument::Constant, $2, SymbolType::VarAddress); }
-	| SIZEOF_TOKEN LEFT_PAREN_TOKEN SYMBOL_TOKEN RIGHT_PAREN_TOKEN     { $$ = Argument::Construct(Argument::Constant, StructDef::GetSize($3)); }
+      ADDR_LEFT argExpr ADDR_RIGHT                                     { $$ = $2; $$.Deref(); }
+	| ADDRESSOF_TOKEN argExpr                                          { $$ = $2; $$.AddressOf(); }
+	| argExpr                                                          { $$ = $1; }
+    | AT_TOKEN SYMBOL_TOKEN                                            { $$ = Argument::Construct(ArgumentBase::Constant(), $2, SymbolType::LabelAddress); }
     ;
+
+argExpr:
+      REG_TOKEN                                                        { $$ = Argument::Construct(ArgumentBase::Register(), $1); }
+    | INT_TOKEN                                                        { $$ = Argument::Construct(ArgumentBase::Constant(), $1); }
+  	| SIZEOF_TOKEN LEFT_PAREN_TOKEN SYMBOL_TOKEN RIGHT_PAREN_TOKEN     { $$ = Argument::Construct(ArgumentBase::Constant(), StructDef::GetSize($3)); }
+	| SYMBOL_TOKEN                                                     { $$ = Argument::Construct(ArgumentBase::DerefConstant(), $1, SymbolType::VarAddress); }
+    | REG_TOKEN DEREF_TOKEN SYMBOL_TOKEN MEMBEROF_TOKEN SYMBOL_TOKEN   { $$ = Argument::Construct(ArgumentBase::RegisterOffset(), $1, StructDef::CalcOffset($3, $5)); }
+	;
 
 label:
       SYMBOL_TOKEN COLON_TOKEN                                         { AddLabel($1); }
@@ -148,7 +152,10 @@ label:
 
 int main(int argc, char** argv)
 {
-	//yydebug = 1;
+    if (argc >= 3 && argv[2][0] == 'd')
+	{
+	    yydebug = 1;
+	}
 	// open a file handle to a particular file:
 	FILE *myfile = fopen(argv[1], "r");
 	// make sure it is valid:

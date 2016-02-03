@@ -18,19 +18,25 @@ void yyerror(const char *s);
 %union
 {
     int symIndex;
-    int argIndex;
     int flags;
+    OperandType::Enum opType;
+    OperandModifier::Enum modType;
+    ArgumentBase argType;
 }
 
 %token <symIndex> SYMBOL_TOKEN
-%token <argIndex> REGISTER_TOKEN
-%token <argIndex> REGADDRESS_TOKEN
-%token <argIndex> CONSTANT_TOKEN
-%token <argIndex> CONSTADDRESS_TOKEN
-%token <argIndex> NONE_TOKEN
+%token <opType> REGISTER_TOKEN
+%token <opType> CONSTANT_TOKEN
+%token <opType> NONE_TOKEN
+%token OFFSET_TOKEN
+%token DEREF_TOKEN
+%token ADDRESSOF_TOKEN
+%token COLON_TOKEN
 %token <flags> RAM_TOKEN
 %token <flags> NOFLAGS_TOKEN
-%type <argIndex> argument
+%type <argType> argument
+%type <opType> operandType
+%type <modType> modifierType
 %type <flags> flag
 
 %%
@@ -40,21 +46,31 @@ instruction_set:
     | instruction
     ;
 
-  instruction:
-      SYMBOL_TOKEN argument argument argument flag  { StoreInstruction($1, $2, $3, $4, $5); }
+instruction:
+      SYMBOL_TOKEN argument argument argument flag                  { StoreInstruction($1, $2, $3, $4, $5); }
     ;
 
-  flag:
-      NOFLAGS_TOKEN                                 { $$ = 0; }
-    | RAM_TOKEN                                     { $$ = 1; }
+flag:
+      NOFLAGS_TOKEN                                                 { $$ = 0; }
+    | RAM_TOKEN                                                     { $$ = 1; }
     ;
 
-  argument:
-      REGISTER_TOKEN                                { $$ = ArgumentBase::Register; }
-    | REGADDRESS_TOKEN                              { $$ = ArgumentBase::RegAddress; }
-    | CONSTANT_TOKEN                                { $$ = ArgumentBase::Constant; }
-    | CONSTADDRESS_TOKEN                            { $$ = ArgumentBase::ConstAddress; }
-    | NONE_TOKEN                                    { $$ = ArgumentBase::None; }
+argument:
+      operandType                                                   { $$ = ArgumentBase::Construct($1, OperandModifier::None, false); }
+    | operandType COLON_TOKEN OFFSET_TOKEN                          { $$ = ArgumentBase::Construct($1, OperandModifier::None, true); }
+    | modifierType COLON_TOKEN operandType                          { $$ = ArgumentBase::Construct($3, $1, false); }
+    | modifierType COLON_TOKEN operandType COLON_TOKEN OFFSET_TOKEN { $$ = ArgumentBase::Construct($3, $1, true); }
+    ;
+
+operandType:
+      REGISTER_TOKEN                                                { $$ = OperandType::Register; }
+    | CONSTANT_TOKEN                                                { $$ = OperandType::Constant; }
+    | NONE_TOKEN                                                    { $$ = OperandType::None; }
+    ;
+
+modifierType:
+      DEREF_TOKEN                                                   { $$ = OperandModifier::Deref; }
+    | ADDRESSOF_TOKEN                                               { $$ = OperandModifier::AddressOf; }
     ;
 
 %%

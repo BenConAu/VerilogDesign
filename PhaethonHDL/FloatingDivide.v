@@ -1,7 +1,8 @@
-module FloatingDivide(a, b, out, debug, clk);
-  output reg [31 : 0] out;
-  output reg [31 : 0] debug;
+module FloatingDivide(a, b, out, debug, clk, enable);
+  output reg [31:0] out;
+  output reg [31:0] debug;
   input wire clk;
+  input wire enable;
   input wire [31:0] a;
   input wire [31:0] b;
   integer i;
@@ -19,32 +20,35 @@ module FloatingDivide(a, b, out, debug, clk);
   reg [63:0] totalMant;
   reg [31:0] clz;
 
-  always @(posedge clk)
+  always @(posedge clk or posedge enable)
   begin
-    // Unpack the floats and force positive Mantissas by exploiting the negation
-    UnpackFloat(a, a[31:31], aMant, aExp);
-    UnpackFloat(b, b[31:31], bMant, bExp);
+    if (enable == 1)
+    begin
+      // Unpack the floats and force positive Mantissas by exploiting the negation
+      UnpackFloat(a, a[31:31], aMant, aExp);
+      UnpackFloat(b, b[31:31], bMant, bExp);
 
-    // Divide the mantissas together and do shift compensation
-    totalMant = aMant;
-    totalMant = totalMant << 23;
-    aPrimeMant = totalMant / bMant;
+      // Divide the mantissas together and do shift compensation
+      totalMant = aMant;
+      totalMant = totalMant << 23;
+      aPrimeMant = totalMant / bMant;
 
-    // Figure out sign of total
-    sign = a[31:31] ^ b[31:31];
+      // Figure out sign of total
+      sign = a[31:31] ^ b[31:31];
 
-    // Figure out leading zero count
-    CLZ(aPrimeMant, clz);
+      // Figure out leading zero count
+      CLZ(aPrimeMant, clz);
 
-    // Normalize to 8 leading zeros
-    NormalizeMantissa(aPrimeMant, clz, aNormMant);
+      // Normalize to 8 leading zeros
+      NormalizeMantissa(aPrimeMant, clz, aNormMant);
 
-    totalExp = aExp - bExp + (8 - clz) + 127;
-    debug = totalExp;
+      totalExp = aExp - bExp + (8 - clz) + 127;
+      debug = totalExp;
 
-    out[31:31] = sign;
-    out[30:23] = totalExp[7:0];
-    out[22:0] = aNormMant[22:0];
+      out[31:31] = sign;
+      out[30:23] = totalExp[7:0];
+      out[22:0] = aNormMant[22:0];
+    end
   end
-  
+
 endmodule // floating

@@ -38,11 +38,11 @@ using namespace std;
 "fmin"               { yylval.instrIndex = Instructions::Fmin; return INSTR_TOKEN_2; }
 "fmax"               { yylval.instrIndex = Instructions::Fmax; return INSTR_TOKEN_2; }
 "fmul"               { yylval.instrIndex = Instructions::Fmul; return INSTR_TOKEN_2; }
+"fdiv"               { yylval.instrIndex = Instructions::Fdiv; return INSTR_TOKEN_2; }
 "vfadd"              { yylval.instrIndex = Instructions::Vfadd; return INSTR_TOKEN_2; }
 "cmp"                { yylval.instrIndex = Instructions::Cmp; return INSTR_TOKEN_2; }
 "jmp"                { yylval.instrIndex = Instructions::Jmp; return INSTR_TOKEN_1; }
 "jne"                { yylval.instrIndex = Instructions::Jne; return INSTR_TOKEN_1; }
-"jnz"                { yylval.instrIndex = Instructions::Jnz; return INSTR_TOKEN_1; }
 "dout"               { yylval.instrIndex = Instructions::Dout; return INSTR_TOKEN_1; }
 "inc"                { yylval.instrIndex = Instructions::Inc; return INSTR_TOKEN_1; }
 "add"                { yylval.instrIndex = Instructions::Add; return INSTR_TOKEN_2; }

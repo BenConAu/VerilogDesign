@@ -6,8 +6,8 @@ void Argument::ResolveSymbol()
     switch (_symType)
     {
         case SymbolType::VarAddress:
-           //printf("Resolving symbol to %x\n", _value);
             _value = DataSegmentDef::CalcAddress(_value);
+            //printf("Resolving symbol to %x\n", _value);
             break;
 
         case SymbolType::LabelAddress:

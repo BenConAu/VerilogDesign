@@ -47,12 +47,14 @@ extern int yydebug;
   {
     SYMBOL_TOKEN = 258,
     REGISTER_TOKEN = 259,
-    REGADDRESS_TOKEN = 260,
-    CONSTANT_TOKEN = 261,
-    CONSTADDRESS_TOKEN = 262,
-    NONE_TOKEN = 263,
-    RAM_TOKEN = 264,
-    NOFLAGS_TOKEN = 265
+    CONSTANT_TOKEN = 260,
+    NONE_TOKEN = 261,
+    OFFSET_TOKEN = 262,
+    DEREF_TOKEN = 263,
+    ADDRESSOF_TOKEN = 264,
+    COLON_TOKEN = 265,
+    RAM_TOKEN = 266,
+    NOFLAGS_TOKEN = 267
   };
 #endif
 
@@ -64,10 +66,12 @@ union YYSTYPE
 #line 19 "PACodeGen.y" /* yacc.c:1909  */
 
     int symIndex;
-    int argIndex;
     int flags;
+    OperandType::Enum opType;
+    OperandModifier::Enum modType;
+    ArgumentBase argType;
 
-#line 71 "PACodeGen.tab.h" /* yacc.c:1909  */
+#line 75 "PACodeGen.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
