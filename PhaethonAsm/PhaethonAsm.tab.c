@@ -1452,7 +1452,7 @@ yyreduce:
 
   case 34:
 #line 145 "PhaethonAsm.y" /* yacc.c:1646  */
-    { (yyval.arg) = Argument::Construct(ArgumentBase::RegisterOffset(), (yyvsp[-4].regIndex), StructDef::CalcOffset((yyvsp[-2].symIndex), (yyvsp[0].symIndex))); }
+    { (yyval.arg) = Argument::Construct(ArgumentBase::DerefRegisterOffset(), (yyvsp[-4].regIndex), StructDef::CalcOffset((yyvsp[-2].symIndex), (yyvsp[0].symIndex))); }
 #line 1457 "PhaethonAsm.tab.c" /* yacc.c:1646  */
     break;
 

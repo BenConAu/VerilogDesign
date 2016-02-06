@@ -142,7 +142,7 @@ argExpr:
     | INT_TOKEN                                                        { $$ = Argument::Construct(ArgumentBase::Constant(), $1); }
   	| SIZEOF_TOKEN LEFT_PAREN_TOKEN SYMBOL_TOKEN RIGHT_PAREN_TOKEN     { $$ = Argument::Construct(ArgumentBase::Constant(), StructDef::GetSize($3)); }
 	| SYMBOL_TOKEN                                                     { $$ = Argument::Construct(ArgumentBase::DerefConstant(), $1, SymbolType::VarAddress); }
-    | REG_TOKEN DEREF_TOKEN SYMBOL_TOKEN MEMBEROF_TOKEN SYMBOL_TOKEN   { $$ = Argument::Construct(ArgumentBase::RegisterOffset(), $1, StructDef::CalcOffset($3, $5)); }
+    | REG_TOKEN DEREF_TOKEN SYMBOL_TOKEN MEMBEROF_TOKEN SYMBOL_TOKEN   { $$ = Argument::Construct(ArgumentBase::DerefRegisterOffset(), $1, StructDef::CalcOffset($3, $5)); }
 	;
 
 label:
