@@ -13,6 +13,7 @@ module ALU(
   r0,          // [Debug]  current r0 value
   r1,          // [Debug]  current r1 value
   r2,          // [Debug]  current r2 value
+  rPos,        // [Debug]  current rPos (register window) value
   debug        // [Output] Debug port
   );
 
@@ -34,9 +35,10 @@ module ALU(
   output reg [31:0]  r1;
   output reg [31:0]  r2;
   output reg [31:0]  debug;
+  output reg [7:0]   rPos;
 
   // Local registers
-  reg        [31:0] regarray[0:33];
+  reg        [31:0] regarray[0:65];
   reg        [3:0]  mode;
   reg        [31:0] ramValue;
   reg        [31:0] regValue[0:3];
@@ -48,7 +50,6 @@ module ALU(
   reg        [7:0]  regAddress3;
   reg        [6:0]  fOpEnable;
   reg        [0:0]  condJump;
-  reg        [7:0]  rPos;
 
   // Wire up the results from the floating units
   wire       [31:0] fAddResult[0:3];
@@ -82,6 +83,7 @@ module ALU(
       ipointer <= 0;
       opCode <= 0;
       opDataWord <= 'hffffffff;
+      rPos <= 2;
       mode <= 0;
       readReq <= 0;
       fOpEnable <= 7'b0000000;
@@ -97,7 +99,6 @@ module ALU(
         readReq <= 1;
         ramAddress <= ipointer;
         opDataWord <= 'h0badf00d;
-        rPos <= 2;
 
         debug[23:0] <= ipointer;
         debug[31:24] <= mode;
@@ -121,7 +122,7 @@ module ALU(
           //$display("Receiving value %h", ramIn);
 
           opCode <= ramIn[7:0];
-          regAddress <= (ramIn[15:8] >= 64) ? (ramIn[15:8] - 64) : (ramIn[15:8] + rPos);
+          regAddress <=  (ramIn[15:8] >= 64)  ? (ramIn[15:8] - 64)  : (ramIn[15:8] + rPos);
           regAddress2 <= (ramIn[23:16] >= 64) ? (ramIn[23:16] - 64) : (ramIn[23:16] + rPos);
           regAddress3 <= (ramIn[31:24] >= 64) ? (ramIn[31:24] - 64) : (ramIn[31:24] + rPos);
 
@@ -388,6 +389,32 @@ module ALU(
             //$display("Doing a ret");
           end
 
+          `RCallRC: begin
+            // Store return address
+            regarray[rPos + opDataWord] <= ipointer;
+
+            // Store arg value
+            regarray[rPos + opDataWord + 1] <= opDataWord;
+
+            // Shift register window
+            rPos <= rPos + opDataWord + 2;
+
+            // Jump to the function
+            ipointer <= regValue[0];
+
+            //$display("Doing a register shift call to %h", regValue[0]);
+          end
+
+          `RRet: begin
+            // Get the return address
+            ipointer <= regarray[rPos - 2] + 8;
+
+            // Get the window value
+            rPos <= rPos - (regarray[rPos - 1] + 2);
+
+            //$display("Doing an rret");
+          end
+
           `CmpRR: begin                                                   // cmp reg, reg
             regarray[1][0:0] <= (regValue[0] == regValue2[0] ? 1 : 0);
             regarray[1][1:1] <= (regValue[0] < regValue2[0] ? 1 : 0);
@@ -440,7 +467,7 @@ module ALU(
         begin
           ipointer <= opDataWord;
         end
-        else if (opCode != `JmpC && opCode != `CallR && opCode != `Ret)
+        else if (opCode != `JmpC && opCode != `CallR && opCode != `Ret && opCode != `RCallRC && opCode != `RRet)
         begin
           //$display("Incrementing ip");
 
@@ -458,9 +485,9 @@ module ALU(
 
       endcase
 
-      r0 <= regarray[0];
-      r1 <= regarray[1];
-      r2 <= regarray[0];
+      r0 <= regarray[rPos];
+      r1 <= regarray[rPos + 1];
+      r2 <= regarray[rPos + 2];
     end
   end
 

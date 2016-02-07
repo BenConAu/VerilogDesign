@@ -13,6 +13,8 @@ Jmp      Constant              None                  None      NoFlags
 Jne      Constant              None                  None      NoFlags
 Call     Register              None                  None      RAM
 Ret      None                  None                  None      RAM
+RCall    Register              Constant              None      NoFlags
+RRet     None                  None                  None      NoFlags
 Add      Register              Constant              None      NoFlags
 MulAdd   Register              Register              Constant  NoFlags
 Inc      Register              None                  None      NoFlags

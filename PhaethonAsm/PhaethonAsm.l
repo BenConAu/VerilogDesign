@@ -52,6 +52,8 @@ using namespace std;
 "pop"                { yylval.instrIndex = Instructions::Pop; return INSTR_TOKEN_1; }
 "call"               { yylval.instrIndex = Instructions::Call; return INSTR_TOKEN_1; }
 "ret"                { yylval.instrIndex = Instructions::Ret; return INSTR_TOKEN_0; }
+"rcall"              { yylval.instrIndex = Instructions::RCall; return INSTR_TOKEN_2; }
+"rret"               { yylval.instrIndex = Instructions::RRet; return INSTR_TOKEN_0; }
 "struct"             { return STRUCT_TOKEN; }
 "ends"               { return ENDS_TOKEN; }
 "datasegment"        { return DATASEGMENT_TOKEN; }
