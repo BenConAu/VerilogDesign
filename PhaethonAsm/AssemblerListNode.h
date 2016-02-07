@@ -21,6 +21,11 @@ public:
     void AddMember(ChildDefType* newMember)
     {
         members.insert(members.begin(), newMember);
+        OnAddMember();
+    }
+
+    virtual void OnAddMember()
+    {
     }
 
     int Find(int memberSymIndex)

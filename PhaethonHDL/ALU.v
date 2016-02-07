@@ -13,6 +13,9 @@ module ALU(
   r0,          // [Debug]  current r0 value
   r1,          // [Debug]  current r1 value
   r2,          // [Debug]  current r2 value
+  r3,          // [Debug]  current r3 value
+  r4,          // [Debug]  current r4 value
+  r5,          // [Debug]  current r5 value
   rPos,        // [Debug]  current rPos (register window) value
   debug        // [Output] Debug port
   );
@@ -34,6 +37,9 @@ module ALU(
   output reg [31:0]  r0;
   output reg [31:0]  r1;
   output reg [31:0]  r2;
+  output reg [31:0]  r3;
+  output reg [31:0]  r4;
+  output reg [31:0]  r5;
   output reg [31:0]  debug;
   output reg [7:0]   rPos;
 
@@ -429,6 +435,8 @@ module ALU(
 
           `JmpC:  ipointer <= opDataWord;                              // jmp address
 
+          `JneC: begin end // Done above
+
           `FaddRR:     regarray[regAddress[7:0]] <= fAddResult[0];          // fadd reg, reg
           `FsubRR:     regarray[regAddress[7:0]] <= fSubResult;             // fsub reg, reg
           `FconvR:     regarray[regAddress[7:0]] <= fConvResult;            // fconv reg
@@ -445,9 +453,10 @@ module ALU(
             regarray[regAddress[7:0] + 3] <= fAddResult[3];
           end
 
-          `AddRC:      regarray[regAddress[7:0]] <= regValue[0] + opDataWord;  // add reg, const
-          `IncR:       regarray[regAddress[7:0]] <= regValue[0] + 1;           // dec reg
-          `DecR:       regarray[regAddress[7:0]] <= regValue[0] - 1;           // dec reg
+          `AddRC:      regarray[regAddress[7:0]] <= regValue[0] + opDataWord;    // add reg, const
+          `AddRR:      regarray[regAddress[7:0]] <= regValue[0] + regValue2[0];  // add reg, reg
+          `IncR:       regarray[regAddress[7:0]] <= regValue[0] + 1;             // dec reg
+          `DecR:       regarray[regAddress[7:0]] <= regValue[0] - 1;             // dec reg
           `MulAddRRC:  regarray[regAddress[7:0]] <= regValue[0] + regValue2[0] * opDataWord;
 
           `DoutR: begin
@@ -488,6 +497,9 @@ module ALU(
       r0 <= regarray[rPos];
       r1 <= regarray[rPos + 1];
       r2 <= regarray[rPos + 2];
+      r3 <= regarray[rPos + 3];
+      r4 <= regarray[rPos + 4];
+      r5 <= regarray[rPos + 5];
     end
   end
 

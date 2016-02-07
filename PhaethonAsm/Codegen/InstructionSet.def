@@ -16,6 +16,7 @@ Ret      None                  None                  None      RAM
 RCall    Register              Constant              None      NoFlags
 RRet     None                  None                  None      NoFlags
 Add      Register              Constant              None      NoFlags
+Add      Register              Register              None      NoFlags
 MulAdd   Register              Register              Constant  NoFlags
 Inc      Register              None                  None      NoFlags
 Dec      Register              None                  None      NoFlags

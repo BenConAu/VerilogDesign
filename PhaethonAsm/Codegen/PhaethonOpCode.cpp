@@ -19,6 +19,7 @@ InstructionData InstructionData::s_data[] = {
     { Instructions::RCall     , OpCodes::RCallRC        , { ArgumentBase::Register()            , ArgumentBase::Constant()            , ArgumentBase::None()       }, 1 },
     { Instructions::RRet      , OpCodes::RRet           , { ArgumentBase::None()                , ArgumentBase::None()                , ArgumentBase::None()       }, -1 },
     { Instructions::Add       , OpCodes::AddRC          , { ArgumentBase::Register()            , ArgumentBase::Constant()            , ArgumentBase::None()       }, 1 },
+    { Instructions::Add       , OpCodes::AddRR          , { ArgumentBase::Register()            , ArgumentBase::Register()            , ArgumentBase::None()       }, -1 },
     { Instructions::MulAdd    , OpCodes::MulAddRRC      , { ArgumentBase::Register()            , ArgumentBase::Register()            , ArgumentBase::Constant()   }, 2 },
     { Instructions::Inc       , OpCodes::IncR           , { ArgumentBase::Register()            , ArgumentBase::None()                , ArgumentBase::None()       }, -1 },
     { Instructions::Dec       , OpCodes::DecR           , { ArgumentBase::Register()            , ArgumentBase::None()                , ArgumentBase::None()       }, -1 },

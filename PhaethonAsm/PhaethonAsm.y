@@ -115,8 +115,17 @@ struct_member_list:
     ;
 
 struct_member:
-	  SYMBOL_TOKEN                                                     { $$ = StructMember::Construct(); $$->SetIntProperty("name", $1); }
-	| SYMBOL_TOKEN ADDR_LEFT INT_TOKEN ADDR_RIGHT                      { $$ = StructMember::Construct(); $$->SetIntProperty("name", $1); $$->SetIntProperty("arraySize", $3); }
+	  SYMBOL_TOKEN SYMBOL_TOKEN                                        {
+	    $$ = StructMember::Construct();
+		$$->SetIntProperty("type", $1);
+		$$->SetIntProperty("name", $2);
+	}
+	| SYMBOL_TOKEN SYMBOL_TOKEN ADDR_LEFT INT_TOKEN ADDR_RIGHT         {
+		$$ = StructMember::Construct();
+		$$->SetIntProperty("type", $1);
+		$$->SetIntProperty("name", $2);
+		$$->SetIntProperty("arraySize", $4);
+	}
 	;
 
 instruction:

@@ -7,6 +7,11 @@ class StructMember : public AssemblerNode<StructMember>
 public:
     int GetSize()
     {
+        if (GetIntProperty("type") != AddSymbol("word"))
+        {
+            printf("Non-word members of structs not supported yet\n");
+        }
+
         int arraySize = GetIntProperty("arraySize");
         if (arraySize == 0)
         {
@@ -38,7 +43,7 @@ public:
         }
         else
         {
-            //printf("Size of struct %d is %d\n", typeSymbol, (int)(s_defs[i]->GetItemCount() * 4));
+            //printf("Size of struct %d with %d items is %d\n", GetIntProperty("name"), GetItemCount(), GetItemCount() * 4);
             return GetItemCount() * 4;
         }
     }
@@ -50,6 +55,8 @@ public:
         for (size_t i = 0; i < GetItemCount(); i++)
         {
             StructMember* pMember = GetItem(i);
+
+            //printf("Member %i is %p\n", (int)i, pMember);
             if (pMember->GetIntProperty("name") == memberSymIndex)
             {
                 //printf("Offset calculated to be %d\n", offset);
@@ -63,9 +70,30 @@ public:
         return -1;
     }
 
-    static int CalcOffset(int structIndex, int memberSymIndex)
+    void OnAddMember()
     {
-        return s_defs[structIndex]->CalcOffset(memberSymIndex);
+        //printf("Member added to struct\n");
+
+        //for (size_t i = 0; i < GetItemCount(); i++)
+        //{
+            //printf("Member %d of %d is symbol %d\n", (int)i, GetItemCount(), GetItem(i)->GetIntProperty("name"));
+        //}
+    }
+
+    static int CalcOffset(int structSymIndex, int memberSymIndex)
+    {
+        for (size_t i = 0; i < s_defs.size(); i++)
+        {
+            //printf("Name of struct %d is %d\n", (int)i, s_defs[i]->GetIntProperty("name"));
+
+            if (s_defs[i]->GetIntProperty("name") == structSymIndex)
+            {
+                return s_defs[i]->CalcOffset(memberSymIndex);
+            }
+        }
+
+        printf("Unknown size for type %d\n", structSymIndex);
+        return -1;
     }
 
     static int GetSize(int typeSymbol)

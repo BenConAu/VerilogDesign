@@ -27,6 +27,7 @@ public:
             baseSize *= arraySize;
         }
 
+        //printf("Size of data segment item is %d\n", baseSize);
         return baseSize;
     }
 
@@ -124,6 +125,7 @@ public:
         	}
         }
 
+        printf("CalcAddress failed for %d\n", symbol);
         return -1;
     }
 

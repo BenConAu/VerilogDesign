@@ -35,7 +35,7 @@ public:
     		}
     	}
 
-    	//std::cout << "Unknown instruction instr = " << instr << ", " << a1._argType.GetShortTypeText() << ", " << a2._argType.GetShortTypeText() << ", " << a3._argType.GetShortTypeText() << std::endl;
+    	std::cout << "Unknown instruction instr = " << instr << ", " << a1._argType.GetShortTypeText() << ", " << a2._argType.GetShortTypeText() << ", " << a3._argType.GetShortTypeText() << std::endl;
     }
 
     void ResolveSymbols()

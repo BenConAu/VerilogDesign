@@ -14,7 +14,7 @@ module test;
 
   initial
   begin
-    $readmemh("../PhaethonAsmTests/TestRCallRRet.pao", fileRam, 0, 29 * 4 - 1);
+    $readmemh("MemoryManager.pao", fileRam, 0, 303 * 4 - 1);
   end
 
   /* Make a regular pulsing clock. */
@@ -27,6 +27,9 @@ module test;
   wire [31:0] r0;
   wire [31:0] r1;
   wire [31:0] r2;
+  wire [31:0] r3;
+  wire [31:0] r4;
+  wire [31:0] r5;
   wire [7:0] rPos;
   wire [31:0] debug;
   wire [31:0] ramAddress;
@@ -56,13 +59,16 @@ module test;
     r0,
     r1,
     r2,
+    r3,
+    r4,
+    r5,
     rPos,
     debug
     );
 
-  //initial
-     //$monitor("At time %t, ip = %h, opCode = %h, reset = %h, r[0:1:2] = %h:%h:%h, rPos = %h, debug = %h",
-            //  $time, iPointer, opCode, reset, r0, r1, r2, rPos, debug);
+  initial
+     $monitor("At time %t, ip = %h, opCode = %h, reset = %h, r[0:1:2:3:4:5] = %h:%h:%h:%h:%h:%h, rPos = %h, debug = %h",
+              $time, iPointer, opCode, reset, r0, r1, r2, r3, r4, r5, rPos, debug);
 
   always @(posedge clk)
   begin
