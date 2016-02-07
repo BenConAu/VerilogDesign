@@ -36,7 +36,7 @@ module ALU(
   output reg [31:0]  debug;
 
   // Local registers
-  reg        [31:0] regarray[0:31];
+  reg        [31:0] regarray[0:33];
   reg        [3:0]  mode;
   reg        [31:0] ramValue;
   reg        [31:0] regValue[0:3];
@@ -48,6 +48,7 @@ module ALU(
   reg        [7:0]  regAddress3;
   reg        [6:0]  fOpEnable;
   reg        [0:0]  condJump;
+  reg        [7:0]  rPos;
 
   // Wire up the results from the floating units
   wire       [31:0] fAddResult[0:3];
@@ -96,6 +97,7 @@ module ALU(
         readReq <= 1;
         ramAddress <= ipointer;
         opDataWord <= 'h0badf00d;
+        rPos <= 2;
 
         debug[23:0] <= ipointer;
         debug[31:24] <= mode;
@@ -119,9 +121,9 @@ module ALU(
           //$display("Receiving value %h", ramIn);
 
           opCode <= ramIn[7:0];
-          regAddress <= ramIn[15:8];
-          regAddress2 <= ramIn[23:16];
-          regAddress3 <= ramIn[31:24];
+          regAddress <= (ramIn[15:8] >= 64) ? (ramIn[15:8] - 64) : (ramIn[15:8] + rPos);
+          regAddress2 <= (ramIn[23:16] >= 64) ? (ramIn[23:16] - 64) : (ramIn[23:16] + rPos);
+          regAddress3 <= (ramIn[31:24] >= 64) ? (ramIn[31:24] - 64) : (ramIn[31:24] + rPos);
 
           // Safe to move to next mode now
           mode <= 2;
@@ -165,7 +167,7 @@ module ALU(
         if (opCode == `FdivRR) fOpEnable[6:6] <= 1;
 
         // Determine if a conditional jump needs to happen
-        if (opCode == `JneC && regarray[31][0:0] == 1'b0) condJump <= 1'b1;
+        if (opCode == `JneC && regarray[1][0:0] == 1'b0) condJump <= 1'b1;
 
         if (Is8ByteOpcode(opCode) == 1)
         begin
@@ -254,9 +256,9 @@ module ALU(
         begin
           // Read value from stack
           readReq <= 1;
-          ramAddress <= regarray[30] - 4;
+          ramAddress <= regarray[0] - 4;
 
-          //$display("Requesting read from %h - 4", regarray[30]);
+          //$display("Requesting read from %h - 4", regarray[0]);
         end
 
         if (opCode == `MovdCR)
@@ -283,7 +285,7 @@ module ALU(
         begin
           // Write register value to stack
           writeReq <= 1;
-          ramAddress <= regarray[30];
+          ramAddress <= regarray[0];
           ramOut <= regValue[0];
 
           //$display("Reqesting push %h", regValue);
@@ -293,7 +295,7 @@ module ALU(
         begin
           // Write ip to stack
           writeReq <= 1;
-          ramAddress <= regarray[30];
+          ramAddress <= regarray[0];
           ramOut <= ipointer;
 
           //$display("Reqesting push %h", regValue);
@@ -358,17 +360,17 @@ module ALU(
           `MovdRoR: begin end // Done above
 
           `PushR: begin
-            regarray[30] <= regarray[30] + 4;                             // push reg
+            regarray[0] <= regarray[0] + 4;                             // push reg
           end
 
           `PopR: begin
             regarray[regAddress[7:0]] <= ramValue;                        // pop reg
-            regarray[30] <= regarray[30] - 4;
+            regarray[0] <= regarray[0] - 4;
           end
 
           `CallR: begin
             // Stack pointer increases like a push
-            regarray[30] <= regarray[30] + 4;                             // call reg
+            regarray[0] <= regarray[0] + 4;                             // call reg
 
             // Jump to the function
             ipointer <= regValue[0];
@@ -378,7 +380,7 @@ module ALU(
 
           `Ret: begin
             // Stack pointer decreases like a pop
-            regarray[30] <= regarray[30] - 4;                             // ret
+            regarray[0] <= regarray[0] - 4;                             // ret
 
             // Return to the saved position, after the call
             ipointer <= ramValue + 4;
@@ -387,15 +389,15 @@ module ALU(
           end
 
           `CmpRR: begin                                                   // cmp reg, reg
-            regarray[31][0:0] <= (regValue[0] == regValue2[0] ? 1 : 0);
-            regarray[31][1:1] <= (regValue[0] < regValue2[0] ? 1 : 0);
-            regarray[31][2:2] <= (regValue[0] > regValue2[0] ? 1 : 0);
+            regarray[1][0:0] <= (regValue[0] == regValue2[0] ? 1 : 0);
+            regarray[1][1:1] <= (regValue[0] < regValue2[0] ? 1 : 0);
+            regarray[1][2:2] <= (regValue[0] > regValue2[0] ? 1 : 0);
           end
 
           `CmpRC: begin
-            regarray[31][0:0] <= (regValue[0] == opDataWord ? 1 : 0);
-            regarray[31][1:1] <= (regValue[0] < opDataWord ? 1 : 0);
-            regarray[31][2:2] <= (regValue[0] > opDataWord ? 1 : 0);
+            regarray[1][0:0] <= (regValue[0] == opDataWord ? 1 : 0);
+            regarray[1][1:1] <= (regValue[0] < opDataWord ? 1 : 0);
+            regarray[1][2:2] <= (regValue[0] > opDataWord ? 1 : 0);
           end
 
           `JmpC:  ipointer <= opDataWord;                              // jmp address
@@ -458,7 +460,7 @@ module ALU(
 
       r0 <= regarray[0];
       r1 <= regarray[1];
-      r2 <= regarray[30];
+      r2 <= regarray[0];
     end
   end
 

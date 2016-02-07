@@ -1052,12 +1052,12 @@ YY_RULE_SETUP
 case 43:
 YY_RULE_SETUP
 #line 61 "PhaethonAsm.l"
-{ yylval.regIndex = 30; return REG_TOKEN; }
+{ yylval.regIndex = 64; return REG_TOKEN; }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
 #line 62 "PhaethonAsm.l"
-{ yylval.regIndex = 31; return REG_TOKEN; }
+{ yylval.regIndex = 65; return REG_TOKEN; }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP

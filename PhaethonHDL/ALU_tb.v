@@ -14,7 +14,7 @@ module test;
 
   initial
   begin
-    $readmemh("../PhaethonAsmTests/TestVMath.pao", fileRam, 0, 23 * 4 - 1);
+    $readmemh("../PhaethonAsmTests/TestPushPop.pao", fileRam, 0, 25 * 4 - 1);
   end
 
   /* Make a regular pulsing clock. */

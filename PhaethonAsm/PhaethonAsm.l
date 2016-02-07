@@ -58,8 +58,8 @@ using namespace std;
 "enddata"            { return ENDDATA_TOKEN; }
 "sizeof"             { return SIZEOF_TOKEN; }
 "r"[0-9]+            { yylval.regIndex = atoi(yytext + 1); return REG_TOKEN; }
-"rsp"                { yylval.regIndex = 30; return REG_TOKEN; }
-"rfl"                { yylval.regIndex = 31; return REG_TOKEN; }
+"rsp"                { yylval.regIndex = 64; return REG_TOKEN; }
+"rfl"                { yylval.regIndex = 65; return REG_TOKEN; }
 [A-Za-z][A-Za-z0-9]* { yylval.symIndex = AddSymbol(yytext); return SYMBOL_TOKEN; }
 .                    ;
 %%
