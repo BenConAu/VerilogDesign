@@ -7,14 +7,14 @@ module test;
   initial begin
     # 0 reset = 1;
     # 1 reset = 0;
-    # 5000 $finish;
+    # 10000 $finish;
   end
 
   reg [7:0] fileRam[0:2047];
 
   initial
   begin
-    $readmemh("MemoryManager.pao", fileRam, 0, 303 * 4 - 1);
+    $readmemh("MemoryManager.pao", fileRam, 0, 340 * 4 - 1);
   end
 
   /* Make a regular pulsing clock. */
@@ -22,7 +22,7 @@ module test;
   always #5 clk = !clk;
   reg [31:0] ramValue;
 
-  wire [7:0] iPointer;
+  wire [31:0] iPointer;
   wire [7:0] opCode;
   wire [31:0] r0;
   wire [31:0] r1;
@@ -66,9 +66,9 @@ module test;
     debug
     );
 
-  initial
-     $monitor("At time %t, ip = %h, opCode = %h, reset = %h, r[0:1:2:3:4:5] = %h:%h:%h:%h:%h:%h, rPos = %h, debug = %h",
-              $time, iPointer, opCode, reset, r0, r1, r2, r3, r4, r5, rPos, debug);
+  //initial
+     //$monitor("At time %t, ip = %h, opCode = %h, reset = %h, r[0:1:2:3:4:5] = %h:%h:%h:%h:%h:%h, rPos = %h, debug = %h",
+              //$time, iPointer[15:0], opCode, reset, r0, r1, r2, r3, r4, r5, rPos, debug);
 
   always @(posedge clk)
   begin

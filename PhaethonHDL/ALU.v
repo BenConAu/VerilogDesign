@@ -32,7 +32,7 @@ module ALU(
   output reg [31:0]  ramOut;
   output reg [0:0]   readReq;
   output reg [0:0]   writeReq;
-  output reg [7:0]   ipointer;
+  output reg [31:0]  ipointer;
   output reg [7:0]   opCode;
   output reg [31:0]  r0;
   output reg [31:0]  r1;
@@ -275,7 +275,7 @@ module ALU(
           ramAddress <= opDataWord;
           ramOut <= regValue2[0];
 
-          //$display("Reqesting write %h to address value %h", regValue2, opDataWord);
+          //$display("Reqesting write %h to address value %h", regValue2[0], opDataWord);
         end
 
         if (opCode == `MovdRoR)
@@ -283,9 +283,9 @@ module ALU(
           // Write values to ram requested by instruction
           writeReq <= 1;
           ramAddress <= opDataWord + regValue[0];
-          ramOut <= regValue3;
+          ramOut <= regValue2[0];
 
-          //$display("Reqesting write %h to address value %h", regValue3, opDataWord + regValue);
+          //$display("Reqesting write %h to address value %h", regValue2[0], opDataWord + regValue[0]);
         end
 
         if (opCode == `PushR)
@@ -486,7 +486,7 @@ module ALU(
             ipointer <= ipointer + 4;
         end
 
-//        $display("Finished instruction %h", opCode);
+        //$display("Finished instruction %h", opCode);
 
         // Mode change
         mode <= 0;

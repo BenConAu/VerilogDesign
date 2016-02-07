@@ -15,10 +15,29 @@ ends
   word heap[256]
  enddata
 
+mov r0, &desc
+dout r0
 mov r0, @memAlloc
 mov r3, 100
 rcall r0, 1
 dout r3
+mov r3, &desc
+mov r4, r3->HeapDescriptor::firstAllocation
+dout r4
+mov r4, r3->HeapDescriptor::lastAllocation
+dout r4
+mov r4, r3->HeapDescriptor::nextAllocation
+dout r4
+mov r3, 200
+rcall r0, 1
+dout r3
+mov r3, &desc
+mov r4, r3->HeapDescriptor::firstAllocation
+dout r4
+mov r4, r3->HeapDescriptor::lastAllocation
+dout r4
+mov r4, r3->HeapDescriptor::nextAllocation
+dout r4
 endLoop:
 jmp @endLoop
 
@@ -27,21 +46,25 @@ mov r1, &desc
 mov r2, r1->HeapDescriptor::firstAllocation
 cmp r2, 0
 jne @memAllocNotFirst                        // If there is an allocation
-mov r3, &desc
-mov r4, &heap
-mov r3->HeapDescriptor::firstAllocation, r4  // First allocation is beginning of heap
-mov r3->HeapDescriptor::lastAllocation, r4   // Last allocation is the same now
-mov r5, r4
-add r5, sizeof(Allocation)
-mov r4->Allocation::start, r5                // Location of actual memory
-mov r6, r5                                   // Save location to return
-add r5, r0                                   // Allocation size
-mov r3->HeapDescriptor::nextAllocation, r5   // Location of next allocation
-mov r4->Allocation::size, r0                 // Size of memory
-mov r5, 0
-mov r4->Allocation::next, r5                 // Next allocation is not there yet
-mov r0, r6                                   // Ready to return
-jmp @memAllocComplete
+mov r3, &heap
+dout r3
+mov r1->HeapDescriptor::firstAllocation, r3  // First allocation is beginning of heap
+mov r1->HeapDescriptor::lastAllocation, r3   // Last allocation is the same now
+jmp @memAllocFillAllocation
 memAllocNotFirst:
-memAllocComplete:
+mov r2, r1->HeapDescriptor::lastAllocation
+mov r3, r1->HeapDescriptor::nextAllocation
+mov r2->Allocation::next, r3                 // Chain to next allocation
+memAllocFillAllocation:
+mov r1->HeapDescriptor::lastAllocation, r3   // Store location of last allocation
+mov r4, r3                                   // r3 has next allocation from both paths
+add r4, sizeof(Allocation)
+mov r3->Allocation::start, r4                // Location of actual memory we will return
+mov r5, r4                                   // Save location to return
+add r4, r0                                   // Allocation size
+mov r1->HeapDescriptor::nextAllocation, r4   // Location of next allocation
+mov r3->Allocation::size, r0                 // Size of memory
+mov r4, 0
+mov r3->Allocation::next, r4                 // Next allocation is not there yet
+mov r0, r5                                   // Ready to return
 rret
