@@ -37,3 +37,37 @@ InstructionData InstructionData::s_data[] = {
 
 int InstructionData::s_dataCount = sizeof(InstructionData::s_data) / sizeof(InstructionData::s_data[0]);
 
+bool Is8ByteOpcode(OpCodes::Enum opCodeParam)
+{
+    if (opCodeParam == OpCodes::MovRC ||
+        opCodeParam == OpCodes::MovRdRo ||
+        opCodeParam == OpCodes::MovRdC ||
+        opCodeParam == OpCodes::MovdCR ||
+        opCodeParam == OpCodes::MovdRoR ||
+        opCodeParam == OpCodes::CmpRC ||
+        opCodeParam == OpCodes::JmpC ||
+        opCodeParam == OpCodes::JneC ||
+        opCodeParam == OpCodes::RCallRC ||
+        opCodeParam == OpCodes::AddRC ||
+        opCodeParam == OpCodes::MulAddRRC)
+        return true;
+    else
+        return false;
+}
+
+bool IsRAMOpcode(OpCodes::Enum opCodeParam)
+{
+    if (opCodeParam == OpCodes::MovRdR ||
+        opCodeParam == OpCodes::MovRdRo ||
+        opCodeParam == OpCodes::MovRdC ||
+        opCodeParam == OpCodes::MovdCR ||
+        opCodeParam == OpCodes::MovdRoR ||
+        opCodeParam == OpCodes::PushR ||
+        opCodeParam == OpCodes::PopR ||
+        opCodeParam == OpCodes::CallR ||
+        opCodeParam == OpCodes::Ret)
+        return true;
+    else
+        return false;
+}
+

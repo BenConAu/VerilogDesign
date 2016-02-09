@@ -108,6 +108,9 @@ void OutputInstructions()
     }
     ::fprintf(fhfile, "    };\n}\n");
 
+    ::fprintf(fhfile, "bool Is8ByteOpcode(OpCodes::Enum opCodeParam);\n");
+    ::fprintf(fhfile, "bool IsRAMOpcode(OpCodes::Enum opCodeParam);\n");
+
     ::fclose(fhfile);
 
     FILE* fcppfile = ::fopen("PhaethonOpCode.cpp", "w");
@@ -132,6 +135,48 @@ void OutputInstructions()
 
     ::fprintf(fcppfile, "int InstructionData::s_dataCount = sizeof(InstructionData::s_data) / sizeof(InstructionData::s_data[0]);\n\n");
 
+    // Cpp function to tell opCodes that have constant data
+    ::fprintf(fcppfile, "bool Is8ByteOpcode(OpCodes::Enum opCodeParam)\n{\n    if (");
+    bool fFirst = true;
+    for (size_t i = 0; i < g_instructionData.size(); i++)
+    {
+        InstructionData& data = g_instructionData[i];
+
+        if (data.constIndex != -1)
+        {
+            if (!fFirst)
+            {
+                fprintf(fcppfile, " ||\n        ");
+            }
+
+            ::fprintf(fcppfile, "opCodeParam == OpCodes::%s", data.opCode.c_str());
+
+            fFirst = false;
+        }
+    }
+    ::fprintf(fcppfile, ")\n        return true;\n    else\n        return false;\n}\n\n");
+
+    // Cpp function to tell opCodes that read or write RAM
+    ::fprintf(fcppfile, "bool IsRAMOpcode(OpCodes::Enum opCodeParam)\n{\n    if (");
+    fFirst = true;
+    for (size_t i = 0; i < g_instructionData.size(); i++)
+    {
+        InstructionData& data = g_instructionData[i];
+
+        if (data.fRAM)
+        {
+            if (!fFirst)
+            {
+                fprintf(fcppfile, " ||\n        ");
+            }
+
+            ::fprintf(fcppfile, "opCodeParam == OpCodes::%s", data.opCode.c_str());
+
+            fFirst = false;
+        }
+    }
+    ::fprintf(fcppfile, ")\n        return true;\n    else\n        return false;\n}\n\n");
+
     ::fclose(fcppfile);
 
     // Now the Verilog
@@ -148,7 +193,7 @@ void OutputInstructions()
 
     // Verilog function to tell opCodes that have constant data
     ::fprintf(fvfile, "function [0:0] Is8ByteOpcode;\n  input [7:0] opCodeParam;\n  if (");
-    bool fFirst = true;
+    fFirst = true;
     for (size_t i = 0; i < g_instructionData.size(); i++)
     {
         InstructionData& data = g_instructionData[i];
@@ -187,7 +232,6 @@ void OutputInstructions()
         }
     }
     ::fprintf(fvfile, ")\n    IsRAMOpcode = 1;\n  else\n    IsRAMOpcode = 0;\nendfunction\n\n");
-
 
     ::fclose(fvfile);
 }

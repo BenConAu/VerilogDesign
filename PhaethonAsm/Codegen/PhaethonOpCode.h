@@ -70,3 +70,5 @@ namespace OpCodes
         DoutR = 32,
     };
 }
+bool Is8ByteOpcode(OpCodes::Enum opCodeParam);
+bool IsRAMOpcode(OpCodes::Enum opCodeParam);
