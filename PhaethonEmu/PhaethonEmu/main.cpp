@@ -181,6 +181,20 @@ int main(int argc, const char * argv[])
                 reg[regAddr1].fl = fmax(regValue1.fl, regValue2.fl);
                 break;
 
+            case OpCodes::MulAddRRC:
+                reg[regAddr1].word = regValue1.word + regValue2.word * opWord;
+                break;
+
+            case OpCodes::PushR:
+                ram.WriteWord(reg[0].word, regValue1);
+                reg[0].word += 4;
+                break;
+
+            case OpCodes::PopR:
+                reg[0].word -= 4;
+                reg[regAddr1] = ram.ReadWord(reg[0].word);
+                break;
+
             case OpCodes::CallR:
                 ram.WriteWord(reg[0].word, ip);
                 reg[0].word += 4;
