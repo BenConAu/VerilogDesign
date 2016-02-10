@@ -141,8 +141,44 @@ int main(int argc, const char * argv[])
                 reg[regAddr1].word = opWord;
                 break;
 
+            case OpCodes::MovRdR:
+                reg[regAddr1] = ram.ReadWord(regValue2.word);
+                break;
+
+            case OpCodes::MovRdC:
+                reg[regAddr1] = ram.ReadWord(opWord);
+                break;
+
+            case OpCodes::MovRdRo:
+                reg[regAddr1] = ram.ReadWord(regValue2.word + opWord);
+                break;
+
+            case OpCodes::MovdCR:
+                ram.WriteWord(opWord, regValue2);
+                break;
+
+            case OpCodes::MovdRoR:
+                ram.WriteWord(regValue1.word + opWord, regValue2);
+                break;
+
+            case OpCodes::DecR:
+                reg[regAddr1].word--;
+                break;
+
+            case OpCodes::IncR:
+                reg[regAddr1].word++;
+                break;
+
+            case OpCodes::FdivRR:
+                reg[regAddr1].fl = regValue1.fl / regValue2.fl;
+                break;
+
             case OpCodes::FminRR:
                 reg[regAddr1].fl = fmin(regValue1.fl, regValue2.fl);
+                break;
+
+            case OpCodes::FmaxRR:
+                reg[regAddr1].fl = fmax(regValue1.fl, regValue2.fl);
                 break;
 
             case OpCodes::CallR:

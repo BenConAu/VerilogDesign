@@ -33,6 +33,8 @@ void yyerror(const char *s);
 	InstructionNode* instructonNode;
 }
 
+%locations
+
 %token <intVal> INT_TOKEN
 %token <instrIndex> INSTR_TOKEN_0
 %token <instrIndex> INSTR_TOKEN_1
@@ -186,8 +188,9 @@ int main(int argc, char** argv)
 	OutputCode();
 }
 
-void yyerror(const char *s) {
-	cout << "EEK, parse error!  Message: " << s << endl;
+void yyerror(const char *s)
+{
+	cout << "Line" << yylloc.first_line << "EEK, parse error!  Message: " << s << endl;
 	// might as well halt now:
 	exit(-1);
 }

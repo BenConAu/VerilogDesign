@@ -1,7 +1,7 @@
 struct foo
-  a
-  b
-  c
+  word a
+  word b
+  word c
 ends
 
 datasegment
