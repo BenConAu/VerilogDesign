@@ -1,6 +1,6 @@
 struct TestStruct
-  first
-  second
+  word first
+  word second
 ends
 
 datasegment

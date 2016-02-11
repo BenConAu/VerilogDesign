@@ -1,10 +1,106 @@
-DebugOut 00000144
-DebugOut 00000150
-DebugOut 0000015c
-DebugOut 00000150
-DebugOut 00000150
-DebugOut 000001c0
-DebugOut 000001cc
-DebugOut 00000150
-DebugOut 000001c0
-DebugOut 00000294
+OP:     MovRC:: 150:   0:   0:   0:   0
+DebugOut 150
+OP:     DoutR:: 150:   0:   0:   0:   0
+OP:     MovRC::  4c:   0:   0:   0:   0
+OP:     MovRC::  4c:   0:   0:  64:   0
+OP:   RCallRC::  64:   0:   0:   0:   0
+OP:     MovRC::  64: 150:   0:   0:   0
+OP:   MovRdRo::  64: 150:   0:   0:   0
+OP:     CmpRC::  64: 150:   0:   0:   0
+OP:      JneC::  64: 150:   0:   0:   0
+OP:     MovRC::  64: 150:   0: 15c:   0
+OP:   MovdRoR::  64: 150:   0: 15c:   0
+OP:   MovdRoR::  64: 150:   0: 15c:   0
+OP:      JmpC::  64: 150:   0: 15c:   0
+OP:   MovdRoR::  64: 150:   0: 15c:   0
+OP:     MovRR::  64: 150:   0: 15c: 15c
+OP:     AddRC::  64: 150:   0: 15c: 168
+OP:   MovdRoR::  64: 150:   0: 15c: 168
+OP:     MovRR::  64: 150:   0: 15c: 168
+OP:     AddRR::  64: 150:   0: 15c: 1cc
+OP:   MovdRoR::  64: 150:   0: 15c: 1cc
+OP:   MovdRoR::  64: 150:   0: 15c: 1cc
+OP:     MovRC::  64: 150:   0: 15c:   0
+OP:   MovdRoR::  64: 150:   0: 15c:   0
+OP:     MovRR:: 168: 150:   0: 15c:   0
+OP:      RRet::  4c:  1c:   1: 168: 150
+OP:     MovRC::  4c:  1c:   1:  c8: 150
+OP:   RCallRC::  c8: 150:   0: 15c:   0
+OP:     MovRC::  c8: 150:   0: 15c:   0
+OP:   MovRdRo::  c8: 150: 15c: 15c:   0
+OP:     CmpRC::  c8: 150: 15c: 15c:   0
+OP:      JneC::  c8: 150: 15c: 15c:   0
+OP:   MovRdRo::  c8: 150: 15c: 15c:   0
+OP:   MovRdRo::  c8: 150: 15c: 1cc:   0
+OP:   MovdRoR::  c8: 150: 15c: 1cc:   0
+OP:   MovdRoR::  c8: 150: 15c: 1cc:   0
+OP:     MovRR::  c8: 150: 15c: 1cc: 1cc
+OP:     AddRC::  c8: 150: 15c: 1cc: 1d8
+OP:   MovdRoR::  c8: 150: 15c: 1cc: 1d8
+OP:     MovRR::  c8: 150: 15c: 1cc: 1d8
+OP:     AddRR::  c8: 150: 15c: 1cc: 2a0
+OP:   MovdRoR::  c8: 150: 15c: 1cc: 2a0
+OP:   MovdRoR::  c8: 150: 15c: 1cc: 2a0
+OP:     MovRC::  c8: 150: 15c: 1cc:   0
+OP:   MovdRoR::  c8: 150: 15c: 1cc:   0
+OP:     MovRR:: 1d8: 150: 15c: 1cc:   0
+OP:      RRet::  4c:  2c:   1: 1d8: 150
+OP:     MovRC::  f0:  2c:   1: 1d8: 150
+OP:   RCallRC:: 1d8: 150: 15c: 1cc:   0
+OP:     MovRC:: 1d8:1234: 15c: 1cc:   0
+DebugOut 1234
+OP:     DoutR:: 1d8:1234: 15c: 1cc:   0
+OP:     MovRC:: 1d8: 150: 15c: 1cc:   0
+OP:   MovRdRo:: 1d8: 150: 15c: 1cc:   0
+OP:     CmpRC:: 1d8: 150: 15c: 1cc:   0
+OP:       JeC:: 1d8: 150: 15c: 1cc:   0
+OP:   MovRdRo:: 1d8: 150: 15c: 168:   0
+DebugOut 168
+OP:     DoutR:: 1d8: 150: 15c: 168:   0
+OP:   MovRdRo:: 1d8: 150: 15c:  64:   0
+DebugOut 64
+OP:     DoutR:: 1d8: 150: 15c:  64:   0
+OP:   MovRdRo:: 1d8: 150: 1cc:  64:   0
+OP:      JmpC:: 1d8: 150: 1cc:  64:   0
+OP:     CmpRC:: 1d8: 150: 1cc:  64:   0
+OP:       JeC:: 1d8: 150: 1cc:  64:   0
+OP:   MovRdRo:: 1d8: 150: 1cc: 1d8:   0
+DebugOut 1d8
+OP:     DoutR:: 1d8: 150: 1cc: 1d8:   0
+OP:   MovRdRo:: 1d8: 150: 1cc:  c8:   0
+DebugOut c8
+OP:     DoutR:: 1d8: 150: 1cc:  c8:   0
+OP:   MovRdRo:: 1d8: 150:   0:  c8:   0
+OP:      JmpC:: 1d8: 150:   0:  c8:   0
+OP:     CmpRC:: 1d8: 150:   0:  c8:   0
+OP:       JeC:: 1d8: 150:   0:  c8:   0
+OP:     MovRC:: 1d8:5678:   0:  c8:   0
+OP:      RRet::  f0:  3c:   1: 1d8:5678
+OP:      JmpC::  f0:  3c:   1: 1d8:5678
+OP:      JmpC::  f0:  3c:   1: 1d8:5678
+OP:      JmpC::  f0:  3c:   1: 1d8:5678
+OP:      JmpC::  f0:  3c:   1: 1d8:5678
+OP:      JmpC::  f0:  3c:   1: 1d8:5678
+OP:      JmpC::  f0:  3c:   1: 1d8:5678
+OP:      JmpC::  f0:  3c:   1: 1d8:5678
+OP:      JmpC::  f0:  3c:   1: 1d8:5678
+OP:      JmpC::  f0:  3c:   1: 1d8:5678
+OP:      JmpC::  f0:  3c:   1: 1d8:5678
+OP:      JmpC::  f0:  3c:   1: 1d8:5678
+OP:      JmpC::  f0:  3c:   1: 1d8:5678
+OP:      JmpC::  f0:  3c:   1: 1d8:5678
+OP:      JmpC::  f0:  3c:   1: 1d8:5678
+OP:      JmpC::  f0:  3c:   1: 1d8:5678
+OP:      JmpC::  f0:  3c:   1: 1d8:5678
+OP:      JmpC::  f0:  3c:   1: 1d8:5678
+OP:      JmpC::  f0:  3c:   1: 1d8:5678
+OP:      JmpC::  f0:  3c:   1: 1d8:5678
+OP:      JmpC::  f0:  3c:   1: 1d8:5678
+OP:      JmpC::  f0:  3c:   1: 1d8:5678
+OP:      JmpC::  f0:  3c:   1: 1d8:5678
+OP:      JmpC::  f0:  3c:   1: 1d8:5678
+OP:      JmpC::  f0:  3c:   1: 1d8:5678
+OP:      JmpC::  f0:  3c:   1: 1d8:5678
+OP:      JmpC::  f0:  3c:   1: 1d8:5678
+OP:      JmpC::  f0:  3c:   1: 1d8:5678
+OP:      JmpC::  f0:  3c:   1: 1d8:5678

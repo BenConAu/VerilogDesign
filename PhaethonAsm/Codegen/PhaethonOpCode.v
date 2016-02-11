@@ -11,25 +11,26 @@
 `define CmpRC 11
 `define JmpC 12
 `define JneC 13
-`define CallR 14
-`define Ret 15
-`define RCallRC 16
-`define RRet 17
-`define AddRC 18
-`define AddRR 19
-`define MulAddRRC 20
-`define IncR 21
-`define DecR 22
-`define FaddRR 23
-`define FsubRR 24
-`define FconvR 25
-`define FmulRR 26
-`define FdivRR 27
-`define FmuladdRRR 28
-`define FminRR 29
-`define FmaxRR 30
-`define VfaddRR 31
-`define DoutR 32
+`define JeC 14
+`define CallR 15
+`define Ret 16
+`define RCallRC 17
+`define RRet 18
+`define AddRC 19
+`define AddRR 20
+`define MulAddRRC 21
+`define IncR 22
+`define DecR 23
+`define FaddRR 24
+`define FsubRR 25
+`define FconvR 26
+`define FmulRR 27
+`define FdivRR 28
+`define FmuladdRRR 29
+`define FminRR 30
+`define FmaxRR 31
+`define VfaddRR 32
+`define DoutR 33
 
 function [0:0] Is8ByteOpcode;
   input [7:0] opCodeParam;
@@ -41,6 +42,7 @@ function [0:0] Is8ByteOpcode;
       opCodeParam == `CmpRC ||
       opCodeParam == `JmpC ||
       opCodeParam == `JneC ||
+      opCodeParam == `JeC ||
       opCodeParam == `RCallRC ||
       opCodeParam == `AddRC ||
       opCodeParam == `MulAddRRC)

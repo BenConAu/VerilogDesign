@@ -122,13 +122,14 @@ void OutputInstructions()
     for (size_t i = 0; i < g_instructionData.size(); i++)
     {
         InstructionData& data = g_instructionData[i];
-        ::fprintf(fcppfile, "    { Instructions::%s, OpCodes::%s, { ArgumentBase::%s, ArgumentBase::%s, ArgumentBase::%s }, %d },\n",
+        ::fprintf(fcppfile, "    { Instructions::%s, OpCodes::%s, { ArgumentBase::%s, ArgumentBase::%s, ArgumentBase::%s }, %d, \"%s\" },\n",
             Pad(g_symbols[data.symIndex], 10).c_str(),
             Pad(data.opCode, 15).c_str(),
             Pad(data.args[0].GetTypeText(), 22).c_str(),
             Pad(data.args[1].GetTypeText(), 22).c_str(),
             Pad(data.args[2].GetTypeText(), 12).c_str(),
-            data.constIndex
+            data.constIndex,
+            data.opCode.c_str()
         );
     }
     ::fprintf(fcppfile, "};\n\n");

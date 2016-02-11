@@ -175,6 +175,7 @@ module ALU(
 
         // Determine if a conditional jump needs to happen
         if (opCode == `JneC && regarray[1][0:0] == 1'b0) condJump <= 1'b1;
+        if (opCode == `JeC && regarray[1][0:0] == 1'b1) condJump <= 1'b1;
 
         if (Is8ByteOpcode(opCode) == 1)
         begin
@@ -436,6 +437,7 @@ module ALU(
           `JmpC:  ipointer <= opDataWord;                              // jmp address
 
           `JneC: begin end // Done above
+          `JeC: begin end   // Done above
 
           `FaddRR:     regarray[regAddress[7:0]] <= fAddResult[0];          // fadd reg, reg
           `FsubRR:     regarray[regAddress[7:0]] <= fSubResult;             // fsub reg, reg
@@ -476,7 +478,12 @@ module ALU(
         begin
           ipointer <= opDataWord;
         end
-        else if (opCode != `JmpC && opCode != `CallR && opCode != `Ret && opCode != `RCallRC && opCode != `RRet)
+        else if (opCode != `JmpC &&
+            opCode != `CallR &&
+            opCode != `Ret &&
+            opCode != `RCallRC &&
+            opCode != `RRet
+            )
         begin
           //$display("Incrementing ip");
 

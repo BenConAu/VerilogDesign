@@ -9,6 +9,7 @@ struct InstructionData
 	OpCodes::Enum opCode;
 	ArgumentBase args[3];
 	int wordArg;
+	const char* pszName;
 
     static InstructionData s_data[];
     static int s_dataCount;

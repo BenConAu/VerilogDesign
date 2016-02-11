@@ -16,28 +16,14 @@ ends
  enddata
 
 mov r0, &desc
-dout r0
+dout r0                                      // Write out location of data segment
 mov r0, @memAlloc
 mov r3, 100
-rcall r0, 1
-dout r3
-mov r3, &desc
-mov r4, r3->HeapDescriptor::firstAllocation
-dout r4
-mov r4, r3->HeapDescriptor::lastAllocation
-dout r4
-mov r4, r3->HeapDescriptor::nextAllocation
-dout r4
+rcall r0, 1                                  // Allocate 100 bytes
 mov r3, 200
-rcall r0, 1
-dout r3
-mov r3, &desc
-mov r4, r3->HeapDescriptor::firstAllocation
-dout r4
-mov r4, r3->HeapDescriptor::lastAllocation
-dout r4
-mov r4, r3->HeapDescriptor::nextAllocation
-dout r4
+rcall r0, 1                                  // Allocate 200 bytes
+mov r0, @memHeapWalk
+rcall r0, 1                                  // Walk the heap
 endLoop:
 jmp @endLoop
 
@@ -47,7 +33,6 @@ mov r2, r1->HeapDescriptor::firstAllocation
 cmp r2, 0
 jne @memAllocNotFirst                        // If there is an allocation
 mov r3, &heap
-dout r3
 mov r1->HeapDescriptor::firstAllocation, r3  // First allocation is beginning of heap
 mov r1->HeapDescriptor::lastAllocation, r3   // Last allocation is the same now
 jmp @memAllocFillAllocation
@@ -67,4 +52,22 @@ mov r3->Allocation::size, r0                 // Size of memory
 mov r4, 0
 mov r3->Allocation::next, r4                 // Next allocation is not there yet
 mov r0, r5                                   // Ready to return
+rret
+
+memHeapWalk:
+mov r1, 4660
+dout r1
+mov r1, &desc
+mov r2, r1->HeapDescriptor::firstAllocation
+memHeapWalkLoop:
+cmp r2, 0
+je @memHeapWalkDone
+mov r3, r2->Allocation::start
+dout r3
+mov r3, r2->Allocation::size
+dout r3
+mov r2, r2->Allocation::next
+jmp @memHeapWalkLoop
+memHeapWalkDone:
+mov r1, 22136
 rret

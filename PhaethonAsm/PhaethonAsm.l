@@ -11,9 +11,12 @@ using namespace std;
 #include "InstructionNode.h"
 #include "PhaethonAsm.tab.h"
 
+#define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno;
+
 %}
 
 %option noyywrap
+%option yylineno
 
 %%
 "//".*"\n"           ;
@@ -43,6 +46,7 @@ using namespace std;
 "cmp"                { yylval.instrIndex = Instructions::Cmp; return INSTR_TOKEN_2; }
 "jmp"                { yylval.instrIndex = Instructions::Jmp; return INSTR_TOKEN_1; }
 "jne"                { yylval.instrIndex = Instructions::Jne; return INSTR_TOKEN_1; }
+"je"                 { yylval.instrIndex = Instructions::Je; return INSTR_TOKEN_1; }
 "dout"               { yylval.instrIndex = Instructions::Dout; return INSTR_TOKEN_1; }
 "inc"                { yylval.instrIndex = Instructions::Inc; return INSTR_TOKEN_1; }
 "add"                { yylval.instrIndex = Instructions::Add; return INSTR_TOKEN_2; }

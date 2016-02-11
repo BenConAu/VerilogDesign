@@ -9,6 +9,7 @@
 #include <iostream>
 #include <cmath>
 #include "../../PhaethonAsm/Codegen/PhaethonOpCode.h"
+#include "../../PhaethonAsm/InstructionData.h"
 
 typedef unsigned int WORD;
 typedef unsigned char BYTE;
@@ -105,6 +106,7 @@ int main(int argc, const char * argv[])
     WORD ip = 0;
     byteWord reg[66];
     WORD rPos = 2;
+    WORD iCount = 0;
 
     for (;;)
     {
@@ -130,6 +132,8 @@ int main(int argc, const char * argv[])
         {
             opWord = ram.ReadWord(ip + 4).word;
         }
+
+        bool condJump = false;
 
         switch(opCode)
         {
@@ -159,6 +163,14 @@ int main(int argc, const char * argv[])
 
             case OpCodes::MovdRoR:
                 ram.WriteWord(regValue1.word + opWord, regValue2);
+                break;
+
+            case OpCodes::AddRC:
+                reg[regAddr1].word += opWord;
+                break;
+
+            case OpCodes::AddRR:
+                reg[regAddr1].word += regValue2.word;
                 break;
 
             case OpCodes::DecR:
@@ -206,8 +218,57 @@ int main(int argc, const char * argv[])
                 ip = ram.ReadWord(reg[0].word).word + 4;
                 break;
 
+            case OpCodes::RCallRC:
+                reg[rPos + opWord] = ip;
+                reg[rPos + opWord + 1] = opWord;
+                rPos += (opWord + 2);
+                ip = regValue1.word;
+                break;
+
+            case OpCodes::RRet:
+                ip = reg[rPos - 2].word + 8;
+                rPos -= (reg[rPos - 1].word + 2);
+                break;
+
             case OpCodes::JmpC:
                 ip = opWord;
+                break;
+
+            case OpCodes::JneC:
+                condJump = (reg[1].word & 1) == 0;
+                break;
+
+            case OpCodes::JeC:
+                condJump = (reg[1].word & 1) != 0;
+                break;
+
+            case OpCodes::CmpRC:
+                if (regValue1.word == opWord)
+                {
+                    reg[1].word |= 1;
+                }
+                else
+                {
+                    reg[1].word &= (~1);
+                }
+
+                if (regValue1.word < opWord)
+                {
+                    reg[1].word |= 2;
+                }
+                else
+                {
+                    reg[1].word &= (~2);
+                }
+
+                if (regValue1.word > opWord)
+                {
+                    reg[1].word |= 4;
+                }
+                else
+                {
+                    reg[1].word &= (~4);
+                }
                 break;
 
             case OpCodes::DoutR:
@@ -219,17 +280,43 @@ int main(int argc, const char * argv[])
                 break;
         }
 
-        if (opCode != OpCodes::CallR && opCode != OpCodes::JmpC && opCode != OpCodes::Ret)
+        if (condJump)
         {
-            if (Is8ByteOpcode(opCode))
+            ip = opWord;
+        }
+        else
+        {
+            if (opCode != OpCodes::CallR &&
+                opCode != OpCodes::JmpC &&
+                opCode != OpCodes::Ret &&
+                opCode != OpCodes::RRet &&
+                opCode != OpCodes::RCallRC
+                )
             {
-                ip += 8;
-            }
-            else
-            {
-                ip += 4;
+                if (Is8ByteOpcode(opCode))
+                {
+                    ip += 8;
+                }
+                else
+                {
+                    ip += 4;
+                }
             }
         }
+
+        printf("OP:%10s::%4x:%4x:%4x:%4x:%4x\n",
+               InstructionData::s_data[opCode - 1].pszName,
+               reg[rPos].word,
+               reg[rPos + 1].word,
+               reg[rPos + 2].word,
+               reg[rPos + 3].word,
+               reg[rPos + 4].word
+               );
+
+        iCount++;
+
+        if (iCount >= 100)
+            break;
     }
 
     return 0;
