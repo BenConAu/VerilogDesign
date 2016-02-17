@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ConstantNode.h"
+
 class AssignmentNode : public ASTNode
 {
 public:
