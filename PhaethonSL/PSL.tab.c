@@ -70,7 +70,7 @@
 using namespace std;
 
 #include "PSLGlobal.h"
-#include "ASTNode.h"
+#include "ASTTree.h"
 
 // stuff from flex that bison needs to know about:
 extern "C" int yylex();

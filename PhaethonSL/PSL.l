@@ -4,7 +4,7 @@
 using namespace std;
 #define YY_DECL extern "C" int yylex()
 
-#include "ASTNode.h"
+#include "ASTTree.h"
 #include "PSLGlobal.h"
 #include "PSL.tab.h"
 
