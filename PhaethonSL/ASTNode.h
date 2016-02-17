@@ -21,7 +21,10 @@ public:
     {
         for (size_t i = 0; i < _children.size(); i++)
         {
-            _children[i]->ProcessNode();
+            if (_children[i] != nullptr)
+            {
+                _children[i]->ProcessNode();
+            }
         }
 
         ProcessNodeImpl();

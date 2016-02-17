@@ -27,6 +27,11 @@ void yyerror(const char *s);
 %token SEMICOLON
 %token EQUAL
 %token STAR
+%token LEFT_PAREN
+%token RIGHT_PAREN
+%token INT_TOKEN
+%token LEFT_BRACE
+%token RIGHT_BRACE
 %token <symIndex> IDENTIFIER
 %type <pNode> variable_identifier
 %type <pNode> primary_expression
@@ -38,11 +43,22 @@ void yyerror(const char *s);
 %type <pNode> expression
 %type <pNode> statement
 %type <pNode> statement_list
+%type <pNode> function_header
+%type <pNode> fully_specified_type
+%type <pNode> function_prototype
+%type <pNode> function_declarator
+%type <pNode> function_definition
+%type <pNode> compound_statement
 
 %%
 
 translation_unit:
-      statement_list                                                { ProcessStatementList($1); }
+      external_declaration
+    | translation_unit external_declaration
+    ;
+
+external_declaration:
+      function_definition                                           { dynamic_cast<FunctionDeclaratorNode*>($1)->ProcessNode(); }
     ;
 
 statement_list:
@@ -92,6 +108,31 @@ primary_expression:
 
 variable_identifier:
       IDENTIFIER                                                    { $$ = new IdentifierNode($1); }
+    ;
+
+function_prototype:
+      function_declarator RIGHT_PAREN                               { $$ = $1; }
+    ;
+
+function_declarator:
+      function_header                                               { $$ = $1; }
+    ;
+
+function_header:
+      fully_specified_type IDENTIFIER LEFT_PAREN                    { $$ = new FunctionDeclaratorNode($1, $2); }
+    ;
+
+fully_specified_type:
+      INT_TOKEN                                                     { $$ = new TypeNode(INT_TOKEN); }
+    ;
+
+function_definition:
+      function_prototype compound_statement                         { $$ = $1; dynamic_cast<FunctionDeclaratorNode*>($$)->SetStatementList($2); }
+    ;
+
+compound_statement:
+      LEFT_BRACE RIGHT_BRACE                                        { $$ = nullptr; }
+    | LEFT_BRACE statement_list RIGHT_BRACE                         { $$ = $2; }
     ;
 
 %%

@@ -4,3 +4,5 @@
 #include "MultiplyNode.h"
 #include "ConstantNode.h"
 #include "IdentifierNode.h"
+#include "FunctionDeclaratorNode.h"
+#include "TypeNode.h"
