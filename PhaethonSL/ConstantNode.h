@@ -36,6 +36,11 @@ public:
 
     bool IsConstant() const override { return true; }
 
+    void VerifyNodeImpl() override
+    {
+        // Make sure in range
+    }
+
 private:
     int _intValue;
     float _floatValue;

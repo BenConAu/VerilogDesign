@@ -49,6 +49,10 @@ void yyerror(const char *s);
 %type <pNode> function_declarator
 %type <pNode> function_definition
 %type <pNode> compound_statement
+%type <pNode> init_declarator_list
+%type <pNode> single_declaration
+%type <pNode> declaration
+%type <pNode> declaration_statement
 
 %%
 
@@ -58,7 +62,10 @@ translation_unit:
     ;
 
 external_declaration:
-      function_definition                                           { dynamic_cast<FunctionDeclaratorNode*>($1)->ProcessNode(); }
+      function_definition                                           {
+        dynamic_cast<FunctionDeclaratorNode*>($1)->VerifyNode(); 
+        dynamic_cast<FunctionDeclaratorNode*>($1)->ProcessNode();
+      }
     ;
 
 statement_list:
@@ -68,6 +75,7 @@ statement_list:
 
 statement:
       expression_statement                                          { $$ = $1; }
+    | declaration_statement                                         { $$ = $1; }
     ;
 
 expression_statement:
@@ -106,6 +114,10 @@ primary_expression:
     | FLOATCONSTANT                                                 { $$ = new ConstantNode($1); }
     ;
 
+declaration:
+      init_declarator_list SEMICOLON                                { $$ = $1; }
+    ;
+
 variable_identifier:
       IDENTIFIER                                                    { $$ = new IdentifierNode($1); }
     ;
@@ -128,6 +140,18 @@ fully_specified_type:
 
 function_definition:
       function_prototype compound_statement                         { $$ = $1; dynamic_cast<FunctionDeclaratorNode*>($$)->SetStatementList($2); }
+    ;
+
+init_declarator_list:
+      single_declaration                                            { $$ = $1; }
+    ;
+
+single_declaration:
+      fully_specified_type IDENTIFIER                               { $$ = new VariableDeclarationNode($1, $2); }
+    ;
+
+declaration_statement:
+      declaration                                                   { $$ = $1; }
     ;
 
 compound_statement:

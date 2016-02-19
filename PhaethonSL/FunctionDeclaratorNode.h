@@ -14,8 +14,14 @@ public:
         AddNode(pList);
     }
 
-    void ProcessNodeImpl()
+    void ProcessNodeImpl() override
     {
+    }
+
+    void VerifyNodeImpl() override
+    {
+        // Make sure the symbol is unique
+        // Figure out parameter stuff?
     }
 
 private:

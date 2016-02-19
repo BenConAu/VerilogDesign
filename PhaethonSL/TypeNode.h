@@ -8,6 +8,10 @@ public:
         _type = type;
     }
 
+    void VerifyNodeImpl() override
+    {
+    }
+
 private:
     int _type;
 };

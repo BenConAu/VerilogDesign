@@ -1,5 +1,9 @@
 int DoStuff()
 {
+    int x;
+    int y;
+    int z;
+    
     y = 1;
     z = 2;
     x = y * z;

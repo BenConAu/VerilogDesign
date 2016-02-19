@@ -1,6 +1,8 @@
 #pragma once
 
-class IdentifierNode : public ASTNode
+#include "ExpressionNode.h"
+
+class IdentifierNode : public ExpressionNode
 {
 public:
     IdentifierNode(int symIndex)
@@ -8,17 +10,20 @@ public:
         _symIndex = symIndex;
     }
 
-    void ProcessNodeImpl() override
+    void VerifyNodeImpl() override
     {
-        _regIndex = _regCollection.GetSymbolRegister(_symIndex);
+        _varCollection.AddReference(_symIndex, this);
     }
 
-    RegIndex GetResultRegister() override
+    void ProcessNodeImpl() override
     {
-        return _regIndex;
+        // Get the register we use for this identifier
+        SetResultRegister(_regCollection.GetVariableRegister(_symIndex));
+
+        // Mark our use of it
+        _varCollection.ProcessReference(_symIndex, this);
     }
 
 private:
     int _symIndex;
-    RegIndex _regIndex;
 };

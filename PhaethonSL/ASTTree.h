@@ -6,3 +6,4 @@
 #include "IdentifierNode.h"
 #include "FunctionDeclaratorNode.h"
 #include "TypeNode.h"
+#include "VariableDeclarationNode.h"

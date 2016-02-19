@@ -1,8 +1,9 @@
 #pragma once
 
 #include "ConstantNode.h"
+#include "ExpressionNode.h"
 
-class AssignmentNode : public ASTNode
+class AssignmentNode : public ExpressionNode
 {
 public:
     AssignmentNode(ASTNode* pLeft, ASTNode* pRight)
@@ -11,10 +12,16 @@ public:
         AddNode(pRight);
     }
 
+    void VerifyNodeImpl() override
+    {
+    }
+
     void ProcessNodeImpl() override
     {
+        ExpressionNode* pLeft = dynamic_cast<ExpressionNode*>(GetChild(0));
+
         // Get the register for the left side
-        RegIndex leftIndex = GetChild(0)->GetResultRegister();
+        RegIndex leftIndex = pLeft->GetResultRegister();
 
         if (GetChild(1)->IsConstant())
         {
@@ -24,22 +31,16 @@ public:
         }
         else
         {
+            ExpressionNode* pRight = dynamic_cast<ExpressionNode*>(GetChild(1));
+
             // Right side is either a constant or another register
-            RegIndex rightIndex = GetChild(1)->GetResultRegister();
+            RegIndex rightIndex = pRight->GetResultRegister();
 
             // print out our code
             printf("mov r%d, r%d\n", leftIndex, rightIndex);
         }
 
         // Our result is the left index now
-        _result = leftIndex;
+        SetResultRegister(leftIndex);
     }
-
-    RegIndex GetResultRegister() override
-    {
-        return _result;
-    }
-
-protected:
-    RegIndex _result;
 };

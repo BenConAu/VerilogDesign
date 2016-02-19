@@ -7,4 +7,8 @@ public:
     {
         AddNode(pFirst);
     }
+
+    void VerifyNodeImpl() override
+    {
+    }
 };

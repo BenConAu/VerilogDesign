@@ -5,6 +5,7 @@
 #include <string>
 
 RegisterCollection _regCollection(32);
+VariableCollection _varCollection;
 
 int AddSymbol(const char* pszSymbol)
 {

@@ -397,8 +397,8 @@ static void yy_fatal_error (yyconst char msg[]  );
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
 
-#define YY_NUM_RULES 14
-#define YY_END_OF_BUFFER 15
+#define YY_NUM_RULES 15
+#define YY_END_OF_BUFFER 16
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -408,9 +408,9 @@ struct yy_trans_info
 	};
 static yyconst flex_int16_t yy_accept[29] =
     {   0,
-        0,    0,   15,   13,   14,    7,    8,    2,   13,   10,
-        4,    3,   12,   12,   12,    5,    6,    0,   10,   12,
-       12,   12,    0,    1,   11,    9,   11,    0
+        0,    0,   16,   14,    2,    8,    9,    3,   14,   11,
+        5,    4,   13,   13,   13,    6,    7,    0,   11,   13,
+       13,   13,    0,    1,   12,   10,   12,    0
     } ;
 
 static yyconst YY_CHAR yy_ec[256] =
@@ -486,9 +486,9 @@ static yyconst flex_int16_t yy_chk[52] =
     } ;
 
 /* Table of booleans, true if rule could match eol. */
-static yyconst flex_int32_t yy_rule_can_match_eol[15] =
+static yyconst flex_int32_t yy_rule_can_match_eol[16] =
     {   0,
-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,     };
+1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,     };
 
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
@@ -807,71 +807,77 @@ YY_RULE_SETUP
 ;
 	YY_BREAK
 case 2:
+/* rule 2 can match eol */
 YY_RULE_SETUP
 #line 16 "PSL.l"
-{ return STAR; }
+;
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
 #line 17 "PSL.l"
-{ return EQUAL; }
+{ return STAR; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
 #line 18 "PSL.l"
-{ return SEMICOLON; }
+{ return EQUAL; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 19 "PSL.l"
-{ return LEFT_BRACE; }
+{ return SEMICOLON; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 20 "PSL.l"
-{ return RIGHT_BRACE; }
+{ return LEFT_BRACE; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 21 "PSL.l"
-{ return LEFT_PAREN; }
+{ return RIGHT_BRACE; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 22 "PSL.l"
-{ return RIGHT_PAREN; }
+{ return LEFT_PAREN; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
 #line 23 "PSL.l"
-{ return INT_TOKEN; }
+{ return RIGHT_PAREN; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
 #line 24 "PSL.l"
-{ yylval.intVal = atoi(yytext); return INTCONSTANT; }
+{ return INT_TOKEN; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
 #line 25 "PSL.l"
-{ yylval.floatVal = (float)atof(yytext + 1); return FLOATCONSTANT; }
+{ yylval.intVal = atoi(yytext); return INTCONSTANT; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 26 "PSL.l"
-{ yylval.symIndex = AddSymbol(yytext); return IDENTIFIER; }
+{ yylval.floatVal = (float)atof(yytext + 1); return FLOATCONSTANT; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 27 "PSL.l"
-;
+{ yylval.symIndex = AddSymbol(yytext); return IDENTIFIER; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
 #line 28 "PSL.l"
+;
+	YY_BREAK
+case 15:
+YY_RULE_SETUP
+#line 29 "PSL.l"
 ECHO;
 	YY_BREAK
-#line 875 "lex.yy.c"
+#line 881 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1884,7 +1890,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 28 "PSL.l"
+#line 29 "PSL.l"
 
 
 

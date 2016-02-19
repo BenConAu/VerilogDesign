@@ -16,32 +16,49 @@ public:
         }
     }
 
-    RegIndex GetSymbolRegister(int symbol)
+    RegIndex AddVariableRegister(int symbol)
     {
         auto iter = _symbolToReg.find(symbol);
         if (iter != _symbolToReg.end())
         {
-            //printf("Symbol already exists, mapped to %d\n", _symbolToReg[symbol]);
-            return _symbolToReg[symbol];
+            throw "Already added";
         }
         else
         {
             if (_availableReg.size() == 0)
             {
-                printf("Crap I ran out of registers guv\n");
-                throw 0;
+                throw "Crap I ran out of registers guv";
             }
 
-            RegIndex ret = _availableReg.front();
-            _availableReg.pop_front();
+            RegIndex ret = GetNextRegister();
             _symbolToReg[symbol] = ret;
 
-            //printf("Found a register index %d\n", ret);
+            printf("Add register index %d for variable %d\n", ret, symbol);
             return ret;
         }
     }
 
-    void ClearSymbolRegister(RegIndex reg)
+    RegIndex GetNextRegister()
+    {
+        RegIndex ret = _availableReg.front();
+        _availableReg.pop_front();
+        return ret;
+    }
+
+    RegIndex GetVariableRegister(int symbol)
+    {
+        auto iter = _symbolToReg.find(symbol);
+        if (iter == _symbolToReg.end())
+        {
+            throw "Symbol not found";
+        }
+        else
+        {
+            return _symbolToReg[symbol];
+        }
+    }
+
+    void ClearVariableRegister(RegIndex reg)
     {
         for (auto iter = _symbolToReg.begin(); iter != _symbolToReg.end(); iter++)
         {

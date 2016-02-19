@@ -1,6 +1,8 @@
 #pragma once
 
-class MultiplyNode : public ASTNode
+#include "ExpressionNode.h"
+
+class MultiplyNode : public ExpressionNode
 {
 public:
     MultiplyNode(ASTNode* pLeft, ASTNode* pRight)
@@ -9,29 +11,29 @@ public:
         AddNode(pRight);
     }
 
+    void VerifyNodeImpl() override
+    {
+    }
+
     void ProcessNodeImpl() override
     {
+        ExpressionNode* pLeft = dynamic_cast<ExpressionNode*>(GetChild(0));
+        ExpressionNode* pRight = dynamic_cast<ExpressionNode*>(GetChild(1));
+
         // Get the register for the left side
-        RegIndex leftIndex = GetChild(0)->GetResultRegister();
+        RegIndex leftIndex = pLeft->GetResultRegister();
 
         // Right side is either a constant or another register
-        RegIndex rightIndex = GetChild(1)->GetResultRegister();
+        RegIndex rightIndex = pRight->GetResultRegister();
+
+        // Get register for our result
+        RegIndex resultIndex = _regCollection.GetNextRegister();
 
         // print out our code
-        printf("mul r%d, r%d\n", leftIndex, rightIndex);
-
-        // Register for the left side has been stomped on, so dissociate from symbol
-        _regCollection.ClearSymbolRegister(leftIndex);
+        printf("mov r%d, r%d\n", resultIndex, leftIndex);
+        printf("mul r%d, r%d\n", resultIndex, rightIndex);
 
         // Our result is the left index now
-        _result = leftIndex;
+        SetResultRegister(resultIndex);
     }
-
-    RegIndex GetResultRegister() override
-    {
-        return _result;
-    }
-
-protected:
-    RegIndex _result;
 };

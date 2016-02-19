@@ -13,6 +13,7 @@
 
 %%
 "//".*"\n"           ;
+"\n"                 ;
 "*"                  { return STAR; }
 "="                  { return EQUAL; }
 ";"                  { return SEMICOLON; }
