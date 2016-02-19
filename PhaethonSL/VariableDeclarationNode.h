@@ -14,9 +14,13 @@ public:
     void VerifyNodeImpl() override
     {
         // Add variable to collection and mark first usage
-        printf("Verify decl\n");
-        _regCollection.AddVariableRegister(_symIndex);
         _varCollection.AddVariable(_symIndex, this);
+    }
+
+    void ProcessNodeImpl() override
+    {
+        // Reserve a register for this declaration
+        _regCollection.AddVariableRegister(_symIndex);        
     }
 
 private:

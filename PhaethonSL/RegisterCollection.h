@@ -33,7 +33,7 @@ public:
             RegIndex ret = GetNextRegister();
             _symbolToReg[symbol] = ret;
 
-            printf("Add register index %d for variable %d\n", ret, symbol);
+            //printf("Add register index %d for variable %d\n", ret, symbol);
             return ret;
         }
     }
