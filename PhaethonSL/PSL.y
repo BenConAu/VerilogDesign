@@ -6,14 +6,15 @@ using namespace std;
 
 #include "PSLGlobal.h"
 #include "ASTTree.h"
+#include "PSL.tab.h"
+#include "lex.h"
 
-// stuff from flex that bison needs to know about:
-extern "C" int yylex();
-extern "C" int yyparse();
-extern "C" FILE *yyin;
-
-void yyerror(const char *s);
+void yyerror(void*, const char *s);
 %}
+
+%pure-parser
+%lex-param {void* scanner}
+%parse-param {void* scanner}
 
 %union {
 	int intVal;
@@ -63,7 +64,7 @@ translation_unit:
 
 external_declaration:
       function_definition                                           {
-        dynamic_cast<FunctionDeclaratorNode*>($1)->VerifyNode(); 
+        dynamic_cast<FunctionDeclaratorNode*>($1)->VerifyNode();
         dynamic_cast<FunctionDeclaratorNode*>($1)->ProcessNode();
       }
     ;
@@ -170,17 +171,21 @@ int main(int, char**) {
 		cout << "I can't open a.snazzle.file!" << endl;
 		return -1;
 	}
-	// set flex to read from it instead of defaulting to STDIN:
-	yyin = myfile;
 
-	// parse through the input until there is no more:
-	do {
-		yyparse();
-	} while (!feof(yyin));
+    void* something;
+    yylex_init(&something);
+
+    // set flex to read from it instead of defaulting to STDIN:
+    yyrestart(myfile, something);
+
+    // parse through the input until there is no more:
+	yyparse(something);
+
+    yylex_destroy(something);
 
 }
 
-void yyerror(const char *s) {
+void yyerror(void *, const char *s) {
 	cout << "EEK, parse error!  Message: " << s << endl;
 	// might as well halt now:
 	exit(-1);

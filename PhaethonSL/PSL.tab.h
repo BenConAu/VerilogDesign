@@ -64,7 +64,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 18 "PSL.y" /* yacc.c:1909  */
+#line 19 "PSL.y" /* yacc.c:1909  */
 
 	int intVal;
     float floatVal;
@@ -80,8 +80,7 @@ typedef union YYSTYPE YYSTYPE;
 #endif
 
 
-extern YYSTYPE yylval;
 
-int yyparse (void);
+int yyparse (void* scanner);
 
 #endif /* !YY_YY_PSL_TAB_H_INCLUDED  */
