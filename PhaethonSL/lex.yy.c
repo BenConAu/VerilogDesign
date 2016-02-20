@@ -487,7 +487,9 @@ static yyconst flex_int32_t yy_rule_can_match_eol[16] =
 #include "PSLGlobal.h"
 #include "PSL.tab.h"
 
-#line 491 "lex.yy.c"
+#define YY_EXTRA_TYPE PSLCompilerContext*
+
+#line 493 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -762,9 +764,9 @@ YY_DECL
 		}
 
 	{
-#line 14 "PSL.l"
+#line 16 "PSL.l"
 
-#line 768 "lex.yy.c"
+#line 770 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -836,81 +838,81 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 15 "PSL.l"
+#line 17 "PSL.l"
 ;
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 16 "PSL.l"
+#line 18 "PSL.l"
 ;
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 17 "PSL.l"
+#line 19 "PSL.l"
 { return STAR; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 18 "PSL.l"
+#line 20 "PSL.l"
 { return EQUAL; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 19 "PSL.l"
+#line 21 "PSL.l"
 { return SEMICOLON; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 20 "PSL.l"
+#line 22 "PSL.l"
 { return LEFT_BRACE; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 21 "PSL.l"
+#line 23 "PSL.l"
 { return RIGHT_BRACE; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 22 "PSL.l"
+#line 24 "PSL.l"
 { return LEFT_PAREN; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 23 "PSL.l"
+#line 25 "PSL.l"
 { return RIGHT_PAREN; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 24 "PSL.l"
+#line 26 "PSL.l"
 { return INT_TOKEN; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 25 "PSL.l"
+#line 27 "PSL.l"
 { yylval->intVal = atoi(yytext); return INTCONSTANT; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 26 "PSL.l"
+#line 28 "PSL.l"
 { yylval->floatVal = (float)atof(yytext + 1); return FLOATCONSTANT; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 27 "PSL.l"
-{ yylval->symIndex = AddSymbol(yytext); return IDENTIFIER; }
+#line 29 "PSL.l"
+{ yylval->symIndex = yyextra->AddSymbol(yytext); return IDENTIFIER; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 28 "PSL.l"
+#line 30 "PSL.l"
 ;
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 29 "PSL.l"
+#line 31 "PSL.l"
 ECHO;
 	YY_BREAK
-#line 914 "lex.yy.c"
+#line 916 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2102,7 +2104,7 @@ void yyfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
-#line 29 "PSL.l"
+#line 31 "PSL.l"
 
 
 

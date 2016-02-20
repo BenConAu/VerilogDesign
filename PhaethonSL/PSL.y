@@ -7,14 +7,19 @@ using namespace std;
 #include "PSLGlobal.h"
 #include "ASTTree.h"
 #include "PSL.tab.h"
+
+#define YY_EXTRA_TYPE PSLCompilerContext*
 #include "lex.h"
 
 void yyerror(void*, const char *s);
+
+#define scanner pContext->pScanner
+
 %}
 
 %pure-parser
 %lex-param {void* scanner}
-%parse-param {void* scanner}
+%parse-param {PSLCompilerContext* pContext}
 
 %union {
 	int intVal;
@@ -172,16 +177,17 @@ int main(int, char**) {
 		return -1;
 	}
 
-    void* something;
-    yylex_init(&something);
+    PSLCompilerContext context;
+    yylex_init(&context.pScanner);
+    yyset_extra(&context, context.pScanner);
 
     // set flex to read from it instead of defaulting to STDIN:
-    yyrestart(myfile, something);
+    yyrestart(myfile, context.pScanner);
 
     // parse through the input until there is no more:
-	yyparse(something);
+	yyparse(&context);
 
-    yylex_destroy(something);
+    yylex_destroy(context.pScanner);
 
 }
 

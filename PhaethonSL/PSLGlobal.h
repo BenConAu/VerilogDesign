@@ -2,8 +2,9 @@
 
 class ASTNode;
 
-int AddSymbol(const char* pszSymbol);
-
-class PSLCompiler
-{    
+class PSLCompilerContext
+{
+public:
+    int AddSymbol(const char* pszSymbol);
+    void* pScanner;
 };

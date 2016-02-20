@@ -7,7 +7,7 @@
 RegisterCollection _regCollection(32);
 VariableCollection _varCollection;
 
-int AddSymbol(const char* pszSymbol)
+int PSLCompilerContext::AddSymbol(const char* pszSymbol)
 {
     static std::vector<std::string> g_symbols;
 
