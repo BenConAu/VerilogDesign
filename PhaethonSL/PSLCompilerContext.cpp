@@ -1,11 +1,22 @@
-#include "PSLGlobal.h"
+#include "PSLCompilerContext.h"
 #include "ASTTree.h"
-#include <memory>
-#include <vector>
-#include <string>
+#include "PSL.tab.h"
+#define YY_EXTRA_TYPE PSLCompilerContext*
+#include "lex.h"
 
 RegisterCollection _regCollection(32);
 VariableCollection _varCollection;
+
+PSLCompilerContext::PSLCompilerContext()
+{
+    yylex_init(&pScanner);
+    yyset_extra(this, pScanner);
+}
+
+PSLCompilerContext::~PSLCompilerContext()
+{
+    yylex_destroy(pScanner);
+}
 
 int PSLCompilerContext::AddSymbol(const char* pszSymbol)
 {

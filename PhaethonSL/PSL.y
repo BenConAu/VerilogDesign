@@ -4,7 +4,7 @@
 #include <iostream>
 using namespace std;
 
-#include "PSLGlobal.h"
+#include "PSLCompilerContext.h"
 #include "ASTTree.h"
 #include "PSL.tab.h"
 
@@ -178,16 +178,12 @@ int main(int, char**) {
 	}
 
     PSLCompilerContext context;
-    yylex_init(&context.pScanner);
-    yyset_extra(&context, context.pScanner);
 
     // set flex to read from it instead of defaulting to STDIN:
     yyrestart(myfile, context.pScanner);
 
     // parse through the input until there is no more:
 	yyparse(&context);
-
-    yylex_destroy(context.pScanner);
 
 }
 

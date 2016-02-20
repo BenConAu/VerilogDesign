@@ -1,7 +1,7 @@
 %{
 
 #include "ASTTree.h"
-#include "PSLGlobal.h"
+#include "PSLCompilerContext.h"
 #include "PSL.tab.h"
 
 #define YY_EXTRA_TYPE PSLCompilerContext*

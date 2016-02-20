@@ -1,10 +1,10 @@
 #pragma once
 
-class ASTNode;
-
 class PSLCompilerContext
 {
 public:
+    PSLCompilerContext();
+    ~PSLCompilerContext();
     int AddSymbol(const char* pszSymbol);
     void* pScanner;
 };

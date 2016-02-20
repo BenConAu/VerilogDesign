@@ -484,7 +484,7 @@ static yyconst flex_int32_t yy_rule_can_match_eol[16] =
 #line 2 "PSL.l"
 
 #include "ASTTree.h"
-#include "PSLGlobal.h"
+#include "PSLCompilerContext.h"
 #include "PSL.tab.h"
 
 #define YY_EXTRA_TYPE PSLCompilerContext*
