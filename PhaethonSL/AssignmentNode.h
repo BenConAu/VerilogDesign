@@ -6,7 +6,7 @@
 class AssignmentNode : public ExpressionNode
 {
 public:
-    AssignmentNode(ASTNode* pLeft, ASTNode* pRight)
+    AssignmentNode(PSLCompilerContext* pContext, ASTNode* pLeft, ASTNode* pRight) : ExpressionNode(pContext)
     {
         AddNode(pLeft);
         AddNode(pRight);

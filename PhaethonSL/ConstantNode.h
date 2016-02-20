@@ -10,13 +10,13 @@ public:
     };
 
 public:
-    ConstantNode(int v)
+    ConstantNode(PSLCompilerContext* pContext, int v)  : ASTNode(pContext)
     {
         _intValue = v;
         _type = Int;
     }
 
-    ConstantNode(float v)
+    ConstantNode(PSLCompilerContext* pContext, float v) : ASTNode(pContext)
     {
         _floatValue = v;
         _type = Float;

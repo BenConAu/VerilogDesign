@@ -75,7 +75,7 @@ external_declaration:
     ;
 
 statement_list:
-      statement                                                     { $$ = new StatementListNode($1); }
+      statement                                                     { $$ = new StatementListNode(pContext, $1); }
     | statement_list statement                                      { $$ = $1; $$->AddNode($2); }
     ;
 
@@ -94,12 +94,12 @@ expression:
 
 assignment_expression:
       multiplicative_expression                                     { $$ = $1; }
-    | unary_expression assignment_operator assignment_expression    { $$ = new AssignmentNode($1, $3); }
+    | unary_expression assignment_operator assignment_expression    { $$ = new AssignmentNode(pContext, $1, $3); }
     ;
 
 multiplicative_expression:
       unary_expression                                              { $$ = $1; }
-    | multiplicative_expression STAR unary_expression               { $$ = new MultiplyNode($1, $3); }
+    | multiplicative_expression STAR unary_expression               { $$ = new MultiplyNode(pContext, $1, $3); }
     ;
 
 unary_expression:
@@ -116,8 +116,8 @@ postfix_expression:
 
 primary_expression:
       variable_identifier                                           { $$ = $1; }
-    | INTCONSTANT                                                   { $$ = new ConstantNode($1); }
-    | FLOATCONSTANT                                                 { $$ = new ConstantNode($1); }
+    | INTCONSTANT                                                   { $$ = new ConstantNode(pContext, $1); }
+    | FLOATCONSTANT                                                 { $$ = new ConstantNode(pContext, $1); }
     ;
 
 declaration:
@@ -125,7 +125,7 @@ declaration:
     ;
 
 variable_identifier:
-      IDENTIFIER                                                    { $$ = new IdentifierNode($1); }
+      IDENTIFIER                                                    { $$ = new IdentifierNode(pContext, $1); }
     ;
 
 function_prototype:
@@ -137,11 +137,11 @@ function_declarator:
     ;
 
 function_header:
-      fully_specified_type IDENTIFIER LEFT_PAREN                    { $$ = new FunctionDeclaratorNode($1, $2); }
+      fully_specified_type IDENTIFIER LEFT_PAREN                    { $$ = new FunctionDeclaratorNode(pContext, $1, $2); }
     ;
 
 fully_specified_type:
-      INT_TOKEN                                                     { $$ = new TypeNode(INT_TOKEN); }
+      INT_TOKEN                                                     { $$ = new TypeNode(pContext, INT_TOKEN); }
     ;
 
 function_definition:
@@ -153,7 +153,7 @@ init_declarator_list:
     ;
 
 single_declaration:
-      fully_specified_type IDENTIFIER                               { $$ = new VariableDeclarationNode($1, $2); }
+      fully_specified_type IDENTIFIER                               { $$ = new VariableDeclarationNode(pContext, $1, $2); }
     ;
 
 declaration_statement:

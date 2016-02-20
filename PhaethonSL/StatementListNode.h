@@ -3,7 +3,7 @@
 class StatementListNode : public ASTNode
 {
 public:
-    StatementListNode(ASTNode* pFirst)
+    StatementListNode(PSLCompilerContext* pContext, ASTNode* pFirst) : ASTNode(pContext) 
     {
         AddNode(pFirst);
     }

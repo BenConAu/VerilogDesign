@@ -4,10 +4,7 @@
 #define YY_EXTRA_TYPE PSLCompilerContext*
 #include "lex.h"
 
-RegisterCollection _regCollection(32);
-VariableCollection _varCollection;
-
-PSLCompilerContext::PSLCompilerContext()
+PSLCompilerContext::PSLCompilerContext() : _regCollection(32)
 {
     yylex_init(&pScanner);
     yyset_extra(this, pScanner);

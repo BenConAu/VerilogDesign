@@ -1,11 +1,12 @@
 #pragma once
 
 #include "ASTNode.h"
+#include "PSLCompilerContext.h"
 
 class VariableDeclarationNode : public ASTNode
 {
 public:
-    VariableDeclarationNode(ASTNode* pType, int symIndex)
+    VariableDeclarationNode(PSLCompilerContext* pContext, ASTNode* pType, int symIndex) : ASTNode(pContext)
     {
         AddNode(pType);
         _symIndex = symIndex;
@@ -14,13 +15,13 @@ public:
     void VerifyNodeImpl() override
     {
         // Add variable to collection and mark first usage
-        _varCollection.AddVariable(_symIndex, this);
+        GetContext()->_varCollection.AddVariable(_symIndex, this);
     }
 
     void ProcessNodeImpl() override
     {
         // Reserve a register for this declaration
-        _regCollection.AddVariableRegister(_symIndex);        
+        GetContext()->_regCollection.AddVariableRegister(_symIndex);
     }
 
 private:

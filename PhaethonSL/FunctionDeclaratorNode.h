@@ -3,7 +3,7 @@
 class FunctionDeclaratorNode : public ASTNode
 {
 public:
-    FunctionDeclaratorNode(ASTNode* pTypeNode, int symIndex)
+    FunctionDeclaratorNode(PSLCompilerContext* pContext, ASTNode* pTypeNode, int symIndex) : ASTNode(pContext)
     {
         AddNode(pTypeNode);
         _symIndex = symIndex;

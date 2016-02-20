@@ -5,15 +5,19 @@
 #include <string>
 #include <deque>
 #include <map>
-#include "RegisterCollection.h"
-#include "VariableCollection.h"
 
-extern RegisterCollection _regCollection;
-extern VariableCollection _varCollection;
+#include "RegisterCollection.h"
+
+class PSLCompilerContext;
 
 class ASTNode
 {
 public:
+    ASTNode(PSLCompilerContext* pContext)
+    {
+        _pContext = pContext;
+    }
+
     void AddNode(ASTNode* pNode)
     {
         _children.push_back(std::unique_ptr<ASTNode>(pNode));
@@ -52,7 +56,10 @@ public:
     size_t GetChildCount() const { return _children.size(); }
     ASTNode* GetChild(size_t i) { return _children[i].get(); }
 
+    PSLCompilerContext* GetContext() { return _pContext; }
+
 private:
+    PSLCompilerContext* _pContext;
     std::unique_ptr<ASTNode> _parent;
     std::vector<std::unique_ptr<ASTNode> > _children;
 };

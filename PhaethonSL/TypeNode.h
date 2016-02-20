@@ -3,7 +3,7 @@
 class TypeNode : public ASTNode
 {
 public:
-    TypeNode(int type)
+    TypeNode(PSLCompilerContext* pContext, int type) : ASTNode(pContext)
     {
         _type = type;
     }
