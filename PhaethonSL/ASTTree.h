@@ -7,3 +7,5 @@
 #include "FunctionDeclaratorNode.h"
 #include "TypeNode.h"
 #include "VariableDeclarationNode.h"
+#include "StructSpecifierNode.h"
+#include "StructDeclarationNode.h"

@@ -53,9 +53,10 @@ extern int yydebug;
     LEFT_PAREN = 263,
     RIGHT_PAREN = 264,
     INT_TOKEN = 265,
-    LEFT_BRACE = 266,
-    RIGHT_BRACE = 267,
-    IDENTIFIER = 268
+    STRUCT_TOKEN = 266,
+    LEFT_BRACE = 267,
+    RIGHT_BRACE = 268,
+    IDENTIFIER = 269
   };
 #endif
 
@@ -64,14 +65,14 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 24 "PSL.y" /* yacc.c:1909  */
+#line 25 "PSL.y" /* yacc.c:1909  */
 
 	int intVal;
     float floatVal;
 	int symIndex;
     ASTNode* pNode;
 
-#line 75 "PSL.tab.h" /* yacc.c:1909  */
+#line 76 "PSL.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

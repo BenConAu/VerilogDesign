@@ -1,17 +1,24 @@
 #pragma once
 
+#include "ASTNode.h"
+
+class TypeInfo;
+
 class TypeNode : public ASTNode
 {
 public:
-    TypeNode(PSLCompilerContext* pContext, int type) : ASTNode(pContext)
+    enum TypeType
     {
-        _type = type;
-    }
+        BasicType,
+        StructType
+    };
 
-    void VerifyNodeImpl() override
-    {
-    }
+public:
+    TypeNode(PSLCompilerContext* pContext, TypeType t, int type);
+    TypeInfo* GetTypeInfo();
+    void VerifyNodeImpl() override;
 
 private:
     int _type;
+    TypeType _typeType;
 };

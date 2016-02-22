@@ -18,6 +18,7 @@ void yyerror(void*, const char *s);
 %}
 
 %pure-parser
+%define parse.error verbose
 %lex-param {void* scanner}
 %parse-param {PSLCompilerContext* pContext}
 
@@ -36,6 +37,7 @@ void yyerror(void*, const char *s);
 %token LEFT_PAREN
 %token RIGHT_PAREN
 %token INT_TOKEN
+%token STRUCT_TOKEN
 %token LEFT_BRACE
 %token RIGHT_BRACE
 %token <symIndex> IDENTIFIER
@@ -59,19 +61,21 @@ void yyerror(void*, const char *s);
 %type <pNode> single_declaration
 %type <pNode> declaration
 %type <pNode> declaration_statement
+%type <pNode> struct_specifier
+%type <pNode> struct_declaration_list
+%type <pNode> struct_declaration
+%type <pNode> external_declaration
 
 %%
 
 translation_unit:
-      external_declaration
-    | translation_unit external_declaration
+      external_declaration											{ pContext->AddExternalDeclaration($1); }
+    | translation_unit external_declaration							{ pContext->AddExternalDeclaration($2); }
     ;
 
 external_declaration:
-      function_definition                                           {
-        dynamic_cast<FunctionDeclaratorNode*>($1)->VerifyNode();
-        dynamic_cast<FunctionDeclaratorNode*>($1)->ProcessNode();
-      }
+      function_definition                                           { $$ = $1; }
+	| struct_specifier SEMICOLON                                    { $$ = $1; }
     ;
 
 statement_list:
@@ -141,7 +145,22 @@ function_header:
     ;
 
 fully_specified_type:
-      INT_TOKEN                                                     { $$ = new TypeNode(pContext, INT_TOKEN); }
+      INT_TOKEN                                                     { $$ = new TypeNode(pContext, TypeNode::BasicType, INT_TOKEN); }
+	| IDENTIFIER                                                    { $$ = new TypeNode(pContext, TypeNode::StructType, $1); }
+    ;
+
+struct_specifier:
+      STRUCT_TOKEN IDENTIFIER LEFT_BRACE struct_declaration_list RIGHT_BRACE {
+	                                    							  $$ = $4; dynamic_cast<StructSpecifierNode*>($$)->SetName($2); }
+    ;
+
+struct_declaration_list:
+      struct_declaration											{ $$ = new StructSpecifierNode(pContext, $1); }
+    | struct_declaration_list struct_declaration					{ $$ = $1; $$->AddNode($2); }
+    ;
+
+struct_declaration:
+      fully_specified_type IDENTIFIER SEMICOLON						{ $$ = new StructDeclarationNode(pContext, $1, $2); }
     ;
 
 function_definition:
@@ -177,14 +196,9 @@ int main(int, char**) {
 		return -1;
 	}
 
-    PSLCompilerContext context;
+    PSLCompilerContext context(myfile);
 
-    // set flex to read from it instead of defaulting to STDIN:
-    yyrestart(myfile, context.pScanner);
-
-    // parse through the input until there is no more:
-	yyparse(&context);
-
+	context.Parse();
 }
 
 void yyerror(void *, const char *s) {
