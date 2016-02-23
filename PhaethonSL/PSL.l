@@ -23,6 +23,7 @@
 "}"                  { return RIGHT_BRACE; }
 "("                  { return LEFT_PAREN; }
 ")"                  { return RIGHT_PAREN; }
+"\."                 { return DOT; }
 "int"                { return INT_TOKEN; }
 "struct"             { return STRUCT_TOKEN; }
 [0-9]+               { yylval->intVal = atoi(yytext); return INTCONSTANT; }

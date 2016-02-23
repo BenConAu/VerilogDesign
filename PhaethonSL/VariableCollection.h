@@ -1,25 +1,23 @@
 #pragma once
 
 #include <map>
+#include "VariableInfo.h"
 
 class VariableDeclarationNode;
 class ASTNode;
-
-struct VariableInfo
-{
-    int symIndex;
-    ASTNode* pDecl;
-    ASTNode* pLastRef;
-    bool fLastProcessed;
-};
+class PSLCompilerContext;
 
 class VariableCollection
 {
 public:
-    void AddVariable(int symIndex, VariableDeclarationNode* pNode);
+    VariableCollection(PSLCompilerContext* pContext);
+    void AddVariable(int symIndex, VariableDeclarationNode* pNode, TypeInfo*);
     void AddReference(int symIndex, ASTNode* pNode);
     void ProcessReference(int symIndex, ASTNode *pNode);
+    bool IsLastReference(int symIndex, ASTNode* pNode);
+    VariableInfo* GetInfo(int symIndex);
 
 private:
-    std::map<int, VariableInfo> _variables;
+    PSLCompilerContext* _pContext;
+    std::map<int, std::unique_ptr<VariableInfo> > _variables;
 };

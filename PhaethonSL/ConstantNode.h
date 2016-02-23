@@ -1,6 +1,8 @@
 #pragma once
 
-class ConstantNode : public ASTNode
+#include "ExpressionNode.h"
+
+class ConstantNode : public ExpressionNode
 {
 public:
     enum ConstantType
@@ -10,36 +12,12 @@ public:
     };
 
 public:
-    ConstantNode(PSLCompilerContext* pContext, int v)  : ASTNode(pContext)
-    {
-        _intValue = v;
-        _type = Int;
-    }
+    ConstantNode(PSLCompilerContext* pContext, int v);
+    ConstantNode(PSLCompilerContext* pContext, float v);
 
-    ConstantNode(PSLCompilerContext* pContext, float v) : ASTNode(pContext)
-    {
-        _floatValue = v;
-        _type = Float;
-    }
-
-    int GetInteger()
-    {
-        if (_type == Int)
-        {
-            return _intValue;
-        }
-        else
-        {
-            throw "Not an integer";
-        }
-    }
-
-    bool IsConstant() const override { return true; }
-
-    void VerifyNodeImpl() override
-    {
-        // Make sure in range
-    }
+    int GetInteger();
+    bool IsConstant() const;
+    void VerifyNodeImpl();
 
 private:
     int _intValue;

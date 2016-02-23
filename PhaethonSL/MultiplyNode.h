@@ -14,6 +14,9 @@ public:
 
     void VerifyNodeImpl() override
     {
+        ExpressionNode* pLeft = dynamic_cast<ExpressionNode*>(GetChild(0));
+
+        SetType(pLeft->GetType());
     }
 
     void ProcessNodeImpl() override
@@ -28,7 +31,7 @@ public:
         RegIndex rightIndex = pRight->GetResultRegister();
 
         // Get register for our result
-        RegIndex resultIndex = GetContext()->_regCollection.GetNextRegister();
+        RegIndex resultIndex = GetContext()->_regCollection.AllocateRegister();
 
         // print out our code
         printf("mov r%d, r%d\n", resultIndex, leftIndex);

@@ -9,12 +9,9 @@ class RegisterCollection
 {
 public:
     RegisterCollection(int regCount);
-    RegIndex AddVariableRegister(int symbol);
-    RegIndex GetNextRegister();
-    RegIndex GetVariableRegister(int symbol);
-    void ClearVariableRegister(RegIndex reg);
+    RegIndex AllocateRegister();
+    void DeallocateRegister(RegIndex reg);
 
 private:
-    std::map<int, RegIndex> _symbolToReg;
     std::deque<RegIndex> _availableReg;
 };

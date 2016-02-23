@@ -9,3 +9,4 @@
 #include "VariableDeclarationNode.h"
 #include "StructSpecifierNode.h"
 #include "StructDeclarationNode.h"
+#include "FieldSelectionNode.h"

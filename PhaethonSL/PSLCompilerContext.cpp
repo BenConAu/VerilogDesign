@@ -4,7 +4,9 @@
 #define YY_EXTRA_TYPE PSLCompilerContext*
 #include "lex.h"
 
-PSLCompilerContext::PSLCompilerContext(FILE *pFile) : _regCollection(32)
+PSLCompilerContext::PSLCompilerContext(FILE *pFile) :
+    _regCollection(32),
+    _varCollection(this)
 {
     yylex_init(&pScanner);
     yyset_extra(this, pScanner);
@@ -21,19 +23,16 @@ PSLCompilerContext::~PSLCompilerContext()
 int PSLCompilerContext::AddSymbol(const char* pszSymbol)
 {
 //    printf("Adding symbol\n");
-
-    static std::vector<std::string> g_symbols;
-
-	for (size_t i = 0; i < g_symbols.size(); i++)
+	for (size_t i = 0; i < _symbols.size(); i++)
 	{
-		if (g_symbols[i].compare(pszSymbol) == 0)
+		if (_symbols[i].compare(pszSymbol) == 0)
 		{
 			return i;
 		}
 	}
 
-	g_symbols.push_back(pszSymbol);
-	return (g_symbols.size() - 1);
+	_symbols.push_back(pszSymbol);
+	return (_symbols.size() - 1);
 }
 
 void PSLCompilerContext::AddExternalDeclaration(ASTNode* pNode)

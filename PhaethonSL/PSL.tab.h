@@ -56,7 +56,8 @@ extern int yydebug;
     STRUCT_TOKEN = 266,
     LEFT_BRACE = 267,
     RIGHT_BRACE = 268,
-    IDENTIFIER = 269
+    DOT = 269,
+    IDENTIFIER = 270
   };
 #endif
 
@@ -72,7 +73,7 @@ union YYSTYPE
 	int symIndex;
     ASTNode* pNode;
 
-#line 76 "PSL.tab.h" /* yacc.c:1909  */
+#line 77 "PSL.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

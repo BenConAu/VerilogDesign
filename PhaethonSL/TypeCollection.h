@@ -3,13 +3,7 @@
 #include <vector>
 #include <map>
 #include <memory>
-
-class TypeInfo
-{
-public:
-    virtual int GetSize() = 0;
-    virtual bool IsBasic() = 0;
-};
+#include "TypeInfo.h"
 
 class TypeMember
 {
@@ -20,11 +14,22 @@ public:
         _pType = pType;
     }
 
+    int GetSymbolIndex()
+    {
+        return _symIndex;
+    }
+
+    TypeInfo* GetType()
+    {
+        return _pType;
+    }
+
     int GetSize()
     {
         return _pType->GetSize();
     }
 
+private:
     int _symIndex;
     TypeInfo* _pType;
 };
@@ -40,6 +45,19 @@ public:
     void AddMember(int symIndex, TypeInfo* pType)
     {
         _members.push_back(std::unique_ptr<TypeMember>(new TypeMember(symIndex, pType)));
+    }
+
+    TypeMember* GetMember(int symIndex)
+    {
+        for (size_t i = 0; i < _members.size(); i++)
+        {
+            if (_members[i]->GetSymbolIndex() == symIndex)
+            {
+                return _members[i].get();
+            }
+        }
+
+        throw "Unknown member";
     }
 
     int GetSize() override

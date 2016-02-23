@@ -17,4 +17,5 @@ public:
     VariableCollection _varCollection;
     TypeCollection _typeCollection;
     std::vector<std::unique_ptr<ASTNode> > _rootNodes;
+    std::vector<std::string> _symbols;    
 };

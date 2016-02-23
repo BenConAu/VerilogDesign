@@ -14,6 +14,12 @@ public:
 
     void VerifyNodeImpl() override
     {
+        ExpressionNode* pLeft = dynamic_cast<ExpressionNode*>(GetChild(0));
+
+        // Type is same as left side
+        SetType(pLeft->GetType());
+
+        // TODO: Check types on left and right match
     }
 
     void ProcessNodeImpl() override
@@ -42,5 +48,8 @@ public:
 
         // Our result is the left index now
         SetResultRegister(leftIndex);
+
+        // Recycle the register if the last reference is done
+        //if (GetContext()->_varCollection.IsLastReference(this))
     }
 };

@@ -40,6 +40,7 @@ void yyerror(void*, const char *s);
 %token STRUCT_TOKEN
 %token LEFT_BRACE
 %token RIGHT_BRACE
+%token DOT
 %token <symIndex> IDENTIFIER
 %type <pNode> variable_identifier
 %type <pNode> primary_expression
@@ -116,6 +117,7 @@ assignment_operator:
 
 postfix_expression:
       primary_expression                                            { $$ = $1; }
+	| postfix_expression DOT IDENTIFIER								{ $$ = new FieldSelectionNode(pContext, $1, $3); }
     ;
 
 primary_expression:
