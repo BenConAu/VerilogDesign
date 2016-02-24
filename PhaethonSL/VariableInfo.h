@@ -11,7 +11,6 @@ class VariableInfo
 public:
     VariableInfo(PSLCompilerContext* pContext, int symIndex, ASTNode* pNode, TypeInfo* pInfo);
 
-    void Allocate();
     RegIndex GetRegIndex();
     TypeInfo* GetTypeInfo() { return _pType; }
     void NotifyNodeProcessed(ASTNode* pNode);

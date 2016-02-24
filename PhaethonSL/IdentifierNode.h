@@ -9,6 +9,9 @@ public:
     void VerifyNodeImpl() override;
     void ProcessNodeImpl() override;
 
+protected:
+    RegIndex CalcResultRegisterImpl() override;    
+
 private:
     int _symIndex;
 };

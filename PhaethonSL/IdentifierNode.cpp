@@ -20,5 +20,9 @@ void IdentifierNode::VerifyNodeImpl()
 
 void IdentifierNode::ProcessNodeImpl()
 {
-    SetResultRegister(GetContext()->_varCollection.GetInfo(_symIndex)->GetRegIndex());
+}
+
+RegIndex IdentifierNode::CalcResultRegisterImpl()
+{
+    return GetContext()->_varCollection.GetInfo(_symIndex)->GetRegIndex();
 }

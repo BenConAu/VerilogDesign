@@ -9,10 +9,16 @@ public:
     ExpressionNode(PSLCompilerContext* pContext) : ASTNode(pContext)
     {
         _pType = nullptr;
+        _result = 0xFF;
     }
 
     RegIndex GetResultRegister()
     {
+        if (_result == 0xFF)
+        {
+            _result = CalcResultRegisterImpl();
+        }
+
         return _result;
     }
 
@@ -22,15 +28,12 @@ public:
         {
             throw "Unset type";
         }
-        
+
         return _pType;
     }
 
 protected:
-    void SetResultRegister(RegIndex result)
-    {
-        _result = result;
-    }
+    virtual RegIndex CalcResultRegisterImpl() = 0;
 
     void SetType(TypeInfo* pInfo)
     {

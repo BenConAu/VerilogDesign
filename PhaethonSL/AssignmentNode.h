@@ -46,10 +46,16 @@ public:
             printf("mov r%d, r%d\n", leftIndex, rightIndex);
         }
 
-        // Our result is the left index now
-        SetResultRegister(leftIndex);
-
         // Recycle the register if the last reference is done
         //if (GetContext()->_varCollection.IsLastReference(this))
+    }
+
+protected:
+    RegIndex CalcResultRegisterImpl() override
+    {
+        ExpressionNode* pLeft = dynamic_cast<ExpressionNode*>(GetChild(0));
+
+        // Get the register for the left side and use it as our destination
+        return pLeft->GetResultRegister();
     }
 };

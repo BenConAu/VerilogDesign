@@ -12,16 +12,11 @@ VariableInfo::VariableInfo(PSLCompilerContext* pContext, int symIndex, ASTNode* 
     fLastProcessed = false;
 }
 
-void VariableInfo::Allocate()
-{
-    _regIndex = _pContext->_regCollection.AllocateRegister();
-}
-
 RegIndex VariableInfo::GetRegIndex()
 {
     if (_regIndex == 0xFF)
     {
-        throw "Register not allocated for this variable";
+        _regIndex = _pContext->_regCollection.AllocateRegister();
     }
 
     return _regIndex;

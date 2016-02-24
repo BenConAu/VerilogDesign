@@ -12,7 +12,7 @@ public:
         _fieldSymIndex = symIndex;
     }
 
-    void VerifyNodeImpl()
+    void VerifyNodeImpl() override
     {
         ExpressionNode* pLeft = dynamic_cast<ExpressionNode*>(GetChild(0));
 
@@ -31,7 +31,11 @@ public:
         SetType(pMember->GetType());
     }
 
-    
+protected:
+    RegIndex CalcResultRegisterImpl() override
+    {
+        return GetContext()->_regCollection.AllocateRegister();
+    }
 
 private:
     int _fieldSymIndex;
