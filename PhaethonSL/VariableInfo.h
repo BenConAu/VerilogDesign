@@ -9,18 +9,14 @@ class TypeInfo;
 class VariableInfo
 {
 public:
-    VariableInfo(PSLCompilerContext* pContext, int symIndex, ASTNode* pNode, TypeInfo* pInfo);
+    VariableInfo(PSLCompilerContext* pContext, int symIndex, TypeInfo* pInfo);
 
     RegIndex GetRegIndex();
     TypeInfo* GetTypeInfo() { return _pType; }
-    void NotifyNodeProcessed(ASTNode* pNode);
 
     PSLCompilerContext* _pContext;
-    int symIndex;
-    ASTNode* pDecl;
-    ASTNode* pLastRef;
+    int _symIndex;
     RegIndex _regIndex;
-    bool fLastProcessed;
 
 private:
     TypeInfo* _pType;

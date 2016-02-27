@@ -11,10 +11,7 @@ class VariableCollection
 {
 public:
     VariableCollection(PSLCompilerContext* pContext);
-    void AddVariable(int symIndex, VariableDeclarationNode* pNode, TypeInfo*);
-    void AddReference(int symIndex, ASTNode* pNode);
-    void ProcessReference(int symIndex, ASTNode *pNode);
-    bool IsLastReference(int symIndex, ASTNode* pNode);
+    void AddVariable(int symIndex, TypeInfo*);
     VariableInfo* GetInfo(int symIndex);
 
 private:

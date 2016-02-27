@@ -16,11 +16,30 @@ public:
     ASTNode(PSLCompilerContext* pContext)
     {
         _pContext = pContext;
+        _fPostProcessed = false;
     }
 
     void AddNode(ASTNode* pNode)
     {
         _children.push_back(std::unique_ptr<ASTNode>(pNode));
+    }
+
+    void PostProcessNode()
+    {
+        if (!_fPostProcessed)
+        {
+            for (size_t i = 0; i < _children.size(); i++)
+            {
+                if (_children[i] != nullptr)
+                {
+                    _children[i]->PostProcessNode();
+                }
+            }
+
+            PostProcessNodeImpl();
+
+            _fPostProcessed = true;
+        }
     }
 
     void ProcessNode()
@@ -52,6 +71,7 @@ public:
     virtual bool IsConstant() const { return false; }
     virtual void VerifyNodeImpl() = 0;
     virtual void ProcessNodeImpl() {}
+    virtual void PostProcessNodeImpl() {}
 
     size_t GetChildCount() const { return _children.size(); }
     ASTNode* GetChild(size_t i) { return _children[i].get(); }
@@ -62,4 +82,5 @@ private:
     PSLCompilerContext* _pContext;
     std::unique_ptr<ASTNode> _parent;
     std::vector<std::unique_ptr<ASTNode> > _children;
+    bool _fPostProcessed;
 };

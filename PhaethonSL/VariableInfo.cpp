@@ -1,15 +1,12 @@
 #include "VariableInfo.h"
 #include "PSLCompilerContext.h"
 
-VariableInfo::VariableInfo(PSLCompilerContext* pContext, int symIndex, ASTNode* pNode, TypeInfo* pInfo)
+VariableInfo::VariableInfo(PSLCompilerContext* pContext, int symIndex, TypeInfo* pInfo)
 {
     _pContext = pContext;
     _pType = pInfo;
-    symIndex = symIndex;
-    pDecl = pNode;
-    pLastRef = pNode;
+    _symIndex = symIndex;
     _regIndex = 0xFF;
-    fLastProcessed = false;
 }
 
 RegIndex VariableInfo::GetRegIndex()
@@ -20,14 +17,4 @@ RegIndex VariableInfo::GetRegIndex()
     }
 
     return _regIndex;
-}
-
-void VariableInfo::NotifyNodeProcessed(ASTNode *pNode)
-{
-    if (pNode == pLastRef)
-    {
-        _pContext->_regCollection.DeallocateRegister(_regIndex);
-        _regIndex = 0xFF;
-        fLastProcessed = true;
-    }
 }

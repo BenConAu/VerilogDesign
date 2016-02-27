@@ -12,7 +12,7 @@ void VariableDeclarationNode::VerifyNodeImpl()
     //printf("Adding variable %s\n", GetContext()->_symbols[_symIndex].c_str());
 
     // Add variable to collection and mark first usage
-    GetContext()->_varCollection.AddVariable(_symIndex, this, dynamic_cast<TypeNode*>(GetChild(0))->GetTypeInfo());
+    GetContext()->_varCollection.AddVariable(_symIndex, dynamic_cast<TypeNode*>(GetChild(0))->GetTypeInfo());
 }
 
 void VariableDeclarationNode::ProcessNodeImpl()
