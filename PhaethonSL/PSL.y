@@ -1,8 +1,5 @@
 %{
 #define YYDEBUG 1
-#include <cstdio>
-#include <iostream>
-using namespace std;
 
 #include "PSLCompilerContext.h"
 #include "ASTTree.h"
@@ -187,24 +184,3 @@ compound_statement:
     ;
 
 %%
-
-int main(int, char**) {
-	//yydebug = 1;
-	// open a file handle to a particular file:
-	FILE *myfile = fopen("test.psl", "r");
-	// make sure it is valid:
-	if (!myfile) {
-		cout << "I can't open a.snazzle.file!" << endl;
-		return -1;
-	}
-
-    PSLCompilerContext context(myfile);
-
-	context.Parse();
-}
-
-void yyerror(void *, const char *s) {
-	cout << "EEK, parse error!  Message: " << s << endl;
-	// might as well halt now:
-	exit(-1);
-}

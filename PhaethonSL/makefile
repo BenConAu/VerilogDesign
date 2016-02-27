@@ -11,6 +11,7 @@ PSLcc: lex.yy.c \
 	   VariableDeclarationNode.cpp \
 	   VariableDeclarationNode.h \
 	   PSLCompilerContext.cpp \
+	   PSLCompiler.cpp \
 	   TypeCollection.cpp \
 	   TypeCollection.h \
 	   StructDeclarationNode.cpp \
@@ -24,6 +25,7 @@ PSLcc: lex.yy.c \
 	clang++ -std=c++11 -g lex.yy.c \
 	   PSL.tab.c \
 	   ConstantNode.cpp \
+	   PSLCompiler.cpp \
 	   TypeNode.cpp \
 	   IdentifierNode.cpp \
 	   VariableCollection.cpp \
