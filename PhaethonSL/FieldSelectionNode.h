@@ -1,6 +1,8 @@
 #pragma once
 
 #include "ExpressionNode.h"
+#include "TypeMember.h"
+#include "StructTypeInfo.h"
 
 class FieldSelectionNode : public ExpressionNode
 {
@@ -19,7 +21,7 @@ public:
         // Should verify that the type exists
         TypeInfo* pExpressionInfo = pLeft->GetType();
 
-        if (!pExpressionInfo->IsBasic())
+        if (pExpressionInfo->IsBasic())
         {
             throw "Cannot field select a basic type";
         }

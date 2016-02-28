@@ -22,6 +22,7 @@ PSLcc: lex.yy.c \
 	   IdentifierNode.h \
 	   VariableInfo.cpp \
 	   VariableInfo.h \
+	   TypeMember.h \
 	   FunctionDeclaratorNode.h \
 	   FieldSelectionNode.h
 	clang++ -std=c++11 -g lex.yy.c \

@@ -17,6 +17,7 @@ public:
 
     void AddStructDef(ASTNode* pNode);
     void AddFuncDef(ASTNode* pNode);
+    void AddGlobal(ASTNode* pNode);
 
     void* pScanner;
     RegisterCollection _regCollection;
@@ -27,6 +28,7 @@ public:
 private:
     std::vector<std::unique_ptr<ASTNode> > _rootNodes;
     size_t _numStructs;
+    size_t _numGlobals;
 
     // Verification stuff
     FunctionDeclaratorNode* _pEntryPoint;

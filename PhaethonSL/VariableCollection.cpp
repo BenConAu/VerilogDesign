@@ -7,13 +7,13 @@ VariableCollection::VariableCollection(PSLCompilerContext* pContext)
     _pContext = pContext;
 }
 
-void VariableCollection::AddVariable(int symIndex, TypeInfo* pTypeInfo)
+void VariableCollection::AddVariable(int symIndex, bool fGlobal, TypeInfo* pTypeInfo)
 {
     auto iter = _variables.find(symIndex);
 
     if (iter == _variables.end())
     {
-        _variables[symIndex] = std::unique_ptr<VariableInfo>(new VariableInfo(_pContext, symIndex, pTypeInfo));
+        _variables[symIndex] = std::unique_ptr<VariableInfo>(new VariableInfo(_pContext, symIndex, fGlobal, pTypeInfo));
     }
     else
     {

@@ -16,11 +16,13 @@ public:
     ASTNode(PSLCompilerContext* pContext)
     {
         _pContext = pContext;
+        _pParent = nullptr;
     }
 
     void AddNode(ASTNode* pNode)
     {
         _children.push_back(std::unique_ptr<ASTNode>(pNode));
+        pNode->_pParent = this;
     }
 
     void ProcessNode()
@@ -53,6 +55,31 @@ public:
         VerifyNodeImpl();
     }
 
+    template<typename T>
+    T* GetTypedParent()
+    {
+        ASTNode* pNode = this;
+
+        for (;;)
+        {
+            ASTNode* pParent = pNode->_pParent;
+            if (pParent == nullptr)
+            {
+                return nullptr;
+            }
+
+            T* pTypedParent = dynamic_cast<T*>(pParent);
+            if (pTypedParent != nullptr)
+            {
+                return pTypedParent;
+            }
+
+            pNode = pParent;
+        }
+
+        return nullptr;
+    }
+
     virtual bool IsConstant() const { return false; }
     virtual void VerifyNodeImpl() = 0;
     virtual void PreProcessNodeImpl() {}
@@ -65,6 +92,6 @@ public:
 
 private:
     PSLCompilerContext* _pContext;
-    std::unique_ptr<ASTNode> _parent;
+    ASTNode* _pParent;
     std::vector<std::unique_ptr<ASTNode> > _children;
 };

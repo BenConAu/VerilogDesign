@@ -4,24 +4,10 @@ struct foo
     int b;
 };
 
-void bar()
-{
-    int x;
-    int y;
-    int z;
-    int d;
-
-    y = 1;
-    z = 2;
-    d = 3;
-    x = y * z * d;
-}
+foo fooVar;
 
 void main()
 {
-    int ab;
-    int cd;
-
-    cd = 1;
-    ab = cd;
+    fooVar.a = 1;
+    fooVar.b = 2;
 }

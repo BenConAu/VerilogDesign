@@ -1,6 +1,8 @@
 #include "StructSpecifierNode.h"
 #include "TypeCollection.h"
 #include "StructDeclarationNode.h"
+#include "StructTypeInfo.h"
+#include "PSLCompilerContext.h"
 
 StructSpecifierNode::StructSpecifierNode(PSLCompilerContext* pContext, ASTNode* pTypeNode) : ASTNode(pContext)
 {
@@ -29,4 +31,6 @@ void StructSpecifierNode::VerifyNodeImpl()
 
         pNewType->AddMember(pSpecifier->GetName(), pSpecifier->GetTypeInfo());
     }
+
+    GetContext()->_typeCollection.AddStructType(_symIndex, pNewType);
 }

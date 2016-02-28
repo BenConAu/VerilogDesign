@@ -1,5 +1,7 @@
 #include "TypeNode.h"
 #include "PSLCompilerContext.h"
+#include "BasicTypeInfo.h"
+#include "StructTypeInfo.h"
 
 TypeNode::TypeNode(PSLCompilerContext* pContext, TypeType t, int type) : ASTNode(pContext)
 {

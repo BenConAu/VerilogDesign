@@ -9,7 +9,7 @@ class TypeInfo;
 class VariableInfo
 {
 public:
-    VariableInfo(PSLCompilerContext* pContext, int symIndex, TypeInfo* pInfo);
+    VariableInfo(PSLCompilerContext* pContext, int symIndex, bool fGlobal, TypeInfo* pInfo);
 
     RegIndex GetRegIndex();
     TypeInfo* GetTypeInfo() { return _pType; }
@@ -20,4 +20,5 @@ public:
 
 private:
     TypeInfo* _pType;
+    bool _fGlobal;
 };

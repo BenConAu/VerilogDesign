@@ -34,6 +34,7 @@ void yyerror(void*, const char *s);
 %token LEFT_PAREN
 %token RIGHT_PAREN
 %token INT_TOKEN
+%token VOID_TOKEN
 %token STRUCT_TOKEN
 %token LEFT_BRACE
 %token RIGHT_BRACE
@@ -74,6 +75,7 @@ translation_unit:
 external_declaration:
       function_definition                                           { $$ = $1; pContext->AddFuncDef($$); }
 	| struct_specifier SEMICOLON                                    { $$ = $1; pContext->AddStructDef($$); }
+	| declaration                                                   { $$ = $1; pContext->AddGlobal($$); }
     ;
 
 statement_list:
@@ -145,6 +147,7 @@ function_header:
 
 fully_specified_type:
       INT_TOKEN                                                     { $$ = new TypeNode(pContext, TypeNode::BasicType, INT_TOKEN); }
+	| VOID_TOKEN                                                    { $$ = new TypeNode(pContext, TypeNode::BasicType, VOID_TOKEN); }
 	| IDENTIFIER                                                    { $$ = new TypeNode(pContext, TypeNode::StructType, $1); }
     ;
 

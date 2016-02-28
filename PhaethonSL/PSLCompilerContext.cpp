@@ -10,6 +10,7 @@ PSLCompilerContext::PSLCompilerContext(FILE *pFile) :
 {
     _pEntryPoint = nullptr;
     _numStructs = 0;
+    _numGlobals = 0;
 
     yylex_init(&pScanner);
     yyset_extra(this, pScanner);
@@ -42,11 +43,20 @@ void PSLCompilerContext::AddStructDef(ASTNode* pNode)
 {
     auto rootStart = _rootNodes.begin();
 
-    // Insert at seam
+    // Insert at end of struct list
     _rootNodes.insert(rootStart + _numStructs, std::unique_ptr<ASTNode>(pNode));
 
     // Seam moves along by 1
     _numStructs++;
+}
+
+void PSLCompilerContext::AddGlobal(ASTNode* pNode)
+{
+    auto rootStart = _rootNodes.begin();
+
+    _rootNodes.insert(rootStart + _numStructs + _numGlobals, std::unique_ptr<ASTNode>(pNode));
+
+    _numGlobals++;
 }
 
 void PSLCompilerContext::AddFuncDef(ASTNode* pNode)
@@ -65,7 +75,7 @@ void PSLCompilerContext::AddFuncDef(ASTNode* pNode)
         auto rootStart = _rootNodes.begin();
 
         // Insert at seam
-        _rootNodes.insert(rootStart + _numStructs, std::unique_ptr<ASTNode>(pNode));
+        _rootNodes.insert(rootStart + _numStructs + _numGlobals, std::unique_ptr<ASTNode>(pNode));
     }
 }
 

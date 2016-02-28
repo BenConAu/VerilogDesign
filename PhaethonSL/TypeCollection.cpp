@@ -1,6 +1,8 @@
 #include "TypeCollection.h"
 #include "ASTNode.h"
 #include "PSL.tab.h"
+#include "BasicTypeInfo.h"
+#include "StructTypeInfo.h"
 
 TypeCollection::TypeCollection()
 {
@@ -26,4 +28,9 @@ BasicTypeInfo* TypeCollection::GetBasicType(int type)
     }
 
     return nullptr;
+}
+
+void TypeCollection::AddStructType(int symIndex, StructTypeInfo* pInfo)
+{
+    _structTypes[symIndex] = std::unique_ptr<StructTypeInfo>(pInfo);
 }

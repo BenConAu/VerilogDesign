@@ -21,7 +21,14 @@ int main(int, char**)
 
     PSLCompilerContext context(myfile);
 
-	context.Parse();
+    try
+    {
+	    context.Parse();
+    }
+    catch(const char* pszMessage)
+    {
+        printf("Error: %s\n", pszMessage);
+    }
 }
 
 void yyerror(void *, const char *s)
