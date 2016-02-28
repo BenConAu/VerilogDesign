@@ -4,7 +4,7 @@ struct foo
     int b;
 };
 
-void main()
+void bar()
 {
     int x;
     int y;

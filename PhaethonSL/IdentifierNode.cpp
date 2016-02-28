@@ -15,7 +15,7 @@ void IdentifierNode::VerifyNodeImpl()
     SetType(pInfo->GetTypeInfo());
 }
 
-void IdentifierNode::ProcessNodeImpl()
+void IdentifierNode::PreProcessNodeImpl()
 {
 }
 

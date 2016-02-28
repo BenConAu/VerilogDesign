@@ -7,10 +7,10 @@ class IdentifierNode : public ExpressionNode
 public:
     IdentifierNode(PSLCompilerContext* pContext, int symIndex);
     void VerifyNodeImpl() override;
-    void ProcessNodeImpl() override;
+    void PreProcessNodeImpl() override;
 
 protected:
-    RegIndex CalcResultRegisterImpl() override;    
+    RegIndex CalcResultRegisterImpl() override;
 
 private:
     int _symIndex;

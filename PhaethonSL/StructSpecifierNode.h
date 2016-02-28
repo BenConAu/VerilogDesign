@@ -7,7 +7,7 @@ class StructSpecifierNode : public ASTNode
 public:
     StructSpecifierNode(PSLCompilerContext* pContext, ASTNode* pTypeNode);
     void SetName(int symIndex);
-    void ProcessNodeImpl() override;
+    void PreProcessNodeImpl() override;
     void VerifyNodeImpl() override;
 
 private:

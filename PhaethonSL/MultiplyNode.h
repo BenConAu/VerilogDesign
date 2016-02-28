@@ -19,7 +19,7 @@ public:
         SetType(pLeft->GetType());
     }
 
-    void ProcessNodeImpl() override
+    void PostProcessNodeImpl() override
     {
         ExpressionNode* pLeft = dynamic_cast<ExpressionNode*>(GetChild(0));
         ExpressionNode* pRight = dynamic_cast<ExpressionNode*>(GetChild(1));

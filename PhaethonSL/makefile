@@ -21,6 +21,7 @@ PSLcc: lex.yy.c \
 	   IdentifierNode.h \
 	   VariableInfo.cpp \
 	   VariableInfo.h \
+	   FunctionDeclaratorNode.h \
 	   FieldSelectionNode.h
 	clang++ -std=c++11 -g lex.yy.c \
 	   PSL.tab.c \

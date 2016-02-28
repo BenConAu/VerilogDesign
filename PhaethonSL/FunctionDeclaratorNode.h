@@ -14,14 +14,36 @@ public:
         AddNode(pList);
     }
 
-    void ProcessNodeImpl() override
-    {
-    }
-
     void VerifyNodeImpl() override
     {
-        // Make sure the symbol is unique
-        // Figure out parameter stuff?
+        if (IsEntryPoint())
+        {
+            GetContext()->SetEntryPoint(this);
+        }
+
+        // TODO: Make sure function name is unique
+    }
+
+    void PreProcessNodeImpl() override
+    {
+        // non-main functions have a prologue
+        if (!IsEntryPoint())
+        {
+            printf("%s:\n", GetContext()->_symbols[_symIndex].c_str());
+        }
+    }
+
+    void PostProcessNodeImpl() override
+    {
+        if (!IsEntryPoint())
+        {
+            printf("rret\n");
+        }
+    }
+
+    bool IsEntryPoint()
+    {
+        return (GetContext()->_symbols[_symIndex] == "main");
     }
 
 private:

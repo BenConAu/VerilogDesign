@@ -13,7 +13,7 @@ public:
 
     TypeInfo* GetTypeInfo();
     int GetName() { return _symIndex; }
-    void ProcessNodeImpl() override;
+    void PreProcessNodeImpl() override;
     void VerifyNodeImpl() override;
 
 private:

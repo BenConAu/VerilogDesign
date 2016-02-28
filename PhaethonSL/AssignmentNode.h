@@ -22,7 +22,7 @@ public:
         // TODO: Check types on left and right match
     }
 
-    void ProcessNodeImpl() override
+    void PostProcessNodeImpl() override
     {
         ExpressionNode* pLeft = dynamic_cast<ExpressionNode*>(GetChild(0));
 
@@ -45,9 +45,6 @@ public:
             // print out our code
             printf("mov r%d, r%d\n", leftIndex, rightIndex);
         }
-
-        // Recycle the register if the last reference is done
-        //if (GetContext()->_varCollection.IsLastReference(this))
     }
 
 protected:

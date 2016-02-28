@@ -8,6 +8,8 @@ PSLCompilerContext::PSLCompilerContext(FILE *pFile) :
     _regCollection(32),
     _varCollection(this)
 {
+    _pEntryPoint = nullptr;
+
     yylex_init(&pScanner);
     yyset_extra(this, pScanner);
 
@@ -42,16 +44,28 @@ void PSLCompilerContext::AddExternalDeclaration(ASTNode* pNode)
 
 void PSLCompilerContext::Parse()
 {
-    // parse through the input until there is no more:
+    // Parse through the input until there is no more:
     yyparse(this);
 
+    // Verify the tree
     for (size_t i = 0; i < _rootNodes.size(); i++)
     {
         _rootNodes[i]->VerifyNode();
     }
 
+    // Process the tree
     for (size_t i = 0; i < _rootNodes.size(); i++)
     {
         _rootNodes[i]->ProcessNode();
     }
+}
+
+void PSLCompilerContext::SetEntryPoint(FunctionDeclaratorNode* pEntryPoint)
+{
+    if (_pEntryPoint != nullptr)
+    {
+        throw "Cannot have two entry points";
+    }
+
+    _pEntryPoint = pEntryPoint;
 }

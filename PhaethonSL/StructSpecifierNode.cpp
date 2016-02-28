@@ -12,7 +12,7 @@ void StructSpecifierNode::SetName(int symIndex)
     _symIndex = symIndex;
 }
 
-void StructSpecifierNode::ProcessNodeImpl()
+void StructSpecifierNode::PreProcessNodeImpl()
 {
 }
 

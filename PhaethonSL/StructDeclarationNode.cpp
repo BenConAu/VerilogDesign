@@ -15,7 +15,7 @@ TypeInfo* StructDeclarationNode::GetTypeInfo()
     return pTypeNode->GetTypeInfo();
 }
 
-void StructDeclarationNode::ProcessNodeImpl()
+void StructDeclarationNode::PreProcessNodeImpl()
 {
 }
 
