@@ -11,6 +11,7 @@ PSLcc: lex.yy.c \
 	   VariableDeclarationNode.cpp \
 	   VariableDeclarationNode.h \
 	   PSLCompilerContext.cpp \
+	   PSLCompilerContext.h \
 	   PSLCompiler.cpp \
 	   TypeCollection.cpp \
 	   TypeCollection.h \

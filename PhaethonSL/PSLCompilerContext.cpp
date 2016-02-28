@@ -9,6 +9,7 @@ PSLCompilerContext::PSLCompilerContext(FILE *pFile) :
     _varCollection(this)
 {
     _pEntryPoint = nullptr;
+    _numStructs = 0;
 
     yylex_init(&pScanner);
     yyset_extra(this, pScanner);
@@ -37,9 +38,35 @@ int PSLCompilerContext::AddSymbol(const char* pszSymbol)
 	return (_symbols.size() - 1);
 }
 
-void PSLCompilerContext::AddExternalDeclaration(ASTNode* pNode)
+void PSLCompilerContext::AddStructDef(ASTNode* pNode)
 {
-    _rootNodes.push_back(std::unique_ptr<ASTNode>(pNode));
+    auto rootStart = _rootNodes.begin();
+
+    // Insert at seam
+    _rootNodes.insert(rootStart + _numStructs, std::unique_ptr<ASTNode>(pNode));
+
+    // Seam moves along by 1
+    _numStructs++;
+}
+
+void PSLCompilerContext::AddFuncDef(ASTNode* pNode)
+{
+    // Add after most recent function node unless it is main
+    FunctionDeclaratorNode* pFuncNode = dynamic_cast<FunctionDeclaratorNode*>(pNode);
+
+    if (!pFuncNode->IsEntryPoint())
+    {
+        // Just tack onto the end
+        _rootNodes.push_back(std::unique_ptr<ASTNode>(pNode));
+    }
+    else
+    {
+        // Put after the structs
+        auto rootStart = _rootNodes.begin();
+
+        // Insert at seam
+        _rootNodes.insert(rootStart + _numStructs, std::unique_ptr<ASTNode>(pNode));
+    }
 }
 
 void PSLCompilerContext::Parse()

@@ -67,13 +67,13 @@ void yyerror(void*, const char *s);
 %%
 
 translation_unit:
-      external_declaration											{ pContext->AddExternalDeclaration($1); }
-    | translation_unit external_declaration							{ pContext->AddExternalDeclaration($2); }
+      external_declaration
+    | translation_unit external_declaration
     ;
 
 external_declaration:
-      function_definition                                           { $$ = $1; }
-	| struct_specifier SEMICOLON                                    { $$ = $1; }
+      function_definition                                           { $$ = $1; pContext->AddFuncDef($$); }
+	| struct_specifier SEMICOLON                                    { $$ = $1; pContext->AddStructDef($$); }
     ;
 
 statement_list:

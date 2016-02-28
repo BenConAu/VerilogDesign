@@ -12,18 +12,22 @@ public:
     PSLCompilerContext(FILE *pFile);
     ~PSLCompilerContext();
     int AddSymbol(const char* pszSymbol);
-    void AddExternalDeclaration(ASTNode* pNode);
     void Parse();
     void SetEntryPoint(FunctionDeclaratorNode* pNode);
+
+    void AddStructDef(ASTNode* pNode);
+    void AddFuncDef(ASTNode* pNode);
 
     void* pScanner;
     RegisterCollection _regCollection;
     VariableCollection _varCollection;
     TypeCollection _typeCollection;
-    std::vector<std::unique_ptr<ASTNode> > _rootNodes;
     std::vector<std::string> _symbols;
 
 private:
+    std::vector<std::unique_ptr<ASTNode> > _rootNodes;
+    size_t _numStructs;
+
     // Verification stuff
     FunctionDeclaratorNode* _pEntryPoint;
 };
