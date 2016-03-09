@@ -1,0 +1,15 @@
+struct foo
+{
+    int a;
+    int b;
+};
+
+foo fooVar;
+
+void main()
+{
+    int c;
+    int d;
+    c = fooVar.a;
+    d = fooVar.b;
+}

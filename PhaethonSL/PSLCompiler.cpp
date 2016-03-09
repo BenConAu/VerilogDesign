@@ -6,16 +6,16 @@
 #include <cstdio>
 #include <iostream>
 
-int main(int, char**)
+int main(int argc, char** argv)
 {
 	//yydebug = 1;
 	// open a file handle to a particular file:
-	FILE *myfile = ::fopen("test.psl", "r");
+	FILE *myfile = ::fopen(argv[1], "r");
 
     // make sure it is valid:
 	if (!myfile)
     {
-		std::cout << "I can't open a.snazzle.file!" << std::endl;
+		std::cout << argv[1] << std::endl;
 		return -1;
 	}
 
