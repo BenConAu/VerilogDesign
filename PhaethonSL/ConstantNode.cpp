@@ -33,3 +33,13 @@ void ConstantNode::VerifyNodeImpl()
 {
     SetType(GetContext()->_typeCollection.GetBasicType(INT_TOKEN));
 }
+
+void ConstantNode::PostProcessNodeImpl()
+{
+    printf("mov r%d, %d\n", GetResultRegister(), GetInteger());
+}
+
+RegIndex ConstantNode::CalcResultLocationImpl()
+{
+    return GetContext()->_regCollection.AllocateRegister();
+}

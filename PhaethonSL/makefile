@@ -2,6 +2,8 @@ PSLcc: lex.yy.c \
 	   PSL.tab.c \
 	   ASTNode.h \
 	   ASTTree.h \
+	   AssignmentNode.cpp \
+	   AssignmentNode.h \
 	   ConstantNode.cpp \
 	   ConstantNode.h \
 	   ExpressionNode.h \
@@ -28,6 +30,7 @@ PSLcc: lex.yy.c \
 	clang++ -std=c++11 -g lex.yy.c \
 	   PSL.tab.c \
 	   ConstantNode.cpp \
+	   AssignmentNode.cpp \
 	   PSLCompiler.cpp \
 	   TypeNode.cpp \
 	   IdentifierNode.cpp \

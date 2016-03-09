@@ -44,7 +44,6 @@ void yyerror(void*, const char *s);
 %type <pNode> primary_expression
 %type <pNode> postfix_expression
 %type <pNode> multiplicative_expression
-%type <pNode> unary_expression
 %type <pNode> assignment_expression
 %type <pNode> expression_statement
 %type <pNode> expression
@@ -64,6 +63,8 @@ void yyerror(void*, const char *s);
 %type <pNode> struct_declaration_list
 %type <pNode> struct_declaration
 %type <pNode> external_declaration
+%type <pNode> read_expression
+%type <pNode> write_expression
 
 %%
 
@@ -97,18 +98,21 @@ expression:
     ;
 
 assignment_expression:
-      multiplicative_expression                                     { $$ = $1; }
-    | unary_expression assignment_operator assignment_expression    { $$ = new AssignmentNode(pContext, $1, $3); }
+      write_expression assignment_operator multiplicative_expression { $$ = new AssignmentNode(pContext, $1, $3); }
     ;
 
 multiplicative_expression:
-      unary_expression                                              { $$ = $1; }
-    | multiplicative_expression STAR unary_expression               { $$ = new MultiplyNode(pContext, $1, $3); }
+      read_expression                                               { $$ = $1; }
+    | multiplicative_expression STAR read_expression                { $$ = new MultiplyNode(pContext, $1, $3); }
     ;
 
-unary_expression:
-      postfix_expression                                            { $$ = $1; }
+write_expression:
+      postfix_expression                                            { $$ = $1; dynamic_cast<ExpressionNode*>($$)->SetExpressionType(ExpressionType::Write); }
     ;
+
+read_expression:
+      postfix_expression                                            { $$ = $1; dynamic_cast<ExpressionNode*>($$)->SetExpressionType(ExpressionType::Read); }
+	;
 
 assignment_operator:
       EQUAL

@@ -11,7 +11,7 @@ class VariableCollection
 {
 public:
     VariableCollection(PSLCompilerContext* pContext);
-    void AddVariable(int symIndex, bool fGlobal, TypeInfo*);
+    void AddVariable(int symIndex, FunctionDeclaratorNode* pScope, TypeInfo*);
     VariableInfo* GetInfo(int symIndex);
 
 private:

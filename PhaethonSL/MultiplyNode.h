@@ -39,7 +39,7 @@ public:
     }
 
 protected:
-    RegIndex CalcResultRegisterImpl() override
+    RegIndex CalcResultLocationImpl() override
     {
         return GetContext()->_regCollection.AllocateRegister();
     }

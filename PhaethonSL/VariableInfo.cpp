@@ -1,21 +1,40 @@
 #include "VariableInfo.h"
 #include "PSLCompilerContext.h"
 
-VariableInfo::VariableInfo(PSLCompilerContext* pContext, int symIndex, bool fGlobal, TypeInfo* pInfo)
+unsigned int VariableInfo::_dataSegEnd = 0;
+
+VariableInfo::VariableInfo(
+    PSLCompilerContext* pContext,
+    int symIndex,
+    FunctionDeclaratorNode* pScope,
+    TypeInfo* pInfo
+    )
 {
     _pContext = pContext;
     _pType = pInfo;
     _symIndex = symIndex;
-    _fGlobal = fGlobal;
-    _regIndex = 0xFF;
+    _pScope = pScope;
+
+    if (_pScope == nullptr)
+    {
+        _locationType = LocationType::Memory;
+        _memLocation = _dataSegEnd;
+
+        _dataSegEnd += 4;
+    }
+    else
+    {
+        _locationType = LocationType::Register;
+        _memLocation = 0xFFFFFFFF;
+    }
 }
 
-RegIndex VariableInfo::GetRegIndex()
+RegIndex VariableInfo::GetRegIndex(FunctionDeclaratorNode* pScope)
 {
-    if (_regIndex == 0xFF)
+    if (_regIndexMap.find(pScope) == _regIndexMap.end())
     {
-        _regIndex = _pContext->_regCollection.AllocateRegister();
+        _regIndexMap[pScope] = _pContext->_regCollection.AllocateRegister();
     }
 
-    return _regIndex;
+    return _regIndexMap[pScope];
 }

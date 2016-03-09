@@ -18,14 +18,10 @@ public:
     int GetInteger();
     bool IsConstant() const override;
     void VerifyNodeImpl() override;
+    void PostProcessNodeImpl() override;
 
 protected:
-    RegIndex CalcResultRegisterImpl() override
-    {
-        // No register needed for constants!
-        // TODO: investigate throwing on this
-        return 0xFF;
-    }
+    RegIndex CalcResultLocationImpl() override;
 
 private:
     int _intValue;

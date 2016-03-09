@@ -22,7 +22,7 @@ void VariableDeclarationNode::VerifyNodeImpl()
     // Add variable to collection and mark first usage
     GetContext()->_varCollection.AddVariable(
         _symIndex,
-        _fGlobal,
+        pFunc,
         dynamic_cast<TypeNode*>(GetChild(0))->GetTypeInfo()
     );
 }

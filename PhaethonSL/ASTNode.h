@@ -25,7 +25,7 @@ public:
         pNode->_pParent = this;
     }
 
-    void ProcessNode()
+    virtual void ProcessNode()
     {
         // Processing before children are done
         PreProcessNodeImpl();
@@ -87,6 +87,7 @@ public:
 
     size_t GetChildCount() const { return _children.size(); }
     ASTNode* GetChild(size_t i) { return _children[i].get(); }
+    ASTNode* GetParent() { return _pParent; }
 
     PSLCompilerContext* GetContext() { return _pContext; }
 

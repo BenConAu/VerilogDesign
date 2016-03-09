@@ -29,9 +29,9 @@ public:
         throw "Unknown member";
     }
 
-    int GetSize() override
+    unsigned int GetSize() override
     {
-        int totalSize = 0;
+        unsigned int totalSize = 0;
 
         for (size_t i = 0; i < _members.size(); i++)
         {
@@ -41,9 +41,31 @@ public:
         return totalSize;
     }
 
+    unsigned int GetOffset(int fieldSymIndex)
+    {
+        unsigned int offset = 0;
+
+        for (size_t i = 0; i < _members.size(); i++)
+        {
+            if (_members[i]->GetSymbolIndex() == fieldSymIndex)
+            {
+                return offset;
+            }
+
+            offset += _members[i]->GetSize();
+        }
+
+        throw "Unknown member";
+    }
+
     bool IsBasic() override
     {
         return false;
+    }
+
+    int GetSymbolIndex()
+    {
+        return _symIndex;
     }
 
 private:

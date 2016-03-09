@@ -19,7 +19,7 @@ public:
         return _pType;
     }
 
-    int GetSize()
+    unsigned int GetSize()
     {
         return _pType->GetSize();
     }

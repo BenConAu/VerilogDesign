@@ -10,7 +10,7 @@ public:
         _typeToken = typeToken;
     }
 
-    int GetSize() override
+    unsigned int GetSize() override
     {
         // All basic types are size 4
         return 4;
