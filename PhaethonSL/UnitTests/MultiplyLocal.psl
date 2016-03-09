@@ -1,0 +1,16 @@
+struct foo
+{
+    int a;
+    int b;
+};
+
+foo fooVar;
+
+void main()
+{
+    int c;
+    c = 1;
+    int d;
+    d = 2;
+    fooVar.a = c * d;
+}
