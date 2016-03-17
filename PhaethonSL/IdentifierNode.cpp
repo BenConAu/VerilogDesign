@@ -18,27 +18,23 @@ void IdentifierNode::VerifyNodeImpl()
 
 void IdentifierNode::PreProcessNodeImpl()
 {
-    // If we are reading, then set up the register if need be
-    if (GetExpressionType() == ExpressionType::Read)
+    VariableInfo* pInfo = GetContext()->_varCollection.GetInfo(_symIndex);
+
+    // If the variable is memory then we need to put in a register
+    if (pInfo->GetLocationType() == LocationType::Memory)
     {
-        VariableInfo* pInfo = GetContext()->_varCollection.GetInfo(_symIndex);
+        FunctionDeclaratorNode* pScope = GetTypedParent<FunctionDeclaratorNode>();
+        RegIndex regIndex = pInfo->GetRegIndex(pScope);
 
-        // If the variable is memory then we need to put in a register
-        if (pInfo->GetLocationType() == LocationType::Memory)
+        if (pInfo->GetTypeInfo()->IsBasic())
         {
-            FunctionDeclaratorNode* pScope = GetTypedParent<FunctionDeclaratorNode>();
-            RegIndex regIndex = pInfo->GetRegIndex(pScope);
-
-            if (pInfo->GetTypeInfo()->IsBasic())
-            {
-                // Basic types by value
-                printf("mov r%d, %s\n", regIndex, GetContext()->_symbols[_symIndex].c_str());
-            }
-            else
-            {
-                // Structs by reference
-                printf("mov r%d, &%s\n", regIndex, GetContext()->_symbols[_symIndex].c_str());
-            }
+            // Basic types by value
+            printf("mov r%d, %s\n", regIndex, GetContext()->_symbols[_symIndex].c_str());
+        }
+        else
+        {
+            // Structs by reference
+            printf("mov r%d, &%s\n", regIndex, GetContext()->_symbols[_symIndex].c_str());
         }
     }
 }

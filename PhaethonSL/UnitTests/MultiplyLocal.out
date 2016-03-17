@@ -4,4 +4,5 @@ mov r2, 2
 mov r3, r2
 mov r4, r1
 mul r4, r3
+mov r5, &fooVar
 mov r5->foo::a, r4
