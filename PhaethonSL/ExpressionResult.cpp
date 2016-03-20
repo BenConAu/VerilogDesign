@@ -25,7 +25,7 @@ ExpressionResult::ExpressionResult(VariableInfo* pInfo)
     _pVarInfo = pInfo;
 }
 
-ExpressionResult::ExpressionResult(RegIndex regIndex, VariableInfo* pVarInfo, TypeMember* pTypeMember)
+ExpressionResult::ExpressionResult(RegIndex regIndex, VariableInfo* pVarInfo, StructMember* pTypeMember)
 {
     _type = ResultType::MemoryOffset;
     _offsetInfo._regIndex = regIndex;

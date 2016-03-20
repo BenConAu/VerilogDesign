@@ -28,7 +28,7 @@ PSLcc: lex.yy.c \
 	   RegisterWrapper.h \
 	   VariableInfo.cpp \
 	   VariableInfo.h \
-	   TypeMember.h \
+	   StructMember.h \
 	   FunctionDeclaratorNode.h \
 	   FieldSelectionNode.cpp \
 	   FieldSelectionNode.h

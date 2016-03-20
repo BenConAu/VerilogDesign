@@ -5,7 +5,7 @@
 
 class PSLCompilerContext;
 class VariableInfo;
-class TypeMember;
+class StructMember;
 
 enum class ResultType
 {
@@ -21,7 +21,7 @@ struct OffsetInfo
 {
     RegIndex _regIndex;
     VariableInfo* _pVarInfo;
-    TypeMember* _pTypeMember;
+    StructMember* _pTypeMember;
 };
 
 struct ExpressionResult
@@ -30,7 +30,7 @@ struct ExpressionResult
     explicit ExpressionResult(RegIndex index);
     explicit ExpressionResult(int constant);
     explicit ExpressionResult(VariableInfo* pInfo);
-    explicit ExpressionResult(RegIndex regIndex, VariableInfo* pVarInfo, TypeMember* pTypeMember);
+    explicit ExpressionResult(RegIndex regIndex, VariableInfo* pVarInfo, StructMember* pTypeMember);
 
     bool IsNone() const;
     std::string GetOperand(PSLCompilerContext*) const;

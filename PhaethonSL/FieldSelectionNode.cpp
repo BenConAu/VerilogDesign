@@ -1,5 +1,5 @@
 #include "FieldSelectionNode.h"
-#include "TypeMember.h"
+#include "StructMember.h"
 #include "StructTypeInfo.h"
 #include "VariableInfo.h"
 #include "FunctionDeclaratorNode.h"
@@ -25,7 +25,7 @@ void FieldSelectionNode::VerifyNodeImpl()
     }
 
     StructTypeInfo* pStructInfo = dynamic_cast<StructTypeInfo*>(pExpressionInfo);
-    TypeMember* pMember = pStructInfo->GetMember(_fieldSymIndex);
+    StructMember* pMember = pStructInfo->GetMember(_fieldSymIndex);
 
     // The type of this expression is the type of the member
     SetType(pMember->GetType());

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "TypeInfo.h"
-#include "TypeMember.h"
+#include "StructMember.h"
 
 class StructTypeInfo : public TypeInfo
 {
@@ -13,10 +13,10 @@ public:
 
     void AddMember(int symIndex, TypeInfo* pType)
     {
-        _members.push_back(std::unique_ptr<TypeMember>(new TypeMember(symIndex, pType)));
+        _members.push_back(std::unique_ptr<StructMember>(new StructMember(symIndex, pType)));
     }
 
-    TypeMember* GetMember(int symIndex)
+    StructMember* GetMember(int symIndex)
     {
         for (size_t i = 0; i < _members.size(); i++)
         {
@@ -70,5 +70,5 @@ public:
 
 private:
     int _symIndex;
-    std::vector<std::unique_ptr<TypeMember> > _members;
+    std::vector<std::unique_ptr<StructMember> > _members;
 };

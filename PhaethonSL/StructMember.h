@@ -1,9 +1,9 @@
 #pragma once
 
-class TypeMember
+class StructMember
 {
 public:
-    TypeMember(int symIndex, TypeInfo* pType)
+    StructMember(int symIndex, TypeInfo* pType)
     {
         _symIndex = symIndex;
         _pType = pType;
