@@ -30,6 +30,7 @@ PSLcc: lex.yy.c \
 	   VariableInfo.h \
 	   TypeMember.h \
 	   FunctionDeclaratorNode.h \
+	   FieldSelectionNode.cpp \
 	   FieldSelectionNode.h
 	clang++ -std=c++11 -g lex.yy.c \
 	   PSL.tab.c \
@@ -47,6 +48,7 @@ PSLcc: lex.yy.c \
 	   VariableInfo.cpp \
 	   ExpressionResult.cpp \
 	   RegisterWrapper.cpp \
+	   FieldSelectionNode.cpp \
 	   StructSpecifierNode.cpp -o PSLcc
 
 lex.yy.c: PSL.l

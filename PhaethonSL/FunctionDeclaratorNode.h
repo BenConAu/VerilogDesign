@@ -1,5 +1,7 @@
 #pragma once
 
+#include "PSLCompilerContext.h"
+
 class FunctionDeclaratorNode : public ASTNode
 {
 public:
