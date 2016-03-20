@@ -21,7 +21,7 @@ public:
     void PostProcessNodeImpl() override;
 
 protected:
-    RegIndex CalcResultLocationImpl() override;
+    ExpressionResult CalcResultImpl() override;
 
 private:
     int _intValue;

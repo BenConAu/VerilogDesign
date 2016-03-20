@@ -36,10 +36,9 @@ void ConstantNode::VerifyNodeImpl()
 
 void ConstantNode::PostProcessNodeImpl()
 {
-    printf("mov r%d, %d\n", GetResultRegister(), GetInteger());
 }
 
-RegIndex ConstantNode::CalcResultLocationImpl()
+ExpressionResult ConstantNode::CalcResultImpl()
 {
-    return GetContext()->_regCollection.AllocateRegister();
+    return ExpressionResult(_intValue);
 }

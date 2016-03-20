@@ -22,6 +22,10 @@ PSLcc: lex.yy.c \
 	   TypeNode.cpp \
 	   IdentifierNode.cpp \
 	   IdentifierNode.h \
+	   ExpressionResult.cpp \
+	   ExpressionResult.h \
+	   RegisterWrapper.cpp \
+	   RegisterWrapper.h \
 	   VariableInfo.cpp \
 	   VariableInfo.h \
 	   TypeMember.h \
@@ -41,6 +45,8 @@ PSLcc: lex.yy.c \
 	   StructDeclarationNode.cpp \
 	   VariableDeclarationNode.cpp \
 	   VariableInfo.cpp \
+	   ExpressionResult.cpp \
+	   RegisterWrapper.cpp \
 	   StructSpecifierNode.cpp -o PSLcc
 
 lex.yy.c: PSL.l

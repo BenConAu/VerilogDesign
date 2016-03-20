@@ -1,6 +1,4 @@
-mov r0, &fooVar
-mov r1, r0->foo::a
-mov r2, r1
-mov r0, &fooVar
-mov r3, r0->foo::b
-mov r4, r3
+mov r1, &fooVar
+mov r0, r1->foo::a
+mov r1, &fooVar
+mov r2, r1->foo::b

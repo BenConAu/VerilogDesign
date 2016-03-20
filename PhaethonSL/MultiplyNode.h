@@ -2,6 +2,7 @@
 
 #include "ExpressionNode.h"
 #include "PSLCompilerContext.h"
+#include "RegisterWrapper.h"
 
 class MultiplyNode : public ExpressionNode
 {
@@ -24,14 +25,17 @@ public:
         ExpressionNode* pLeft = dynamic_cast<ExpressionNode*>(GetChild(0));
         ExpressionNode* pRight = dynamic_cast<ExpressionNode*>(GetChild(1));
 
+        RegisterWrapper leftWrap(GetContext(), pLeft->GetResult());
+        RegisterWrapper rightWrap(GetContext(), pRight->GetResult());
+
         // Get the register for the left side
-        RegIndex leftIndex = pLeft->GetResultRegister();
+        RegIndex leftIndex = leftWrap.GetWrapped()._regIndex;
 
         // Right side is either a constant or another register
-        RegIndex rightIndex = pRight->GetResultRegister();
+        RegIndex rightIndex = rightWrap.GetWrapped()._regIndex;
 
         // Get register for our result
-        RegIndex resultIndex = GetResultRegister();
+        RegIndex resultIndex = GetResult()._regIndex;
 
         // print out our code
         printf("mov r%d, r%d\n", resultIndex, leftIndex);
@@ -39,8 +43,8 @@ public:
     }
 
 protected:
-    RegIndex CalcResultLocationImpl() override
+    ExpressionResult CalcResultImpl() override
     {
-        return GetContext()->_regCollection.AllocateRegister();
+        return ExpressionResult(GetContext()->_regCollection.AllocateRegister());
     }
 };

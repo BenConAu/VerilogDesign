@@ -8,8 +8,8 @@ class AssignmentNode : public ExpressionNode
 public:
     AssignmentNode(PSLCompilerContext* pContext, ASTNode* pLeft, ASTNode* pRight);
     void VerifyNodeImpl() override;
-    void ProcessNode() override;
+    void PostProcessNodeImpl() override;
 
 protected:
-    RegIndex CalcResultLocationImpl() override;
+    ExpressionResult CalcResultImpl() override;
 };

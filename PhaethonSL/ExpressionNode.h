@@ -2,6 +2,7 @@
 
 #include "ASTNode.h"
 #include "TypeInfo.h"
+#include "ExpressionResult.h"
 
 enum class ExpressionType
 {
@@ -16,15 +17,14 @@ public:
     ExpressionNode(PSLCompilerContext* pContext) : ASTNode(pContext)
     {
         _pType = nullptr;
-        _result = 0xFF;
         _exprType = ExpressionType::Unset;
     }
 
-    RegIndex GetResultRegister()
+    ExpressionResult GetResult()
     {
-        if (_result == 0xFF)
+        if (_result.IsNone())
         {
-            _result = CalcResultLocationImpl();
+            _result = CalcResultImpl();
         }
 
         return _result;
@@ -61,10 +61,8 @@ public:
         return _exprType;
     }
 
-    virtual void ProcessWrite(RegIndex valueIndex) {}
-
 protected:
-    virtual RegIndex CalcResultLocationImpl() = 0;
+    virtual ExpressionResult CalcResultImpl() = 0;
 
     void SetType(TypeInfo* pInfo)
     {
@@ -78,6 +76,6 @@ protected:
 
 private:
     ExpressionType _exprType;
-    RegIndex _result;
+    ExpressionResult _result;
     TypeInfo* _pType;
 };

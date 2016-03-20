@@ -35,68 +35,44 @@ public:
 
     void PostProcessNodeImpl() override
     {
-        IdentifierNode* pChildId = dynamic_cast<IdentifierNode*>(GetChild(0));
-        if (pChildId != nullptr)
-        {
-            VariableInfo* pVarInfo = GetContext()->_varCollection.GetInfo(pChildId->GetSymbolIndex());
-            StructTypeInfo* pTypeInfo = dynamic_cast<StructTypeInfo*>(pVarInfo->GetTypeInfo());
-            if (pTypeInfo == nullptr)
-            {
-                throw "Can only field select a struct";
-            }
-
-            unsigned int offset = pTypeInfo->GetOffset(_fieldSymIndex);
-
-            printf(
-                "mov r%d, r%d->%s::%s\n",
-                GetResultRegister(),
-                pChildId->GetResultRegister(),
-                GetContext()->_symbols[pTypeInfo->GetSymbolIndex()].c_str(),
-                GetContext()->_symbols[pTypeInfo->GetMember(_fieldSymIndex)->GetSymbolIndex()].c_str()
-            );
-        }
-        else
-        {
-            throw "Can only field select identifiers";
-        }
-    }
-
-    void ProcessWrite(RegIndex valueIndex) override
-    {
-        IdentifierNode* pChildId = dynamic_cast<IdentifierNode*>(GetChild(0));
-        if (pChildId != nullptr)
-        {
-            // Get the identifier to load its register
-            pChildId->ProcessNode();
-
-            // Write to the field
-            VariableInfo* pVarInfo = GetContext()->_varCollection.GetInfo(pChildId->GetSymbolIndex());
-            StructTypeInfo* pTypeInfo = dynamic_cast<StructTypeInfo*>(pVarInfo->GetTypeInfo());
-            if (pTypeInfo == nullptr)
-            {
-                throw "Can only field select a struct";
-            }
-
-            unsigned int offset = pTypeInfo->GetOffset(_fieldSymIndex);
-
-            printf(
-                "mov r%d->%s::%s, r%d\n",
-                pChildId->GetResultRegister(),
-                GetContext()->_symbols[pTypeInfo->GetSymbolIndex()].c_str(),
-                GetContext()->_symbols[pTypeInfo->GetMember(_fieldSymIndex)->GetSymbolIndex()].c_str(),
-                valueIndex
-            );
-        }
-        else
-        {
-            throw "Can only field select identifiers";
-        }
     }
 
 protected:
-    RegIndex CalcResultLocationImpl() override
+    ExpressionResult CalcResultImpl() override
     {
-        return GetContext()->_regCollection.AllocateRegister();
+        ExpressionNode* pChildExpr = dynamic_cast<ExpressionNode*>(GetChild(0));
+        if (pChildExpr != nullptr)
+        {
+            // Find the result of the child
+            ExpressionResult childResult = pChildExpr->GetResult();
+
+            // It needs to be something that we can select from
+            if (childResult._type != ResultType::Memory)
+            {
+                throw "Can only field select a memory struct";
+            }
+
+            // We have a variable in there somewhere
+            VariableInfo* pVarInfo = childResult._pVarInfo;
+            StructTypeInfo* pTypeInfo = dynamic_cast<StructTypeInfo*>(pVarInfo->GetTypeInfo());
+            if (pTypeInfo == nullptr)
+            {
+                throw "Can only field select a struct";
+            }
+
+            // It is a register already, so return that
+            FunctionDeclaratorNode* pScope = GetTypedParent<FunctionDeclaratorNode>();
+            RegIndex regIndex = pVarInfo->GetRegIndex(pScope);
+            printf("mov r%d, %s\n", regIndex, childResult.GetOperand(GetContext()).c_str());
+
+            ExpressionResult result(regIndex, pVarInfo, pTypeInfo->GetMember(_fieldSymIndex));
+
+            return result;
+        }
+        else
+        {
+            throw "Can only field select identifiers";
+        }
     }
 
 private:
