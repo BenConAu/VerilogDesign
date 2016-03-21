@@ -1,3 +1,4 @@
+#define YYDEBUG 1
 #include "PSLCompilerContext.h"
 #include "ASTTree.h"
 #include "PSL.tab.h"

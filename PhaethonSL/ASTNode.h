@@ -22,7 +22,11 @@ public:
     void AddNode(ASTNode* pNode)
     {
         _children.push_back(std::unique_ptr<ASTNode>(pNode));
-        pNode->_pParent = this;
+
+        if (pNode != nullptr)
+        {
+            pNode->_pParent = this;
+        }
     }
 
     virtual void ProcessNode()

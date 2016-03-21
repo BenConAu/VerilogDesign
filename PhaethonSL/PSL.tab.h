@@ -52,13 +52,16 @@ extern int yydebug;
     STAR = 262,
     LEFT_PAREN = 263,
     RIGHT_PAREN = 264,
-    INT_TOKEN = 265,
-    VOID_TOKEN = 266,
-    STRUCT_TOKEN = 267,
-    LEFT_BRACE = 268,
-    RIGHT_BRACE = 269,
-    DOT = 270,
-    IDENTIFIER = 271
+    INTPTR_TOKEN = 265,
+    INT_TOKEN = 266,
+    VOID_TOKEN = 267,
+    STRUCT_TOKEN = 268,
+    LEFT_BRACE = 269,
+    RIGHT_BRACE = 270,
+    DOT = 271,
+    COMMA = 272,
+    NULLPTR_TOKEN = 273,
+    IDENTIFIER = 274
   };
 #endif
 
@@ -74,7 +77,7 @@ union YYSTYPE
 	int symIndex;
     ASTNode* pNode;
 
-#line 78 "PSL.tab.h" /* yacc.c:1909  */
+#line 81 "PSL.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

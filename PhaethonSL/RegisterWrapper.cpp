@@ -19,8 +19,14 @@ RegisterWrapper::RegisterWrapper(PSLCompilerContext* pContext, ExpressionResult 
             printf("mov r%d, %d\n", _converted._regIndex, result._constant);
             break;
 
-        case ResultType::None:
         case ResultType::Memory:
+            _converted = ExpressionResult(pContext->_regCollection.AllocateRegister());
+            _fAllocated = true;
+
+            printf("mov r%d, %s\n", _converted._regIndex, result.GetOperand(pContext).c_str());
+            break;
+
+        case ResultType::None:
         case ResultType::MemoryOffset:
             throw "Cannot wrap none";
     }

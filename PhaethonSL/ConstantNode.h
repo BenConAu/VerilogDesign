@@ -8,12 +8,14 @@ public:
     enum ConstantType
     {
         Int,
-        Float
+        Float,
+        Pointer,
     };
 
 public:
     ConstantNode(PSLCompilerContext* pContext, int v);
     ConstantNode(PSLCompilerContext* pContext, float v);
+    ConstantNode(PSLCompilerContext* pContext, ConstantType t);
 
     int GetInteger();
     bool IsConstant() const override;

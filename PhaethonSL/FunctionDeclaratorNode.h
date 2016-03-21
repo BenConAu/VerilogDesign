@@ -11,6 +11,11 @@ public:
         _symIndex = symIndex;
     }
 
+    void AddParameter(ASTNode* pNode)
+    {
+        AddNode(pNode);
+    }
+
     void SetStatementList(ASTNode* pList)
     {
         AddNode(pList);

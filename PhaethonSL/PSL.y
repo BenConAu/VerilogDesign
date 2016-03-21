@@ -33,12 +33,15 @@ void yyerror(void*, const char *s);
 %token STAR
 %token LEFT_PAREN
 %token RIGHT_PAREN
+%token INTPTR_TOKEN
 %token INT_TOKEN
 %token VOID_TOKEN
 %token STRUCT_TOKEN
 %token LEFT_BRACE
 %token RIGHT_BRACE
 %token DOT
+%token COMMA
+%token NULLPTR_TOKEN
 %token <symIndex> IDENTIFIER
 %type <pNode> variable_identifier
 %type <pNode> primary_expression
@@ -65,6 +68,8 @@ void yyerror(void*, const char *s);
 %type <pNode> external_declaration
 %type <pNode> read_expression
 %type <pNode> write_expression
+%type <pNode> parameter_declaration
+%type <pNode> function_header_with_parameters
 
 %%
 
@@ -127,6 +132,7 @@ primary_expression:
       variable_identifier                                           { $$ = $1; }
     | INTCONSTANT                                                   { $$ = new ConstantNode(pContext, $1); }
     | FLOATCONSTANT                                                 { $$ = new ConstantNode(pContext, $1); }
+	| NULLPTR_TOKEN                                                 { $$ = new ConstantNode(pContext, ConstantNode::Pointer); }
     ;
 
 declaration:
@@ -143,11 +149,21 @@ function_prototype:
 
 function_declarator:
       function_header                                               { $$ = $1; }
+	| function_header_with_parameters								{ $$ = $1; }
     ;
+
+function_header_with_parameters:
+	  function_header parameter_declaration							{ $$ = $1; dynamic_cast<FunctionDeclaratorNode*>($$)->AddParameter($2); }
+	| function_header_with_parameters COMMA parameter_declaration   { $$ = $1; dynamic_cast<FunctionDeclaratorNode*>($$)->AddParameter($3); }
+	;
 
 function_header:
       fully_specified_type IDENTIFIER LEFT_PAREN                    { $$ = new FunctionDeclaratorNode(pContext, $1, $2); }
     ;
+
+parameter_declaration:
+      fully_specified_type IDENTIFIER                               { $$ = new FunctionParameterNode(pContext, $1, $2); }
+	;
 
 fully_specified_type:
       INT_TOKEN                                                     { $$ = new TypeNode(pContext, TypeNode::BasicType, INT_TOKEN); }

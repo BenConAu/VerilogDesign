@@ -1,0 +1,33 @@
+struct Allocation
+{
+    uint length;
+    Allocation next;
+};
+
+struct AllocationHeader
+{
+    Allocation first;
+    Allocation last;
+    Allocation next;
+};
+
+AllocationHeader header;
+
+void MemoryInit()
+{
+    header.first = nullptr;
+    header.last = nullptr;
+    header.next = __datasegmentend;
+}
+
+IntPtr MemoryAlloc(uint size)
+{
+}
+
+void MemoryFree(IntPtr allocation)
+{
+}
+
+void main()
+{
+}

@@ -1,10 +1,19 @@
 #include "VariableCollection.h"
 #include "VariableDeclarationNode.h"
 #include "VariableInfo.h"
+#include "PSL.tab.h"
+#include <sstream>
 
 VariableCollection::VariableCollection(PSLCompilerContext* pContext)
 {
     _pContext = pContext;
+}
+
+void VariableCollection::AddBuiltin()
+{
+    int dseIndex = _pContext->AddSymbol("__datasegmentend");
+    TypeInfo *pDseType = new BasicTypeInfo(INTPTR_TOKEN);
+    AddVariable(dseIndex, nullptr, pDseType);
 }
 
 void VariableCollection::AddVariable(int symIndex, FunctionDeclaratorNode* pScope, TypeInfo* pTypeInfo)
@@ -31,6 +40,10 @@ VariableInfo* VariableCollection::GetInfo(int symIndex)
     }
     else
     {
-        throw "Attempting info get of nonexistent var";
+        std::stringstream sstr;
+        sstr << "Attempting info get of nonexistent var " << _pContext->_symbols[symIndex];
+        std::string error = sstr.str();
+
+        throw error.c_str();
     }
 }

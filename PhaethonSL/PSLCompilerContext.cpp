@@ -12,6 +12,8 @@ PSLCompilerContext::PSLCompilerContext(FILE *pFile) :
     _numStructs = 0;
     _numGlobals = 0;
 
+    _varCollection.AddBuiltin();
+
     yylex_init(&pScanner);
     yyset_extra(this, pScanner);
 

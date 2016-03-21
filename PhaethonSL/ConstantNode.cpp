@@ -15,6 +15,12 @@ ConstantNode::ConstantNode(PSLCompilerContext* pContext, float v) : ExpressionNo
     _type = Float;
 }
 
+ConstantNode::ConstantNode(PSLCompilerContext* pContext, ConstantType t) : ExpressionNode(pContext)
+{
+    _intValue = 0;
+    _type = t;
+}
+
 int ConstantNode::GetInteger()
 {
     if (_type == Int)

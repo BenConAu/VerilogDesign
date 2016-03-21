@@ -10,3 +10,4 @@
 #include "StructSpecifierNode.h"
 #include "StructDeclarationNode.h"
 #include "FieldSelectionNode.h"
+#include "FunctionParameterNode.h"
