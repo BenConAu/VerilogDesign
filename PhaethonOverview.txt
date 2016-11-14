@@ -1,0 +1,13 @@
+Instruction set overview
+
+The Phaethon instruction set is designed to be simple to implement, but allow for powerful
+instructions to be added to the instruction set. An attempt has been made to allow for
+cooperative development between the hardware, the instruction set and the high level
+language for shader development.
+
+Only move instructions have variants beyond registers and constants. This is intended
+to push most code generation towards using registers.
+
+Function calls can be done through traditional stack means, or through using register
+window shifting. After a window shift, the r0 register becomes the first argument to
+the function being called.

@@ -20,7 +20,6 @@ public:
     void AddGlobal(ASTNode* pNode);
 
     void* pScanner;
-    RegisterCollection _regCollection;
     VariableCollection _varCollection;
     TypeCollection _typeCollection;
     std::vector<std::string> _symbols;

@@ -1,6 +1,7 @@
 #include "AssignmentNode.h"
 #include "PSLCompilerContext.h"
 #include "RegisterWrapper.h"
+#include "FunctionDeclaratorNode.h"
 
 AssignmentNode::AssignmentNode(PSLCompilerContext* pContext, ASTNode* pLeft, ASTNode* pRight) : ExpressionNode(pContext)
 {
@@ -20,6 +21,8 @@ void AssignmentNode::VerifyNodeImpl()
 
 void AssignmentNode::PostProcessNodeImpl()
 {
+    FunctionDeclaratorNode* pFunc = GetTypedParent<FunctionDeclaratorNode>();
+
     ExpressionNode* pLeft = dynamic_cast<ExpressionNode*>(GetChild(0));
     ExpressionNode* pRight = dynamic_cast<ExpressionNode*>(GetChild(1));
 
@@ -38,9 +41,17 @@ void AssignmentNode::PostProcessNodeImpl()
         case ResultType::MemoryOffset:
             {
                 // Need to make a register for this to work
-                RegisterWrapper wrapper(GetContext(), rightResult);
+                RegisterWrapper wrapper(GetContext(), pFunc->GetRegCollection(), rightResult);
 
-                printf("mov %s, r%d\n", leftResult.GetOperand(GetContext()).c_str(), rightResult._regIndex);
+                // Push the wrapped register into the memory
+                printf(
+                    "mov %s, r%d\n", 
+                    leftResult.GetOperand(GetContext()).c_str(),
+                    wrapper.GetWrapped()._regIndex
+                    );
+                
+                // Now we have generated code, the temporary register will
+                // go out of scope and be returned back.
             }
 
             break;

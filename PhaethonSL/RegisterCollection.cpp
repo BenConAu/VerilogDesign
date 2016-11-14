@@ -19,3 +19,9 @@ void RegisterCollection::DeallocateRegister(RegIndex reg)
 {
     _availableReg.push_front(reg);
 }
+
+void RegisterCollection::ReserveRegister(RegIndex reg)
+{
+    auto regIter = std::find(_availableReg.begin(), _availableReg.end(), reg);
+    _availableReg.erase(regIter);
+}

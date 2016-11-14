@@ -3,11 +3,16 @@
 #include "ExpressionResult.h"
 
 class PSLCompilerContext;
+class RegisterCollection;
 
 class RegisterWrapper
 {
 public:
-    RegisterWrapper(PSLCompilerContext* pContext, ExpressionResult result);
+    RegisterWrapper(
+        PSLCompilerContext* pContext,
+        RegisterCollection* pCollection, 
+        ExpressionResult result
+        );
 
     const ExpressionResult& GetWrapped();
 
@@ -17,4 +22,5 @@ private:
     bool _fAllocated;
     ExpressionResult _converted;
     PSLCompilerContext* _pContext;
+    RegisterCollection* _pCollection;
 };

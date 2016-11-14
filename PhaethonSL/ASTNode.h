@@ -92,6 +92,19 @@ public:
     size_t GetChildCount() const { return _children.size(); }
     ASTNode* GetChild(size_t i) { return _children[i].get(); }
     ASTNode* GetParent() { return _pParent; }
+    
+    int GetChildIndex(ASTNode* pNode)
+    {
+        for (size_t i = 0; i < _children.size(); i++)
+        {
+            if (_children[i].get() == pNode)
+            {
+                return i;
+            }
+        }
+
+        throw "Invalid child given for index query";
+    }
 
     PSLCompilerContext* GetContext() { return _pContext; }
 

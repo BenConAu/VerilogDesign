@@ -6,6 +6,13 @@ struct foo
 
 foo fooVar;
 
+void TestFunction(int v)
+{
+    int f;
+    f = fooVar.a;
+    fooVar.b = v;
+}
+
 void main()
 {
     int c;

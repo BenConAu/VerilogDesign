@@ -29,11 +29,14 @@ PSLcc: lex.yy.c \
 	   VariableInfo.cpp \
 	   VariableInfo.h \
 	   StructMember.h \
+	   FunctionDeclaratorNode.cpp \
 	   FunctionDeclaratorNode.h \
 	   FunctionParameterNode.cpp \
 	   FunctionParameterNode.h \
 	   FieldSelectionNode.cpp \
-	   FieldSelectionNode.h
+	   FieldSelectionNode.h \
+	   MultiplyNode.h \
+	   MultiplyNode.cpp
 	clang++ -std=c++11 -g lex.yy.c \
 	   PSL.tab.c \
 	   ConstantNode.cpp \
@@ -52,6 +55,8 @@ PSLcc: lex.yy.c \
 	   RegisterWrapper.cpp \
 	   FieldSelectionNode.cpp \
 	   FunctionParameterNode.cpp \
+	   MultiplyNode.cpp \
+	   FunctionDeclaratorNode.cpp \
 	   StructSpecifierNode.cpp -o PSLcc
 
 lex.yy.c: PSL.l

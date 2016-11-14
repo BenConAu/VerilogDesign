@@ -1,9 +1,13 @@
 #include "RegisterWrapper.h"
 #include "PSLCompilerContext.h"
 
-RegisterWrapper::RegisterWrapper(PSLCompilerContext* pContext, ExpressionResult result)
+RegisterWrapper::RegisterWrapper(
+    PSLCompilerContext* pContext,
+    RegisterCollection* pCollection, 
+    ExpressionResult result
+    )
 {
-    _pContext = pContext;
+    _pCollection = pCollection;
 
     switch (result._type)
     {
@@ -13,14 +17,14 @@ RegisterWrapper::RegisterWrapper(PSLCompilerContext* pContext, ExpressionResult 
             break;
 
         case ResultType::Constant:
-            _converted = ExpressionResult(pContext->_regCollection.AllocateRegister());
+            _converted = ExpressionResult(_pCollection->AllocateRegister());
             _fAllocated = true;
 
             printf("mov r%d, %d\n", _converted._regIndex, result._constant);
             break;
 
         case ResultType::Memory:
-            _converted = ExpressionResult(pContext->_regCollection.AllocateRegister());
+            _converted = ExpressionResult(_pCollection->AllocateRegister());
             _fAllocated = true;
 
             printf("mov r%d, %s\n", _converted._regIndex, result.GetOperand(pContext).c_str());
@@ -41,6 +45,6 @@ RegisterWrapper::~RegisterWrapper()
 {
     if (_fAllocated)
     {
-        _pContext->_regCollection.DeallocateRegister(_converted._regIndex);
+        _pCollection->DeallocateRegister(_converted._regIndex);
     }
 }

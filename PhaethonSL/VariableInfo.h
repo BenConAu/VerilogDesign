@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include "RegisterCollection.h"
 #include "VariableLocation.h"
 
@@ -8,14 +9,18 @@ class FunctionDeclaratorNode;
 class ASTNode;
 class TypeInfo;
 
+// Every variable that is declared has to have data tracked for it. This includes
+// where it resides in memory (if anywhere), whether it is assigned to a register
+// at all, and what type it is.
 class VariableInfo
 {
 public:
     VariableInfo(
-        PSLCompilerContext* pContext,
-        int symIndex,
-        FunctionDeclaratorNode* pScope,
-        TypeInfo* pInfo
+        PSLCompilerContext* pContext,   // The context that this variable lives in
+        int symIndex,                   // The symbol index for the identifier for the variable
+        FunctionDeclaratorNode* pScope, // The scope that the variable is declared in
+        TypeInfo* pInfo,                // The type of the variable
+        RegIndex* pRegIndex             // The register to use, if known
         );
 
     LocationType GetLocationType() { return _locationType; }

@@ -13,16 +13,21 @@ void VariableCollection::AddBuiltin()
 {
     int dseIndex = _pContext->AddSymbol("__datasegmentend");
     TypeInfo *pDseType = new BasicTypeInfo(INTPTR_TOKEN);
-    AddVariable(dseIndex, nullptr, pDseType);
+    AddVariable(dseIndex, nullptr, pDseType, nullptr);
 }
 
-void VariableCollection::AddVariable(int symIndex, FunctionDeclaratorNode* pScope, TypeInfo* pTypeInfo)
+void VariableCollection::AddVariable(
+    int symIndex, 
+    FunctionDeclaratorNode* pScope, 
+    TypeInfo* pTypeInfo, 
+    RegIndex* pRegIndex
+    )
 {
     auto iter = _variables.find(symIndex);
 
     if (iter == _variables.end())
     {
-        _variables[symIndex] = std::unique_ptr<VariableInfo>(new VariableInfo(_pContext, symIndex, pScope, pTypeInfo));
+        _variables[symIndex] = std::unique_ptr<VariableInfo>(new VariableInfo(_pContext, symIndex, pScope, pTypeInfo, pRegIndex));
     }
     else
     {

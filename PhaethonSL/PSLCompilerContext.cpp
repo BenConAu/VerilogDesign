@@ -5,7 +5,6 @@
 #include "lex.h"
 
 PSLCompilerContext::PSLCompilerContext(FILE *pFile) :
-    _regCollection(32),
     _varCollection(this)
 {
     _pEntryPoint = nullptr;

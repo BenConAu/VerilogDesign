@@ -1,19 +1,30 @@
 #pragma once
 
 #include "PSLCompilerContext.h"
+#include "ASTNode.h"
 
 class FunctionDeclaratorNode : public ASTNode
 {
 public:
-    FunctionDeclaratorNode(PSLCompilerContext* pContext, ASTNode* pTypeNode, int symIndex) : ASTNode(pContext)
+    FunctionDeclaratorNode(
+        PSLCompilerContext* pContext, 
+        ASTNode* pTypeNode, 
+        int symIndex
+        ) : 
+            ASTNode(pContext),
+            _regCollection(32)  // TODO: Shrink registers on function calls somehow
     {
         AddNode(pTypeNode);
+
         _symIndex = symIndex;
+        _paramCount = 0;
     }
 
     void AddParameter(ASTNode* pNode)
     {
         AddNode(pNode);
+
+        _paramCount++;
     }
 
     void SetStatementList(ASTNode* pList)
@@ -31,14 +42,7 @@ public:
         // TODO: Make sure function name is unique
     }
 
-    void PreProcessNodeImpl() override
-    {
-        // non-main functions have a prologue
-        if (!IsEntryPoint())
-        {
-            printf("%s:\n", GetContext()->_symbols[_symIndex].c_str());
-        }
-    }
+    void PreProcessNodeImpl() override;
 
     void PostProcessNodeImpl() override
     {
@@ -53,6 +57,15 @@ public:
         return (GetContext()->_symbols[_symIndex] == "main");
     }
 
+    RegisterCollection* GetRegCollection() { return &_regCollection; }
+
 private:
+    // The symbol index of the function identifier
     int _symIndex;
+
+    // The register allocator for this function
+    RegisterCollection _regCollection;
+
+    // Param count
+    int _paramCount;
 };

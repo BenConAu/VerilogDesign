@@ -23,7 +23,8 @@ void VariableDeclarationNode::VerifyNodeImpl()
     GetContext()->_varCollection.AddVariable(
         _symIndex,
         pFunc,
-        dynamic_cast<TypeNode*>(GetChild(0))->GetTypeInfo()
+        dynamic_cast<TypeNode*>(GetChild(0))->GetTypeInfo(),
+        nullptr
     );
 }
 

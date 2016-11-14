@@ -38,6 +38,7 @@ bool ExpressionResult::IsNone() const
     return (_type == ResultType::None);
 }
 
+// Create an assembly language operand representing the expression result
 std::string ExpressionResult::GetOperand(PSLCompilerContext* pContext) const
 {
     std::stringstream result;
@@ -45,14 +46,17 @@ std::string ExpressionResult::GetOperand(PSLCompilerContext* pContext) const
     switch (_type)
     {
         case ResultType::Constant:
+            // PASM just uses the constant simply
             result << _constant;
             break;
 
         case ResultType::Register:
+            // Return the register syntax
             result << "r" << (unsigned int)_regIndex;
             break;
 
         case ResultType::Memory:
+            // The assembler uses C-like syntax for getting addresses of things
             result << "&" << pContext->_symbols[_pVarInfo->GetSymbolIndex()];
             break;
 

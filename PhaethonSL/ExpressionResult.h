@@ -7,13 +7,16 @@ class PSLCompilerContext;
 class VariableInfo;
 class StructMember;
 
+// This enumeration represents the different types of operand arguments that
+// the assembly can represent. In practice most of them will need to be
+// converted to a register.
 enum class ResultType
 {
-    None,
-    Constant,
-    Register,
-    Memory,
-    MemoryOffset,
+    None,           // Used for error conditions and the such
+    Constant,       // The result is a constant
+    Register,       // The result is stored in a register
+    Memory,         // The result is a memory location (also a constant, technically)
+    MemoryOffset,   // The result is a memory location plus an offset
 };
 
 // If you want an offset you need to make a register for it
@@ -24,6 +27,9 @@ struct OffsetInfo
     StructMember* _pTypeMember;
 };
 
+// An ExpressionResult is a representation of the output of an expression in
+// the tree. Many leaf nodes of expression trees are very simple (such as a 
+// constant). 
 struct ExpressionResult
 {
     explicit ExpressionResult();
