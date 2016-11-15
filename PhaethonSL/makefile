@@ -31,6 +31,8 @@ PSLcc: lex.yy.c \
 	   SmartRegister.cpp \
 	   SmartRegister.h \
 	   StructMember.h \
+	   Operand.cpp \
+	   Operand.h \
 	   FunctionDeclaratorNode.cpp \
 	   FunctionDeclaratorNode.h \
 	   FunctionParameterNode.cpp \
@@ -41,25 +43,26 @@ PSLcc: lex.yy.c \
 	   MultiplyNode.cpp
 	clang++ -std=c++11 -g lex.yy.c \
 	   PSL.tab.c \
-	   ConstantNode.cpp \
 	   AssignmentNode.cpp \
-	   PSLCompiler.cpp \
-	   TypeNode.cpp \
+	   ConstantNode.cpp \
+	   ExpressionResult.cpp \
+	   FieldSelectionNode.cpp \
+	   FunctionDeclaratorNode.cpp \
+	   FunctionParameterNode.cpp \
 	   IdentifierNode.cpp \
-	   VariableCollection.cpp \
+	   MultiplyNode.cpp \
+	   Operand.cpp \
+	   PSLCompiler.cpp \
 	   PSLCompilerContext.cpp \
 	   RegisterCollection.cpp \
-	   TypeCollection.cpp \
+	   RegisterWrapper.cpp \
+	   SmartRegister.cpp \
 	   StructDeclarationNode.cpp \
+	   TypeNode.cpp \
+	   TypeCollection.cpp \
+	   VariableCollection.cpp \
 	   VariableDeclarationNode.cpp \
 	   VariableInfo.cpp \
-	   ExpressionResult.cpp \
-	   RegisterWrapper.cpp \
-	   FieldSelectionNode.cpp \
-	   FunctionParameterNode.cpp \
-	   MultiplyNode.cpp \
-	   FunctionDeclaratorNode.cpp \
-	   SmartRegister.cpp \
 	   StructSpecifierNode.cpp -o PSLcc
 
 lex.yy.c: PSL.l
