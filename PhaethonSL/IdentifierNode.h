@@ -8,9 +8,7 @@ public:
     IdentifierNode(PSLCompilerContext* pContext, int symIndex);
     void VerifyNodeImpl() override;
     int GetSymbolIndex() const { return _symIndex; }
-
-protected:
-    ExpressionResult CalcResultImpl() override;
+    ExpressionResult* CalculateResult() override;
 
 private:
     int _symIndex;

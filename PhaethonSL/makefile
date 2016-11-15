@@ -28,6 +28,8 @@ PSLcc: lex.yy.c \
 	   RegisterWrapper.h \
 	   VariableInfo.cpp \
 	   VariableInfo.h \
+	   SmartRegister.cpp \
+	   SmartRegister.h \
 	   StructMember.h \
 	   FunctionDeclaratorNode.cpp \
 	   FunctionDeclaratorNode.h \
@@ -57,6 +59,7 @@ PSLcc: lex.yy.c \
 	   FunctionParameterNode.cpp \
 	   MultiplyNode.cpp \
 	   FunctionDeclaratorNode.cpp \
+	   SmartRegister.cpp \
 	   StructSpecifierNode.cpp -o PSLcc
 
 lex.yy.c: PSL.l

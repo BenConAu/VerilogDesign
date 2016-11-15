@@ -2,65 +2,65 @@
 #include "PSLCompilerContext.h"
 #include <sstream>
 
-ExpressionResult::ExpressionResult()
+Operand::Operand()
 {
-    _type = ResultType::None;
+    _type = OperandType::None;
 }
 
-ExpressionResult::ExpressionResult(RegIndex index)
+Operand::Operand(RegIndex index)
 {
-    _type = ResultType::Register;
+    _type = OperandType::Register;
     _regIndex = index;
 }
 
-ExpressionResult::ExpressionResult(int constant)
+Operand::Operand(int constant)
 {
-    _type = ResultType::Constant;
+    _type = OperandType::Constant;
     _constant = constant;
 }
 
-ExpressionResult::ExpressionResult(VariableInfo* pInfo)
+Operand::Operand(VariableInfo* pInfo)
 {
-    _type = ResultType::Memory;
+    _type = OperandType::Memory;
     _pVarInfo = pInfo;
 }
 
-ExpressionResult::ExpressionResult(RegIndex regIndex, VariableInfo* pVarInfo, StructMember* pTypeMember)
+Operand::Operand(RegIndex regIndex, VariableInfo* pVarInfo, StructMember* pTypeMember)
 {
-    _type = ResultType::MemoryOffset;
+    _type = OperandType::MemoryOffset;
     _offsetInfo._regIndex = regIndex;
     _offsetInfo._pVarInfo = pVarInfo;
     _offsetInfo._pTypeMember = pTypeMember;
 }
 
-bool ExpressionResult::IsNone() const
+bool Operand::IsNone() const
 {
-    return (_type == ResultType::None);
+    return (_type == OperandType::None);
 }
 
 // Create an assembly language operand representing the expression result
-std::string ExpressionResult::GetOperand(PSLCompilerContext* pContext) const
+std::string Operand::GetOperand(PSLCompilerContext* pContext) const
 {
     std::stringstream result;
 
     switch (_type)
     {
-        case ResultType::Constant:
+        case OperandType::Constant:
             // PASM just uses the constant simply
             result << _constant;
             break;
 
-        case ResultType::Register:
+        case OperandType::Register:
             // Return the register syntax
             result << "r" << (unsigned int)_regIndex;
             break;
 
-        case ResultType::Memory:
+        case OperandType::Memory:
             // The assembler uses C-like syntax for getting addresses of things
             result << "&" << pContext->_symbols[_pVarInfo->GetSymbolIndex()];
             break;
 
-        case ResultType::MemoryOffset:
+        case OperandType::MemoryOffset:
         {
             StructTypeInfo* pTypeInfo = dynamic_cast<StructTypeInfo*>(_offsetInfo._pVarInfo->GetTypeInfo());
             std::string typeName = pContext->_symbols[pTypeInfo->GetSymbolIndex()];
@@ -75,4 +75,20 @@ std::string ExpressionResult::GetOperand(PSLCompilerContext* pContext) const
     }
 
     return result.str();
+}
+
+ExpressionResult::ExpressionResult(Operand operand, RegisterCollection* pCollection) : 
+    _tempRegister(operand._regIndex, pCollection)
+{
+    if (operand._type != OperandType::Register)
+    {
+        throw "Dude you can't go making a temporary register object without a register";
+    }
+
+    _operand = operand;
+}
+
+ExpressionResult::ExpressionResult(Operand operand)
+{
+    _operand = operand;
 }

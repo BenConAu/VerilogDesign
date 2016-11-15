@@ -11,16 +11,16 @@ public:
     RegisterWrapper(
         PSLCompilerContext* pContext,
         RegisterCollection* pCollection, 
-        ExpressionResult result
+        Operand result
         );
 
-    const ExpressionResult& GetWrapped();
+    const Operand& GetWrapped();
 
     ~RegisterWrapper();
 
 private:
     bool _fAllocated;
-    ExpressionResult _converted;
+    Operand _converted;
     PSLCompilerContext* _pContext;
     RegisterCollection* _pCollection;
 };

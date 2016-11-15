@@ -4,39 +4,39 @@
 RegisterWrapper::RegisterWrapper(
     PSLCompilerContext* pContext,
     RegisterCollection* pCollection, 
-    ExpressionResult result
+    Operand result
     )
 {
     _pCollection = pCollection;
 
     switch (result._type)
     {
-        case ResultType::Register:
+        case OperandType::Register:
             _converted = result;
             _fAllocated = false;
             break;
 
-        case ResultType::Constant:
-            _converted = ExpressionResult(_pCollection->AllocateRegister());
+        case OperandType::Constant:
+            _converted = Operand(_pCollection->AllocateRegister());
             _fAllocated = true;
 
             printf("mov r%d, %d\n", _converted._regIndex, result._constant);
             break;
 
-        case ResultType::Memory:
-            _converted = ExpressionResult(_pCollection->AllocateRegister());
+        case OperandType::Memory:
+            _converted = Operand(_pCollection->AllocateRegister());
             _fAllocated = true;
 
             printf("mov r%d, %s\n", _converted._regIndex, result.GetOperand(pContext).c_str());
             break;
 
-        case ResultType::None:
-        case ResultType::MemoryOffset:
+        case OperandType::None:
+        case OperandType::MemoryOffset:
             throw "Cannot wrap none";
     }
 }
 
-const ExpressionResult& RegisterWrapper::GetWrapped()
+const Operand& RegisterWrapper::GetWrapped()
 {
     return _converted;
 }

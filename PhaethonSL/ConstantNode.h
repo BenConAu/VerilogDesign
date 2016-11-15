@@ -20,10 +20,7 @@ public:
     int GetInteger();
     bool IsConstant() const override;
     void VerifyNodeImpl() override;
-    void PostProcessNodeImpl() override;
-
-protected:
-    ExpressionResult CalcResultImpl() override;
+    ExpressionResult* CalculateResult() override;
 
 private:
     int _intValue;

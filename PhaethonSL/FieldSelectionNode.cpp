@@ -31,22 +31,22 @@ void FieldSelectionNode::VerifyNodeImpl()
     SetType(pMember->GetType());
 }
 
-ExpressionResult FieldSelectionNode::CalcResultImpl()
+ExpressionResult* FieldSelectionNode::CalculateResult()
 {
     ExpressionNode* pChildExpr = dynamic_cast<ExpressionNode*>(GetChild(0));
     if (pChildExpr != nullptr)
     {
         // Find the result of the child
-        ExpressionResult childResult = pChildExpr->GetResult();
+        std::unique_ptr<ExpressionResult> childResult(pChildExpr->CalculateResult());
 
         // It needs to be something that we can select from
-        if (childResult._type != ResultType::Memory)
+        if (childResult.get()->_operand._type != OperandType::Memory)
         {
             throw "Can only field select a memory struct";
         }
 
         // We have a variable in there somewhere
-        VariableInfo* pVarInfo = childResult._pVarInfo;
+        VariableInfo* pVarInfo = childResult.get()->_operand._pVarInfo;
         StructTypeInfo* pTypeInfo = dynamic_cast<StructTypeInfo*>(pVarInfo->GetTypeInfo());
         if (pTypeInfo == nullptr)
         {
@@ -56,11 +56,11 @@ ExpressionResult FieldSelectionNode::CalcResultImpl()
         // It is a register already, so return that
         FunctionDeclaratorNode* pScope = GetTypedParent<FunctionDeclaratorNode>();
         RegIndex regIndex = pVarInfo->GetRegIndex(pScope);
-        printf("mov r%d, %s\n", regIndex, childResult.GetOperand(GetContext()).c_str());
+        printf("mov r%d, %s\n", regIndex, childResult.get()->_operand.GetOperand(GetContext()).c_str());
 
-        ExpressionResult result(regIndex, pVarInfo, pTypeInfo->GetMember(_fieldSymIndex));
+        Operand result(regIndex, pVarInfo, pTypeInfo->GetMember(_fieldSymIndex));
 
-        return result;
+        return new ExpressionResult(result);
     }
     else
     {

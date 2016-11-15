@@ -20,16 +20,6 @@ public:
         _exprType = ExpressionType::Unset;
     }
 
-    ExpressionResult GetResult()
-    {
-        if (_result.IsNone())
-        {
-            _result = CalcResultImpl();
-        }
-
-        return _result;
-    }
-
     TypeInfo* GetType()
     {
         if (_pType == nullptr)
@@ -61,9 +51,9 @@ public:
         return _exprType;
     }
 
-protected:
-    virtual ExpressionResult CalcResultImpl() = 0;
+    virtual ExpressionResult* CalculateResult() = 0;
 
+protected:
     void SetType(TypeInfo* pInfo)
     {
         if (pInfo == nullptr)
@@ -76,6 +66,5 @@ protected:
 
 private:
     ExpressionType _exprType;
-    ExpressionResult _result;
     TypeInfo* _pType;
 };

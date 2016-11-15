@@ -3,7 +3,7 @@
 #include "RegisterWrapper.h"
 #include "FunctionDeclaratorNode.h"
 
-AssignmentNode::AssignmentNode(PSLCompilerContext* pContext, ASTNode* pLeft, ASTNode* pRight) : ExpressionNode(pContext)
+AssignmentNode::AssignmentNode(PSLCompilerContext* pContext, ASTNode* pLeft, ASTNode* pRight) : ASTNode(pContext)
 {
     AddNode(pLeft);
     AddNode(pRight);
@@ -12,9 +12,6 @@ AssignmentNode::AssignmentNode(PSLCompilerContext* pContext, ASTNode* pLeft, AST
 void AssignmentNode::VerifyNodeImpl()
 {
     ExpressionNode* pLeft = dynamic_cast<ExpressionNode*>(GetChild(0));
-
-    // Type is same as left side
-    SetType(pLeft->GetType());
 
     // TODO: Check types on left and right match
 }
@@ -26,27 +23,31 @@ void AssignmentNode::PostProcessNodeImpl()
     ExpressionNode* pLeft = dynamic_cast<ExpressionNode*>(GetChild(0));
     ExpressionNode* pRight = dynamic_cast<ExpressionNode*>(GetChild(1));
 
-    ExpressionResult leftResult = pLeft->GetResult();
-    ExpressionResult rightResult = pRight->GetResult();
+    std::unique_ptr<ExpressionResult> leftResult(pLeft->CalculateResult());
+    std::unique_ptr<ExpressionResult> rightResult(pRight->CalculateResult());
 
     // Figure out what kind of LHS expression we have
-    switch (leftResult._type)
+    switch (leftResult.get()->_operand._type)
     {
-        case ResultType::Register:
+        case OperandType::Register:
             // The great thing about registers is that everything can move into them
-            printf("mov r%d, %s\n", leftResult._regIndex, rightResult.GetOperand(GetContext()).c_str());
+            printf(
+                "mov %s, %s\n", 
+                leftResult.get()->_operand.GetOperand(GetContext()).c_str(), 
+                rightResult.get()->_operand.GetOperand(GetContext()).c_str()
+                );
             break;
 
-        case ResultType::Memory:
-        case ResultType::MemoryOffset:
+        case OperandType::Memory:
+        case OperandType::MemoryOffset:
             {
                 // Need to make a register for this to work
-                RegisterWrapper wrapper(GetContext(), pFunc->GetRegCollection(), rightResult);
+                RegisterWrapper wrapper(GetContext(), pFunc->GetRegCollection(), rightResult.get()->_operand);
 
                 // Push the wrapped register into the memory
                 printf(
                     "mov %s, r%d\n", 
-                    leftResult.GetOperand(GetContext()).c_str(),
+                    leftResult.get()->_operand.GetOperand(GetContext()).c_str(),
                     wrapper.GetWrapped()._regIndex
                     );
                 
@@ -59,9 +60,4 @@ void AssignmentNode::PostProcessNodeImpl()
         default:
             throw "Unexpected LHS expression result";
     }
-}
-
-ExpressionResult AssignmentNode::CalcResultImpl()
-{
-    throw "AssignmentNode is not an lvalue";
 }

@@ -40,11 +40,7 @@ void ConstantNode::VerifyNodeImpl()
     SetType(GetContext()->_typeCollection.GetBasicType(INT_TOKEN));
 }
 
-void ConstantNode::PostProcessNodeImpl()
+ExpressionResult* ConstantNode::CalculateResult()
 {
-}
-
-ExpressionResult ConstantNode::CalcResultImpl()
-{
-    return ExpressionResult(_intValue);
+    return new ExpressionResult(Operand(_intValue));
 }

@@ -20,8 +20,5 @@ public:
         SetType(pLeft->GetType());
     }
 
-    void PostProcessNodeImpl() override;
-
-protected:
-    ExpressionResult CalcResultImpl() override;
+    virtual ExpressionResult* CalculateResult() override;
 };

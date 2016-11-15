@@ -9,8 +9,7 @@ public:
 
     void VerifyNodeImpl() override;
 
-protected:
-    ExpressionResult CalcResultImpl() override;
+    ExpressionResult* CalculateResult() override;
 
 private:
     int _fieldSymIndex;

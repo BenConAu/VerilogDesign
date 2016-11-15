@@ -2,6 +2,7 @@
 
 #include <string>
 #include "VariableLocation.h"
+#include "SmartRegister.h"
 
 class PSLCompilerContext;
 class VariableInfo;
@@ -10,7 +11,7 @@ class StructMember;
 // This enumeration represents the different types of operand arguments that
 // the assembly can represent. In practice most of them will need to be
 // converted to a register.
-enum class ResultType
+enum class OperandType
 {
     None,           // Used for error conditions and the such
     Constant,       // The result is a constant
@@ -27,21 +28,21 @@ struct OffsetInfo
     StructMember* _pTypeMember;
 };
 
-// An ExpressionResult is a representation of the output of an expression in
-// the tree. Many leaf nodes of expression trees are very simple (such as a 
-// constant). 
-struct ExpressionResult
+// An Operand is a representation of an operand in PASM. This is part of what an
+// expression will output. Many leaf nodes of expression trees are very simple (such 
+// as a constant). 
+struct Operand
 {
-    explicit ExpressionResult();
-    explicit ExpressionResult(RegIndex index);
-    explicit ExpressionResult(int constant);
-    explicit ExpressionResult(VariableInfo* pInfo);
-    explicit ExpressionResult(RegIndex regIndex, VariableInfo* pVarInfo, StructMember* pTypeMember);
+    explicit Operand();
+    explicit Operand(RegIndex index);
+    explicit Operand(int constant);
+    explicit Operand(VariableInfo* pInfo);
+    explicit Operand(RegIndex regIndex, VariableInfo* pVarInfo, StructMember* pTypeMember);
 
     bool IsNone() const;
     std::string GetOperand(PSLCompilerContext*) const;
 
-    ResultType _type;
+    OperandType _type;
     union
     {
         int _constant;
@@ -49,4 +50,18 @@ struct ExpressionResult
         VariableInfo* _pVarInfo;
         OffsetInfo  _offsetInfo;
     };
+};
+
+// An ExpressionResult stores everything needed when an expression finishes and
+// includes anything that will be freed when the result is no longer needed.
+struct ExpressionResult
+{
+    ExpressionResult(Operand operand, RegisterCollection* pCollection);
+    ExpressionResult(Operand);
+
+    // The operand with the result of the expression
+    Operand _operand;
+
+    // If the operation had a temporary register it is stored here
+    SmartRegister _tempRegister;
 };

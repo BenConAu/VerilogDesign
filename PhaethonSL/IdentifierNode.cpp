@@ -16,7 +16,7 @@ void IdentifierNode::VerifyNodeImpl()
     SetType(pInfo->GetTypeInfo());
 }
 
-ExpressionResult IdentifierNode::CalcResultImpl()
+ExpressionResult* IdentifierNode::CalculateResult()
 {
     VariableInfo* pInfo = GetContext()->_varCollection.GetInfo(_symIndex);
 
@@ -24,7 +24,7 @@ ExpressionResult IdentifierNode::CalcResultImpl()
     if (pInfo->GetLocationType() == LocationType::Memory)
     {
         // Return it as a memory expression
-        return ExpressionResult(pInfo);
+        return new ExpressionResult(Operand(pInfo));
     }
     else
     {
@@ -32,6 +32,6 @@ ExpressionResult IdentifierNode::CalcResultImpl()
         FunctionDeclaratorNode* pScope = GetTypedParent<FunctionDeclaratorNode>();
         RegIndex regIndex = pInfo->GetRegIndex(pScope);
 
-        return ExpressionResult(regIndex);
+        return new ExpressionResult(Operand(regIndex));
     }
 }
