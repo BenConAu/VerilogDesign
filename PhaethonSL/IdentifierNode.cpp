@@ -30,7 +30,7 @@ ExpressionResult* IdentifierNode::CalculateResult()
     {
         // It is a register already, so return that
         FunctionDeclaratorNode* pScope = GetTypedParent<FunctionDeclaratorNode>();
-        RegIndex regIndex = pInfo->GetRegIndex(pScope);
+        RegIndex regIndex = pInfo->EnsureVariableRegister(pScope);
 
         return new ExpressionResult(pInfo, Operand(regIndex));
     }

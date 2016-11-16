@@ -25,7 +25,7 @@ public:
 
     LocationType GetLocationType() { return _locationType; }
     unsigned int GetMemLocation();
-    RegIndex GetRegIndex(FunctionDeclaratorNode* pScope);
+    RegIndex EnsureVariableRegister(FunctionDeclaratorNode* pScope);
     int GetSymbolIndex() const { return _symIndex; }
 
     TypeInfo* GetTypeInfo() { return _pType; }

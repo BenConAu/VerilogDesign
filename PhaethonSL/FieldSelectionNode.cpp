@@ -61,14 +61,17 @@ ExpressionResult* FieldSelectionNode::CalculateResult()
             throw "Need variable info to field select";
         }
 
-        VariableInfo* pVarInfo = childResult.get()->_pVarInfo;
+        // We need the scope to ensure register
+        FunctionDeclaratorNode* pScope = GetTypedParent<FunctionDeclaratorNode>();
 
         // It is a register already, so return that
-        FunctionDeclaratorNode* pScope = GetTypedParent<FunctionDeclaratorNode>();
-        RegIndex regIndex = pVarInfo->GetRegIndex(pScope);
-        printf("mov r%d, %s\n", regIndex, childResult.get()->_operand.GetOperand().c_str());
-
-        Operand result(regIndex, pVarInfo, pTypeInfo->GetMember(_fieldSymIndex), GetContext());
+        VariableInfo* pVarInfo = childResult.get()->_pVarInfo;
+        Operand result(
+            pVarInfo->EnsureVariableRegister(pScope), 
+            pVarInfo, 
+            pTypeInfo->GetMember(_fieldSymIndex), 
+            GetContext()
+            );
 
         // Get the type of the member we are selecting
         StructMember* pMember = pTypeInfo->GetMember(_fieldSymIndex);

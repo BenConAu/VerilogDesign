@@ -1,6 +1,7 @@
 #include "VariableInfo.h"
 #include "PSLCompilerContext.h"
 #include "FunctionDeclaratorNode.h"
+#include "Operand.h"
 
 unsigned int VariableInfo::_dataSegEnd = 0;
 
@@ -42,13 +43,23 @@ VariableInfo::VariableInfo(
     }
 }
 
-RegIndex VariableInfo::GetRegIndex(FunctionDeclaratorNode* pScope)
+RegIndex VariableInfo::EnsureVariableRegister(FunctionDeclaratorNode* pScope)
 {
     if (_regIndexMap.find(pScope) == _regIndexMap.end())
     {
         // Upon the first request for a register at a particular scope,
         // allocate the register.
         _regIndexMap[pScope] = pScope->GetRegCollection()->AllocateRegister();
+
+        // If we have a memory variable then it needs to be loaded when first ensured
+        if (_locationType == LocationType::Memory)
+        {
+            // An operand that represents the variable
+            Operand varOperand(this, pScope->GetContext());
+
+            // Spit out the code to load said register
+            printf("mov r%d, %s\n", _regIndexMap[pScope], varOperand.GetOperand().c_str());
+        }
     }
 
     return _regIndexMap[pScope];
