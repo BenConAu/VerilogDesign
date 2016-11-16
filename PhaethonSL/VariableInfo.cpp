@@ -56,9 +56,10 @@ RegIndex VariableInfo::EnsureVariableRegister(FunctionDeclaratorNode* pScope)
         {
             // An operand that represents the variable
             Operand varOperand(this, pScope->GetContext());
+            Operand regOperand(_regIndexMap[pScope]);
 
             // Spit out the code to load said register
-            printf("mov r%d, %s\n", _regIndexMap[pScope], varOperand.GetOperand().c_str());
+            Operand::PrintInstruction("mov", regOperand, varOperand);
         }
     }
 

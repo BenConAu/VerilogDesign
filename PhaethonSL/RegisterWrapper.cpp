@@ -16,18 +16,12 @@ RegisterWrapper::RegisterWrapper(
             break;
 
         case OperandType::Constant:
-            _converted = Operand(_pCollection->AllocateRegister());
-            _fAllocated = true;
-
-            printf("mov r%d, %d\n", _converted._regIndex, result._constant);
-            break;
-
         case OperandType::Memory:
         case OperandType::MemoryOffset:
             _converted = Operand(_pCollection->AllocateRegister());
             _fAllocated = true;
 
-            printf("mov r%d, %s\n", _converted._regIndex, result.GetOperand().c_str());
+            Operand::PrintInstruction("mov", _converted, result);
             break;
 
         case OperandType::None:

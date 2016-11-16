@@ -50,7 +50,7 @@ bool Operand::IsNone() const
 }
 
 // Create an assembly language operand representing the expression result
-std::string Operand::GetOperand() const
+std::string Operand::GetOpString() const
 {
     std::stringstream result;
 

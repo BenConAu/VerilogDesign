@@ -49,7 +49,21 @@ struct Operand
         );
 
     bool IsNone() const;
-    std::string GetOperand() const;
+    std::string GetOpString() const;
+
+    static void PrintInstruction(
+        const std::string& instr,
+        const Operand& op1,
+        const Operand& op2
+        )
+    {
+        printf(
+            "%s %s, %s", 
+            instr.c_str(), 
+            op1.GetOpString().c_str(), 
+            op2.GetOpString().c_str()
+            );
+    }
 
     OperandType _type;
     union

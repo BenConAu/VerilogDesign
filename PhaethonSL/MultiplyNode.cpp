@@ -21,19 +21,13 @@ ExpressionResult* MultiplyNode::CalculateResult()
     RegisterWrapper leftWrap(pFunc->GetRegCollection(), leftResult.get()->_operand);
     RegisterWrapper rightWrap(pFunc->GetRegCollection(), rightResult.get()->_operand);
 
-    // Get the register for the left side
-    RegIndex leftIndex = leftWrap.GetWrapped()._regIndex;
-
-    // Right side is either a constant or another register
-    RegIndex rightIndex = rightWrap.GetWrapped()._regIndex;
-
     // Get register for our result
     RegIndex resultIndex = pFunc->GetRegCollection()->AllocateRegister();
     Operand resultOperand(resultIndex);
 
     // print out our code
-    printf("mov r%d, r%d\n", resultIndex, leftIndex);
-    printf("mul r%d, r%d\n", resultIndex, rightIndex);
+    Operand::PrintInstruction("mov", resultOperand, leftWrap.GetWrapped());
+    Operand::PrintInstruction("mul", resultOperand, rightWrap.GetWrapped());
 
     return new ExpressionResult(leftResult.get()->_pTypeInfo, resultOperand, pFunc->GetRegCollection());
 }
