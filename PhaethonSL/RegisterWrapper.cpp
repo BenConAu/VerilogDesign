@@ -23,6 +23,7 @@ RegisterWrapper::RegisterWrapper(
             break;
 
         case OperandType::Memory:
+        case OperandType::MemoryOffset:
             _converted = Operand(_pCollection->AllocateRegister());
             _fAllocated = true;
 
@@ -30,7 +31,6 @@ RegisterWrapper::RegisterWrapper(
             break;
 
         case OperandType::None:
-        case OperandType::MemoryOffset:
             throw "Cannot wrap none";
     }
 }
