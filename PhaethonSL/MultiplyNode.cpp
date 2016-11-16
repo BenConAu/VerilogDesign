@@ -18,8 +18,8 @@ ExpressionResult* MultiplyNode::CalculateResult()
     std::unique_ptr<ExpressionResult> rightResult(pRight->CalculateResult());
 
     // Multiplication only works with registers so we make wrappers
-    RegisterWrapper leftWrap(GetContext(), pFunc->GetRegCollection(), leftResult.get()->_operand);
-    RegisterWrapper rightWrap(GetContext(), pFunc->GetRegCollection(), rightResult.get()->_operand);
+    RegisterWrapper leftWrap(pFunc->GetRegCollection(), leftResult.get()->_operand);
+    RegisterWrapper rightWrap(pFunc->GetRegCollection(), rightResult.get()->_operand);
 
     // Get the register for the left side
     RegIndex leftIndex = leftWrap.GetWrapped()._regIndex;
@@ -35,5 +35,5 @@ ExpressionResult* MultiplyNode::CalculateResult()
     printf("mov r%d, r%d\n", resultIndex, leftIndex);
     printf("mul r%d, r%d\n", resultIndex, rightIndex);
 
-    return new ExpressionResult(resultOperand, pFunc->GetRegCollection());
+    return new ExpressionResult(leftResult.get()->_pTypeInfo, resultOperand, pFunc->GetRegCollection());
 }

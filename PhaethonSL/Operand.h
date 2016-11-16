@@ -23,8 +23,8 @@ enum class OperandType
 struct OffsetInfo
 {
     RegIndex _regIndex;
-    VariableInfo* _pVarInfo;
-    StructMember* _pTypeMember;
+    std::string _typeName;
+    std::string _memberName;
 };
 
 // An Operand is a representation of an operand in PASM. This is part of what an
@@ -35,19 +35,30 @@ struct Operand
     explicit Operand();
     explicit Operand(RegIndex index);
     explicit Operand(int constant);
-    explicit Operand(VariableInfo* pInfo);
-    explicit Operand(RegIndex regIndex, VariableInfo* pVarInfo, StructMember* pTypeMember);
+    
+    explicit Operand(
+        VariableInfo* pVarInfo, 
+        PSLCompilerContext* pContext
+        );
+
+    explicit Operand(
+        RegIndex regIndex, 
+        VariableInfo* pVarInfo, 
+        StructMember* pTypeMember, 
+        PSLCompilerContext* pContext
+        );
 
     bool IsNone() const;
-    std::string GetOperand(PSLCompilerContext*) const;
+    std::string GetOperand() const;
 
     OperandType _type;
     union
     {
         int _constant;
         RegIndex _regIndex;
-        VariableInfo* _pVarInfo;
-        OffsetInfo  _offsetInfo;
     };
+
+    // Cannot go into the union
+    OffsetInfo  _offsetInfo;
 };
 

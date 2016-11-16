@@ -2,6 +2,7 @@ struct foo
 {
     int a;
     int b;
+    int c;
 };
 
 foo fooVar;
@@ -13,4 +14,6 @@ void main()
     int d;
     d = 2;
     fooVar.a = c * d;
+    fooVar.b = fooVar.a * c;
+    fooVar.c = d * fooVar.b;
 }

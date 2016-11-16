@@ -9,7 +9,6 @@ class RegisterWrapper
 {
 public:
     RegisterWrapper(
-        PSLCompilerContext* pContext,
         RegisterCollection* pCollection, 
         Operand result
         );

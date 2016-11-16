@@ -42,5 +42,13 @@ void ConstantNode::VerifyNodeImpl()
 
 ExpressionResult* ConstantNode::CalculateResult()
 {
-    return new ExpressionResult(Operand(_intValue));
+    if (_type != Int)
+    {
+        throw "Only int constants supported right now";
+    }
+
+    return new ExpressionResult(
+        GetContext()->_typeCollection.GetBasicType(INT_TOKEN), 
+        Operand(_intValue)
+        );
 }

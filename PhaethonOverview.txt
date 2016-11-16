@@ -1,4 +1,4 @@
-Instruction set overview
+Instruction Set Overview
 
 The Phaethon instruction set is designed to be simple to implement, but allow for powerful
 instructions to be added to the instruction set. An attempt has been made to allow for
@@ -11,3 +11,18 @@ to push most code generation towards using registers.
 Function calls can be done through traditional stack means, or through using register
 window shifting. After a window shift, the r0 register becomes the first argument to
 the function being called.
+
+Shader Language Overview
+
+The shader language is not meant to be a high level language but rather a very low
+level procedural language in the spirit of B. Structure types are added on top of
+the register represented types of the hardware.
+
+Expressions therefore output either a structure or a member of a structure. The only
+operators allowed on structures is field access.
+
+The language is strongly typed with the following types:
+
+int
+float
+struct

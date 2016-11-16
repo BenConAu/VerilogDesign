@@ -3,8 +3,6 @@ mov r0, r1->foo::a
 mov r1, &fooVar
 mov r2, r1->foo::b
 TestFunction:
-mov r2, &fooVar
-mov r1, r2->foo::a
-mov r2, &fooVar
-mov r2->foo::b, r0
+mov r1, &fooVar
+mov r0, r1->foo::a
 rret

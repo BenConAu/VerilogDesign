@@ -5,12 +5,25 @@
 #include "SmartRegister.h"
 #include "Operand.h"
 
+class TypeInfo;
+class VariableInfo;
+
 // An ExpressionResult stores everything needed when an expression finishes and
 // includes anything that will be freed when the result is no longer needed.
+//
+// This implies that every expression needs to store what it outputs into
+// this form. 
 struct ExpressionResult
 {
-    ExpressionResult(Operand operand, RegisterCollection* pCollection);
-    ExpressionResult(Operand);
+    ExpressionResult(TypeInfo* pTypeInfo, Operand operand, RegisterCollection* pCollection);
+    ExpressionResult(TypeInfo* pTypeInfo, Operand operand);
+    ExpressionResult(VariableInfo* pVarInfo, Operand operand);
+
+    // The type of the result that is stored in the operand
+    TypeInfo* _pTypeInfo;
+
+    // Optional variable info that might be relevant
+    VariableInfo* _pVarInfo;
 
     // The operand with the result of the expression
     Operand _operand;

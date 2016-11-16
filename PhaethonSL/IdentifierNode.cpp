@@ -24,7 +24,7 @@ ExpressionResult* IdentifierNode::CalculateResult()
     if (pInfo->GetLocationType() == LocationType::Memory)
     {
         // Return it as a memory expression
-        return new ExpressionResult(Operand(pInfo));
+        return new ExpressionResult(pInfo, Operand(pInfo, GetContext()));
     }
     else
     {
@@ -32,6 +32,6 @@ ExpressionResult* IdentifierNode::CalculateResult()
         FunctionDeclaratorNode* pScope = GetTypedParent<FunctionDeclaratorNode>();
         RegIndex regIndex = pInfo->GetRegIndex(pScope);
 
-        return new ExpressionResult(Operand(regIndex));
+        return new ExpressionResult(pInfo, Operand(regIndex));
     }
 }

@@ -45,22 +45,35 @@ ExpressionResult* FieldSelectionNode::CalculateResult()
             throw "Can only field select a memory struct";
         }
 
-        // We have a variable in there somewhere
-        VariableInfo* pVarInfo = childResult.get()->_operand._pVarInfo;
-        StructTypeInfo* pTypeInfo = dynamic_cast<StructTypeInfo*>(pVarInfo->GetTypeInfo());
+        // Get the type of the child expression
+        StructTypeInfo* pTypeInfo = dynamic_cast<StructTypeInfo*>(childResult.get()->_pTypeInfo);
         if (pTypeInfo == nullptr)
         {
             throw "Can only field select a struct";
         }
 
+        // Since this is always a struct, the operand has a memory location in
+        // it. This will now transform into an offset operation, which requires
+        // that the variable info be there so that we can get the register
+        // that we associate with the struct pointer.
+        if (childResult.get()->_pVarInfo == nullptr)
+        {
+            throw "Need variable info to field select";
+        }
+
+        VariableInfo* pVarInfo = childResult.get()->_pVarInfo;
+
         // It is a register already, so return that
         FunctionDeclaratorNode* pScope = GetTypedParent<FunctionDeclaratorNode>();
         RegIndex regIndex = pVarInfo->GetRegIndex(pScope);
-        printf("mov r%d, %s\n", regIndex, childResult.get()->_operand.GetOperand(GetContext()).c_str());
+        printf("mov r%d, %s\n", regIndex, childResult.get()->_operand.GetOperand().c_str());
 
-        Operand result(regIndex, pVarInfo, pTypeInfo->GetMember(_fieldSymIndex));
+        Operand result(regIndex, pVarInfo, pTypeInfo->GetMember(_fieldSymIndex), GetContext());
 
-        return new ExpressionResult(result);
+        // Get the type of the member we are selecting
+        StructMember* pMember = pTypeInfo->GetMember(_fieldSymIndex);
+
+        return new ExpressionResult(pMember->GetType(), result);
     }
     else
     {

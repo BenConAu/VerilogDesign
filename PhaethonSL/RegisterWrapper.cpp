@@ -2,7 +2,6 @@
 #include "PSLCompilerContext.h"
 
 RegisterWrapper::RegisterWrapper(
-    PSLCompilerContext* pContext,
     RegisterCollection* pCollection, 
     Operand result
     )
@@ -27,7 +26,7 @@ RegisterWrapper::RegisterWrapper(
             _converted = Operand(_pCollection->AllocateRegister());
             _fAllocated = true;
 
-            printf("mov r%d, %s\n", _converted._regIndex, result.GetOperand(pContext).c_str());
+            printf("mov r%d, %s\n", _converted._regIndex, result.GetOperand().c_str());
             break;
 
         case OperandType::None:

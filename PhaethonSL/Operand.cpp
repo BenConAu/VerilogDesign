@@ -19,18 +19,29 @@ Operand::Operand(int constant)
     _constant = constant;
 }
 
-Operand::Operand(VariableInfo* pInfo)
+Operand::Operand(
+    VariableInfo* pVarInfo, 
+    PSLCompilerContext* pContext
+    )
 {
     _type = OperandType::Memory;
-    _pVarInfo = pInfo;
+
+    _offsetInfo._memberName = pContext->_symbols[pVarInfo->GetSymbolIndex()];
 }
 
-Operand::Operand(RegIndex regIndex, VariableInfo* pVarInfo, StructMember* pTypeMember)
+Operand::Operand(
+    RegIndex regIndex, 
+    VariableInfo* pVarInfo, 
+    StructMember* pTypeMember, 
+    PSLCompilerContext* pContext
+    )
 {
     _type = OperandType::MemoryOffset;
     _offsetInfo._regIndex = regIndex;
-    _offsetInfo._pVarInfo = pVarInfo;
-    _offsetInfo._pTypeMember = pTypeMember;
+
+    StructTypeInfo* pTypeInfo = dynamic_cast<StructTypeInfo*>(pVarInfo->GetTypeInfo());
+    _offsetInfo._typeName = pContext->_symbols[pTypeInfo->GetSymbolIndex()];
+    _offsetInfo._memberName = pContext->_symbols[pTypeMember->GetSymbolIndex()];
 }
 
 bool Operand::IsNone() const
@@ -39,7 +50,7 @@ bool Operand::IsNone() const
 }
 
 // Create an assembly language operand representing the expression result
-std::string Operand::GetOperand(PSLCompilerContext* pContext) const
+std::string Operand::GetOperand() const
 {
     std::stringstream result;
 
@@ -57,18 +68,12 @@ std::string Operand::GetOperand(PSLCompilerContext* pContext) const
 
         case OperandType::Memory:
             // The assembler uses C-like syntax for getting addresses of things
-            result << "&" << pContext->_symbols[_pVarInfo->GetSymbolIndex()];
+            result << "&" << _offsetInfo._memberName;
             break;
 
         case OperandType::MemoryOffset:
-        {
-            StructTypeInfo* pTypeInfo = dynamic_cast<StructTypeInfo*>(_offsetInfo._pVarInfo->GetTypeInfo());
-            std::string typeName = pContext->_symbols[pTypeInfo->GetSymbolIndex()];
-            std::string memberName = pContext->_symbols[_offsetInfo._pTypeMember->GetSymbolIndex()];
-
-            result << "r" << (unsigned int)_offsetInfo._regIndex << "->" << typeName << "::" << memberName;
-        }
-        break;
+            result << "r" << (unsigned int)_offsetInfo._regIndex << "->" << _offsetInfo._typeName << "::" << _offsetInfo._memberName;
+            break;
 
         default:
             throw "Unknown result type";

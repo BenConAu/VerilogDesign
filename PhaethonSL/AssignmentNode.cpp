@@ -33,8 +33,8 @@ void AssignmentNode::PostProcessNodeImpl()
             // The great thing about registers is that everything can move into them
             printf(
                 "mov %s, %s\n", 
-                leftResult.get()->_operand.GetOperand(GetContext()).c_str(), 
-                rightResult.get()->_operand.GetOperand(GetContext()).c_str()
+                leftResult.get()->_operand.GetOperand().c_str(), 
+                rightResult.get()->_operand.GetOperand().c_str()
                 );
             break;
 
@@ -42,12 +42,12 @@ void AssignmentNode::PostProcessNodeImpl()
         case OperandType::MemoryOffset:
             {
                 // Need to make a register for this to work
-                RegisterWrapper wrapper(GetContext(), pFunc->GetRegCollection(), rightResult.get()->_operand);
+                RegisterWrapper wrapper(pFunc->GetRegCollection(), rightResult.get()->_operand);
 
                 // Push the wrapped register into the memory
                 printf(
                     "mov %s, r%d\n", 
-                    leftResult.get()->_operand.GetOperand(GetContext()).c_str(),
+                    leftResult.get()->_operand.GetOperand().c_str(),
                     wrapper.GetWrapped()._regIndex
                     );
                 
