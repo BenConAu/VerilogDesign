@@ -58,7 +58,7 @@ struct Operand
         )
     {
         printf(
-            "%s %s, %s", 
+            "%s %s, %s\n", 
             instr.c_str(), 
             op1.GetOpString().c_str(), 
             op2.GetOpString().c_str()
