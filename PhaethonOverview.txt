@@ -31,3 +31,10 @@ The language is strongly typed with the following types:
 int
 float
 struct
+
+How to update the ISA
+
+- Update InstructionSet.def with the new instruction
+- 'make' in PhaethonISA
+- Now update PhaethonHDL with implementation of the instruction
+- 'make' in PhaethonAsm

@@ -20,7 +20,7 @@ module ALU(
   debug        // [Output] Debug port
   );
 
-  `include "../PhaethonISA/PhaethonOpCode.v"
+  `include "../PhaethonISA/Generated/PhaethonOpCode.v"
 
   // Input / output
   input  wire        clk;
