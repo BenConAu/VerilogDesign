@@ -12,6 +12,11 @@ Function calls can be done through traditional stack means, or through using reg
 window shifting. After a window shift, the r0 register becomes the first argument to
 the function being called.
 
+Hardware definition
+
+The instruction set is defined in PhaethonISA in InstructionSet.def. This file details
+the opcodes and operand forms for the instruction set.
+
 Shader Language Overview
 
 The shader language is not meant to be a high level language but rather a very low
