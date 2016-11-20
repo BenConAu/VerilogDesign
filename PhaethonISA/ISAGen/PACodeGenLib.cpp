@@ -115,7 +115,7 @@ void OutputInstructions()
 
     FILE* fcppfile = ::fopen("Generated/PhaethonOpCode.cpp", "w");
 
-    ::fprintf(fcppfile, "#include \"../PhaethonASM/InstructionData.h\"\n\n");
+    ::fprintf(fcppfile, "#include \"../InstructionData.h\"\n\n");
 
     // Now the collection of instruction data
     ::fprintf(fcppfile, "InstructionData InstructionData::s_data[] = {\n");
