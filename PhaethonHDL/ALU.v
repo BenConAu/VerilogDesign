@@ -20,7 +20,7 @@ module ALU(
   debug        // [Output] Debug port
   );
 
-  `include "../PhaethonAsm/CodeGen/PhaethonOpCode.v"
+  `include "../PhaethonISA/PhaethonOpCode.v"
 
   // Input / output
   input  wire        clk;
