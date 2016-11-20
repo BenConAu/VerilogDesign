@@ -100,7 +100,7 @@
 #include <cstdio>
 #include <iostream>
 #include "PACodeGenLib.h"
-#include "../PhaethonAsm/Operand.h"
+#include "Operand.h"
 
 using namespace std;
 

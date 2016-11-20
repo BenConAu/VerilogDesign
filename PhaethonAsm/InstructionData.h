@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../PhaethonISA/PhaethonOpCode.h"
-#include "Operand.h"
+#include "../PhaethonISA/Operand.h"
 
 struct InstructionData
 {
