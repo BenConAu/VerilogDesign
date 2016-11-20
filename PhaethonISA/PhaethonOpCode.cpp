@@ -1,4 +1,4 @@
-#include "../InstructionData.h"
+#include "../PhaethonAsm/InstructionData.h"
 
 InstructionData InstructionData::s_data[] = {
     { Instructions::Mov       , OpCodes::MovRR          , { ArgumentBase::Register()            , ArgumentBase::Register()            , ArgumentBase::None()       }, -1, "MovRR" },

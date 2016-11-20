@@ -39,76 +39,45 @@
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     INT_TOKEN = 258,
-     INSTR_TOKEN_0 = 259,
-     INSTR_TOKEN_1 = 260,
-     INSTR_TOKEN_2 = 261,
-     INSTR_TOKEN_3 = 262,
-     REG_TOKEN = 263,
-     COMMA_TOKEN = 264,
-     ADDR_LEFT = 265,
-     ADDR_RIGHT = 266,
-     COLON_TOKEN = 267,
-     STRUCT_TOKEN = 268,
-     ENDS_TOKEN = 269,
-     DATASEGMENT_TOKEN = 270,
-     ENDDATA_TOKEN = 271,
-     LEFT_PAREN_TOKEN = 272,
-     RIGHT_PAREN_TOKEN = 273,
-     MEMBEROF_TOKEN = 274,
-     DEREF_TOKEN = 275,
-     ADDRESSOF_TOKEN = 276,
-     AT_TOKEN = 277,
-     SIZEOF_TOKEN = 278,
-     SYMBOL_TOKEN = 279
+     SYMBOL_TOKEN = 258,
+     REGISTER_TOKEN = 259,
+     CONSTANT_TOKEN = 260,
+     NONE_TOKEN = 261,
+     OFFSET_TOKEN = 262,
+     DEREF_TOKEN = 263,
+     ADDRESSOF_TOKEN = 264,
+     COLON_TOKEN = 265,
+     RAM_TOKEN = 266,
+     NOFLAGS_TOKEN = 267
    };
 #endif
 /* Tokens.  */
-#define INT_TOKEN 258
-#define INSTR_TOKEN_0 259
-#define INSTR_TOKEN_1 260
-#define INSTR_TOKEN_2 261
-#define INSTR_TOKEN_3 262
-#define REG_TOKEN 263
-#define COMMA_TOKEN 264
-#define ADDR_LEFT 265
-#define ADDR_RIGHT 266
-#define COLON_TOKEN 267
-#define STRUCT_TOKEN 268
-#define ENDS_TOKEN 269
-#define DATASEGMENT_TOKEN 270
-#define ENDDATA_TOKEN 271
-#define LEFT_PAREN_TOKEN 272
-#define RIGHT_PAREN_TOKEN 273
-#define MEMBEROF_TOKEN 274
-#define DEREF_TOKEN 275
-#define ADDRESSOF_TOKEN 276
-#define AT_TOKEN 277
-#define SIZEOF_TOKEN 278
-#define SYMBOL_TOKEN 279
+#define SYMBOL_TOKEN 258
+#define REGISTER_TOKEN 259
+#define CONSTANT_TOKEN 260
+#define NONE_TOKEN 261
+#define OFFSET_TOKEN 262
+#define DEREF_TOKEN 263
+#define ADDRESSOF_TOKEN 264
+#define COLON_TOKEN 265
+#define RAM_TOKEN 266
+#define NOFLAGS_TOKEN 267
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 21 "PhaethonAsm.y"
+#line 19 "PACodeGen.y"
 {
-	int intVal;
-	float floatVal;
-	Instructions::Enum instrIndex;
-	int regIndex;
-	int symIndex;
-	Argument arg;
-	StructDef* structDef;
-	StructMember* structMember;
-	DataSegmentDef* dataSegmentDef;
-	DataSegmentItemDef* dataSegmentItemDef;
-	DataSegmentItemEntry* dataSegmentItemEntry;
-	InstructionNode* instructonNode;
+    int symIndex;
+    int flags;
+    OperandType::Enum opType;
+    OperandModifier::Enum modType;
+    ArgumentBase argType;
 }
 /* Line 1529 of yacc.c.  */
-#line 112 "PhaethonAsm.tab.h"
+#line 81 "PACodeGen.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -117,17 +86,3 @@ typedef union YYSTYPE
 
 extern YYSTYPE yylval;
 
-#if ! defined YYLTYPE && ! defined YYLTYPE_IS_DECLARED
-typedef struct YYLTYPE
-{
-  int first_line;
-  int first_column;
-  int last_line;
-  int last_column;
-} YYLTYPE;
-# define yyltype YYLTYPE /* obsolescent; will be withdrawn */
-# define YYLTYPE_IS_DECLARED 1
-# define YYLTYPE_IS_TRIVIAL 1
-#endif
-
-extern YYLTYPE yylloc;

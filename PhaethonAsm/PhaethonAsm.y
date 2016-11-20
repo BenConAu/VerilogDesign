@@ -4,7 +4,7 @@
 #include <iostream>
 using namespace std;
 
-#include "CodeGen/PhaethonOpCode.h"
+#include "../PhaethonISA/PhaethonOpCode.h"
 #include "PhaethonAsmLib.h"
 #include "StructDef.h"
 #include "DataSegmentDef.h"

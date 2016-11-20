@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CodeGen/PhaethonOpCode.h"
+#include "../PhaethonISA/PhaethonOpCode.h"
 #include "ArgumentBase.h"
 
 struct InstructionData

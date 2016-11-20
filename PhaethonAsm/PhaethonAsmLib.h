@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CodeGen/PhaethonOpCode.h"
+#include "../PhaethonISA/PhaethonOpCode.h"
 #include "Argument.h"
 
 void StoreInstruction(Instructions::Enum instr, Argument a1, Argument a2, Argument a3);
