@@ -3,7 +3,7 @@
 #include "DataSegmentDef.h"
 #include "InstructionNode.h"
 #include "PhaethonAsm.tab.h"
-#include "../PhaethonISA/PhaethonOpCode.h"
+#include "../PhaethonISA/Generated/PhaethonOpCode.h"
 #include "InstructionData.h"
 #include <iostream>
 #include <vector>

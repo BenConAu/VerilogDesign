@@ -86,7 +86,7 @@ std::string Pad(std::string s, int len)
 
 void OutputInstructions()
 {
-    FILE* fhfile = ::fopen("PhaethonOpCode.h", "w");
+    FILE* fhfile = ::fopen("Generated/PhaethonOpCode.h", "w");
 
     ::fprintf(fhfile, "#pragma once\n\n");
 
@@ -113,7 +113,7 @@ void OutputInstructions()
 
     ::fclose(fhfile);
 
-    FILE* fcppfile = ::fopen("PhaethonOpCode.cpp", "w");
+    FILE* fcppfile = ::fopen("Generated/PhaethonOpCode.cpp", "w");
 
     ::fprintf(fcppfile, "#include \"../PhaethonASM/InstructionData.h\"\n\n");
 
@@ -181,7 +181,7 @@ void OutputInstructions()
     ::fclose(fcppfile);
 
     // Now the Verilog
-    FILE* fvfile = ::fopen("PhaethonOpCode.v", "w");
+    FILE* fvfile = ::fopen("Generated/PhaethonOpCode.v", "w");
 
     // The opCode enum does as defines in verilog
     for (size_t i = 0; i < g_instructionData.size(); i++)

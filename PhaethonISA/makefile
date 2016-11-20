@@ -1,5 +1,5 @@
-PACodeGen: lex.yy.c PACodeGen.tab.c PACodeGenLib.cpp ../PhaethonAsm/Operand.cpp ../PhaethonAsm/Operand.h
-	clang++ -std=c++11 lex.yy.c PACodeGen.tab.c PACodeGenLib.cpp ../PhaethonAsm/Operand.cpp -o PACodeGen
+PACodeGen: lex.yy.c PACodeGen.tab.c PACodeGenLib.cpp Operand.cpp Operand.h
+	clang++ -std=c++11 lex.yy.c PACodeGen.tab.c PACodeGenLib.cpp Operand.cpp -o PACodeGen
 
 lex.yy.c: PACodeGen.l
 	flex PACodeGen.l

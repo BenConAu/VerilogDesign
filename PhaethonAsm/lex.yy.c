@@ -564,7 +564,7 @@ char *yytext;
 using namespace std;
 #define YY_DECL extern "C" int yylex()
 
-#include "../PhaethonISA/PhaethonOpCode.h"
+#include "../PhaethonISA/Generated/PhaethonOpCode.h"
 #include "PhaethonAsmLib.h"
 #include "StructDef.h"
 #include "DataSegmentDef.h"

@@ -10,8 +10,8 @@ PhaethonAsm: 			\
 	DataSegmentDef.h 	\
 	Argument.h 			\
 	Argument.cpp 		\
-	../PhaethonISA/PhaethonOpCode.h 	\
-	../PhaethonISA/PhaethonOpCode.cpp 	\
+	../PhaethonISA/Generated/PhaethonOpCode.h 	\
+	../PhaethonISA/Generated/PhaethonOpCode.cpp 	\
 	../PhaethonISA/Operand.cpp 			\
 	../PhaethonISA/Operand.h
 	clang++ -std=c++11 -Wno-deprecated-register \
@@ -21,7 +21,7 @@ PhaethonAsm: 			\
 	Argument.cpp 		\
 	InstructionNode.cpp \
 	../PhaethonISA/Operand.cpp 			\
-	../PhaethonISA/PhaethonOpCode.cpp 	\
+	../PhaethonISA/Generated/PhaethonOpCode.cpp 	\
 	-o PhaethonAsm
 
 lex.yy.c: PhaethonAsm.l
