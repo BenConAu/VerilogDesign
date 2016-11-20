@@ -3,7 +3,7 @@
 #include <cstdio>
 #include <iostream>
 #include "PACodeGenLib.h"
-#include "../PhaethonAsm/ArgumentBase.h"
+#include "../PhaethonAsm/Operand.h"
 
 using namespace std;
 
@@ -21,7 +21,7 @@ void yyerror(const char *s);
     int flags;
     OperandType::Enum opType;
     OperandModifier::Enum modType;
-    ArgumentBase argType;
+    Operand argType;
 }
 
 %token <symIndex> SYMBOL_TOKEN
@@ -56,10 +56,10 @@ flag:
     ;
 
 argument:
-      operandType                                                   { $$ = ArgumentBase::Construct($1, OperandModifier::None, false); }
-    | operandType COLON_TOKEN OFFSET_TOKEN                          { $$ = ArgumentBase::Construct($1, OperandModifier::None, true); }
-    | modifierType COLON_TOKEN operandType                          { $$ = ArgumentBase::Construct($3, $1, false); }
-    | modifierType COLON_TOKEN operandType COLON_TOKEN OFFSET_TOKEN { $$ = ArgumentBase::Construct($3, $1, true); }
+      operandType                                                   { $$ = Operand::Construct($1, OperandModifier::None, false); }
+    | operandType COLON_TOKEN OFFSET_TOKEN                          { $$ = Operand::Construct($1, OperandModifier::None, true); }
+    | modifierType COLON_TOKEN operandType                          { $$ = Operand::Construct($3, $1, false); }
+    | modifierType COLON_TOKEN operandType COLON_TOKEN OFFSET_TOKEN { $$ = Operand::Construct($3, $1, true); }
     ;
 
 operandType:

@@ -22,12 +22,12 @@ namespace OperandModifier
 	};
 }
 
-class ArgumentBase
+class Operand
 {
 public:
-	static ArgumentBase Construct(OperandType::Enum t, OperandModifier::Enum m, bool o)
+	static Operand Construct(OperandType::Enum t, OperandModifier::Enum m, bool o)
 	{
-		ArgumentBase base;
+		Operand base;
 
 		base._type = t;
 		base._modifier = m;
@@ -36,9 +36,9 @@ public:
 		return base;
 	}
 
-	static ArgumentBase Register()
+	static Operand Register()
 	{
-		ArgumentBase base;
+		Operand base;
 
 		base._type = OperandType::Register;
 		base._modifier = OperandModifier::None;
@@ -47,9 +47,9 @@ public:
 		return base;
 	}
 
-	static ArgumentBase DerefRegister()
+	static Operand DerefRegister()
 	{
-		ArgumentBase base;
+		Operand base;
 
 		base._type = OperandType::Register;
 		base._modifier = OperandModifier::Deref;
@@ -58,9 +58,9 @@ public:
 		return base;
 	}
 
-	static ArgumentBase RegisterOffset()
+	static Operand RegisterOffset()
 	{
-		ArgumentBase base;
+		Operand base;
 
 		base._type = OperandType::Register;
 		base._modifier = OperandModifier::None;
@@ -69,9 +69,9 @@ public:
 		return base;
 	}
 
-	static ArgumentBase DerefRegisterOffset()
+	static Operand DerefRegisterOffset()
 	{
-		ArgumentBase base;
+		Operand base;
 
 		base._type = OperandType::Register;
 		base._modifier = OperandModifier::Deref;
@@ -80,9 +80,9 @@ public:
 		return base;
 	}
 
-	static ArgumentBase Constant()
+	static Operand Constant()
 	{
-		ArgumentBase base;
+		Operand base;
 
 		base._type = OperandType::Constant;
 		base._modifier = OperandModifier::None;
@@ -91,9 +91,9 @@ public:
 		return base;
 	}
 
-	static ArgumentBase DerefConstant()
+	static Operand DerefConstant()
 	{
-		ArgumentBase base;
+		Operand base;
 
 		base._type = OperandType::Constant;
 		base._modifier = OperandModifier::Deref;
@@ -102,9 +102,9 @@ public:
 		return base;
 	}
 
-	static ArgumentBase AddressOfConstant()
+	static Operand AddressOfConstant()
 	{
-		ArgumentBase base;
+		Operand base;
 
 		base._type = OperandType::Constant;
 		base._modifier = OperandModifier::AddressOf;
@@ -113,9 +113,9 @@ public:
 		return base;
 	}
 
-	static ArgumentBase None()
+	static Operand None()
 	{
-		ArgumentBase base;
+		Operand base;
 
 		base._type = OperandType::None;
 		base._modifier = OperandModifier::None;
@@ -165,7 +165,7 @@ public:
 		return typeText;
 	}
 
-	bool operator==(const ArgumentBase other)
+	bool operator==(const Operand other)
 	{
 		return (_type == other._type && _modifier == other._modifier && _fOffset == other._fOffset);
 	}

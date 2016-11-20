@@ -8,7 +8,7 @@ static std::vector<std::string> g_symbols;
 
 struct InstructionData
 {
-    InstructionData(int si, ArgumentBase a1, ArgumentBase a2, ArgumentBase a3, int flag)
+    InstructionData(int si, Operand a1, Operand a2, Operand a3, int flag)
     {
         symIndex = si;
 
@@ -44,7 +44,7 @@ struct InstructionData
     }
 
     int symIndex;
-    ArgumentBase args[3];
+    Operand args[3];
     int constIndex;
     bool fRAM;
     std::string opCode;
@@ -52,7 +52,7 @@ struct InstructionData
 
 static std::vector<InstructionData> g_instructionData;
 
-void StoreInstruction(int symIndex, ArgumentBase arg1, ArgumentBase arg2, ArgumentBase arg3, int flag)
+void StoreInstruction(int symIndex, Operand arg1, Operand arg2, Operand arg3, int flag)
 {
     InstructionData data(symIndex, arg1, arg2, arg3, flag);
     g_instructionData.push_back(data);
@@ -115,14 +115,14 @@ void OutputInstructions()
 
     FILE* fcppfile = ::fopen("PhaethonOpCode.cpp", "w");
 
-    ::fprintf(fcppfile, "#include \"../InstructionData.h\"\n\n");
+    ::fprintf(fcppfile, "#include \"../PhaethonASM/InstructionData.h\"\n\n");
 
     // Now the collection of instruction data
     ::fprintf(fcppfile, "InstructionData InstructionData::s_data[] = {\n");
     for (size_t i = 0; i < g_instructionData.size(); i++)
     {
         InstructionData& data = g_instructionData[i];
-        ::fprintf(fcppfile, "    { Instructions::%s, OpCodes::%s, { ArgumentBase::%s, ArgumentBase::%s, ArgumentBase::%s }, %d, \"%s\" },\n",
+        ::fprintf(fcppfile, "    { Instructions::%s, OpCodes::%s, { Operand::%s, Operand::%s, Operand::%s }, %d, \"%s\" },\n",
             Pad(g_symbols[data.symIndex], 10).c_str(),
             Pad(data.opCode, 15).c_str(),
             Pad(data.args[0].GetTypeText(), 22).c_str(),

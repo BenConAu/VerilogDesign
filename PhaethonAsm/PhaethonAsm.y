@@ -145,15 +145,15 @@ argument:
       ADDR_LEFT argExpr ADDR_RIGHT                                     { $$ = $2; $$.Deref(); }
 	| ADDRESSOF_TOKEN argExpr                                          { $$ = $2; $$.AddressOf(); }
 	| argExpr                                                          { $$ = $1; }
-    | AT_TOKEN SYMBOL_TOKEN                                            { $$ = Argument::Construct(ArgumentBase::Constant(), $2, SymbolType::LabelAddress); }
+    | AT_TOKEN SYMBOL_TOKEN                                            { $$ = Argument::Construct(Operand::Constant(), $2, SymbolType::LabelAddress); }
     ;
 
 argExpr:
-      REG_TOKEN                                                        { $$ = Argument::Construct(ArgumentBase::Register(), $1); }
-    | INT_TOKEN                                                        { $$ = Argument::Construct(ArgumentBase::Constant(), $1); }
-  	| SIZEOF_TOKEN LEFT_PAREN_TOKEN SYMBOL_TOKEN RIGHT_PAREN_TOKEN     { $$ = Argument::Construct(ArgumentBase::Constant(), StructDef::GetSize($3)); }
-	| SYMBOL_TOKEN                                                     { $$ = Argument::Construct(ArgumentBase::DerefConstant(), $1, SymbolType::VarAddress); }
-    | REG_TOKEN DEREF_TOKEN SYMBOL_TOKEN MEMBEROF_TOKEN SYMBOL_TOKEN   { $$ = Argument::Construct(ArgumentBase::DerefRegisterOffset(), $1, StructDef::CalcOffset($3, $5)); }
+      REG_TOKEN                                                        { $$ = Argument::Construct(Operand::Register(), $1); }
+    | INT_TOKEN                                                        { $$ = Argument::Construct(Operand::Constant(), $1); }
+  	| SIZEOF_TOKEN LEFT_PAREN_TOKEN SYMBOL_TOKEN RIGHT_PAREN_TOKEN     { $$ = Argument::Construct(Operand::Constant(), StructDef::GetSize($3)); }
+	| SYMBOL_TOKEN                                                     { $$ = Argument::Construct(Operand::DerefConstant(), $1, SymbolType::VarAddress); }
+    | REG_TOKEN DEREF_TOKEN SYMBOL_TOKEN MEMBEROF_TOKEN SYMBOL_TOKEN   { $$ = Argument::Construct(Operand::DerefRegisterOffset(), $1, StructDef::CalcOffset($3, $5)); }
 	;
 
 label:

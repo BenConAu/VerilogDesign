@@ -74,7 +74,7 @@ typedef union YYSTYPE
     int flags;
     OperandType::Enum opType;
     OperandModifier::Enum modType;
-    ArgumentBase argType;
+    Operand argType;
 }
 /* Line 1529 of yacc.c.  */
 #line 81 "PACodeGen.tab.h"

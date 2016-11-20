@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../PhaethonAsm/ArgumentBase.h"
+#include "../PhaethonAsm/Operand.h"
 
-void StoreInstruction(int symIndex, ArgumentBase arg1, ArgumentBase arg2, ArgumentBase arg3, int flag);
+void StoreInstruction(int symIndex, Operand arg1, Operand arg2, Operand arg3, int flag);
 int AddSymbol(const char* pszSymbol);
 void OutputInstructions();

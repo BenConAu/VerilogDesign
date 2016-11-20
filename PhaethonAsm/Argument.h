@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ArgumentBase.h"
+#include "Operand.h"
 
 namespace SymbolType
 {
@@ -15,7 +15,7 @@ namespace SymbolType
 class Argument
 {
 public:
-	static Argument Construct(ArgumentBase t, int v)
+	static Argument Construct(Operand t, int v)
 	{
 		Argument a;
 
@@ -27,7 +27,7 @@ public:
 		return a;
 	}
 
-	static Argument Construct(ArgumentBase t, int v, int offset)
+	static Argument Construct(Operand t, int v, int offset)
 	{
 		Argument a;
 
@@ -39,7 +39,7 @@ public:
 		return a;
 	}
 
-	static Argument Construct(ArgumentBase t, int symbol, SymbolType::Enum symType)
+	static Argument Construct(Operand t, int symbol, SymbolType::Enum symType)
 	{
 		Argument a;
 
@@ -53,7 +53,7 @@ public:
 
 	static Argument ConstructNone()
 	{
-		return Construct(ArgumentBase::None(), 0);
+		return Construct(Operand::None(), 0);
 	}
 
 	void Deref()
@@ -92,7 +92,7 @@ public:
 	void ResolveSymbol();
 
 public:
-	ArgumentBase _argType;
+	Operand _argType;
 	unsigned int _value;
 	unsigned int _offset;
 	SymbolType::Enum _symType;

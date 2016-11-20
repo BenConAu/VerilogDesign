@@ -100,7 +100,7 @@
 #include <cstdio>
 #include <iostream>
 #include "PACodeGenLib.h"
-#include "../PhaethonAsm/ArgumentBase.h"
+#include "../PhaethonAsm/Operand.h"
 
 using namespace std;
 
@@ -138,7 +138,7 @@ typedef union YYSTYPE
     int flags;
     OperandType::Enum opType;
     OperandModifier::Enum modType;
-    ArgumentBase argType;
+    Operand argType;
 }
 /* Line 193 of yacc.c.  */
 #line 145 "PACodeGen.tab.c"
@@ -1371,22 +1371,22 @@ yyreduce:
 
   case 7:
 #line 59 "PACodeGen.y"
-    { (yyval.argType) = ArgumentBase::Construct((yyvsp[(1) - (1)].opType), OperandModifier::None, false); ;}
+    { (yyval.argType) = Operand::Construct((yyvsp[(1) - (1)].opType), OperandModifier::None, false); ;}
     break;
 
   case 8:
 #line 60 "PACodeGen.y"
-    { (yyval.argType) = ArgumentBase::Construct((yyvsp[(1) - (3)].opType), OperandModifier::None, true); ;}
+    { (yyval.argType) = Operand::Construct((yyvsp[(1) - (3)].opType), OperandModifier::None, true); ;}
     break;
 
   case 9:
 #line 61 "PACodeGen.y"
-    { (yyval.argType) = ArgumentBase::Construct((yyvsp[(3) - (3)].opType), (yyvsp[(1) - (3)].modType), false); ;}
+    { (yyval.argType) = Operand::Construct((yyvsp[(3) - (3)].opType), (yyvsp[(1) - (3)].modType), false); ;}
     break;
 
   case 10:
 #line 62 "PACodeGen.y"
-    { (yyval.argType) = ArgumentBase::Construct((yyvsp[(3) - (5)].opType), (yyvsp[(1) - (5)].modType), true); ;}
+    { (yyval.argType) = Operand::Construct((yyvsp[(3) - (5)].opType), (yyvsp[(1) - (5)].modType), true); ;}
     break;
 
   case 11:

@@ -12,14 +12,14 @@ PhaethonAsm: 			\
 	DataSegmentDef.h 	\
 	Argument.h 			\
 	Argument.cpp 		\
-	ArgumentBase.cpp 	\
-	ArgumentBase.h
+	Operand.cpp 		\
+	Operand.h
 	clang++ -std=c++11 -Wno-deprecated-register \
-	lex.yy.c \
-	PhaethonAsm.tab.c \
-	PhaethonAsmLib.cpp \
-	Argument.cpp \
-	ArgumentBase.cpp \
+	lex.yy.c 			\
+	PhaethonAsm.tab.c 	\
+	PhaethonAsmLib.cpp 	\
+	Argument.cpp 		\
+	Operand.cpp 		\
 	InstructionNode.cpp \
 	../PhaethonISA/PhaethonOpCode.cpp \
 	-o PhaethonAsm
