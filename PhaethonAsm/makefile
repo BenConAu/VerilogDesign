@@ -13,7 +13,8 @@ PhaethonAsm: 			\
 	../PhaethonISA/Generated/PhaethonOpCode.h 	\
 	../PhaethonISA/Generated/PhaethonOpCode.cpp 	\
 	../PhaethonISA/Operand.cpp 			\
-	../PhaethonISA/Operand.h
+	../PhaethonISA/Operand.h            \
+	../PhaethonISA/InstructionData.h
 	clang++ -std=c++11 -Wno-deprecated-register \
 	lex.yy.c 			\
 	PhaethonAsm.tab.c 	\

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "AssemblerNode.h"
-#include "InstructionData.h"
+#include "../PhaethonISA/InstructionData.h"
 #include "PhaethonAsmLib.h"
 #include <iostream>
 #include <vector>
