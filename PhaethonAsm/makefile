@@ -8,6 +8,7 @@ PhaethonAsm: 			\
 	AssemblerListNode.h \
 	StructDef.h 		\
 	DataSegmentDef.h 	\
+	DataSegmentDef.cpp  \
 	Argument.h 			\
 	Argument.cpp 		\
 	../PhaethonISA/Generated/PhaethonOpCode.h 	\
@@ -20,6 +21,7 @@ PhaethonAsm: 			\
 	PhaethonAsm.tab.c 	\
 	PhaethonAsmLib.cpp 	\
 	Argument.cpp 		\
+	DataSegmentDef.cpp  \
 	InstructionNode.cpp \
 	../PhaethonISA/Operand.cpp 			\
 	../PhaethonISA/Generated/PhaethonOpCode.cpp 	\

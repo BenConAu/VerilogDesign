@@ -65,7 +65,6 @@ public:
     	}
     }
 
-
 public:
     static std::vector<std::unique_ptr<InstructionNode> > s_defs;
     static std::vector<std::unique_ptr<InstructionNode> >& GlobalList() { return s_defs; }
