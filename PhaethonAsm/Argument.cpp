@@ -31,23 +31,29 @@ void Argument::AddressOf()
         printf("Wat - address of register makes no sense\n");
     }
 
-    if (_argType._type == OperandType::Constant &&
-        _argType._modifier == OperandModifier::Deref &&
+    if (_argType._type == OperandType::ConstantMemory &&
         _symType == SymbolType::VarAddress)
     {
         // Somebody wants to store the address of a variable, so
         // changing the modifer will give us the right thing after
         // the symbol has been looked up
-        _argType._modifier = OperandModifier::None;
+        _argType._type = OperandType::Constant;
     }
 }
 
 void Argument::Deref()
 {
-    if (_argType._modifier != OperandModifier::None)
+    switch(_argType._type)
     {
-        printf("You already had a modifer\n");
-    }
+        case OperandType::Constant:
+            _argType._type = OperandType::ConstantMemory;
+            break;
 
-    _argType._modifier = OperandModifier::Deref;
+        case OperandType::Register:
+            _argType._type = OperandType::RegisterMemory;
+            break;
+
+        default:
+            throw "Not a valid operand to derefence\n";
+    }
 }

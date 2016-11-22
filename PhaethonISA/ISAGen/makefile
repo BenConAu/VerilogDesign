@@ -4,7 +4,7 @@ ISAGen: \
 	PACodeGenLib.cpp \
 	../ISAOperand.cpp \
 	../ISAOperand.h
-	clang++ -std=c++11 \
+	clang++ -std=c++11 -Wno-deprecated-register \
 	lex.yy.c \
 	PACodeGen.tab.c \
 	PACodeGenLib.cpp \

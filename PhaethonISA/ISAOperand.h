@@ -2,124 +2,97 @@
 
 #include <string>
 
-namespace OperandType
+// This enumeration represents the different types of operand arguments that
+// the assembly can represent. In practice most of them will need to be
+// converted to a register.
+enum class OperandType : int
 {
-	enum Enum
-	{
-		None = 0,
-		Constant = 1,
-		Register = 2,
-	};
-}
+    None = 0,       // Used for error conditions and the such
+    Constant,       // The result is a constant
+    Register,       // The result is stored in a register
+    ConstantMemory, // The result is a memory location (also a constant, technically)
+	RegisterMemory, // The result is a memory location (stored in a register) - not used by SL yet
+    MemoryOffset,   // The result is a memory location plus an offset
+};
 
-namespace OperandModifier
-{
-	enum Enum
-	{
-		None,
-		Deref,
-		AddressOf
-	};
-}
-
-class Operand
+class ISAOperand
 {
 public:
-	static Operand Construct(OperandType::Enum t, OperandModifier::Enum m, bool o)
+	static ISAOperand Construct(OperandType t, bool deref)
 	{
-		Operand base;
+		ISAOperand base;
+
+		if (t == OperandType::Register)
+		{
+			if (deref)
+			{
+				t = OperandType::RegisterMemory;
+			}
+		}
+
+		if (t == OperandType::Constant)
+		{
+			if (deref)
+			{
+				t = OperandType::ConstantMemory;
+			}
+		}
 
 		base._type = t;
-		base._modifier = m;
-		base._fOffset = o;
 
 		return base;
 	}
 
-	static Operand Register()
+	static ISAOperand Register()
 	{
-		Operand base;
+		ISAOperand base;
 
 		base._type = OperandType::Register;
-		base._modifier = OperandModifier::None;
-		base._fOffset = false;
 
 		return base;
 	}
 
-	static Operand DerefRegister()
+	static ISAOperand DerefRegister()
 	{
-		Operand base;
+		ISAOperand base;
 
-		base._type = OperandType::Register;
-		base._modifier = OperandModifier::Deref;
-		base._fOffset = false;
+		base._type = OperandType::RegisterMemory;
 
 		return base;
 	}
 
-	static Operand RegisterOffset()
+	static ISAOperand DerefRegisterOffset()
 	{
-		Operand base;
+		ISAOperand base;
 
-		base._type = OperandType::Register;
-		base._modifier = OperandModifier::None;
-		base._fOffset = true;
+		base._type = OperandType::MemoryOffset;
 
 		return base;
 	}
 
-	static Operand DerefRegisterOffset()
+	static ISAOperand Constant()
 	{
-		Operand base;
-
-		base._type = OperandType::Register;
-		base._modifier = OperandModifier::Deref;
-		base._fOffset = true;
-
-		return base;
-	}
-
-	static Operand Constant()
-	{
-		Operand base;
+		ISAOperand base;
 
 		base._type = OperandType::Constant;
-		base._modifier = OperandModifier::None;
-		base._fOffset = false;
 
 		return base;
 	}
 
-	static Operand DerefConstant()
+	static ISAOperand DerefConstant()
 	{
-		Operand base;
+		ISAOperand base;
 
-		base._type = OperandType::Constant;
-		base._modifier = OperandModifier::Deref;
-		base._fOffset = false;
+		base._type = OperandType::ConstantMemory;
 
 		return base;
 	}
 
-	static Operand AddressOfConstant()
+	static ISAOperand None()
 	{
-		Operand base;
-
-		base._type = OperandType::Constant;
-		base._modifier = OperandModifier::AddressOf;
-		base._fOffset = false;
-
-		return base;
-	}
-
-	static Operand None()
-	{
-		Operand base;
+		ISAOperand base;
 
 		base._type = OperandType::None;
-		base._modifier = OperandModifier::None;
-		base._fOffset = false;
 
 		return base;
 	}
@@ -127,19 +100,7 @@ public:
 	std::string GetShortTypeText()
 	{
 		std::string shortTypeText;
-		if (_modifier == OperandModifier::Deref)
-		{
-			shortTypeText.append("d");
-		}
-		else if (_modifier == OperandModifier::AddressOf)
-		{
-			shortTypeText.append("a");
-		}
-		shortTypeText.append(ppszShortTypeText[_type]);
-		if (_fOffset)
-		{
-			shortTypeText.append("o");
-		}
+		shortTypeText.append(ppszShortTypeText[static_cast<int>(_type)]);
 
 		return shortTypeText;
 	}
@@ -147,32 +108,44 @@ public:
 	std::string GetTypeText()
 	{
 		std::string typeText;
-		if (_modifier == OperandModifier::Deref)
-		{
-			typeText.append("Deref");
-		}
-		else if (_modifier == OperandModifier::AddressOf)
-		{
-			typeText.append("AddressOf");
-		}
-		typeText.append(ppszTypeText[_type]);
-		if (_fOffset)
-		{
-			typeText.append("Offset");
-		}
+		typeText.append(ppszTypeText[static_cast<int>(_type)]);
 		typeText.append("()");
 
 		return typeText;
 	}
 
-	bool operator==(const Operand other)
+	bool operator==(const ISAOperand other)
 	{
-		return (_type == other._type && _modifier == other._modifier && _fOffset == other._fOffset);
+		return (_type == other._type);
 	}
 
-	OperandType::Enum _type;
-	OperandModifier::Enum _modifier;
-	bool _fOffset;
+	bool IsRAMOpcode() const
+	{
+		if (_type == OperandType::ConstantMemory ||
+			_type == OperandType::RegisterMemory ||
+			_type == OperandType::MemoryOffset
+			)
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	bool Is8ByteOpcode() const
+	{
+		if (_type == OperandType::Constant ||
+			_type == OperandType::ConstantMemory ||
+			_type == OperandType::MemoryOffset
+			)
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	OperandType _type;
 
 private:
     static const char* ppszTypeText[];

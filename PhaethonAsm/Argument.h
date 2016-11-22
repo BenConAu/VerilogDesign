@@ -16,7 +16,7 @@ namespace SymbolType
 class Argument
 {
 public:
-	static Argument Construct(Operand t, int v)
+	static Argument Construct(ISAOperand t, int v)
 	{
 		Argument a;
 
@@ -28,7 +28,7 @@ public:
 		return a;
 	}
 
-	static Argument Construct(Operand t, int v, int offset)
+	static Argument Construct(ISAOperand t, int v, int offset)
 	{
 		Argument a;
 
@@ -40,7 +40,7 @@ public:
 		return a;
 	}
 
-	static Argument Construct(Operand t, int symbol, SymbolType::Enum symType)
+	static Argument Construct(ISAOperand t, int symbol, SymbolType::Enum symType)
 	{
 		Argument a;
 
@@ -56,7 +56,7 @@ public:
 
 	static Argument ConstructNone()
 	{
-		return Construct(Operand::None(), 0);
+		return Construct(ISAOperand::None(), 0);
 	}
 
 	void Deref();
@@ -64,7 +64,7 @@ public:
 	void ResolveSymbol();
 
 public:
-	Operand _argType;
+	ISAOperand _argType;
 	ObjArgument _objArg;
 	SymbolType::Enum _symType;
 };

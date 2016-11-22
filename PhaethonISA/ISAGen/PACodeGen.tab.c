@@ -136,12 +136,11 @@ typedef union YYSTYPE
 {
     int symIndex;
     int flags;
-    OperandType::Enum opType;
-    OperandModifier::Enum modType;
-    Operand argType;
+    OperandType opType;
+    ISAOperand argType;
 }
 /* Line 193 of yacc.c.  */
-#line 145 "PACodeGen.tab.c"
+#line 144 "PACodeGen.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -154,7 +153,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 158 "PACodeGen.tab.c"
+#line 157 "PACodeGen.tab.c"
 
 #ifdef short
 # undef short
@@ -367,18 +366,18 @@ union yyalloc
 #endif
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  12
+#define YYFINAL  10
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   26
+#define YYLAST   19
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  13
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  7
+#define YYNNTS  6
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  15
+#define YYNRULES  12
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  25
+#define YYNSTATES  22
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
@@ -425,7 +424,7 @@ static const yytype_uint8 yytranslate[] =
 static const yytype_uint8 yyprhs[] =
 {
        0,     0,     3,     6,     8,    14,    16,    18,    20,    24,
-      28,    34,    36,    38,    40,    42
+      30,    32,    34
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
@@ -433,16 +432,15 @@ static const yytype_int8 yyrhs[] =
 {
       14,     0,    -1,    15,    14,    -1,    15,    -1,     3,    17,
       17,    17,    16,    -1,    12,    -1,    11,    -1,    18,    -1,
-      18,    10,     7,    -1,    19,    10,    18,    -1,    19,    10,
-      18,    10,     7,    -1,     4,    -1,     5,    -1,     6,    -1,
-       8,    -1,     9,    -1
+       8,    10,    18,    -1,     8,    10,     4,    10,     7,    -1,
+       4,    -1,     5,    -1,     6,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    45,    45,    46,    50,    54,    55,    59,    60,    61,
-      62,    66,    67,    68,    72,    73
+       0,    43,    43,    44,    48,    52,    53,    57,    58,    59,
+      63,    64,    65
 };
 #endif
 
@@ -455,7 +453,7 @@ static const char *const yytname[] =
   "CONSTANT_TOKEN", "NONE_TOKEN", "OFFSET_TOKEN", "DEREF_TOKEN",
   "ADDRESSOF_TOKEN", "COLON_TOKEN", "RAM_TOKEN", "NOFLAGS_TOKEN",
   "$accept", "instruction_set", "instruction", "flag", "argument",
-  "operandType", "modifierType", 0
+  "operandType", 0
 };
 #endif
 
@@ -473,14 +471,14 @@ static const yytype_uint16 yytoknum[] =
 static const yytype_uint8 yyr1[] =
 {
        0,    13,    14,    14,    15,    16,    16,    17,    17,    17,
-      17,    18,    18,    18,    19,    19
+      18,    18,    18
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     2,     1,     5,     1,     1,     1,     3,     3,
-       5,     1,     1,     1,     1,     1
+       0,     2,     2,     1,     5,     1,     1,     1,     3,     5,
+       1,     1,     1
 };
 
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
@@ -488,31 +486,31 @@ static const yytype_uint8 yyr2[] =
    means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       0,     0,     0,     3,    11,    12,    13,    14,    15,     0,
-       7,     0,     1,     2,     0,     0,     0,     0,     8,     9,
-       6,     5,     4,     0,    10
+       0,     0,     0,     3,    10,    11,    12,     0,     0,     7,
+       1,     2,     0,     0,    10,     8,     0,     0,     6,     5,
+       4,     9
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     2,     3,    22,     9,    10,    11
+      -1,     2,     3,    20,     8,     9
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -7
+#define YYPACT_NINF -9
 static const yytype_int8 yypact[] =
 {
-       9,    -4,    13,     9,    -7,    -7,    -7,    -7,    -7,    -4,
-       4,     6,    -7,    -7,    -4,     8,     5,    -5,    -7,     7,
-      -7,    -7,    -7,    11,    -7
+       9,    -2,     1,     9,    -9,    -9,    -9,     4,    -2,    -9,
+      -9,    -9,     3,    -2,     5,    -9,    -1,     6,    -9,    -9,
+      -9,    -9
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -7,    16,    -7,    -7,    -6,    10,    -7
+      -9,    13,    -9,    -9,    -8,     7
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -522,25 +520,23 @@ static const yytype_int8 yypgoto[] =
 #define YYTABLE_NINF -1
 static const yytype_uint8 yytable[] =
 {
-       4,     5,     6,    14,     7,     8,    20,    21,    17,     4,
-       5,     6,     1,    12,    15,    18,    16,    23,    24,    13,
-       0,     0,     0,     0,     0,     0,    19
+      13,    10,     4,     5,     6,    16,     7,    14,     5,     6,
+      18,    19,     1,    21,    12,    17,    11,     0,     0,    15
 };
 
 static const yytype_int8 yycheck[] =
 {
-       4,     5,     6,     9,     8,     9,    11,    12,    14,     4,
-       5,     6,     3,     0,    10,     7,    10,    10,     7,     3,
-      -1,    -1,    -1,    -1,    -1,    -1,    16
+       8,     0,     4,     5,     6,    13,     8,     4,     5,     6,
+      11,    12,     3,     7,    10,    10,     3,    -1,    -1,    12
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,     3,    14,    15,     4,     5,     6,     8,     9,    17,
-      18,    19,     0,    14,    17,    10,    10,    17,     7,    18,
-      11,    12,    16,    10,     7
+       0,     3,    14,    15,     4,     5,     6,     8,    17,    18,
+       0,    14,    10,    17,     4,    18,    17,    10,    11,    12,
+      16,     7
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1355,68 +1351,53 @@ yyreduce:
   switch (yyn)
     {
         case 4:
-#line 50 "PACodeGen.y"
+#line 48 "PACodeGen.y"
     { StoreInstruction((yyvsp[(1) - (5)].symIndex), (yyvsp[(2) - (5)].argType), (yyvsp[(3) - (5)].argType), (yyvsp[(4) - (5)].argType), (yyvsp[(5) - (5)].flags)); ;}
     break;
 
   case 5:
-#line 54 "PACodeGen.y"
+#line 52 "PACodeGen.y"
     { (yyval.flags) = 0; ;}
     break;
 
   case 6:
-#line 55 "PACodeGen.y"
+#line 53 "PACodeGen.y"
     { (yyval.flags) = 1; ;}
     break;
 
   case 7:
-#line 59 "PACodeGen.y"
-    { (yyval.argType) = Operand::Construct((yyvsp[(1) - (1)].opType), OperandModifier::None, false); ;}
+#line 57 "PACodeGen.y"
+    { (yyval.argType) = ISAOperand::Construct((yyvsp[(1) - (1)].opType), false); ;}
     break;
 
   case 8:
-#line 60 "PACodeGen.y"
-    { (yyval.argType) = Operand::Construct((yyvsp[(1) - (3)].opType), OperandModifier::None, true); ;}
+#line 58 "PACodeGen.y"
+    { (yyval.argType) = ISAOperand::Construct((yyvsp[(3) - (3)].opType), true); ;}
     break;
 
   case 9:
-#line 61 "PACodeGen.y"
-    { (yyval.argType) = Operand::Construct((yyvsp[(3) - (3)].opType), (yyvsp[(1) - (3)].modType), false); ;}
+#line 59 "PACodeGen.y"
+    { (yyval.argType) = ISAOperand::DerefRegisterOffset(); ;}
     break;
 
   case 10:
-#line 62 "PACodeGen.y"
-    { (yyval.argType) = Operand::Construct((yyvsp[(3) - (5)].opType), (yyvsp[(1) - (5)].modType), true); ;}
-    break;
-
-  case 11:
-#line 66 "PACodeGen.y"
+#line 63 "PACodeGen.y"
     { (yyval.opType) = OperandType::Register; ;}
     break;
 
-  case 12:
-#line 67 "PACodeGen.y"
+  case 11:
+#line 64 "PACodeGen.y"
     { (yyval.opType) = OperandType::Constant; ;}
     break;
 
-  case 13:
-#line 68 "PACodeGen.y"
+  case 12:
+#line 65 "PACodeGen.y"
     { (yyval.opType) = OperandType::None; ;}
-    break;
-
-  case 14:
-#line 72 "PACodeGen.y"
-    { (yyval.modType) = OperandModifier::Deref; ;}
-    break;
-
-  case 15:
-#line 73 "PACodeGen.y"
-    { (yyval.modType) = OperandModifier::AddressOf; ;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1420 "PACodeGen.tab.c"
+#line 1401 "PACodeGen.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1630,22 +1611,24 @@ yyreturn:
 }
 
 
-#line 76 "PACodeGen.y"
+#line 68 "PACodeGen.y"
 
 int main(int, char**) {
 	//yydebug = 1;
 	// open a file handle to a particular file:
 	FILE *myfile = fopen("InstructionSet.def", "r");
 	// make sure it is valid:
-	if (!myfile) {
-		cout << "I can't open a.snazzle.file!" << endl;
+	if (!myfile) 
+    {
+		cout << "I can't open InstructionSet.def!" << endl;
 		return -1;
 	}
 	// set flex to read from it instead of defaulting to STDIN:
 	yyin = myfile;
 
 	// parse through the input until there is no more:
-	do {
+	do 
+    {
 		yyparse();
 	} while (!feof(yyin));
 

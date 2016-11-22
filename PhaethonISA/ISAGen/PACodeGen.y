@@ -19,9 +19,8 @@ void yyerror(const char *s);
 {
     int symIndex;
     int flags;
-    OperandType::Enum opType;
-    OperandModifier::Enum modType;
-    Operand argType;
+    OperandType opType;
+    ISAOperand argType;
 }
 
 %token <symIndex> SYMBOL_TOKEN
@@ -36,7 +35,6 @@ void yyerror(const char *s);
 %token <flags> NOFLAGS_TOKEN
 %type <argType> argument
 %type <opType> operandType
-%type <modType> modifierType
 %type <flags> flag
 
 %%
@@ -56,10 +54,9 @@ flag:
     ;
 
 argument:
-      operandType                                                   { $$ = Operand::Construct($1, OperandModifier::None, false); }
-    | operandType COLON_TOKEN OFFSET_TOKEN                          { $$ = Operand::Construct($1, OperandModifier::None, true); }
-    | modifierType COLON_TOKEN operandType                          { $$ = Operand::Construct($3, $1, false); }
-    | modifierType COLON_TOKEN operandType COLON_TOKEN OFFSET_TOKEN { $$ = Operand::Construct($3, $1, true); }
+      operandType                                                   { $$ = ISAOperand::Construct($1, false); }
+    | DEREF_TOKEN COLON_TOKEN operandType                           { $$ = ISAOperand::Construct($3, true); }
+    | DEREF_TOKEN COLON_TOKEN REGISTER_TOKEN COLON_TOKEN OFFSET_TOKEN { $$ = ISAOperand::DerefRegisterOffset(); }
     ;
 
 operandType:
@@ -68,26 +65,23 @@ operandType:
     | NONE_TOKEN                                                    { $$ = OperandType::None; }
     ;
 
-modifierType:
-      DEREF_TOKEN                                                   { $$ = OperandModifier::Deref; }
-    | ADDRESSOF_TOKEN                                               { $$ = OperandModifier::AddressOf; }
-    ;
-
 %%
 int main(int, char**) {
 	//yydebug = 1;
 	// open a file handle to a particular file:
 	FILE *myfile = fopen("InstructionSet.def", "r");
 	// make sure it is valid:
-	if (!myfile) {
-		cout << "I can't open a.snazzle.file!" << endl;
+	if (!myfile) 
+    {
+		cout << "I can't open InstructionSet.def!" << endl;
 		return -1;
 	}
 	// set flex to read from it instead of defaulting to STDIN:
 	yyin = myfile;
 
 	// parse through the input until there is no more:
-	do {
+	do 
+    {
 		yyparse();
 	} while (!feof(yyin));
 

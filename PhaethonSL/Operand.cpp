@@ -24,7 +24,7 @@ Operand::Operand(
     PSLCompilerContext* pContext
     )
 {
-    _type = OperandType::Memory;
+    _type = OperandType::ConstantMemory;
 
     _offsetInfo._memberName = pContext->_symbols[pVarInfo->GetSymbolIndex()];
 }
@@ -66,7 +66,7 @@ std::string Operand::GetOpString() const
             result << "r" << (unsigned int)_regIndex;
             break;
 
-        case OperandType::Memory:
+        case OperandType::ConstantMemory:
             // The assembler uses C-like syntax for getting addresses of things
             result << "&" << _offsetInfo._memberName;
             break;

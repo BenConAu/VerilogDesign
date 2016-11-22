@@ -72,12 +72,11 @@ typedef union YYSTYPE
 {
     int symIndex;
     int flags;
-    OperandType::Enum opType;
-    OperandModifier::Enum modType;
-    Operand argType;
+    OperandType opType;
+    ISAOperand argType;
 }
 /* Line 1529 of yacc.c.  */
-#line 81 "PACodeGen.tab.h"
+#line 80 "PACodeGen.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

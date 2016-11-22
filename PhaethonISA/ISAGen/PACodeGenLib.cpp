@@ -8,7 +8,7 @@ static std::vector<std::string> g_symbols;
 
 struct InstructionData
 {
-    InstructionData(int si, Operand a1, Operand a2, Operand a3, int flag)
+    InstructionData(int si, ISAOperand a1, ISAOperand a2, ISAOperand a3, int flag)
     {
         symIndex = si;
 
@@ -22,7 +22,7 @@ struct InstructionData
 
         for (int i = 0; i < 3; i++)
         {
-            if (args[i]._type == OperandType::Constant || args[i]._fOffset)
+            if (args[i].Is8ByteOpcode())
             {
                 if (constIndex == -1)
                 {
@@ -34,7 +34,7 @@ struct InstructionData
                 }
             }
 
-            if (args[i]._modifier == OperandModifier::Deref || flag == 1)
+            if (args[i].IsRAMOpcode() || flag == 1)
             {
                 fRAM = true;
             }
@@ -44,7 +44,7 @@ struct InstructionData
     }
 
     int symIndex;
-    Operand args[3];
+    ISAOperand args[3];
     int constIndex;
     bool fRAM;
     std::string opCode;
@@ -52,7 +52,7 @@ struct InstructionData
 
 static std::vector<InstructionData> g_instructionData;
 
-void StoreInstruction(int symIndex, Operand arg1, Operand arg2, Operand arg3, int flag)
+void StoreInstruction(int symIndex, ISAOperand arg1, ISAOperand arg2, ISAOperand arg3, int flag)
 {
     InstructionData data(symIndex, arg1, arg2, arg3, flag);
     g_instructionData.push_back(data);
@@ -122,7 +122,7 @@ void OutputInstructions()
     for (size_t i = 0; i < g_instructionData.size(); i++)
     {
         InstructionData& data = g_instructionData[i];
-        ::fprintf(fcppfile, "    { Instructions::%s, OpCodes::%s, { Operand::%s, Operand::%s, Operand::%s }, %d, \"%s\" },\n",
+        ::fprintf(fcppfile, "    { Instructions::%s, OpCodes::%s, { ISAOperand::%s, ISAOperand::%s, ISAOperand::%s }, %d, \"%s\" },\n",
             Pad(g_symbols[data.symIndex], 10).c_str(),
             Pad(data.opCode, 15).c_str(),
             Pad(data.args[0].GetTypeText(), 22).c_str(),

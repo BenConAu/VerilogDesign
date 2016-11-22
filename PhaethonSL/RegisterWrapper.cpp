@@ -16,13 +16,16 @@ RegisterWrapper::RegisterWrapper(
             break;
 
         case OperandType::Constant:
-        case OperandType::Memory:
+        case OperandType::ConstantMemory:
         case OperandType::MemoryOffset:
             _converted = Operand(_pCollection->AllocateRegister());
             _fAllocated = true;
 
             Operand::PrintInstruction("mov", _converted, result);
             break;
+
+        case OperandType::RegisterMemory:
+            throw "RegisterMemory";
 
         case OperandType::None:
             throw "Cannot wrap none";

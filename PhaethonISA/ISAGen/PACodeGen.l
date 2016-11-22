@@ -16,7 +16,6 @@ using namespace std;
 "Register"        { return REGISTER_TOKEN; }
 "Constant"        { return CONSTANT_TOKEN; }
 "Deref"           { return DEREF_TOKEN; }
-"AddressOf"       { return ADDRESSOF_TOKEN; }
 "Offset"          { return OFFSET_TOKEN; }
 "None"            { return NONE_TOKEN; }
 "RAM"             { return RAM_TOKEN; }

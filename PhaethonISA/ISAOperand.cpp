@@ -1,13 +1,19 @@
 #include "ISAOperand.h"
 
-const char* Operand::ppszTypeText[] = {
+const char* ISAOperand::ppszTypeText[] = {
     "None",
     "Constant",
     "Register",
+    "DerefConstant",
+    "DerefRegister",
+    "DerefRegisterOffset",
 };
 
-const char* Operand::ppszShortTypeText[] = {
+const char* ISAOperand::ppszShortTypeText[] = {
     "",
     "C",
     "R",
+    "dC",
+    "dR",
+    "dRo",
 };

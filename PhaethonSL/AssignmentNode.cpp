@@ -38,7 +38,7 @@ void AssignmentNode::PostProcessNodeImpl()
                 );
             break;
 
-        case OperandType::Memory:
+        case OperandType::ConstantMemory:
         case OperandType::MemoryOffset:
             {
                 // Need to make a register for this to work
