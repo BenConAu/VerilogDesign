@@ -1377,7 +1377,7 @@ yyreduce:
 
   case 9:
 #line 59 "PACodeGen.y"
-    { (yyval.argType) = ISAOperand::DerefRegisterOffset(); ;}
+    { (yyval.argType) = ISAOperand::Construct(OperandType::DerefRegisterOffset, false); ;}
     break;
 
   case 10:
