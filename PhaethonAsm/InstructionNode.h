@@ -2,8 +2,8 @@
 
 #include "AssemblerNode.h"
 #include "../PhaethonISA/InstructionData.h"
+#include "../PhaethonObjWriter/ObjWriter.h"
 #include "PhaethonAsmLib.h"
-#include "ObjWriter.h"
 #include <iostream>
 #include <vector>
 

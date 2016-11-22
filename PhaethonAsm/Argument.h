@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../PhaethonISA/Operand.h"
-#include "ObjArgument.h"
+#include "../PhaethonObjWriter/ObjArgument.h"
 
 namespace SymbolType
 {
@@ -46,6 +46,8 @@ public:
 
 		a._argType = t;
 		a._symType = symType;
+
+		// We store the symbol index here, but we replace it later in ResolveSymbol
 		a._objArg._value = symbol;
 		a._objArg._offset = -1;
 
@@ -57,39 +59,8 @@ public:
 		return Construct(Operand::None(), 0);
 	}
 
-	void Deref()
-	{
-		if (_argType._modifier != OperandModifier::None)
-		{
-			printf("You already had a modifer\n");
-		}
-
-		_argType._modifier = OperandModifier::Deref;
-	}
-
-	void AddressOf()
-	{
-		if (_argType._type == OperandType::Constant && _symType == SymbolType::None)
-		{
-			printf("Wat - address of non symbol constant makes no sense\n");
-		}
-
-		if (_argType._type == OperandType::Register)
-		{
-			printf("Wat - address of register makes no sense\n");
-		}
-
-		if (_argType._type == OperandType::Constant &&
-			_argType._modifier == OperandModifier::Deref &&
-			_symType == SymbolType::VarAddress)
-		{
-			// Somebody wants to store the address of a variable, so
-			// changing the modifer will give us the right thing after
-			// the symbol has been looked up
-			_argType._modifier = OperandModifier::None;
-		}
-	}
-
+	void Deref();
+	void AddressOf();
 	void ResolveSymbol();
 
 public:
