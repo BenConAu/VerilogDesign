@@ -3,16 +3,16 @@
 #include <string>
 
 // This enumeration represents the different types of operand arguments that
-// the assembly can represent. In practice most of them will need to be
-// converted to a register.
+// the hardware can represent. Registers and constants are by far the most
+// common operand arguments.
 enum class OperandType : int
 {
-    None = 0,       // Used for error conditions and the such
-    Constant,       // The result is a constant
-    Register,       // The result is stored in a register
-    ConstantMemory, // The result is a memory location (also a constant, technically)
-	RegisterMemory, // The result is a memory location (stored in a register) - not used by SL yet
-    MemoryOffset,   // The result is a memory location plus an offset
+    None = 0,       		// Used for error conditions and the such or unintialized types
+    Constant,       		// The operand is a constant
+    Register,       		// The operand is a register
+    DerefConstant,  		// The operand is a memory location at the given constant location
+	DerefRegister,  		// The operand is a memory location at the given register location
+    DerefRegisterOffset,	// Just like above, but with a constant offset
 };
 
 class ISAOperand
@@ -26,7 +26,7 @@ public:
 		{
 			if (deref)
 			{
-				t = OperandType::RegisterMemory;
+				t = OperandType::DerefRegister;
 			}
 		}
 
@@ -34,7 +34,7 @@ public:
 		{
 			if (deref)
 			{
-				t = OperandType::ConstantMemory;
+				t = OperandType::DerefConstant;
 			}
 		}
 
@@ -56,7 +56,7 @@ public:
 	{
 		ISAOperand base;
 
-		base._type = OperandType::RegisterMemory;
+		base._type = OperandType::DerefRegister;
 
 		return base;
 	}
@@ -65,7 +65,7 @@ public:
 	{
 		ISAOperand base;
 
-		base._type = OperandType::MemoryOffset;
+		base._type = OperandType::DerefRegisterOffset;
 
 		return base;
 	}
@@ -83,7 +83,7 @@ public:
 	{
 		ISAOperand base;
 
-		base._type = OperandType::ConstantMemory;
+		base._type = OperandType::DerefConstant;
 
 		return base;
 	}
@@ -119,11 +119,12 @@ public:
 		return (_type == other._type);
 	}
 
+	// Return true for opcodes that read / write RAM
 	bool IsRAMOpcode() const
 	{
-		if (_type == OperandType::ConstantMemory ||
-			_type == OperandType::RegisterMemory ||
-			_type == OperandType::MemoryOffset
+		if (_type == OperandType::DerefConstant ||
+			_type == OperandType::DerefRegister ||
+			_type == OperandType::DerefRegisterOffset
 			)
 		{
 			return true;
@@ -132,11 +133,12 @@ public:
 		return false;
 	}
 
+	// Return true for opcodes that need 8 bytes to store
 	bool Is8ByteOpcode() const
 	{
 		if (_type == OperandType::Constant ||
-			_type == OperandType::ConstantMemory ||
-			_type == OperandType::MemoryOffset
+			_type == OperandType::DerefConstant ||
+			_type == OperandType::DerefRegisterOffset
 			)
 		{
 			return true;

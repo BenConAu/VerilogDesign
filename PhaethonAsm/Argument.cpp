@@ -31,7 +31,7 @@ void Argument::AddressOf()
         printf("Wat - address of register makes no sense\n");
     }
 
-    if (_argType._type == OperandType::ConstantMemory &&
+    if (_argType._type == OperandType::DerefConstant &&
         _symType == SymbolType::VarAddress)
     {
         // Somebody wants to store the address of a variable, so
@@ -46,11 +46,11 @@ void Argument::Deref()
     switch(_argType._type)
     {
         case OperandType::Constant:
-            _argType._type = OperandType::ConstantMemory;
+            _argType._type = OperandType::DerefConstant;
             break;
 
         case OperandType::Register:
-            _argType._type = OperandType::RegisterMemory;
+            _argType._type = OperandType::DerefRegister;
             break;
 
         default:

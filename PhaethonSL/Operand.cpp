@@ -24,7 +24,7 @@ Operand::Operand(
     PSLCompilerContext* pContext
     )
 {
-    _type = OperandType::ConstantMemory;
+    _type = OperandType::DerefConstant;
 
     _offsetInfo._memberName = pContext->_symbols[pVarInfo->GetSymbolIndex()];
 }
@@ -36,7 +36,7 @@ Operand::Operand(
     PSLCompilerContext* pContext
     )
 {
-    _type = OperandType::MemoryOffset;
+    _type = OperandType::DerefRegisterOffset;
     _offsetInfo._regIndex = regIndex;
 
     StructTypeInfo* pTypeInfo = dynamic_cast<StructTypeInfo*>(pVarInfo->GetTypeInfo());
@@ -66,12 +66,12 @@ std::string Operand::GetOpString() const
             result << "r" << (unsigned int)_regIndex;
             break;
 
-        case OperandType::ConstantMemory:
+        case OperandType::DerefConstant:
             // The assembler uses C-like syntax for getting addresses of things
             result << "&" << _offsetInfo._memberName;
             break;
 
-        case OperandType::MemoryOffset:
+        case OperandType::DerefRegisterOffset:
             result << "r" << (unsigned int)_offsetInfo._regIndex << "->" << _offsetInfo._typeName << "::" << _offsetInfo._memberName;
             break;
 

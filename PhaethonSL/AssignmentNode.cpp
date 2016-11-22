@@ -38,8 +38,8 @@ void AssignmentNode::PostProcessNodeImpl()
                 );
             break;
 
-        case OperandType::ConstantMemory:
-        case OperandType::MemoryOffset:
+        case OperandType::DerefConstant:
+        case OperandType::DerefRegisterOffset:
             {
                 // Need to make a register for this to work
                 RegisterWrapper wrapper(pFunc->GetRegCollection(), rightResult.get()->_operand);

@@ -16,15 +16,15 @@ RegisterWrapper::RegisterWrapper(
             break;
 
         case OperandType::Constant:
-        case OperandType::ConstantMemory:
-        case OperandType::MemoryOffset:
+        case OperandType::DerefConstant:
+        case OperandType::DerefRegisterOffset:
             _converted = Operand(_pCollection->AllocateRegister());
             _fAllocated = true;
 
             Operand::PrintInstruction("mov", _converted, result);
             break;
 
-        case OperandType::RegisterMemory:
+        case OperandType::DerefRegister:
             throw "RegisterMemory";
 
         case OperandType::None:
