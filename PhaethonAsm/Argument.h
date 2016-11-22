@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../PhaethonISA/Operand.h"
+#include "ObjArgument.h"
 
 namespace SymbolType
 {
@@ -20,9 +21,9 @@ public:
 		Argument a;
 
 		a._argType = t;
-		a._value = v;
 		a._symType = SymbolType::None;
-		a._offset = -1;
+		a._objArg._value = v;
+		a._objArg._offset = -1;
 
 		return a;
 	}
@@ -32,9 +33,9 @@ public:
 		Argument a;
 
 		a._argType = t;
-		a._value = v;
 		a._symType = SymbolType::None;
-		a._offset = offset;
+		a._objArg._value = v;
+		a._objArg._offset = offset;
 
 		return a;
 	}
@@ -44,9 +45,9 @@ public:
 		Argument a;
 
 		a._argType = t;
-		a._value = symbol;
 		a._symType = symType;
-		a._offset = -1;
+		a._objArg._value = symbol;
+		a._objArg._offset = -1;
 
 		return a;
 	}
@@ -93,7 +94,6 @@ public:
 
 public:
 	Operand _argType;
-	unsigned int _value;
-	unsigned int _offset;
+	ObjArgument _objArg;
 	SymbolType::Enum _symType;
 };

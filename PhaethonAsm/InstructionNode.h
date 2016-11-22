@@ -3,7 +3,7 @@
 #include "AssemblerNode.h"
 #include "../PhaethonISA/InstructionData.h"
 #include "PhaethonAsmLib.h"
-#include "ObjInstruction.h"
+#include "ObjWriter.h"
 #include <iostream>
 #include <vector>
 
@@ -14,6 +14,10 @@ public:
 
     void StoreInstruction(Instructions::Enum instr, Argument a1, Argument a2, Argument a3)
     {
+        _args[0] = a1;
+        _args[1] = a2;
+        _args[2] = a3;
+
         //std::cout << "Lookup instr = " << instr << ", " << a1._argType.GetShortTypeText() << ", " << a2._argType.GetShortTypeText() << ", " << a3._argType.GetShortTypeText() << std::endl;
         //std::cout << "       value = " << instr << ", " << a1._value << ", " << a2._value << ", " << a3._value << std::endl;
 
@@ -24,15 +28,10 @@ public:
     			InstructionData::s_data[i].args[1] == a2._argType &&
     			InstructionData::s_data[i].args[2] == a3._argType)
     		{
-                _instruction = ObjInstruction(
-                    InstructionData::s_data[i].opCode,
-                    a1,
-                    a2,
-                    a3,
-                    InstructionData::s_data[i].wordArg
-                    );
+                _opCode = InstructionData::s_data[i].opCode;
+                _wordArg = InstructionData::s_data[i].wordArg;
 
-                s_codeSize += (_instruction._wordArg == -1) ? 4 : 8;
+                s_codeSize += (_wordArg == -1) ? 4 : 8;
 
     			return;
     		}
@@ -45,13 +44,23 @@ public:
     {
         for (int i = 0; i < 3; i++)
         {
-            _instruction._args[i].ResolveSymbol();
+            _args[i].ResolveSymbol();
         }
     }
 
     void OutputInstruction()
     {
-        _instruction.Output();
+        ObjArgument objArgs[3];
+        for (int i = 0; i < 3; i++)
+        {
+            objArgs[i] = _args[i]._objArg;
+        }
+
+        ::OutputInstruction(
+            _opCode,
+            objArgs,
+            _wordArg
+        );
     }
 
 public:
@@ -60,5 +69,7 @@ public:
     static int s_codeSize;
 
 private:
-    ObjInstruction _instruction;
+    OpCodes::Enum _opCode;
+    Argument _args[3];
+    int _wordArg;    
 };
