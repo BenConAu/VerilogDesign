@@ -21,36 +21,36 @@ void Argument::ResolveSymbol()
 
 void Argument::AddressOf()
 {
-    if (_argType._type == OperandType::Constant && _symType == SymbolType::None)
+    if (_argType == OperandType::Constant && _symType == SymbolType::None)
     {
         printf("Wat - address of non symbol constant makes no sense\n");
     }
 
-    if (_argType._type == OperandType::Register)
+    if (_argType == OperandType::Register)
     {
         printf("Wat - address of register makes no sense\n");
     }
 
-    if (_argType._type == OperandType::DerefConstant &&
+    if (_argType == OperandType::DerefConstant &&
         _symType == SymbolType::VarAddress)
     {
         // Somebody wants to store the address of a variable, so
         // changing the modifer will give us the right thing after
         // the symbol has been looked up
-        _argType._type = OperandType::Constant;
+        _argType = OperandType::Constant;
     }
 }
 
 void Argument::Deref()
 {
-    switch(_argType._type)
+    switch(_argType)
     {
         case OperandType::Constant:
-            _argType._type = OperandType::DerefConstant;
+            _argType = OperandType::DerefConstant;
             break;
 
         case OperandType::Register:
-            _argType._type = OperandType::DerefRegister;
+            _argType = OperandType::DerefRegister;
             break;
 
         default:

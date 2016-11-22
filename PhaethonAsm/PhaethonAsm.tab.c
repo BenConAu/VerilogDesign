@@ -1585,32 +1585,32 @@ yyreduce:
 
   case 29:
 #line 148 "PhaethonAsm.y"
-    { (yyval.arg) = Argument::Construct(ISAOperand::Constant(), (yyvsp[(2) - (2)].symIndex), SymbolType::LabelAddress); ;}
+    { (yyval.arg) = Argument::Construct(OperandType::Constant, (yyvsp[(2) - (2)].symIndex), SymbolType::LabelAddress); ;}
     break;
 
   case 30:
 #line 152 "PhaethonAsm.y"
-    { (yyval.arg) = Argument::Construct(ISAOperand::Register(), (yyvsp[(1) - (1)].regIndex)); ;}
+    { (yyval.arg) = Argument::Construct(OperandType::Register, (yyvsp[(1) - (1)].regIndex)); ;}
     break;
 
   case 31:
 #line 153 "PhaethonAsm.y"
-    { (yyval.arg) = Argument::Construct(ISAOperand::Constant(), (yyvsp[(1) - (1)].intVal)); ;}
+    { (yyval.arg) = Argument::Construct(OperandType::Constant, (yyvsp[(1) - (1)].intVal)); ;}
     break;
 
   case 32:
 #line 154 "PhaethonAsm.y"
-    { (yyval.arg) = Argument::Construct(ISAOperand::Constant(), StructDef::GetSize((yyvsp[(3) - (4)].symIndex))); ;}
+    { (yyval.arg) = Argument::Construct(OperandType::Constant, StructDef::GetSize((yyvsp[(3) - (4)].symIndex))); ;}
     break;
 
   case 33:
 #line 155 "PhaethonAsm.y"
-    { (yyval.arg) = Argument::Construct(ISAOperand::DerefConstant(), (yyvsp[(1) - (1)].symIndex), SymbolType::VarAddress); ;}
+    { (yyval.arg) = Argument::Construct(OperandType::DerefConstant, (yyvsp[(1) - (1)].symIndex), SymbolType::VarAddress); ;}
     break;
 
   case 34:
 #line 156 "PhaethonAsm.y"
-    { (yyval.arg) = Argument::Construct(ISAOperand::DerefRegisterOffset(), (yyvsp[(1) - (5)].regIndex), StructDef::CalcOffset((yyvsp[(3) - (5)].symIndex), (yyvsp[(5) - (5)].symIndex))); ;}
+    { (yyval.arg) = Argument::Construct(OperandType::DerefRegisterOffset, (yyvsp[(1) - (5)].regIndex), StructDef::CalcOffset((yyvsp[(3) - (5)].symIndex), (yyvsp[(5) - (5)].symIndex))); ;}
     break;
 
   case 35:

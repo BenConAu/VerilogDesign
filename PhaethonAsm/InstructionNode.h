@@ -24,9 +24,9 @@ public:
     	for (int i = 0; i < InstructionData::s_dataCount; i++)
     	{
     		if (InstructionData::s_data[i].instr == instr &&
-    			InstructionData::s_data[i].args[0] == a1._argType &&
-    			InstructionData::s_data[i].args[1] == a2._argType &&
-    			InstructionData::s_data[i].args[2] == a3._argType)
+    			InstructionData::s_data[i].args[0]._type == a1._argType &&
+    			InstructionData::s_data[i].args[1]._type == a2._argType &&
+    			InstructionData::s_data[i].args[2]._type == a3._argType)
     		{
                 _opCode = InstructionData::s_data[i].opCode;
                 _wordArg = InstructionData::s_data[i].wordArg;
@@ -37,7 +37,12 @@ public:
     		}
     	}
 
-    	std::cout << "Unknown instruction instr = " << instr << ", " << a1._argType.GetShortTypeText() << ", " << a2._argType.GetShortTypeText() << ", " << a3._argType.GetShortTypeText() << std::endl;
+    	std::cout 
+            << "Unknown instruction instr = " 
+            << instr  << ", " 
+            << ISAOperand::GetShortTypeText(a1._argType) << ", " 
+            << ISAOperand::GetShortTypeText(a2._argType) << ", " 
+            << ISAOperand::GetShortTypeText(a3._argType) << std::endl;
     }
 
     void ResolveSymbols()

@@ -97,18 +97,18 @@ public:
 		return base;
 	}
 
-	std::string GetShortTypeText()
+	static std::string GetShortTypeText(OperandType type)
 	{
 		std::string shortTypeText;
-		shortTypeText.append(ppszShortTypeText[static_cast<int>(_type)]);
+		shortTypeText.append(ppszShortTypeText[static_cast<int>(type)]);
 
 		return shortTypeText;
 	}
 
-	std::string GetTypeText()
+	static std::string GetTypeText(OperandType type)
 	{
 		std::string typeText;
-		typeText.append(ppszTypeText[static_cast<int>(_type)]);
+		typeText.append(ppszTypeText[static_cast<int>(type)]);
 		typeText.append("()");
 
 		return typeText;
