@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../PhaethonISA/ISAOperand.h"
+#include "../PhaethonISA/OperandType.h"
 #include "VariableLocation.h"
 #include <string>
 

@@ -122,7 +122,7 @@ void OutputInstructions()
     for (size_t i = 0; i < g_instructionData.size(); i++)
     {
         InstructionData& data = g_instructionData[i];
-        ::fprintf(fcppfile, "    { Instructions::%s, OpCodes::%s, { ISAOperand::%s, ISAOperand::%s, ISAOperand::%s }, %d, \"%s\" },\n",
+        ::fprintf(fcppfile, "    { Instructions::%s, OpCodes::%s, { OperandType::%s, OperandType::%s, OperandType::%s }, %d, \"%s\" },\n",
             Pad(g_symbols[data.symIndex], 10).c_str(),
             Pad(data.opCode, 15).c_str(),
             Pad(OperandTypeHelper::GetTypeText(data.args[0]._type), 22).c_str(),

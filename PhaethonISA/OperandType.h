@@ -30,7 +30,6 @@ public:
 	{
 		std::string typeText;
 		typeText.append(ppszTypeText[static_cast<int>(type)]);
-		typeText.append("()");
 
 		return typeText;
 	}

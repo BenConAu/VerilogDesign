@@ -3,7 +3,7 @@
 #include <cstdio>
 #include <iostream>
 #include "PACodeGenLib.h"
-#include "../ISAOperand.h"
+#include "ISAOperand.h"
 
 using namespace std;
 

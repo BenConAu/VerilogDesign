@@ -1,13 +1,13 @@
 #pragma once
 
 #include "../PhaethonISA/Generated/PhaethonOpCode.h"
-#include "../PhaethonISA/ISAOperand.h"
+#include "OperandType.h"
 
 struct InstructionData
 {
 	Instructions::Enum instr;
 	OpCodes::Enum opCode;
-	ISAOperand args[3];
+	OperandType argTypes[3];
 	int wordArg;
 	const char* pszName;
 

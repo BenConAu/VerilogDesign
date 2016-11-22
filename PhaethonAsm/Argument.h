@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../PhaethonISA/ISAOperand.h"
+#include "../PhaethonISA/OperandType.h"
 #include "../PhaethonObjWriter/ObjArgument.h"
 
 namespace SymbolType

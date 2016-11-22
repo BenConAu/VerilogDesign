@@ -1,6 +1,6 @@
 #pragma once
 
-#include "OperandType.h"
+#include "../OperandType.h"
 
 class ISAOperand
 {

@@ -16,7 +16,6 @@ PhaethonAsm: 			\
 	../PhaethonObjWriter/ObjWriter.cpp       	\
 	../PhaethonISA/Generated/PhaethonOpCode.h 	\
 	../PhaethonISA/Generated/PhaethonOpCode.cpp \
-	../PhaethonISA/ISAOperand.h            		\
 	../PhaethonISA/OperandType.h 				\
 	../PhaethonISA/OperandType.cpp 				\
 	../PhaethonISA/InstructionData.h
