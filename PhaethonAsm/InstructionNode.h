@@ -40,9 +40,9 @@ public:
     	std::cout 
             << "Unknown instruction instr = " 
             << instr  << ", " 
-            << ISAOperand::GetShortTypeText(a1._argType) << ", " 
-            << ISAOperand::GetShortTypeText(a2._argType) << ", " 
-            << ISAOperand::GetShortTypeText(a3._argType) << std::endl;
+            << OperandTypeHelper::GetShortTypeText(a1._argType) << ", " 
+            << OperandTypeHelper::GetShortTypeText(a2._argType) << ", " 
+            << OperandTypeHelper::GetShortTypeText(a3._argType) << std::endl;
     }
 
     void ResolveSymbols()

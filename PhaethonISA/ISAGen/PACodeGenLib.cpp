@@ -39,7 +39,7 @@ struct InstructionData
                 fRAM = true;
             }
 
-            opCode.append(ISAOperand::GetShortTypeText(args[i]._type));
+            opCode.append(OperandTypeHelper::GetShortTypeText(args[i]._type));
         }
     }
 
@@ -125,9 +125,9 @@ void OutputInstructions()
         ::fprintf(fcppfile, "    { Instructions::%s, OpCodes::%s, { ISAOperand::%s, ISAOperand::%s, ISAOperand::%s }, %d, \"%s\" },\n",
             Pad(g_symbols[data.symIndex], 10).c_str(),
             Pad(data.opCode, 15).c_str(),
-            Pad(ISAOperand::GetTypeText(data.args[0]._type), 22).c_str(),
-            Pad(ISAOperand::GetTypeText(data.args[1]._type), 22).c_str(),
-            Pad(ISAOperand::GetTypeText(data.args[2]._type), 12).c_str(),
+            Pad(OperandTypeHelper::GetTypeText(data.args[0]._type), 22).c_str(),
+            Pad(OperandTypeHelper::GetTypeText(data.args[1]._type), 22).c_str(),
+            Pad(OperandTypeHelper::GetTypeText(data.args[2]._type), 12).c_str(),
             data.constIndex,
             data.opCode.c_str()
         );
