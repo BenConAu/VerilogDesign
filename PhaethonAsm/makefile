@@ -16,8 +16,8 @@ PhaethonAsm: 			\
 	../PhaethonObjWriter/ObjWriter.cpp       	\
 	../PhaethonISA/Generated/PhaethonOpCode.h 	\
 	../PhaethonISA/Generated/PhaethonOpCode.cpp \
-	../PhaethonISA/Operand.cpp 					\
-	../PhaethonISA/Operand.h            		\
+	../PhaethonISA/ISAOperand.cpp 				\
+	../PhaethonISA/ISAOperand.h            		\
 	../PhaethonISA/InstructionData.h
 	clang++ -std=c++11 -Wno-deprecated-register \
 	lex.yy.c 			\
@@ -27,7 +27,7 @@ PhaethonAsm: 			\
 	DataSegmentDef.cpp  \
 	InstructionNode.cpp \
 	../PhaethonObjWriter/ObjWriter.cpp       	\
-	../PhaethonISA/Operand.cpp 					\
+	../PhaethonISA/ISAOperand.cpp 				\
 	../PhaethonISA/Generated/PhaethonOpCode.cpp \
 	-o PhaethonAsm
 

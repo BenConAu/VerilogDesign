@@ -100,7 +100,7 @@
 #include <cstdio>
 #include <iostream>
 #include "PACodeGenLib.h"
-#include "../Operand.h"
+#include "../ISAOperand.h"
 
 using namespace std;
 

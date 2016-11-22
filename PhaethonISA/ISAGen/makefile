@@ -2,13 +2,13 @@ ISAGen: \
 	lex.yy.c \
 	PACodeGen.tab.c \
 	PACodeGenLib.cpp \
-	../Operand.cpp \
-	../Operand.h
+	../ISAOperand.cpp \
+	../ISAOperand.h
 	clang++ -std=c++11 \
 	lex.yy.c \
 	PACodeGen.tab.c \
 	PACodeGenLib.cpp \
-	../Operand.cpp \
+	../ISAOperand.cpp \
 	-o ISAGen
 
 lex.yy.c: PACodeGen.l

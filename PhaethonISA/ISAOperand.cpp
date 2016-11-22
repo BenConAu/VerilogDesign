@@ -1,4 +1,4 @@
-#include "Operand.h"
+#include "ISAOperand.h"
 
 const char* Operand::ppszTypeText[] = {
     "None",
