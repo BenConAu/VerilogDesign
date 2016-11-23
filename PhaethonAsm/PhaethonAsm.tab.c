@@ -1507,7 +1507,7 @@ yyreduce:
 
   case 16:
 #line 107 "PhaethonAsm.y"
-    { (yyval.dataSegmentItemEntry) = DataSegmentItemEntry::Construct(); (yyval.dataSegmentItemEntry)->SetIntProperty("value", (yyvsp[(1) - (1)].intVal)); ;}
+    { (yyval.dataSegmentItemEntry) = AssemblerNode::Construct<DataSegmentItemEntry>(); (yyval.dataSegmentItemEntry)->SetIntProperty("value", (yyvsp[(1) - (1)].intVal)); ;}
     break;
 
   case 17:
@@ -1528,7 +1528,7 @@ yyreduce:
   case 20:
 #line 120 "PhaethonAsm.y"
     {
-	    (yyval.structMember) = StructMember::Construct();
+	    (yyval.structMember) = AssemblerNode::Construct<StructMember>();
 		(yyval.structMember)->SetIntProperty("type", (yyvsp[(1) - (2)].symIndex));
 		(yyval.structMember)->SetIntProperty("name", (yyvsp[(2) - (2)].symIndex));
 	;}
@@ -1537,7 +1537,7 @@ yyreduce:
   case 21:
 #line 125 "PhaethonAsm.y"
     {
-		(yyval.structMember) = StructMember::Construct();
+		(yyval.structMember) = AssemblerNode::Construct<StructMember>();
 		(yyval.structMember)->SetIntProperty("type", (yyvsp[(1) - (5)].symIndex));
 		(yyval.structMember)->SetIntProperty("name", (yyvsp[(2) - (5)].symIndex));
 		(yyval.structMember)->SetIntProperty("arraySize", (yyvsp[(4) - (5)].intVal));
@@ -1546,25 +1546,25 @@ yyreduce:
 
   case 22:
 #line 134 "PhaethonAsm.y"
-    { (yyval.instructonNode) = InstructionNode::Construct(); (yyval.instructonNode)->StoreInstruction((yyvsp[(1) - (6)].instrIndex), (yyvsp[(2) - (6)].arg), (yyvsp[(4) - (6)].arg), (yyvsp[(6) - (6)].arg)); ;}
+    { (yyval.instructonNode) = AssemblerNode::Construct<InstructionNode>(); (yyval.instructonNode)->StoreInstruction((yyvsp[(1) - (6)].instrIndex), (yyvsp[(2) - (6)].arg), (yyvsp[(4) - (6)].arg), (yyvsp[(6) - (6)].arg)); ;}
     break;
 
   case 23:
 #line 135 "PhaethonAsm.y"
-    { (yyval.instructonNode) = InstructionNode::Construct(); (yyval.instructonNode)->StoreInstruction((yyvsp[(1) - (4)].instrIndex), (yyvsp[(2) - (4)].arg), (yyvsp[(4) - (4)].arg), Argument::ConstructNone()); ;}
+    { (yyval.instructonNode) = AssemblerNode::Construct<InstructionNode>(); (yyval.instructonNode)->StoreInstruction((yyvsp[(1) - (4)].instrIndex), (yyvsp[(2) - (4)].arg), (yyvsp[(4) - (4)].arg), Argument::ConstructNone()); ;}
     break;
 
   case 24:
 #line 136 "PhaethonAsm.y"
     {
-    	(yyval.instructonNode) = InstructionNode::Construct(); (yyval.instructonNode)->StoreInstruction((yyvsp[(1) - (2)].instrIndex), (yyvsp[(2) - (2)].arg), Argument::ConstructNone(), Argument::ConstructNone());
+    	(yyval.instructonNode) = AssemblerNode::Construct<InstructionNode>(); (yyval.instructonNode)->StoreInstruction((yyvsp[(1) - (2)].instrIndex), (yyvsp[(2) - (2)].arg), Argument::ConstructNone(), Argument::ConstructNone());
 	;}
     break;
 
   case 25:
 #line 139 "PhaethonAsm.y"
     {
-    	(yyval.instructonNode) = InstructionNode::Construct(); (yyval.instructonNode)->StoreInstruction((yyvsp[(1) - (1)].instrIndex), Argument::ConstructNone(), Argument::ConstructNone(), Argument::ConstructNone());
+    	(yyval.instructonNode) = AssemblerNode::Construct<InstructionNode>(); (yyval.instructonNode)->StoreInstruction((yyvsp[(1) - (1)].instrIndex), Argument::ConstructNone(), Argument::ConstructNone(), Argument::ConstructNone());
     ;}
     break;
 

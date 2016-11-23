@@ -7,6 +7,7 @@ PhaethonAsm: 			\
 	AssemblerNode.h 	\
 	AssemblerListNode.h \
 	StructDef.h 		\
+	StructMember.h      \
 	DataSegmentDef.h 	\
 	DataSegmentDef.cpp  \
 	Argument.h 			\

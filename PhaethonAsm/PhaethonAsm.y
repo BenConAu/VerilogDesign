@@ -104,7 +104,7 @@ constant_list:
 	;
 
 constant_item:
-      INT_TOKEN                                                        { $$ = DataSegmentItemEntry::Construct(); $$->SetIntProperty("value", $1); }
+      INT_TOKEN                                                        { $$ = AssemblerNode::Construct<DataSegmentItemEntry>(); $$->SetIntProperty("value", $1); }
 	;
 
 struct_definition:
@@ -118,12 +118,12 @@ struct_member_list:
 
 struct_member:
 	  SYMBOL_TOKEN SYMBOL_TOKEN                                        {
-	    $$ = StructMember::Construct();
+	    $$ = AssemblerNode::Construct<StructMember>();
 		$$->SetIntProperty("type", $1);
 		$$->SetIntProperty("name", $2);
 	}
 	| SYMBOL_TOKEN SYMBOL_TOKEN ADDR_LEFT INT_TOKEN ADDR_RIGHT         {
-		$$ = StructMember::Construct();
+		$$ = AssemblerNode::Construct<StructMember>();
 		$$->SetIntProperty("type", $1);
 		$$->SetIntProperty("name", $2);
 		$$->SetIntProperty("arraySize", $4);
@@ -131,13 +131,13 @@ struct_member:
 	;
 
 instruction:
-      INSTR_TOKEN_3 argument COMMA_TOKEN argument COMMA_TOKEN argument { $$ = InstructionNode::Construct(); $$->StoreInstruction($1, $2, $4, $6); }
-    | INSTR_TOKEN_2 argument COMMA_TOKEN argument                      { $$ = InstructionNode::Construct(); $$->StoreInstruction($1, $2, $4, Argument::ConstructNone()); }
+      INSTR_TOKEN_3 argument COMMA_TOKEN argument COMMA_TOKEN argument { $$ = AssemblerNode::Construct<InstructionNode>(); $$->StoreInstruction($1, $2, $4, $6); }
+    | INSTR_TOKEN_2 argument COMMA_TOKEN argument                      { $$ = AssemblerNode::Construct<InstructionNode>(); $$->StoreInstruction($1, $2, $4, Argument::ConstructNone()); }
     | INSTR_TOKEN_1 argument                                           {
-    	$$ = InstructionNode::Construct(); $$->StoreInstruction($1, $2, Argument::ConstructNone(), Argument::ConstructNone());
+    	$$ = AssemblerNode::Construct<InstructionNode>(); $$->StoreInstruction($1, $2, Argument::ConstructNone(), Argument::ConstructNone());
 	}
 	| INSTR_TOKEN_0                                                    {
-    	$$ = InstructionNode::Construct(); $$->StoreInstruction($1, Argument::ConstructNone(), Argument::ConstructNone(), Argument::ConstructNone());
+    	$$ = AssemblerNode::Construct<InstructionNode>(); $$->StoreInstruction($1, Argument::ConstructNone(), Argument::ConstructNone(), Argument::ConstructNone());
     }
     ;
 

@@ -1,9 +1,6 @@
 #pragma once
 
-class DataSegmentItemEntry : public AssemblerNode<DataSegmentItemEntry>
+class DataSegmentItemEntry : public AssemblerNode
 {
-public:
-    static std::vector<std::unique_ptr<DataSegmentItemEntry> > s_defs;
-    static std::vector<std::unique_ptr<DataSegmentItemEntry> >& GlobalList() { return s_defs; }
 };
 

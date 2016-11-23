@@ -18,9 +18,6 @@ public:
     static void ResolveSymbols();
     static int CalcAddress(int symbol);
 
-    static std::vector<std::unique_ptr<DataSegmentDef> > s_defs;
-    static std::vector<std::unique_ptr<DataSegmentDef> >& GlobalList() { return s_defs; }
-
 private:
     int _startAddress;
 };

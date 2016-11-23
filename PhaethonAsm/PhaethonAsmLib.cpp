@@ -8,14 +8,9 @@
 #include <iostream>
 #include <vector>
 
-std::vector<std::unique_ptr<StructDef> > StructDef::s_defs;
-std::vector<std::unique_ptr<StructMember> > StructMember::s_defs;
-std::vector<std::unique_ptr<DataSegmentDef> > DataSegmentDef::s_defs;
-std::vector<std::unique_ptr<DataSegmentItemDef> > DataSegmentItemDef::s_defs;
-std::vector<std::unique_ptr<DataSegmentItemEntry> > DataSegmentItemEntry::s_defs;
-std::vector<std::unique_ptr<InstructionNode> > InstructionNode::s_defs;
-
 StructDef::StructDefInfo StructDef::s_defInfo;
+
+std::vector<std::unique_ptr<AssemblerNode> > s_nodeDefs;
 
 struct LabelData
 {
@@ -75,14 +70,22 @@ void OutputCode()
 	DataSegmentDef::ResolveSymbols();
 
 	// Now output all of the instructions
-	for (size_t i = 0; i < InstructionNode::GlobalList().size(); i++)
+	for (size_t i = 0; i < s_nodeDefs.size(); i++)
 	{
-		InstructionNode::GlobalList()[i]->OutputInstruction();
+		InstructionNode* pInstr = dynamic_cast<InstructionNode*>(s_nodeDefs[i].get());
+		if (pInstr != nullptr)
+		{
+			pInstr->OutputInstruction();
+		}
 	}
 
 	// Now the data segments can be printed
-	for (size_t ds = 0; ds < DataSegmentDef::GlobalList().size(); ds++)
+	for (size_t i = 0; i < s_nodeDefs.size(); i++)
 	{
-		DataSegmentDef::GlobalList()[ds]->OutputDataSegment();
+		DataSegmentDef* pDS = dynamic_cast<DataSegmentDef*>(s_nodeDefs[i].get());
+		if (pDS != nullptr)
+		{
+			pDS->OutputDataSegment();
+		}
 	}
 }

@@ -1,38 +1,11 @@
 #pragma once
 
+#include "StructMember.h"
 #include "AssemblerListNode.h"
-
-class StructMember : public AssemblerNode<StructMember>
-{
-public:
-    int GetSize()
-    {
-        if (GetIntProperty("type") != AddSymbol("word"))
-        {
-            printf("Non-word members of structs not supported yet\n");
-        }
-
-        int arraySize = GetIntProperty("arraySize");
-        if (arraySize == 0)
-        {
-            // Nothing stored means it is not an array
-            return 4;
-        }
-        else
-        {
-            // Array of word
-            return arraySize * 4;
-        }
-    }
-
-public:
-    static std::vector<std::unique_ptr<StructMember> > s_defs;
-    static std::vector<std::unique_ptr<StructMember> >& GlobalList() { return s_defs; }
-};
 
 class StructDef : public AssemblerListNode<StructDef, StructMember>
 {
-public:
+  public:
     int GetSize()
     {
         int storedSize = GetIntProperty("size");
@@ -54,7 +27,7 @@ public:
 
         for (size_t i = 0; i < GetItemCount(); i++)
         {
-            StructMember* pMember = GetItem(i);
+            StructMember *pMember = GetItem(i);
 
             //printf("Member %i is %p\n", (int)i, pMember);
             if (pMember->GetIntProperty("name") == memberSymIndex)
@@ -76,19 +49,23 @@ public:
 
         //for (size_t i = 0; i < GetItemCount(); i++)
         //{
-            //printf("Member %d of %d is symbol %d\n", (int)i, GetItemCount(), GetItem(i)->GetIntProperty("name"));
+        //printf("Member %d of %d is symbol %d\n", (int)i, GetItemCount(), GetItem(i)->GetIntProperty("name"));
         //}
     }
 
     static int CalcOffset(int structSymIndex, int memberSymIndex)
     {
-        for (size_t i = 0; i < s_defs.size(); i++)
+        for (size_t i = 0; i < s_nodeDefs.size(); i++)
         {
-            //printf("Name of struct %d is %d\n", (int)i, s_defs[i]->GetIntProperty("name"));
-
-            if (s_defs[i]->GetIntProperty("name") == structSymIndex)
+            StructDef *pDef = dynamic_cast<StructDef *>(s_nodeDefs[i].get());
+            if (pDef != nullptr)
             {
-                return s_defs[i]->CalcOffset(memberSymIndex);
+                //printf("Name of struct %d is %d\n", (int)i, s_defs[i]->GetIntProperty("name"));
+
+                if (pDef->GetIntProperty("name") == structSymIndex)
+                {
+                    return pDef->CalcOffset(memberSymIndex);
+                }
             }
         }
 
@@ -98,13 +75,17 @@ public:
 
     static int GetSize(int typeSymbol)
     {
-        for (size_t i = 0; i < s_defs.size(); i++)
+        for (size_t i = 0; i < s_nodeDefs.size(); i++)
         {
-            //printf("Name of struct %d is %d\n", (int)i, s_defs[i]->GetIntProperty("name"));
-
-            if (s_defs[i]->GetIntProperty("name") == typeSymbol)
+            StructDef *pDef = dynamic_cast<StructDef *>(s_nodeDefs[i].get());
+            if (pDef != nullptr)
             {
-                return s_defs[i]->GetSize();
+                //printf("Name of struct %d is %d\n", (int)i, s_defs[i]->GetIntProperty("name"));
+
+                if (pDef->GetIntProperty("name") == typeSymbol)
+                {
+                    return pDef->GetSize();
+                }
             }
         }
 
@@ -112,16 +93,13 @@ public:
         return -1;
     }
 
-    static std::vector<std::unique_ptr<StructDef> > s_defs;
-    static std::vector<std::unique_ptr<StructDef> >& GlobalList() { return s_defs; }
-
-private:
+  private:
     class StructDefInfo
     {
-    public:
+      public:
         StructDefInfo()
         {
-            StructDef* pWordStruct = StructDef::Construct(nullptr);
+            StructDef *pWordStruct = StructDef::Construct(nullptr);
             pWordStruct->SetIntProperty("name", AddSymbol("word"));
             pWordStruct->SetIntProperty("size", 4);
 

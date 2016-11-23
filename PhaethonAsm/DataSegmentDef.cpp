@@ -52,37 +52,49 @@ void DataSegmentDef::ResolveSymbols()
     int startByte = InstructionNode::GetCodeSize();
 
     // Set the start address of each segment
-    for (size_t i = 0; i < DataSegmentDef::s_defs.size(); i++)
+    for (size_t i = 0; i < s_nodeDefs.size(); i++)
     {
-        //printf("Setting start of segment to %x\n", startByte);
-        s_defs[i]->_startAddress = startByte;
-        startByte += s_defs[i]->GetSize();
+        DataSegmentDef *pDef = dynamic_cast<DataSegmentDef *>(s_nodeDefs[i].get());
+        if (pDef != nullptr)
+        {
+            //printf("Setting start of segment to %x\n", startByte);
+            pDef->_startAddress = startByte;
+            startByte += pDef->GetSize();
+        }
     }
 
     // Now we can resolve all of the instructions
-    for (size_t i = 0; i < InstructionNode::GlobalList().size(); i++)
+    for (size_t i = 0; i < s_nodeDefs.size(); i++)
     {
-        InstructionNode::GlobalList()[i]->ResolveSymbols();
+        InstructionNode *pInst = dynamic_cast<InstructionNode *>(s_nodeDefs[i].get());
+        if (pInst != nullptr)
+        {
+            pInst->ResolveSymbols();
+        }
     }
 }
 
 int DataSegmentDef::CalcAddress(int symbol)
 {
-    for (int ds = 0; ds < DataSegmentDef::s_defs.size(); ds++)
+    for (int ds = 0; ds < s_nodeDefs.size(); ds++)
     {
-        int startByte = s_defs[ds]->_startAddress;
-
-        for (int i = 0; i < DataSegmentDef::s_defs[ds]->GetItemCount(); i++)
+        DataSegmentDef *pDS = dynamic_cast<DataSegmentDef *>(s_nodeDefs[ds].get());
+        if (pDS != nullptr)
         {
-            DataSegmentItemDef *itemDef = DataSegmentDef::s_defs[ds]->GetItem(i);
-            if (itemDef->GetIntProperty("name") == symbol)
+            int startByte = pDS->_startAddress;
+
+            for (int i = 0; i < pDS->GetItemCount(); i++)
             {
-                return startByte;
+                DataSegmentItemDef *itemDef = pDS->GetItem(i);
+                if (itemDef->GetIntProperty("name") == symbol)
+                {
+                    return startByte;
+                }
+
+                //printf("Type of item %d is %d\n", i, itemDef->GetIntProperty("type"));
+
+                startByte += itemDef->CalcSize();
             }
-
-            //printf("Type of item %d is %d\n", i, itemDef->GetIntProperty("type"));
-
-            startByte += itemDef->CalcSize();
         }
     }
 

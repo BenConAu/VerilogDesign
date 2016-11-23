@@ -4,12 +4,12 @@
 #include <vector>
 
 template<typename DefType, typename ChildDefType>
-class AssemblerListNode : public AssemblerNode<DefType>
+class AssemblerListNode : public AssemblerNode
 {
 public:
     static DefType* Construct(ChildDefType* pFirstItem)
     {
-        DefType* pNewList = AssemblerNode<DefType>::Construct();
+        DefType* pNewList = AssemblerNode::Construct<DefType>();
         if (pFirstItem != nullptr)
         {
             pNewList->AddMember(pFirstItem);
