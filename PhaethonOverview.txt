@@ -1,3 +1,31 @@
+Phaethon
+
+Phaethon is an FPGA design project to explore what a ray tracing GPU would look like
+at a hardware level. It is meant to explore what novel enhancements would be needed
+at the ALU level to move the needle. By building a good enough stack, you can experiment
+with new instructions that could drastically increase memory bandwidth efficiency or
+scheduling.
+
+Directory Structure
+
+In order of grokking:
+
+PhaethonISA - this contains the basic instruction set definition that both the Verilog
+and software projects use. This is defined in this way so that the opcodes and operand
+structures can be consistent between the object format and the Verilog.
+
+PhaethonHDL - this contains the Verilog modules that define the hardware.
+
+PhaethonObjWriter - this is the code for outputting the object format that Phaethon runs
+on. It is shared by both the assembler and high level language.
+
+PhaethonAsm - this is an assembler for the Phaethon assembly language.
+
+PhaethonSL - this is a compiler for the Phaethon high level shading language.
+
+PhaethonEmu - this is an emulator for the Phaethon hardware. It is out of date, but
+valuable to debug some things that the verilog simulator makes it hard to verify.
+
 Instruction Set Overview
 
 The Phaethon instruction set is designed to be simple to implement, but allow for powerful
