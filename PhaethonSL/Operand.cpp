@@ -63,7 +63,7 @@ std::string Operand::GetOpString() const
 
         case OperandType::Register:
             // Return the register syntax
-            result << "r" << GetRegIndex();
+            result << "r" << (unsigned int)GetRegIndex();
             break;
 
         case OperandType::DerefConstant:
@@ -72,7 +72,7 @@ std::string Operand::GetOpString() const
             break;
 
         case OperandType::DerefRegisterOffset:
-            result << "r" << GetRegIndex() << "->" << _offsetInfo._typeName << "::" << _offsetInfo._memberName;
+            result << "r" << (unsigned int)GetRegIndex() << "->" << _offsetInfo._typeName << "::" << _offsetInfo._memberName;
             break;
 
         default:
