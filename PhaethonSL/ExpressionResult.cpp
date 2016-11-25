@@ -2,14 +2,14 @@
 #include "VariableInfo.h"
 
 ExpressionResult::ExpressionResult(TypeInfo* pTypeInfo, Operand operand, RegisterCollection* pCollection) : 
-    _tempRegister(operand._regIndex, pCollection)
+    _tempRegister(operand.GetRegIndex(), pCollection)
 {
-    if (operand._type == OperandType::None)
+    if (operand.GetType() == OperandType::None)
     {
         throw "Cannot give none operands to ExpressionResult";
     }
 
-    if (operand._type != OperandType::Register)
+    if (operand.GetType() != OperandType::Register)
     {
         throw "Dude you can't go making a temporary register object without a register";
     }
@@ -20,7 +20,7 @@ ExpressionResult::ExpressionResult(TypeInfo* pTypeInfo, Operand operand, Registe
 
 ExpressionResult::ExpressionResult(TypeInfo* pTypeInfo, Operand operand)
 {
-    if (operand._type == OperandType::None)
+    if (operand.GetType() == OperandType::None)
     {
         throw "Cannot give none operands to ExpressionResult";
     }
@@ -31,7 +31,7 @@ ExpressionResult::ExpressionResult(TypeInfo* pTypeInfo, Operand operand)
 
 ExpressionResult::ExpressionResult(VariableInfo* pVarInfo, Operand operand)
 {
-    if (operand._type == OperandType::None)
+    if (operand.GetType() == OperandType::None)
     {
         throw "Cannot give none operands to ExpressionResult";
     }

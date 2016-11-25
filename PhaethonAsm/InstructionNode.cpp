@@ -14,9 +14,9 @@ void InstructionNode::StoreInstruction(Instructions::Enum instr, Argument a1, Ar
     for (int i = 0; i < InstructionData::s_dataCount; i++)
     {
         if (InstructionData::s_data[i].instr == instr &&
-            InstructionData::s_data[i].argTypes[0] == a1._argType &&
-            InstructionData::s_data[i].argTypes[1] == a2._argType &&
-            InstructionData::s_data[i].argTypes[2] == a3._argType)
+            InstructionData::s_data[i].argTypes[0] == a1._objArg._argType &&
+            InstructionData::s_data[i].argTypes[1] == a2._objArg._argType &&
+            InstructionData::s_data[i].argTypes[2] == a3._objArg._argType)
         {
             _opCode = InstructionData::s_data[i].opCode;
             _wordArg = InstructionData::s_data[i].wordArg;
@@ -30,9 +30,9 @@ void InstructionNode::StoreInstruction(Instructions::Enum instr, Argument a1, Ar
     std::cout
         << "Unknown instruction instr = "
         << instr << ", "
-        << OperandTypeHelper::GetShortTypeText(a1._argType) << ", "
-        << OperandTypeHelper::GetShortTypeText(a2._argType) << ", "
-        << OperandTypeHelper::GetShortTypeText(a3._argType) << std::endl;
+        << OperandTypeHelper::GetShortTypeText(a1._objArg._argType) << ", "
+        << OperandTypeHelper::GetShortTypeText(a2._objArg._argType) << ", "
+        << OperandTypeHelper::GetShortTypeText(a3._objArg._argType) << std::endl;
 }
 
 void InstructionNode::ResolveSymbols()
@@ -51,7 +51,7 @@ void InstructionNode::OutputInstruction()
         objArgs[i] = _args[i]._objArg;
     }
 
-    ::OutputInstruction(
+    s_writer.OutputInstruction(
         _opCode,
         objArgs,
         _wordArg);

@@ -8,7 +8,7 @@ RegisterWrapper::RegisterWrapper(
 {
     _pCollection = pCollection;
 
-    switch (result._type)
+    switch (result.GetType())
     {
         case OperandType::Register:
             _converted = result;
@@ -41,6 +41,6 @@ RegisterWrapper::~RegisterWrapper()
 {
     if (_fAllocated)
     {
-        _pCollection->DeallocateRegister(_converted._regIndex);
+        _pCollection->DeallocateRegister(_converted.GetRegIndex());
     }
 }

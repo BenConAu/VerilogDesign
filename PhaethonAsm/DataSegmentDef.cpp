@@ -19,7 +19,7 @@ void DataSegmentDef::OutputDataSegment()
         {
             for (int j = 0; j < arraySize; j++)
             {
-                OutputWord(0x13371337);
+                s_writer.OutputWord(0x13371337);
             }
         }
         else
@@ -28,7 +28,7 @@ void DataSegmentDef::OutputDataSegment()
             {
                 DataSegmentItemEntry *entry = itemDef->GetItem(j);
 
-                OutputWord(entry->GetIntProperty("value"));
+                s_writer.OutputWord(entry->GetIntProperty("value"));
             }
         }
     }

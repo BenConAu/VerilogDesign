@@ -12,6 +12,8 @@ StructDef::StructDefInfo StructDef::s_defInfo;
 
 std::vector<std::unique_ptr<AssemblerNode> > s_nodeDefs;
 
+BinaryObjWriter s_writer;
+
 struct LabelData
 {
 	int symIndex;

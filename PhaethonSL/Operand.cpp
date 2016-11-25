@@ -4,19 +4,19 @@
 
 Operand::Operand()
 {
-    _type = OperandType::None;
+    _objArg._argType = OperandType::None;
 }
 
 Operand::Operand(RegIndex index)
 {
-    _type = OperandType::Register;
-    _regIndex = index;
+    _objArg._argType = OperandType::Register;
+    _objArg._value = index;
 }
 
 Operand::Operand(int constant)
 {
-    _type = OperandType::Constant;
-    _constant = constant;
+    _objArg._argType = OperandType::Constant;
+    _objArg._value = constant;
 }
 
 Operand::Operand(
@@ -24,7 +24,7 @@ Operand::Operand(
     PSLCompilerContext* pContext
     )
 {
-    _type = OperandType::DerefConstant;
+    _objArg._argType = OperandType::DerefConstant;
 
     _offsetInfo._memberName = pContext->_symbols[pVarInfo->GetSymbolIndex()];
 }
@@ -36,8 +36,8 @@ Operand::Operand(
     PSLCompilerContext* pContext
     )
 {
-    _type = OperandType::DerefRegisterOffset;
-    _offsetInfo._regIndex = regIndex;
+    _objArg._argType = OperandType::DerefRegisterOffset;
+    _objArg._value = regIndex;
 
     StructTypeInfo* pTypeInfo = dynamic_cast<StructTypeInfo*>(pVarInfo->GetTypeInfo());
     _offsetInfo._typeName = pContext->_symbols[pTypeInfo->GetSymbolIndex()];
@@ -46,7 +46,7 @@ Operand::Operand(
 
 bool Operand::IsNone() const
 {
-    return (_type == OperandType::None);
+    return (GetType() == OperandType::None);
 }
 
 // Create an assembly language operand representing the expression result
@@ -54,16 +54,16 @@ std::string Operand::GetOpString() const
 {
     std::stringstream result;
 
-    switch (_type)
+    switch (GetType())
     {
         case OperandType::Constant:
             // PASM just uses the constant simply
-            result << _constant;
+            result << _objArg._value;
             break;
 
         case OperandType::Register:
             // Return the register syntax
-            result << "r" << (unsigned int)_regIndex;
+            result << "r" << GetRegIndex();
             break;
 
         case OperandType::DerefConstant:
@@ -72,7 +72,7 @@ std::string Operand::GetOpString() const
             break;
 
         case OperandType::DerefRegisterOffset:
-            result << "r" << (unsigned int)_offsetInfo._regIndex << "->" << _offsetInfo._typeName << "::" << _offsetInfo._memberName;
+            result << "r" << GetRegIndex() << "->" << _offsetInfo._typeName << "::" << _offsetInfo._memberName;
             break;
 
         default:
@@ -82,3 +82,17 @@ std::string Operand::GetOpString() const
     return result.str();
 }
 
+RegIndex Operand::GetRegIndex() const
+{
+    switch (GetType())
+    {
+        case OperandType::None:
+        case OperandType::Constant:
+        case OperandType::DerefConstant:
+            throw "Attempt to retrieve register index from non-register operand";
+
+        default:
+            // For register arguments, the value is the index of the register
+            return _objArg._value;
+    }
+}

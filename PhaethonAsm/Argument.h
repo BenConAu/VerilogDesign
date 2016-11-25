@@ -20,8 +20,8 @@ public:
 	{
 		Argument a;
 
-		a._argType = t;
 		a._symType = SymbolType::None;
+		a._objArg._argType = t;
 		a._objArg._value = v;
 		a._objArg._offset = -1;
 
@@ -32,8 +32,8 @@ public:
 	{
 		Argument a;
 
-		a._argType = t;
 		a._symType = SymbolType::None;
+		a._objArg._argType = t;
 		a._objArg._value = v;
 		a._objArg._offset = offset;
 
@@ -44,10 +44,10 @@ public:
 	{
 		Argument a;
 
-		a._argType = t;
 		a._symType = symType;
 
 		// We store the symbol index here, but we replace it later in ResolveSymbol
+		a._objArg._argType = t;
 		a._objArg._value = symbol;
 		a._objArg._offset = -1;
 
@@ -64,7 +64,6 @@ public:
 	void ResolveSymbol();
 
 public:
-	OperandType _argType;
 	ObjArgument _objArg;
 	SymbolType::Enum _symType;
 };

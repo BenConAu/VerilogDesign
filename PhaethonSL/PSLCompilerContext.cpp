@@ -12,6 +12,7 @@ PSLCompilerContext::PSLCompilerContext(FILE *pFile) :
     _numGlobals = 0;
 
     _varCollection.AddBuiltin();
+    _writer.reset(new BinaryObjWriter);
 
     yylex_init(&pScanner);
     yyset_extra(this, pScanner);

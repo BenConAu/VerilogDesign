@@ -27,7 +27,7 @@ void AssignmentNode::PostProcessNodeImpl()
     std::unique_ptr<ExpressionResult> rightResult(pRight->CalculateResult());
 
     // Figure out what kind of LHS expression we have
-    switch (leftResult.get()->_operand._type)
+    switch (leftResult.get()->_operand.GetType())
     {
         case OperandType::Register:
             // The great thing about registers is that everything can move into them

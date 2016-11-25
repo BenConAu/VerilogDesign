@@ -1,8 +1,12 @@
 #pragma once
 
-// An instruction argument could potentially have a value and an offset
+#include "../PhaethonISA/OperandType.h"
+
+// An instruction argument could potentially have a value and an offset,
+// as well as the type of the argument.
 struct ObjArgument
 {
-    unsigned int _value;
-    unsigned int _offset;
+   	OperandType _argType;
+    unsigned int _value;    // The constant value or the register index
+    unsigned int _offset;   // The offset (if any)
 };

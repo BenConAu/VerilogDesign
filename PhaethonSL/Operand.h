@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../PhaethonISA/OperandType.h"
+#include "../PhaethonObjWriter/ObjArgument.h"
 #include "VariableLocation.h"
 #include <string>
 
@@ -11,7 +11,6 @@ class StructMember;
 // If you want an offset you need to make a register for it
 struct OffsetInfo
 {
-    RegIndex _regIndex;
     std::string _typeName;
     std::string _memberName;
 };
@@ -19,8 +18,9 @@ struct OffsetInfo
 // An Operand is a representation of an operand in PASM. This is part of what an
 // expression will output. Many leaf nodes of expression trees are very simple (such 
 // as a constant). 
-struct Operand
+class Operand
 {
+public:
     explicit Operand();
     explicit Operand(RegIndex index);
     explicit Operand(int constant);
@@ -39,6 +39,8 @@ struct Operand
 
     bool IsNone() const;
     std::string GetOpString() const;
+    OperandType GetType() const { return _objArg._argType; }
+    RegIndex GetRegIndex() const;
 
     static void PrintInstruction(
         const std::string& instr,
@@ -54,12 +56,9 @@ struct Operand
             );
     }
 
-    OperandType _type;
-    union
-    {
-        int _constant;
-        RegIndex _regIndex;
-    };
+private:
+    // The information about the argument
+    ObjArgument _objArg;
 
     // Cannot go into the union
     OffsetInfo  _offsetInfo;

@@ -2,12 +2,12 @@
 #include "ObjArgument.h"
 #include <stdio.h>
 
-void OutputBytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned char b4)
+void BinaryObjWriter::OutputBytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned char b4)
 {
     printf("%02x %02x %02x %02x\n", b1, b2, b3, b4);
 }
 
-void OutputWord(unsigned int w)
+void BinaryObjWriter::OutputWord(unsigned int w)
 {
     OutputBytes(
         static_cast<unsigned char>(w & 0xFF),
@@ -16,7 +16,7 @@ void OutputWord(unsigned int w)
         static_cast<unsigned char>(w >> 24 & 0xFF));
 }
 
-void OutputInstruction(
+void BinaryObjWriter::OutputInstruction(
     OpCodes::Enum opCode,
     ObjArgument* args,
     int wordArg
@@ -37,4 +37,13 @@ void OutputInstruction(
             OutputWord(args[wordArg]._offset);
         }
     }
+}
+
+void AsmObjWriter::OutputInstruction(
+    OpCodes::Enum opCode,
+    ObjArgument* args,
+    int wordArg
+    )
+{
+    
 }
