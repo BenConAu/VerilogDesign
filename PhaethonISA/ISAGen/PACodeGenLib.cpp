@@ -119,7 +119,7 @@ void OutputInstructions()
     ::fprintf(fcppfile, "#include \"../InstructionData.h\"\n\n");
 
     // Now the collection of instruction data
-    ::fprintf(fcppfile, "InstructionDataReal InstructionDataReal::s_data[] = {\n");
+    ::fprintf(fcppfile, "InstructionData InstructionData::s_data[] = {\n");
     for (size_t i = 0; i < g_symbols.size(); i++)
     {
         std::string lower = g_symbols[i];
@@ -132,7 +132,7 @@ void OutputInstructions()
     }
     ::fprintf(fcppfile, "};\n\n");
 
-    ::fprintf(fcppfile, "int InstructionDataReal::s_dataCount = sizeof(InstructionDataReal::s_data) / sizeof(InstructionDataReal::s_data[0]);\n\n");
+    ::fprintf(fcppfile, "int InstructionData::s_dataCount = sizeof(InstructionData::s_data) / sizeof(InstructionData::s_data[0]);\n\n");
 
     // Now the collection of opcode data
     ::fprintf(fcppfile, "OpCodeData OpCodeData::s_data[] = {\n");

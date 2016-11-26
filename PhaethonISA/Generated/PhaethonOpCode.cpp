@@ -1,6 +1,6 @@
 #include "../InstructionData.h"
 
-InstructionDataReal InstructionDataReal::s_data[] = {
+InstructionData InstructionData::s_data[] = {
     { Instructions::Mov       , "mov" },
     { Instructions::Push      , "push" },
     { Instructions::Pop       , "pop" },
@@ -28,7 +28,7 @@ InstructionDataReal InstructionDataReal::s_data[] = {
     { Instructions::Dout      , "dout" },
 };
 
-int InstructionDataReal::s_dataCount = sizeof(InstructionDataReal::s_data) / sizeof(InstructionDataReal::s_data[0]);
+int InstructionData::s_dataCount = sizeof(InstructionData::s_data) / sizeof(InstructionData::s_data[0]);
 
 OpCodeData OpCodeData::s_data[] = {
     { Instructions::Mov       , OpCodes::MovRR          , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "MovRR" },

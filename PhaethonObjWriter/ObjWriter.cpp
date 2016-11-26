@@ -88,7 +88,7 @@ void AsmObjWriter::OutputInstruction(
 
             printf(
                 "%s %s, %s\n",
-                InstructionDataReal::s_data[index].pszName,
+                InstructionData::s_data[index].pszName,
                 GetOpString(args[0]).c_str(),
                 GetOpString(args[1]).c_str()
                 );

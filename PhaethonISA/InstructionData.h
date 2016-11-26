@@ -25,11 +25,14 @@ struct OpCodeData
     static int s_dataCount;
 };
 
-struct InstructionDataReal
+struct InstructionData
 {
+	// The enum of the instruction
 	Instructions::Enum instr;
+
+	// The name of the instruction
 	const char* pszName;
 
-	static InstructionDataReal s_data[];
+	static InstructionData s_data[];
 	static int s_dataCount;
 };
