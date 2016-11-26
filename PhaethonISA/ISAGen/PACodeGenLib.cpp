@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <algorithm>
 
 static std::vector<std::string> g_symbols;
 
@@ -91,10 +92,10 @@ void OutputInstructions()
     ::fprintf(fhfile, "#pragma once\n\n");
 
     // First the enum of Instructions
-    ::fprintf(fhfile, "namespace Instructions\n{\n    enum Enum\n    {\n        Unknown,\n");
+    ::fprintf(fhfile, "namespace Instructions\n{\n    enum Enum\n    {\n        Unknown = 0,\n");
     for (size_t i = 0; i < g_symbols.size(); i++)
     {
-        ::fprintf(fhfile, "        %s,\n", g_symbols[i].c_str());
+        ::fprintf(fhfile, "        %s = %d,\n", g_symbols[i].c_str(), (int)i + 1);
     }
     ::fprintf(fhfile, "    };\n}\n");
 
@@ -118,6 +119,22 @@ void OutputInstructions()
     ::fprintf(fcppfile, "#include \"../InstructionData.h\"\n\n");
 
     // Now the collection of instruction data
+    ::fprintf(fcppfile, "InstructionDataReal InstructionDataReal::s_data[] = {\n");
+    for (size_t i = 0; i < g_symbols.size(); i++)
+    {
+        std::string lower = g_symbols[i];
+        std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
+
+        ::fprintf(fcppfile, "    { Instructions::%s, \"%s\" },\n",
+            Pad(g_symbols[i], 10).c_str(),
+            lower.c_str()
+        );
+    }
+    ::fprintf(fcppfile, "};\n\n");
+
+    ::fprintf(fcppfile, "int InstructionDataReal::s_dataCount = sizeof(InstructionDataReal::s_data) / sizeof(InstructionDataReal::s_data[0]);\n\n");
+
+    // Now the collection of opcode data
     ::fprintf(fcppfile, "InstructionData InstructionData::s_data[] = {\n");
     for (size_t i = 0; i < g_instructionData.size(); i++)
     {

@@ -37,7 +37,7 @@ public:
 
 private:
     std::vector<std::unique_ptr<ASTNode> > _rootNodes;
-    std::unique_ptr<BinaryObjWriter> _writer;
+    std::unique_ptr<ObjWriter> _writer;
     size_t _numStructs;
     size_t _numGlobals;
 

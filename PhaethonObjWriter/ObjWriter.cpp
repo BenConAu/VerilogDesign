@@ -83,14 +83,17 @@ void AsmObjWriter::OutputInstruction(
     {
         if (InstructionData::s_data[i].opCode == opCode)
         {
+            // Subtract 1 to account for Unknown
+            int index = InstructionData::s_data[i].instr - 1;
+
             printf(
                 "%s %s, %s\n",
-                InstructionData::s_data[i].pszName,
+                InstructionDataReal::s_data[index].pszName,
                 GetOpString(args[0]).c_str(),
                 GetOpString(args[1]).c_str()
                 );
             
-            break;
+            return;
         }
     }
 

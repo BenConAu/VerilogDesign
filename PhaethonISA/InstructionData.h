@@ -14,3 +14,12 @@ struct InstructionData
     static InstructionData s_data[];
     static int s_dataCount;
 };
+
+struct InstructionDataReal
+{
+	Instructions::Enum instr;
+	const char* pszName;
+
+	static InstructionDataReal s_data[];
+	static int s_dataCount;
+};

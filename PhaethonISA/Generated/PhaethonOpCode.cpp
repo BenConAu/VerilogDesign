@@ -1,5 +1,35 @@
 #include "../InstructionData.h"
 
+InstructionDataReal InstructionDataReal::s_data[] = {
+    { Instructions::Mov       , "mov" },
+    { Instructions::Push      , "push" },
+    { Instructions::Pop       , "pop" },
+    { Instructions::Cmp       , "cmp" },
+    { Instructions::Jmp       , "jmp" },
+    { Instructions::Jne       , "jne" },
+    { Instructions::Je        , "je" },
+    { Instructions::Call      , "call" },
+    { Instructions::Ret       , "ret" },
+    { Instructions::RCall     , "rcall" },
+    { Instructions::RRet      , "rret" },
+    { Instructions::Add       , "add" },
+    { Instructions::MulAdd    , "muladd" },
+    { Instructions::Inc       , "inc" },
+    { Instructions::Dec       , "dec" },
+    { Instructions::Fadd      , "fadd" },
+    { Instructions::Fsub      , "fsub" },
+    { Instructions::Fconv     , "fconv" },
+    { Instructions::Fmul      , "fmul" },
+    { Instructions::Fdiv      , "fdiv" },
+    { Instructions::Fmuladd   , "fmuladd" },
+    { Instructions::Fmin      , "fmin" },
+    { Instructions::Fmax      , "fmax" },
+    { Instructions::Vfadd     , "vfadd" },
+    { Instructions::Dout      , "dout" },
+};
+
+int InstructionDataReal::s_dataCount = sizeof(InstructionDataReal::s_data) / sizeof(InstructionDataReal::s_data[0]);
+
 InstructionData InstructionData::s_data[] = {
     { Instructions::Mov       , OpCodes::MovRR          , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "MovRR" },
     { Instructions::Mov       , OpCodes::MovRC          , { OperandType::Register              , OperandType::Constant              , OperandType::None         }, 1, "MovRC" },

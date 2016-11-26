@@ -1,4 +1,4 @@
 all: *.out
 
-%.out : %.psl
+%.out : %.psl ../PSLcc
 	../PSLcc $< > $@
