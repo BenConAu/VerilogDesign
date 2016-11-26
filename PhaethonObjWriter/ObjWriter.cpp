@@ -25,7 +25,7 @@ void BinaryObjWriter::OutputInstruction(
 {
     OutputBytes(opCode, args[0]._value, args[1]._value, args[2]._value);
 
-    int wordArg = InstructionData::s_data[opCode - 1].wordArg;
+    int wordArg = OpCodeData::s_data[opCode - 1].wordArg;
     if (wordArg != -1)
     {
         if (args[wordArg]._offset == -1)
@@ -79,12 +79,12 @@ void AsmObjWriter::OutputInstruction(
     ObjArgument *args
     )
 {
-    for (int i = 0; i < InstructionData::s_dataCount; i++)
+    for (int i = 0; i < OpCodeData::s_dataCount; i++)
     {
-        if (InstructionData::s_data[i].opCode == opCode)
+        if (OpCodeData::s_data[i].opCode == opCode)
         {
             // Subtract 1 to account for Unknown
-            int index = InstructionData::s_data[i].instr - 1;
+            int index = OpCodeData::s_data[i].instr - 1;
 
             printf(
                 "%s %s, %s\n",

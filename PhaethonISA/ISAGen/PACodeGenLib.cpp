@@ -135,7 +135,7 @@ void OutputInstructions()
     ::fprintf(fcppfile, "int InstructionDataReal::s_dataCount = sizeof(InstructionDataReal::s_data) / sizeof(InstructionDataReal::s_data[0]);\n\n");
 
     // Now the collection of opcode data
-    ::fprintf(fcppfile, "InstructionData InstructionData::s_data[] = {\n");
+    ::fprintf(fcppfile, "OpCodeData OpCodeData::s_data[] = {\n");
     for (size_t i = 0; i < g_instructionData.size(); i++)
     {
         InstructionData& data = g_instructionData[i];
@@ -151,7 +151,7 @@ void OutputInstructions()
     }
     ::fprintf(fcppfile, "};\n\n");
 
-    ::fprintf(fcppfile, "int InstructionData::s_dataCount = sizeof(InstructionData::s_data) / sizeof(InstructionData::s_data[0]);\n\n");
+    ::fprintf(fcppfile, "int OpCodeData::s_dataCount = sizeof(OpCodeData::s_data) / sizeof(OpCodeData::s_data[0]);\n\n");
 
     // Cpp function to tell opCodes that have constant data
     ::fprintf(fcppfile, "bool Is8ByteOpcode(OpCodes::Enum opCodeParam)\n{\n    if (");

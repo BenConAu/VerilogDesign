@@ -30,7 +30,7 @@ InstructionDataReal InstructionDataReal::s_data[] = {
 
 int InstructionDataReal::s_dataCount = sizeof(InstructionDataReal::s_data) / sizeof(InstructionDataReal::s_data[0]);
 
-InstructionData InstructionData::s_data[] = {
+OpCodeData OpCodeData::s_data[] = {
     { Instructions::Mov       , OpCodes::MovRR          , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "MovRR" },
     { Instructions::Mov       , OpCodes::MovRC          , { OperandType::Register              , OperandType::Constant              , OperandType::None         }, 1, "MovRC" },
     { Instructions::Mov       , OpCodes::MovRdR         , { OperandType::Register              , OperandType::DerefRegister         , OperandType::None         }, -1, "MovRdR" },
@@ -66,7 +66,7 @@ InstructionData InstructionData::s_data[] = {
     { Instructions::Dout      , OpCodes::DoutR          , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "DoutR" },
 };
 
-int InstructionData::s_dataCount = sizeof(InstructionData::s_data) / sizeof(InstructionData::s_data[0]);
+int OpCodeData::s_dataCount = sizeof(OpCodeData::s_data) / sizeof(OpCodeData::s_data[0]);
 
 bool Is8ByteOpcode(OpCodes::Enum opCodeParam)
 {

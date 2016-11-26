@@ -11,16 +11,17 @@ void InstructionNode::StoreInstruction(Instructions::Enum instr, Argument a1, Ar
     //std::cout << "Lookup instr = " << instr << ", " << a1._argType.GetShortTypeText() << ", " << a2._argType.GetShortTypeText() << ", " << a3._argType.GetShortTypeText() << std::endl;
     //std::cout << "       value = " << instr << ", " << a1._value << ", " << a2._value << ", " << a3._value << std::endl;
 
-    for (int i = 0; i < InstructionData::s_dataCount; i++)
+    // Search for the opcode that has the arguments with the given instruction
+    for (int i = 0; i < OpCodeData::s_dataCount; i++)
     {
-        if (InstructionData::s_data[i].instr == instr &&
-            InstructionData::s_data[i].argTypes[0] == a1._objArg._argType &&
-            InstructionData::s_data[i].argTypes[1] == a2._objArg._argType &&
-            InstructionData::s_data[i].argTypes[2] == a3._objArg._argType)
+        if (OpCodeData::s_data[i].instr == instr &&
+            OpCodeData::s_data[i].argTypes[0] == a1._objArg._argType &&
+            OpCodeData::s_data[i].argTypes[1] == a2._objArg._argType &&
+            OpCodeData::s_data[i].argTypes[2] == a3._objArg._argType)
         {
-            _opCode = InstructionData::s_data[i].opCode;
+            _opCode = OpCodeData::s_data[i].opCode;
 
-            s_codeSize += (InstructionData::s_data[i].wordArg == -1) ? 4 : 8;
+            s_codeSize += (OpCodeData::s_data[i].wordArg == -1) ? 4 : 8;
 
             return;
         }
