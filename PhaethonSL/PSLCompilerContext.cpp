@@ -3,6 +3,7 @@
 #include "PSL.tab.h"
 #define YY_EXTRA_TYPE PSLCompilerContext *
 #include "lex.h"
+#include "../PhaethonObjWriter/AsmObjWriter.h"
 
 PSLCompilerContext::PSLCompilerContext(FILE *pFile) : _varCollection(this)
 {

@@ -14,7 +14,8 @@ PhaethonAsm: 			\
 	Argument.cpp 		\
 	../PhaethonObjWriter/ObjArgument.h       	\
 	../PhaethonObjWriter/ObjWriter.h         	\
-	../PhaethonObjWriter/ObjWriter.cpp       	\
+	../PhaethonObjWriter/BinaryObjWriter.h      \
+	../PhaethonObjWriter/BinaryObjWriter.cpp   	\
 	../PhaethonISA/Generated/PhaethonOpCode.h 	\
 	../PhaethonISA/Generated/PhaethonOpCode.cpp \
 	../PhaethonISA/OperandType.h 				\
@@ -27,7 +28,7 @@ PhaethonAsm: 			\
 	Argument.cpp 		\
 	DataSegmentDef.cpp  \
 	InstructionNode.cpp \
-	../PhaethonObjWriter/ObjWriter.cpp       	\
+	../PhaethonObjWriter/BinaryObjWriter.cpp   	\
 	../PhaethonISA/OperandType.cpp 				\
 	../PhaethonISA/Generated/PhaethonOpCode.cpp \
 	-o PhaethonAsm

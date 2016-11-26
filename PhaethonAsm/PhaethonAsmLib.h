@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../PhaethonISA/Generated/PhaethonOpCode.h"
-#include "../PhaethonObjWriter/ObjWriter.h"
+#include "../PhaethonObjWriter/BinaryObjWriter.h"
 #include "Argument.h"
 #include <vector>
 
