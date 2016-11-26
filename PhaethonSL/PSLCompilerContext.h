@@ -4,6 +4,7 @@
 #include "VariableCollection.h"
 #include "TypeCollection.h"
 #include "../PhaethonObjWriter/ObjWriter.h"
+#include "Operand.h"
 
 class FunctionDeclaratorNode;
 
@@ -20,7 +21,14 @@ public:
     void AddFuncDef(ASTNode* pNode);
     void AddGlobal(ASTNode* pNode);
 
-    ObjWriter* GetWriter() { return _writer.get(); }
+    //ObjWriter* GetWriter() { return _writer.get(); }
+
+    void OutputInstruction(
+        OpCodes::Enum opCode,
+        const Operand& a1,
+        const Operand& a2 = Operand(),
+        const Operand& a3 = Operand()
+    );
 
     void* pScanner;
     VariableCollection _varCollection;

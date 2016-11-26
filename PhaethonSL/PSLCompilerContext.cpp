@@ -1,11 +1,10 @@
 #include "PSLCompilerContext.h"
 #include "ASTTree.h"
 #include "PSL.tab.h"
-#define YY_EXTRA_TYPE PSLCompilerContext*
+#define YY_EXTRA_TYPE PSLCompilerContext *
 #include "lex.h"
 
-PSLCompilerContext::PSLCompilerContext(FILE *pFile) :
-    _varCollection(this)
+PSLCompilerContext::PSLCompilerContext(FILE *pFile) : _varCollection(this)
 {
     _pEntryPoint = nullptr;
     _numStructs = 0;
@@ -26,22 +25,22 @@ PSLCompilerContext::~PSLCompilerContext()
     yylex_destroy(pScanner);
 }
 
-int PSLCompilerContext::AddSymbol(const char* pszSymbol)
+int PSLCompilerContext::AddSymbol(const char *pszSymbol)
 {
-//    printf("Adding symbol\n");
-	for (size_t i = 0; i < _symbols.size(); i++)
-	{
-		if (_symbols[i].compare(pszSymbol) == 0)
-		{
-			return i;
-		}
-	}
+    //    printf("Adding symbol\n");
+    for (size_t i = 0; i < _symbols.size(); i++)
+    {
+        if (_symbols[i].compare(pszSymbol) == 0)
+        {
+            return i;
+        }
+    }
 
-	_symbols.push_back(pszSymbol);
-	return (_symbols.size() - 1);
+    _symbols.push_back(pszSymbol);
+    return (_symbols.size() - 1);
 }
 
-void PSLCompilerContext::AddStructDef(ASTNode* pNode)
+void PSLCompilerContext::AddStructDef(ASTNode *pNode)
 {
     auto rootStart = _rootNodes.begin();
 
@@ -52,7 +51,7 @@ void PSLCompilerContext::AddStructDef(ASTNode* pNode)
     _numStructs++;
 }
 
-void PSLCompilerContext::AddGlobal(ASTNode* pNode)
+void PSLCompilerContext::AddGlobal(ASTNode *pNode)
 {
     auto rootStart = _rootNodes.begin();
 
@@ -61,10 +60,10 @@ void PSLCompilerContext::AddGlobal(ASTNode* pNode)
     _numGlobals++;
 }
 
-void PSLCompilerContext::AddFuncDef(ASTNode* pNode)
+void PSLCompilerContext::AddFuncDef(ASTNode *pNode)
 {
     // Add after most recent function node unless it is main
-    FunctionDeclaratorNode* pFuncNode = dynamic_cast<FunctionDeclaratorNode*>(pNode);
+    FunctionDeclaratorNode *pFuncNode = dynamic_cast<FunctionDeclaratorNode *>(pNode);
 
     if (!pFuncNode->IsEntryPoint())
     {
@@ -99,7 +98,7 @@ void PSLCompilerContext::Parse()
     }
 }
 
-void PSLCompilerContext::SetEntryPoint(FunctionDeclaratorNode* pEntryPoint)
+void PSLCompilerContext::SetEntryPoint(FunctionDeclaratorNode *pEntryPoint)
 {
     if (_pEntryPoint != nullptr)
     {
@@ -107,4 +106,21 @@ void PSLCompilerContext::SetEntryPoint(FunctionDeclaratorNode* pEntryPoint)
     }
 
     _pEntryPoint = pEntryPoint;
+}
+
+void PSLCompilerContext::OutputInstruction(
+    OpCodes::Enum opCode,
+    const Operand &a1,
+    const Operand &a2,
+    const Operand &a3
+    )
+{
+    ObjArgument args[] = {
+        a1.GetObjArgument(),
+        a2.GetObjArgument(),
+        a3.GetObjArgument()
+    };
+
+    // Push the wrapped register into the memory
+    _writer->OutputInstruction(opCode, args);
 }

@@ -35,6 +35,8 @@ PSLcc: lex.yy.c \
 	   Operand.h \
 	   ../PhaethonObjWriter/ObjWriter.cpp \
 	   ../PhaethonObjWriter/ObjWriter.h \
+  	   ../PhaethonISA/Generated/PhaethonOpCode.cpp \
+  	   ../PhaethonISA/Generated/PhaethonOpCode.h \
 	   FunctionDeclaratorNode.cpp \
 	   FunctionDeclaratorNode.h \
 	   FunctionParameterNode.cpp \
@@ -45,6 +47,7 @@ PSLcc: lex.yy.c \
 	   MultiplyNode.cpp
 	clang++ -std=c++11 -g lex.yy.c \
 	   ../PhaethonObjWriter/ObjWriter.cpp \
+	   ../PhaethonISA/Generated/PhaethonOpCode.cpp \
 	   PSL.tab.c \
 	   AssignmentNode.cpp \
 	   ConstantNode.cpp \

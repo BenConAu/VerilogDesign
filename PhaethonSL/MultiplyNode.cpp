@@ -1,14 +1,14 @@
 #include "MultiplyNode.h"
 #include "FunctionDeclaratorNode.h"
 
-ExpressionResult* MultiplyNode::CalculateResult()
+ExpressionResult *MultiplyNode::CalculateResult()
 {
-    FunctionDeclaratorNode* pFunc = GetTypedParent<FunctionDeclaratorNode>();
+    FunctionDeclaratorNode *pFunc = GetTypedParent<FunctionDeclaratorNode>();
 
     // The inputs to the multiply must be expressions themselves. Ideally this part
     // could be factored into the expression class itself.
-    ExpressionNode* pLeft = dynamic_cast<ExpressionNode*>(GetChild(0));
-    ExpressionNode* pRight = dynamic_cast<ExpressionNode*>(GetChild(1));
+    ExpressionNode *pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));
+    ExpressionNode *pRight = dynamic_cast<ExpressionNode *>(GetChild(1));
 
     // Calculate the result of each of the inputs so that they will go out of scope
     // after consumption. The result holds the location of the expression result
@@ -18,16 +18,24 @@ ExpressionResult* MultiplyNode::CalculateResult()
     std::unique_ptr<ExpressionResult> rightResult(pRight->CalculateResult());
 
     // Multiplication only works with registers so we make wrappers
-    RegisterWrapper leftWrap(pFunc->GetRegCollection(), leftResult.get()->_operand);
-    RegisterWrapper rightWrap(pFunc->GetRegCollection(), rightResult.get()->_operand);
+    RegisterWrapper leftWrap(GetContext(), pFunc->GetRegCollection(), leftResult.get()->_operand);
+    RegisterWrapper rightWrap(GetContext(), pFunc->GetRegCollection(), rightResult.get()->_operand);
 
     // Get register for our result
     RegIndex resultIndex = pFunc->GetRegCollection()->AllocateRegister();
     Operand resultOperand(resultIndex);
 
-    // print out our code
-    Operand::PrintInstruction("mov", resultOperand, leftWrap.GetWrapped());
-    Operand::PrintInstruction("mul", resultOperand, rightWrap.GetWrapped());
+    GetContext()->OutputInstruction(
+        OpCodes::MovRR, 
+        resultOperand,
+        leftWrap.GetWrapped()
+        );
+    
+    GetContext()->OutputInstruction(
+        OpCodes::FmulRR,
+        resultOperand,
+        rightWrap.GetWrapped()
+        );
 
     return new ExpressionResult(leftResult.get()->_pTypeInfo, resultOperand, pFunc->GetRegCollection());
 }

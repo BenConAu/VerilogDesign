@@ -7,19 +7,20 @@ class RegisterCollection;
 
 class RegisterWrapper
 {
-public:
+  public:
     RegisterWrapper(
-        RegisterCollection* pCollection, 
+        PSLCompilerContext* pContext,
+        RegisterCollection* pCollection,
         Operand result
         );
 
-    const Operand& GetWrapped();
+    const Operand &GetWrapped();
 
     ~RegisterWrapper();
 
-private:
+  private:
     bool _fAllocated;
     Operand _converted;
-    PSLCompilerContext* _pContext;
-    RegisterCollection* _pCollection;
+    PSLCompilerContext *_pContext;
+    RegisterCollection *_pCollection;
 };

@@ -1,6 +1,8 @@
 #include "ObjWriter.h"
 #include "ObjArgument.h"
+#include "../PhaethonISA/InstructionData.h"
 #include <stdio.h>
+#include <sstream>
 
 void BinaryObjWriter::OutputBytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned char b4)
 {
@@ -18,12 +20,12 @@ void BinaryObjWriter::OutputWord(unsigned int w)
 
 void BinaryObjWriter::OutputInstruction(
     OpCodes::Enum opCode,
-    ObjArgument* args,
-    int wordArg
+    ObjArgument *args
     )
 {
     OutputBytes(opCode, args[0]._value, args[1]._value, args[2]._value);
 
+    int wordArg = InstructionData::s_data[opCode - 1].wordArg;
     if (wordArg != -1)
     {
         if (args[wordArg]._offset == -1)
@@ -39,11 +41,58 @@ void BinaryObjWriter::OutputInstruction(
     }
 }
 
+std::string AsmObjWriter::GetOpString(const ObjArgument &objArg) const
+{
+    std::stringstream result;
+
+    switch (objArg._argType)
+    {
+    case OperandType::Constant:
+        // PASM just uses the constant simply
+        result << objArg._value;
+        break;
+
+    case OperandType::Register:
+        // Return the register syntax
+        result << "r" << objArg._value;
+        break;
+
+    case OperandType::DerefConstant:
+        // The assembler uses C-like syntax for getting addresses of things
+        result << "&" << objArg._memberName;
+        break;
+
+    case OperandType::DerefRegisterOffset:
+        // C++ syntax for members of things
+        result << "r" << objArg._value << "->" << objArg._typeName << "::" << objArg._memberName;
+        break;
+
+    default:
+        throw "Unknown result type";
+    }
+
+    return result.str();
+}
+
 void AsmObjWriter::OutputInstruction(
     OpCodes::Enum opCode,
-    ObjArgument* args,
-    int wordArg
+    ObjArgument *args
     )
 {
-    
+    for (int i = 0; i < InstructionData::s_dataCount; i++)
+    {
+        if (InstructionData::s_data[i].opCode == opCode)
+        {
+            printf(
+                "%s %s, %s\n",
+                InstructionData::s_data[i].pszName,
+                GetOpString(args[0]).c_str(),
+                GetOpString(args[1]).c_str()
+                );
+            
+            break;
+        }
+    }
+
+    throw "Unknown instruction";
 }

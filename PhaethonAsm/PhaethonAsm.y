@@ -18,20 +18,7 @@ extern "C" FILE *yyin;
 void yyerror(const char *s);
 %}
 
-%union {
-	int intVal;
-	float floatVal;
-	Instructions::Enum instrIndex;
-	int regIndex;
-	int symIndex;
-	Argument arg;
-	StructDef* structDef;
-	StructMember* structMember;
-	DataSegmentDef* dataSegmentDef;
-	DataSegmentItemDef* dataSegmentItemDef;
-	DataSegmentItemEntry* dataSegmentItemEntry;
-	InstructionNode* instructonNode;
-}
+%define api.value.type {struct ParseStruct}
 
 %locations
 

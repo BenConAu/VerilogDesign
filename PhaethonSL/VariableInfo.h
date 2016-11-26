@@ -23,8 +23,8 @@ public:
         RegIndex* pRegIndex             // The register to use, if known
         );
 
-    LocationType GetLocationType() { return _locationType; }
-    unsigned int GetMemLocation();
+    LocationType GetLocationType() const { return _locationType; }
+    unsigned int GetMemLocation() const { return _memLocation; }
     RegIndex EnsureVariableRegister(FunctionDeclaratorNode* pScope);
     int GetSymbolIndex() const { return _symIndex; }
 

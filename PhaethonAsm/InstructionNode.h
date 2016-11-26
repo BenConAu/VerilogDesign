@@ -22,5 +22,4 @@ public:
 private:
     OpCodes::Enum _opCode;
     Argument _args[3];
-    int _wordArg;    
 };

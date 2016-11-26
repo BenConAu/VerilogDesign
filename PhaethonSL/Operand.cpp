@@ -1,5 +1,6 @@
 #include "Operand.h"
 #include "PSLCompilerContext.h"
+#include "StructTypeInfo.h"
 #include <sstream>
 
 Operand::Operand()
@@ -24,9 +25,12 @@ Operand::Operand(
     PSLCompilerContext* pContext
     )
 {
+    // Fill in the actual byte position
     _objArg._argType = OperandType::DerefConstant;
+    _objArg._value = pVarInfo->GetMemLocation();
 
-    _offsetInfo._memberName = pContext->_symbols[pVarInfo->GetSymbolIndex()];
+    // Fill in symbolic information
+    _objArg._memberName = pContext->_symbols[pVarInfo->GetSymbolIndex()];
 }
 
 Operand::Operand(
@@ -39,47 +43,20 @@ Operand::Operand(
     _objArg._argType = OperandType::DerefRegisterOffset;
     _objArg._value = regIndex;
 
+    // Need to be given a struct
     StructTypeInfo* pTypeInfo = dynamic_cast<StructTypeInfo*>(pVarInfo->GetTypeInfo());
-    _offsetInfo._typeName = pContext->_symbols[pTypeInfo->GetSymbolIndex()];
-    _offsetInfo._memberName = pContext->_symbols[pTypeMember->GetSymbolIndex()];
+
+    // Fill in the actual byte offset
+    _objArg._offset = pTypeInfo->GetOffset(pTypeMember->GetSymbolIndex());
+
+    // Fill in symbolic information
+    _objArg._typeName = pContext->_symbols[pTypeInfo->GetSymbolIndex()];
+    _objArg._memberName = pContext->_symbols[pTypeMember->GetSymbolIndex()];
 }
 
 bool Operand::IsNone() const
 {
     return (GetType() == OperandType::None);
-}
-
-// Create an assembly language operand representing the expression result
-std::string Operand::GetOpString() const
-{
-    std::stringstream result;
-
-    switch (GetType())
-    {
-        case OperandType::Constant:
-            // PASM just uses the constant simply
-            result << _objArg._value;
-            break;
-
-        case OperandType::Register:
-            // Return the register syntax
-            result << "r" << (unsigned int)GetRegIndex();
-            break;
-
-        case OperandType::DerefConstant:
-            // The assembler uses C-like syntax for getting addresses of things
-            result << "&" << _offsetInfo._memberName;
-            break;
-
-        case OperandType::DerefRegisterOffset:
-            result << "r" << (unsigned int)GetRegIndex() << "->" << _offsetInfo._typeName << "::" << _offsetInfo._memberName;
-            break;
-
-        default:
-            throw "Unknown result type";
-    }
-
-    return result.str();
 }
 
 RegIndex Operand::GetRegIndex() const

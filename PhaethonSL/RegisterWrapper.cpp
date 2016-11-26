@@ -2,37 +2,59 @@
 #include "PSLCompilerContext.h"
 
 RegisterWrapper::RegisterWrapper(
-    RegisterCollection* pCollection, 
+    PSLCompilerContext* pContext,
+    RegisterCollection* pCollection,
     Operand result
     )
 {
     _pCollection = pCollection;
 
+    if (result.GetType() != OperandType::Register)
+    {
+        _converted = Operand(_pCollection->AllocateRegister());
+        _fAllocated = true;
+    }
+    else
+    {
+        _converted = result;
+        _fAllocated = false;
+    }
+
+    OpCodes::Enum opCode = OpCodes::Unknown;
+
     switch (result.GetType())
     {
-        case OperandType::Register:
-            _converted = result;
-            _fAllocated = false;
-            break;
+    case OperandType::Register:
+        // Do nothing
+        break;
 
-        case OperandType::Constant:
-        case OperandType::DerefConstant:
-        case OperandType::DerefRegisterOffset:
-            _converted = Operand(_pCollection->AllocateRegister());
-            _fAllocated = true;
+    case OperandType::Constant:
+        opCode = OpCodes::MovRC;
+        break;
 
-            Operand::PrintInstruction("mov", _converted, result);
-            break;
+    case OperandType::DerefConstant:
+        opCode = OpCodes::MovRdC;
+        break;
 
-        case OperandType::DerefRegister:
-            throw "RegisterMemory";
+    case OperandType::DerefRegisterOffset:
+        opCode = OpCodes::MovRdRo;
+        break;
 
-        case OperandType::None:
-            throw "Cannot wrap none";
+    default:
+        throw "Unexpected operand type";
+    }
+
+    if (opCode != OpCodes::Unknown)
+    {
+        pContext->OutputInstruction(
+            opCode,
+            _converted,
+            result
+            );
     }
 }
 
-const Operand& RegisterWrapper::GetWrapped()
+const Operand &RegisterWrapper::GetWrapped()
 {
     return _converted;
 }

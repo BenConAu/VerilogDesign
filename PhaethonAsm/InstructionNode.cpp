@@ -19,9 +19,8 @@ void InstructionNode::StoreInstruction(Instructions::Enum instr, Argument a1, Ar
             InstructionData::s_data[i].argTypes[2] == a3._objArg._argType)
         {
             _opCode = InstructionData::s_data[i].opCode;
-            _wordArg = InstructionData::s_data[i].wordArg;
 
-            s_codeSize += (_wordArg == -1) ? 4 : 8;
+            s_codeSize += (InstructionData::s_data[i].wordArg == -1) ? 4 : 8;
 
             return;
         }
@@ -53,6 +52,6 @@ void InstructionNode::OutputInstruction()
 
     s_writer.OutputInstruction(
         _opCode,
-        objArgs,
-        _wordArg);
+        objArgs
+        );
 }

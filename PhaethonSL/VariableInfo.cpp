@@ -59,7 +59,7 @@ RegIndex VariableInfo::EnsureVariableRegister(FunctionDeclaratorNode* pScope)
             Operand regOperand(_regIndexMap[pScope]);
 
             // Spit out the code to load said register
-            Operand::PrintInstruction("mov", regOperand, varOperand);
+            pScope->GetContext()->OutputInstruction(OpCodes::MovRdC, regOperand, varOperand);
         }
     }
 
