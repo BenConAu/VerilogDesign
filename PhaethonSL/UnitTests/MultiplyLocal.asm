@@ -12,3 +12,4 @@ mov r4, r2->foo::b
 mov r3, r1
 fmul r3, r4
 mov r2->foo::c, r3
+stall

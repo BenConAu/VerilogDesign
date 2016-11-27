@@ -43,14 +43,7 @@ public:
     }
 
     void PreProcessNodeImpl() override;
-
-    void PostProcessNodeImpl() override
-    {
-        if (!IsEntryPoint())
-        {
-            GetContext()->OutputInstruction(OpCodes::RRet);
-        }
-    }
+    void PostProcessNodeImpl() override;
 
     bool IsEntryPoint()
     {

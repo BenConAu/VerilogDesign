@@ -26,6 +26,7 @@ InstructionData InstructionData::s_data[] = {
     { Instructions::Fmax      , "fmax" },
     { Instructions::Vfadd     , "vfadd" },
     { Instructions::Dout      , "dout" },
+    { Instructions::Stall     , "stall" },
 };
 
 int InstructionData::s_dataCount = sizeof(InstructionData::s_data) / sizeof(InstructionData::s_data[0]);
@@ -64,6 +65,7 @@ OpCodeData OpCodeData::s_data[] = {
     { Instructions::Fmax      , OpCodes::FmaxRR         , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "FmaxRR" },
     { Instructions::Vfadd     , OpCodes::VfaddRR        , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "VfaddRR" },
     { Instructions::Dout      , OpCodes::DoutR          , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "DoutR" },
+    { Instructions::Stall     , OpCodes::Stall          , { OperandType::None                  , OperandType::None                  , OperandType::None         }, -1, "Stall" },
 };
 
 int OpCodeData::s_dataCount = sizeof(OpCodeData::s_data) / sizeof(OpCodeData::s_data[0]);

@@ -31,6 +31,7 @@
 `define FmaxRR 31
 `define VfaddRR 32
 `define DoutR 33
+`define Stall 34
 
 function [0:0] Is8ByteOpcode;
   input [7:0] opCodeParam;

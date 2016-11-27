@@ -31,3 +31,4 @@ Fmin     Register              Register              None      NoFlags
 Fmax     Register              Register              None      NoFlags
 Vfadd    Register              Register              None      NoFlags
 Dout     Register              None                  None      NoFlags
+Stall    None                  None                  None      NoFlags

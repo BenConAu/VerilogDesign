@@ -465,6 +465,9 @@ module ALU(
             $display("DebugOut %h", regValue[0]);
           end
 
+          `Stall: begin 
+          end
+
           default: $display("Unknown instruction %h", opCode);
         endcase
 
@@ -482,7 +485,8 @@ module ALU(
             opCode != `CallR &&
             opCode != `Ret &&
             opCode != `RCallRC &&
-            opCode != `RRet
+            opCode != `RRet &&
+            opCode != `Stall
             )
         begin
           //$display("Incrementing ip");

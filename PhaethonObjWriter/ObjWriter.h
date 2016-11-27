@@ -8,6 +8,10 @@ struct ObjArgument;
 class ObjWriter
 {
   public:
+    virtual ~ObjWriter()
+    {
+    }
+
     virtual void OutputInstruction(
         OpCodes::Enum opCode,
         ObjArgument *args

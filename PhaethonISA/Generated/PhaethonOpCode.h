@@ -30,6 +30,7 @@ namespace Instructions
         Fmax = 23,
         Vfadd = 24,
         Dout = 25,
+        Stall = 26,
     };
 }
 namespace OpCodes
@@ -70,6 +71,7 @@ namespace OpCodes
         FmaxRR = 31,
         VfaddRR = 32,
         DoutR = 33,
+        Stall = 34,
     };
 }
 bool Is8ByteOpcode(OpCodes::Enum opCodeParam);
