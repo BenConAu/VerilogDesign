@@ -11,10 +11,13 @@ module test;
   end
 
   reg [7:0] fileRam[0:2047];
+  reg [511:0] testname;
+  reg fileFound;
 
   initial
   begin
-    $readmemh("MemoryManager.pao", fileRam, 0, 343 * 4 - 1);
+    fileFound = $value$plusargs("ROMFILE=%s", testname);
+    $readmemh(testname, fileRam, 0);
   end
 
   /* Make a regular pulsing clock. */

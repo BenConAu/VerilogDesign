@@ -12,6 +12,7 @@ class BinaryObjWriter : public ObjWriter
 
      ~BinaryObjWriter()
     {
+        ::fprintf(_pOutFile, "@7ff\n");
         ::fclose(_pOutFile);
     }
 

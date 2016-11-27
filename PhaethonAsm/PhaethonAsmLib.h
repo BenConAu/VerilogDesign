@@ -12,6 +12,7 @@ int AddSymbol(const char* pszSymbol);
 int GetLabelAddress(int symIndex);
 void AddLabel(int symIndex);
 void OutputCode(const char* pszName);
+int GetFloatAsInt(const char* pszToken);
 
 class StructDef;
 class StructMember;
@@ -23,7 +24,6 @@ class InstructionNode;
 struct ParseStruct 
 {
 	int intVal;
-	float floatVal;
 	Instructions::Enum instrIndex;
 	int regIndex;
 	int symIndex;

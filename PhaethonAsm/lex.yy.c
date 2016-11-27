@@ -920,7 +920,7 @@ YY_RULE_SETUP
 case 14:
 YY_RULE_SETUP
 #line 35 "PhaethonAsm.l"
-{ yylval.floatVal = (float)atof(yytext + 1); return INT_TOKEN; }
+{ yylval.intVal = GetFloatAsInt(yytext + 1); return INT_TOKEN; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP

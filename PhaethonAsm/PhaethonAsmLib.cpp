@@ -20,6 +20,15 @@ struct LabelData
 
 std::vector<LabelData> g_labels;
 
+int GetFloatAsInt(const char* pszToken)
+{
+	float floatVal = static_cast<float>(::atof(pszToken));
+	int intVal;
+	::memcpy(&intVal, &floatVal, 4);
+
+	return intVal;
+}
+
 int AddSymbol(const char* pszSymbol)
 {
 	static std::vector<std::string> g_symbols;

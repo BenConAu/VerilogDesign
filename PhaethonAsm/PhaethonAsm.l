@@ -32,7 +32,7 @@ using namespace std;
 "("                  { return LEFT_PAREN_TOKEN; }
 ")"                  { return RIGHT_PAREN_TOKEN; }
 [0-9]+               { yylval.intVal = atoi(yytext); return INT_TOKEN; }
-"f"[0-9]+"\."[0-9]*  { yylval.floatVal = (float)atof(yytext + 1); return INT_TOKEN; }
+"f"[0-9]+"\."[0-9]*  { yylval.intVal = GetFloatAsInt(yytext + 1); return INT_TOKEN; }
 "mov"                { yylval.instrIndex = Instructions::Mov; return INSTR_TOKEN_2; }
 "fconv"              { yylval.instrIndex = Instructions::Fconv; return INSTR_TOKEN_1; }
 "fadd"               { yylval.instrIndex = Instructions::Fadd; return INSTR_TOKEN_2; }
