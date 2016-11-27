@@ -7,6 +7,16 @@
 #include <cstdio>
 #include <iostream>
 
+bool ends_with(std::string const & value, std::string const & ending)
+{
+    if (ending.size() > value.size()) 
+	{
+	return false;
+	}
+
+    return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
+}
+
 int main(int argc, char** argv)
 {
 	//yydebug = 1;
@@ -20,7 +30,23 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
-    PSLCompilerContext context(myfile, argv[2]);
+	const char* pszAsmName = nullptr;
+	const char* pszObjName = nullptr;
+
+	for (int i = 2; i < argc; i++)
+	{
+		if (ends_with(argv[i], ".asm"))
+		{
+			pszAsmName = argv[i];
+		}
+
+		if (ends_with(argv[i], ".pao"))
+		{
+			pszObjName = argv[i];
+		}
+	}
+
+    PSLCompilerContext context(myfile, pszAsmName, pszObjName);
 
     try
     {

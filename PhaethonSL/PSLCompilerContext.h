@@ -11,7 +11,11 @@ class FunctionDeclaratorNode;
 class PSLCompilerContext
 {
   public:
-    PSLCompilerContext(FILE *pFile, const char *pszOutName);
+    PSLCompilerContext(
+        FILE *pFile,
+        const char *pszAsmName,
+        const char *pszObjName);
+
     ~PSLCompilerContext();
     int AddSymbol(const char *pszSymbol);
     void Parse();

@@ -5,14 +5,32 @@
 #include "lex.h"
 #include "../PhaethonObjWriter/AsmObjWriter.h"
 
-PSLCompilerContext::PSLCompilerContext(FILE *pFile, const char* pszOutName) : _varCollection(this)
+PSLCompilerContext::PSLCompilerContext(
+    FILE *pFile, 
+    const char* pszAsmName, 
+    const char* pszObjName
+    ) : _varCollection(this)
 {
     _pEntryPoint = nullptr;
     _numStructs = 0;
     _numGlobals = 0;
 
     _varCollection.AddBuiltin();
-    _writers.push_back(std::unique_ptr<ObjWriter>(new AsmObjWriter(pszOutName)));
+
+    if (pszAsmName != nullptr)
+    {
+        _writers.push_back(std::unique_ptr<ObjWriter>(new AsmObjWriter(pszAsmName)));
+    }
+
+    if (pszObjName != nullptr)
+    {
+        _writers.push_back(std::unique_ptr<ObjWriter>(new AsmObjWriter(pszObjName)));
+    }
+
+    if (_writers.size() == 0)
+    {
+        throw "No object writers specified";
+    }
 
     yylex_init(&pScanner);
     yyset_extra(this, pScanner);
