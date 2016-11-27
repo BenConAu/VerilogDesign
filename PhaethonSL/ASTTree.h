@@ -11,3 +11,4 @@
 #include "StructDeclarationNode.h"
 #include "FieldSelectionNode.h"
 #include "FunctionParameterNode.h"
+#include "DebugOutNode.h"

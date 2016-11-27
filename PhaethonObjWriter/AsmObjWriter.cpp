@@ -57,6 +57,14 @@ void AsmObjWriter::OutputInstruction(
                     InstructionData::s_data[index].pszName);
                 break;
 
+            case 1:
+                fprintf(
+                    _pOutFile,
+                    "%s %s\n",
+                    InstructionData::s_data[index].pszName,
+                    GetOpString(args[0]).c_str());
+                break;
+
             case 2:
                 fprintf(
                     _pOutFile,

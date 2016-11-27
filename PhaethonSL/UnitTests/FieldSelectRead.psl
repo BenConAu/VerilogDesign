@@ -18,4 +18,6 @@ void main()
     int d;
     c = fooVar.a;
     d = fooVar.b;
+    debugout(c);
+    debugout(d);
 }

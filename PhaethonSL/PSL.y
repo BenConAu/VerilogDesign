@@ -42,6 +42,7 @@ void yyerror(void*, const char *s);
 %token DOT
 %token COMMA
 %token NULLPTR_TOKEN
+%token DEBUGOUT_TOKEN
 %token <symIndex> IDENTIFIER
 %type <pNode> variable_identifier
 %type <pNode> primary_expression
@@ -70,6 +71,7 @@ void yyerror(void*, const char *s);
 %type <pNode> write_expression
 %type <pNode> parameter_declaration
 %type <pNode> function_header_with_parameters
+%type <pNode> debugout_expression
 
 %%
 
@@ -100,6 +102,11 @@ expression_statement:
 
 expression:
       assignment_expression                                         { $$ = $1; }
+    | debugout_expression                                           { $$ = $1; }
+    ;
+
+debugout_expression:
+      DEBUGOUT_TOKEN LEFT_PAREN postfix_expression RIGHT_PAREN      { $$ = new DebugOutNode(pContext, $3); }
     ;
 
 assignment_expression:

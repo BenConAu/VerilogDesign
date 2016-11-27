@@ -6,6 +6,7 @@
 Operand::Operand()
 {
     _objArg._argType = OperandType::None;
+    _objArg._value = 0xef;
 }
 
 Operand::Operand(RegIndex index)
