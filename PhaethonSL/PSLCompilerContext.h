@@ -37,7 +37,7 @@ class PSLCompilerContext
 
   private:
     std::vector<std::unique_ptr<ASTNode>> _rootNodes;
-    std::unique_ptr<ObjWriter> _writer;
+    std::vector<std::unique_ptr<ObjWriter>> _writers;
     size_t _numStructs;
     size_t _numGlobals;
 

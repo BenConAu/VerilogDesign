@@ -12,7 +12,7 @@ PSLCompilerContext::PSLCompilerContext(FILE *pFile, const char* pszOutName) : _v
     _numGlobals = 0;
 
     _varCollection.AddBuiltin();
-    _writer.reset(new AsmObjWriter(pszOutName));
+    _writers.push_back(std::unique_ptr<ObjWriter>(new AsmObjWriter(pszOutName)));
 
     yylex_init(&pScanner);
     yyset_extra(this, pScanner);
@@ -122,11 +122,16 @@ void PSLCompilerContext::OutputInstruction(
         a3.GetObjArgument()
     };
 
-    // Push the wrapped register into the memory
-    _writer->OutputInstruction(opCode, args);
+    for (int i = 0; i < _writers.size(); i++)
+    {
+        _writers[i]->OutputInstruction(opCode, args);
+    }
 }
 
 void PSLCompilerContext::OutputLabel(const char* pszLabel)
 {
-    _writer->OutputLabel(pszLabel);
+    for (int i = 0; i < _writers.size(); i++)
+    {
+        _writers[i]->OutputLabel(pszLabel);
+    }
 }
