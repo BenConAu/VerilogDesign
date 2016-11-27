@@ -4,6 +4,7 @@
 #define YY_EXTRA_TYPE PSLCompilerContext *
 #include "lex.h"
 #include "../PhaethonObjWriter/AsmObjWriter.h"
+#include "../PhaethonObjWriter/BinaryObjWriter.h"
 
 PSLCompilerContext::PSLCompilerContext(
     FILE *pFile, 
@@ -24,7 +25,7 @@ PSLCompilerContext::PSLCompilerContext(
 
     if (pszObjName != nullptr)
     {
-        _writers.push_back(std::unique_ptr<ObjWriter>(new AsmObjWriter(pszObjName)));
+        _writers.push_back(std::unique_ptr<ObjWriter>(new BinaryObjWriter(pszObjName)));
     }
 
     if (_writers.size() == 0)

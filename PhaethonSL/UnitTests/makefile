@@ -1,5 +1,5 @@
 all: *.asm
 
 %.asm : %.psl ../PSLcc
-	../PSLcc $< $@
+	../PSLcc $< $@ $*.pao
 

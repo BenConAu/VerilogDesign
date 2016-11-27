@@ -36,6 +36,8 @@ PSLcc: lex.yy.c \
 	   ../PhaethonObjWriter/ObjWriter.h \
 	   ../PhaethonObjWriter/AsmObjWriter.cpp \
 	   ../PhaethonObjWriter/AsmObjWriter.h \
+	   ../PhaethonObjWriter/BinaryObjWriter.cpp \
+	   ../PhaethonObjWriter/BinaryObjWriter.h \
   	   ../PhaethonISA/Generated/PhaethonOpCode.cpp \
   	   ../PhaethonISA/Generated/PhaethonOpCode.h \
 	   FunctionDeclaratorNode.cpp \
@@ -48,6 +50,7 @@ PSLcc: lex.yy.c \
 	   MultiplyNode.cpp
 	clang++ -std=c++11 -g lex.yy.c \
 	   ../PhaethonObjWriter/AsmObjWriter.cpp \
+	   ../PhaethonObjWriter/BinaryObjWriter.cpp \
 	   ../PhaethonISA/Generated/PhaethonOpCode.cpp \
 	   PSL.tab.c \
 	   AssignmentNode.cpp \
