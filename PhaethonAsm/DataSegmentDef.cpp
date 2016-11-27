@@ -19,7 +19,7 @@ void DataSegmentDef::OutputDataSegment()
         {
             for (int j = 0; j < arraySize; j++)
             {
-                s_writer.OutputWord(0x13371337);
+                s_pWriter->OutputWord(0x13371337);
             }
         }
         else
@@ -28,7 +28,7 @@ void DataSegmentDef::OutputDataSegment()
             {
                 DataSegmentItemEntry *entry = itemDef->GetItem(j);
 
-                s_writer.OutputWord(entry->GetIntProperty("value"));
+                s_pWriter->OutputWord(entry->GetIntProperty("value"));
             }
         }
     }
@@ -52,9 +52,9 @@ void DataSegmentDef::ResolveSymbols()
     int startByte = InstructionNode::GetCodeSize();
 
     // Set the start address of each segment
-    for (size_t i = 0; i < s_nodeDefs.size(); i++)
+    for (size_t i = 0; i < AssemblerNode::GetNodes().size(); i++)
     {
-        DataSegmentDef *pDef = dynamic_cast<DataSegmentDef *>(s_nodeDefs[i].get());
+        DataSegmentDef *pDef = AssemblerNode::GetNode<DataSegmentDef>(i);
         if (pDef != nullptr)
         {
             //printf("Setting start of segment to %x\n", startByte);
@@ -64,9 +64,9 @@ void DataSegmentDef::ResolveSymbols()
     }
 
     // Now we can resolve all of the instructions
-    for (size_t i = 0; i < s_nodeDefs.size(); i++)
+    for (size_t i = 0; i < AssemblerNode::GetNodes().size(); i++)
     {
-        InstructionNode *pInst = dynamic_cast<InstructionNode *>(s_nodeDefs[i].get());
+        InstructionNode *pInst = AssemblerNode::GetNode<InstructionNode>(i);
         if (pInst != nullptr)
         {
             pInst->ResolveSymbols();
@@ -76,9 +76,9 @@ void DataSegmentDef::ResolveSymbols()
 
 int DataSegmentDef::CalcAddress(int symbol)
 {
-    for (int ds = 0; ds < s_nodeDefs.size(); ds++)
+    for (int ds = 0; ds < AssemblerNode::GetNodes().size(); ds++)
     {
-        DataSegmentDef *pDS = dynamic_cast<DataSegmentDef *>(s_nodeDefs[ds].get());
+        DataSegmentDef *pDS = AssemblerNode::GetNode<DataSegmentDef>(ds);
         if (pDS != nullptr)
         {
             int startByte = pDS->_startAddress;

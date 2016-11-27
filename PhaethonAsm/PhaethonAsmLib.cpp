@@ -10,9 +10,7 @@
 
 StructDef::StructDefInfo StructDef::s_defInfo;
 
-std::vector<std::unique_ptr<AssemblerNode> > s_nodeDefs;
-
-BinaryObjWriter s_writer;
+std::unique_ptr<BinaryObjWriter> s_pWriter;
 
 struct LabelData
 {
@@ -66,15 +64,17 @@ int GetLabelAddress(int symIndex)
 	return -1;
 }
 
-void OutputCode()
+void OutputCode(const char* pszName)
 {
+	s_pWriter.reset(new BinaryObjWriter(pszName));
+
 	// Make sure that the symbols are resolved
 	DataSegmentDef::ResolveSymbols();
 
 	// Now output all of the instructions
-	for (size_t i = 0; i < s_nodeDefs.size(); i++)
+	for (size_t i = 0; i < AssemblerNode::GetNodes().size(); i++)
 	{
-		InstructionNode* pInstr = dynamic_cast<InstructionNode*>(s_nodeDefs[i].get());
+        InstructionNode *pInstr = AssemblerNode::GetNode<InstructionNode>(i);
 		if (pInstr != nullptr)
 		{
 			pInstr->OutputInstruction();
@@ -82,9 +82,9 @@ void OutputCode()
 	}
 
 	// Now the data segments can be printed
-	for (size_t i = 0; i < s_nodeDefs.size(); i++)
+	for (size_t i = 0; i < AssemblerNode::GetNodes().size(); i++)
 	{
-		DataSegmentDef* pDS = dynamic_cast<DataSegmentDef*>(s_nodeDefs[i].get());
+        DataSegmentDef *pDS = AssemblerNode::GetNode<DataSegmentDef>(i);
 		if (pDS != nullptr)
 		{
 			pDS->OutputDataSegment();

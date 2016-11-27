@@ -51,7 +51,7 @@ void InstructionNode::OutputInstruction()
         objArgs[i] = _args[i]._objArg;
     }
 
-    s_writer.OutputInstruction(
+    s_pWriter->OutputInstruction(
         _opCode,
         objArgs
         );

@@ -1800,10 +1800,11 @@ yyreturn:
 
 int main(int argc, char** argv)
 {
-    if (argc >= 3 && argv[2][0] == 'd')
+    if (argc >= 4 && argv[3][0] == 'd')
 	{
 	    yydebug = 1;
 	}
+
 	// open a file handle to a particular file:
 	FILE *myfile = fopen(argv[1], "r");
 	// make sure it is valid:
@@ -1822,7 +1823,7 @@ int main(int argc, char** argv)
 		yyparse();
 	} while (!feof(yyin));
 
-	OutputCode();
+	OutputCode(argv[2]);
 }
 
 void yyerror(const char *s)

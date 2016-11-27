@@ -2,6 +2,7 @@
 
 #include "StructMember.h"
 #include "AssemblerListNode.h"
+#include <typeinfo>
 
 class StructDef : public AssemblerListNode<StructDef, StructMember>
 {
@@ -55,9 +56,9 @@ class StructDef : public AssemblerListNode<StructDef, StructMember>
 
     static int CalcOffset(int structSymIndex, int memberSymIndex)
     {
-        for (size_t i = 0; i < s_nodeDefs.size(); i++)
+        for (size_t i = 0; i < AssemblerNode::GetNodes().size(); i++)
         {
-            StructDef *pDef = dynamic_cast<StructDef *>(s_nodeDefs[i].get());
+            StructDef *pDef = AssemblerNode::GetNode<StructDef>(i);
             if (pDef != nullptr)
             {
                 //printf("Name of struct %d is %d\n", (int)i, s_defs[i]->GetIntProperty("name"));
@@ -75,21 +76,25 @@ class StructDef : public AssemblerListNode<StructDef, StructMember>
 
     static int GetSize(int typeSymbol)
     {
-        for (size_t i = 0; i < s_nodeDefs.size(); i++)
+        //printf("Starting size search\n");
+
+        for (size_t i = 0; i < AssemblerNode::GetNodes().size(); i++)
         {
-            StructDef *pDef = dynamic_cast<StructDef *>(s_nodeDefs[i].get());
+            //            printf("Getting node %d with name %s\n", (int)i, typeid(s_nodeDefs[i].get()).name());
+            StructDef *pDef = AssemblerNode::GetNode<StructDef>(i);
             if (pDef != nullptr)
             {
-                //printf("Name of struct %d is %d\n", (int)i, s_defs[i]->GetIntProperty("name"));
+                //printf("Name of struct %d is %d\n", (int)i, pDef->GetIntProperty("name"));
 
                 if (pDef->GetIntProperty("name") == typeSymbol)
                 {
+                    //printf("Ending size search\n");
                     return pDef->GetSize();
                 }
             }
         }
 
-        printf("Unknown size for type %d\n", typeSymbol);
+        throw "Unknown size for type";
         return -1;
     }
 
@@ -103,7 +108,7 @@ class StructDef : public AssemblerListNode<StructDef, StructMember>
             pWordStruct->SetIntProperty("name", AddSymbol("word"));
             pWordStruct->SetIntProperty("size", 4);
 
-            //printf("Number of structs is now %d\n", (int)s_defs.size());
+            //            printf("Number of structs is now %d\n", (int)s_nodeDefs.size());
         }
     };
 

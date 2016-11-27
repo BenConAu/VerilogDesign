@@ -1,4 +1,4 @@
-all: *.pao
+all: *.pao ../PhaethonAsm/PhaethonAsm
 
 %.pao : %.asm
-	../PhaethonAsm/PhaethonAsm $< > $@
+	../PhaethonAsm/PhaethonAsm $< $@

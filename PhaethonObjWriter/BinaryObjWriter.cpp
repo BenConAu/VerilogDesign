@@ -4,7 +4,7 @@
 
 void BinaryObjWriter::OutputBytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned char b4)
 {
-    printf("%02x %02x %02x %02x\n", b1, b2, b3, b4);
+    fprintf(_pOutFile, "%02x %02x %02x %02x\n", b1, b2, b3, b4);
 }
 
 void BinaryObjWriter::OutputWord(unsigned int w)

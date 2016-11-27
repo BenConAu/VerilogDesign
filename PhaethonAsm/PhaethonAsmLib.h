@@ -5,13 +5,13 @@
 #include "Argument.h"
 #include <vector>
 
-extern BinaryObjWriter s_writer;
+extern std::unique_ptr<BinaryObjWriter> s_pWriter;
 
 void StoreInstruction(Instructions::Enum instr, Argument a1, Argument a2, Argument a3);
 int AddSymbol(const char* pszSymbol);
 int GetLabelAddress(int symIndex);
 void AddLabel(int symIndex);
-void OutputCode();
+void OutputCode(const char* pszName);
 
 class StructDef;
 class StructMember;
