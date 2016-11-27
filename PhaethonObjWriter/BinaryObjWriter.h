@@ -16,5 +16,9 @@ class BinaryObjWriter : public ObjWriter
         OpCodes::Enum opCode,
         ObjArgument *args
         ) override;
+        
+    void OutputLabel(
+        const char* pszLabel
+        ) override;
 };
 

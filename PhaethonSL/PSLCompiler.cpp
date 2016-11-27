@@ -20,7 +20,7 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
-    PSLCompilerContext context(myfile);
+    PSLCompilerContext context(myfile, argv[2]);
 
     try
     {

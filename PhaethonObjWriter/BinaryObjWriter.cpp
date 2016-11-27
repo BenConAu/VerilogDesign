@@ -38,3 +38,7 @@ void BinaryObjWriter::OutputInstruction(
         }
     }
 }
+
+void BinaryObjWriter::OutputLabel(const char* pszLabel)
+{
+}

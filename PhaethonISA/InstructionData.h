@@ -20,6 +20,26 @@ struct OpCodeData
 	// The name of the opcode (used to generate code)
 	const char* pszName;
 
+	int OperandCount()
+	{
+		if (argTypes[0] == OperandType::None)
+		{
+			return 0;
+		}
+
+		if (argTypes[1] == OperandType::None)
+		{
+			return 1;
+		}
+
+		if (argTypes[2] == OperandType::None)
+		{
+			return 2;
+		}
+
+		return 3;
+	}
+
 	// Table of data about opcodes
     static OpCodeData s_data[];
     static int s_dataCount;

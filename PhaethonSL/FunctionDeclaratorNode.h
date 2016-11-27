@@ -48,7 +48,7 @@ public:
     {
         if (!IsEntryPoint())
         {
-            printf("rret\n");
+            GetContext()->OutputInstruction(OpCodes::RRet);
         }
     }
 

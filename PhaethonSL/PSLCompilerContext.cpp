@@ -5,14 +5,14 @@
 #include "lex.h"
 #include "../PhaethonObjWriter/AsmObjWriter.h"
 
-PSLCompilerContext::PSLCompilerContext(FILE *pFile) : _varCollection(this)
+PSLCompilerContext::PSLCompilerContext(FILE *pFile, const char* pszOutName) : _varCollection(this)
 {
     _pEntryPoint = nullptr;
     _numStructs = 0;
     _numGlobals = 0;
 
     _varCollection.AddBuiltin();
-    _writer.reset(new AsmObjWriter);
+    _writer.reset(new AsmObjWriter(pszOutName));
 
     yylex_init(&pScanner);
     yyset_extra(this, pScanner);
@@ -124,4 +124,9 @@ void PSLCompilerContext::OutputInstruction(
 
     // Push the wrapped register into the memory
     _writer->OutputInstruction(opCode, args);
+}
+
+void PSLCompilerContext::OutputLabel(const char* pszLabel)
+{
+    _writer->OutputLabel(pszLabel);
 }

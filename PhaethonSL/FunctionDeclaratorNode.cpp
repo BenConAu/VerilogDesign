@@ -14,6 +14,6 @@ void FunctionDeclaratorNode::PreProcessNodeImpl()
     // non-main functions have a prologue
     if (!IsEntryPoint())
     {
-        printf("%s:\n", GetContext()->_symbols[_symIndex].c_str());
+        GetContext()->OutputLabel(GetContext()->_symbols[_symIndex].c_str());
     }
 }

@@ -39,8 +39,7 @@ std::string AsmObjWriter::GetOpString(const ObjArgument &objArg) const
 
 void AsmObjWriter::OutputInstruction(
     OpCodes::Enum opCode,
-    ObjArgument *args
-    )
+    ObjArgument *args)
 {
     for (int i = 0; i < OpCodeData::s_dataCount; i++)
     {
@@ -49,16 +48,36 @@ void AsmObjWriter::OutputInstruction(
             // Subtract 1 to account for Unknown
             int index = OpCodeData::s_data[i].instr - 1;
 
-            printf(
-                "%s %s, %s\n",
-                InstructionData::s_data[index].pszName,
-                GetOpString(args[0]).c_str(),
-                GetOpString(args[1]).c_str()
-                );
-            
+            switch (OpCodeData::s_data[i].OperandCount())
+            {
+            case 0:
+                fprintf(
+                    _pOutFile,
+                    "%s\n",
+                    InstructionData::s_data[index].pszName);
+                break;
+
+            case 2:
+                fprintf(
+                    _pOutFile,
+                    "%s %s, %s\n",
+                    InstructionData::s_data[index].pszName,
+                    GetOpString(args[0]).c_str(),
+                    GetOpString(args[1]).c_str());
+                break;
+
+            default:
+                throw "Unsupported arg count";
+            }
+
             return;
         }
     }
 
     throw "Unknown instruction";
+}
+
+void AsmObjWriter::OutputLabel(const char* pszLabel)
+{
+    fprintf(_pOutFile, "%s:\n", pszLabel);
 }
