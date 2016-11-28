@@ -15,4 +15,6 @@ void main()
 {
     fooVar.a = 1;
     fooVar.b = 2;
+    debugout(fooVar.a);
+    debugout(fooVar.b);
 }

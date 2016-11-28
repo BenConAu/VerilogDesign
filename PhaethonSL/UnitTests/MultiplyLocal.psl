@@ -14,6 +14,8 @@ void main()
     int d;
     d = 2;
     fooVar.a = c * d;
-    fooVar.b = fooVar.a * c;
+    fooVar.b = fooVar.a * d;
     fooVar.c = d * fooVar.b;
+    d = fooVar.c;
+    debugout(d);
 }
