@@ -9,10 +9,10 @@ foo fooVar;
 
 void main()
 {
-    int c;
-    c = 1;
-    int d;
-    d = 2;
+    float c;
+    c = f1.0;
+    float d;
+    d = f2.0;
     fooVar.a = c * d;
     fooVar.b = fooVar.a * d;
     fooVar.c = d * fooVar.b;

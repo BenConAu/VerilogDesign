@@ -35,6 +35,7 @@ void yyerror(void*, const char *s);
 %token RIGHT_PAREN
 %token INTPTR_TOKEN
 %token INT_TOKEN
+%token FLOAT_TOKEN
 %token VOID_TOKEN
 %token STRUCT_TOKEN
 %token LEFT_BRACE
@@ -174,6 +175,7 @@ parameter_declaration:
 
 fully_specified_type:
       INT_TOKEN                                                     { $$ = new TypeNode(pContext, TypeNode::BasicType, INT_TOKEN); }
+    | FLOAT_TOKEN                                                   { $$ = new TypeNode(pContext, TypeNode::BasicType, FLOAT_TOKEN); }
 	| VOID_TOKEN                                                    { $$ = new TypeNode(pContext, TypeNode::BasicType, VOID_TOKEN); }
 	| IDENTIFIER                                                    { $$ = new TypeNode(pContext, TypeNode::StructType, $1); }
     ;

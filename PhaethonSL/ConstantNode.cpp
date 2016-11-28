@@ -3,19 +3,19 @@
 #include "PSL.tab.h"
 #include "BasicTypeInfo.h"
 
-ConstantNode::ConstantNode(PSLCompilerContext* pContext, int v)  : ExpressionNode(pContext)
+ConstantNode::ConstantNode(PSLCompilerContext *pContext, int v) : ExpressionNode(pContext)
 {
     _intValue = v;
     _type = Int;
 }
 
-ConstantNode::ConstantNode(PSLCompilerContext* pContext, float v) : ExpressionNode(pContext)
+ConstantNode::ConstantNode(PSLCompilerContext *pContext, float v) : ExpressionNode(pContext)
 {
     _floatValue = v;
     _type = Float;
 }
 
-ConstantNode::ConstantNode(PSLCompilerContext* pContext, ConstantType t) : ExpressionNode(pContext)
+ConstantNode::ConstantNode(PSLCompilerContext *pContext, ConstantType t) : ExpressionNode(pContext)
 {
     _intValue = 0;
     _type = t;
@@ -26,6 +26,12 @@ int ConstantNode::GetInteger()
     if (_type == Int)
     {
         return _intValue;
+    }
+    else if (_type == Float)
+    {
+        int intValue;
+        ::memcpy(&intValue, &_floatValue, 4);
+        return intValue;
     }
     else
     {
@@ -40,15 +46,22 @@ void ConstantNode::VerifyNodeImpl()
     SetType(GetContext()->_typeCollection.GetBasicType(INT_TOKEN));
 }
 
-ExpressionResult* ConstantNode::CalculateResult()
+ExpressionResult *ConstantNode::CalculateResult()
 {
-    if (_type != Int)
+    TypeInfo *pTypeInfo = nullptr;
+
+    if (_type == Int)
     {
-        throw "Only int constants supported right now";
+        pTypeInfo = GetContext()->_typeCollection.GetBasicType(INT_TOKEN);
+    }
+    else if (_type == Float)
+    {
+        pTypeInfo = GetContext()->_typeCollection.GetBasicType(FLOAT_TOKEN);
+    }
+    else
+    {
+        throw "Unknown type so cannot calculate result";
     }
 
-    return new ExpressionResult(
-        GetContext()->_typeCollection.GetBasicType(INT_TOKEN), 
-        Operand(_intValue)
-        );
+    return new ExpressionResult(pTypeInfo, Operand(GetInteger()));
 }

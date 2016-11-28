@@ -27,6 +27,7 @@
 ","                  { return COMMA; }
 "intptr"             { return INTPTR_TOKEN; }
 "int"                { return INT_TOKEN; }
+"float"              { return FLOAT_TOKEN; }
 "void"               { return VOID_TOKEN; }
 "struct"             { return STRUCT_TOKEN; }
 "nullptr"            { return NULLPTR_TOKEN; }

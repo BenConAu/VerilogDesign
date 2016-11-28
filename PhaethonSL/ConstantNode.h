@@ -17,10 +17,12 @@ public:
     ConstantNode(PSLCompilerContext* pContext, float v);
     ConstantNode(PSLCompilerContext* pContext, ConstantType t);
 
-    int GetInteger();
     bool IsConstant() const override;
     void VerifyNodeImpl() override;
     ExpressionResult* CalculateResult() override;
+
+private:
+    int GetInteger();
 
 private:
     int _intValue;

@@ -8,6 +8,7 @@ TypeCollection::TypeCollection()
 {
     // Built in types
     _basicTypes[INT_TOKEN] = std::unique_ptr<BasicTypeInfo>(new BasicTypeInfo(INT_TOKEN));
+    _basicTypes[FLOAT_TOKEN] = std::unique_ptr<BasicTypeInfo>(new BasicTypeInfo(FLOAT_TOKEN));
 }
 
 StructTypeInfo* TypeCollection::GetStructType(int symIndex)

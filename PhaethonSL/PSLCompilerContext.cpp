@@ -161,7 +161,7 @@ void PSLCompilerContext::OutputMovInstruction(
         switch (a2.GetType())
         {
         case OperandType::Register:
-            // Do nothing
+            opCode = OpCodes::MovRR;
             break;
 
         case OperandType::Constant:
@@ -196,13 +196,10 @@ void PSLCompilerContext::OutputMovInstruction(
         throw "Unexpected operand type";
     }
 
-    if (opCode != OpCodes::Unknown)
-    {
-        OutputInstruction(
-            opCode,
-            a1,
-            a2);
-    }
+    OutputInstruction(
+        opCode,
+        a1,
+        a2);
 }
 
 void PSLCompilerContext::OutputLabel(const char *pszLabel)
