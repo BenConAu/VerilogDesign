@@ -150,6 +150,61 @@ void PSLCompilerContext::OutputInstruction(
     }
 }
 
+void PSLCompilerContext::OutputMovInstruction(
+    const Operand &a1,
+    const Operand &a2)
+{
+    OpCodes::Enum opCode = OpCodes::Unknown;
+
+    if (a1.GetType() == OperandType::Register)
+    {
+        switch (a2.GetType())
+        {
+        case OperandType::Register:
+            // Do nothing
+            break;
+
+        case OperandType::Constant:
+            opCode = OpCodes::MovRC;
+            break;
+
+        case OperandType::DerefConstant:
+            opCode = OpCodes::MovRdC;
+            break;
+
+        case OperandType::DerefRegisterOffset:
+            opCode = OpCodes::MovRdRo;
+            break;
+
+        default:
+            throw "Unexpected operand type";
+        }
+    }
+    else if (a1.GetType() == OperandType::DerefRegisterOffset)
+    {
+        if (a2.GetType() == OperandType::Register)
+        {
+            opCode = OpCodes::MovdRoR;
+        }
+        else
+        {
+            throw "Unexpected operand type";
+        }
+    }
+    else
+    {
+        throw "Unexpected operand type";
+    }
+
+    if (opCode != OpCodes::Unknown)
+    {
+        OutputInstruction(
+            opCode,
+            a1,
+            a2);
+    }
+}
+
 void PSLCompilerContext::OutputLabel(const char *pszLabel)
 {
     for (int i = 0; i < _writers.size(); i++)

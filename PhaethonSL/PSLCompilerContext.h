@@ -31,6 +31,10 @@ class PSLCompilerContext
         const Operand &a2 = Operand(),
         const Operand &a3 = Operand());
 
+    void OutputMovInstruction(
+        const Operand &a1,
+        const Operand &a2);
+
     void OutputLabel(
         const char *pszLabel);
 

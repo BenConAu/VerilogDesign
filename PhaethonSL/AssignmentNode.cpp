@@ -33,8 +33,7 @@ void AssignmentNode::PostProcessNodeImpl()
     case OperandType::Register:
     {
         // The great thing about registers is that everything can move into them
-        GetContext()->OutputInstruction(
-            OpCodes::MovRR,
+        GetContext()->OutputMovInstruction(
             leftResult.get()->_operand,
             rightResult.get()->_operand
             );
@@ -52,8 +51,7 @@ void AssignmentNode::PostProcessNodeImpl()
             );
 
         // Push the wrapped register into the memory
-        GetContext()->OutputInstruction(
-            OpCodes::MovRR,
+        GetContext()->OutputMovInstruction(
             leftResult.get()->_operand,
             wrapper.GetWrapped()
             );

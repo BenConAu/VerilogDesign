@@ -25,8 +25,7 @@ ExpressionResult *MultiplyNode::CalculateResult()
     RegIndex resultIndex = pFunc->GetRegCollection()->AllocateRegister();
     Operand resultOperand(resultIndex);
 
-    GetContext()->OutputInstruction(
-        OpCodes::MovRR, 
+    GetContext()->OutputMovInstruction(
         resultOperand,
         leftWrap.GetWrapped()
         );
