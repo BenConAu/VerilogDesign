@@ -14,6 +14,8 @@ void TestFunction()
 
 void main()
 {
+    fooVar.a = 1;
+    fooVar.b = 2;
     int c;
     int d;
     c = fooVar.a;

@@ -14,10 +14,11 @@ class ObjWriter
 
     virtual void OutputInstruction(
         OpCodes::Enum opCode,
-        ObjArgument *args
-        ) = 0;
+        ObjArgument *args) = 0;
 
     virtual void OutputLabel(
         const char* pszLabel
         ) = 0;
+
+    virtual void FinishCode() = 0;
 };

@@ -13,6 +13,9 @@ struct ObjArgument
     unsigned int _value;    // The constant value or the register index
     unsigned int _offset;   // The offset (if any)
 
+    // Whether the argument stores a memory location
+    bool _fMemoryLocation;
+
     // Symbolic information (optional)
     std::string _typeName;
     std::string _memberName;    

@@ -6,11 +6,11 @@
 unsigned int VariableInfo::_dataSegEnd = 0;
 
 VariableInfo::VariableInfo(
-    PSLCompilerContext* pContext,   // The context that this variable lives in
+    PSLCompilerContext *pContext,   // The context that this variable lives in
     int symIndex,                   // The symbol index for the identifier for the variable
-    FunctionDeclaratorNode* pScope, // The scope that the variable is declared in
-    TypeInfo* pInfo,                // The type of the variable
-    RegIndex* pRegIndex             // The register to use, if known
+    FunctionDeclaratorNode *pScope, // The scope that the variable is declared in
+    TypeInfo *pInfo,                // The type of the variable
+    RegIndex *pRegIndex             // The register to use, if known
     )
 {
     _pContext = pContext;
@@ -43,7 +43,7 @@ VariableInfo::VariableInfo(
     }
 }
 
-RegIndex VariableInfo::EnsureVariableRegister(FunctionDeclaratorNode* pScope)
+RegIndex VariableInfo::EnsureVariableRegister(FunctionDeclaratorNode *pScope)
 {
     if (_regIndexMap.find(pScope) == _regIndexMap.end())
     {
@@ -59,7 +59,10 @@ RegIndex VariableInfo::EnsureVariableRegister(FunctionDeclaratorNode* pScope)
             Operand regOperand(_regIndexMap[pScope]);
 
             // Spit out the code to load said register
-            pScope->GetContext()->OutputInstruction(OpCodes::MovRdC, regOperand, varOperand);
+            pScope->GetContext()->OutputInstruction(
+                OpCodes::MovRC,
+                regOperand,
+                varOperand);
         }
     }
 

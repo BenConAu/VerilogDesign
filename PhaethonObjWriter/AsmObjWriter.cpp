@@ -11,8 +11,16 @@ std::string AsmObjWriter::GetOpString(const ObjArgument &objArg) const
     switch (objArg._argType)
     {
     case OperandType::Constant:
-        // PASM just uses the constant simply
-        result << objArg._value;
+        if (objArg._memberName.length() != 0)
+        {
+            // The constant was derived from a variable, use that
+            result << "&" << objArg._memberName;
+        }
+        else
+        {
+            // If no symbol is given, then we can just go with the constant
+            result << objArg._value;
+        }
         break;
 
     case OperandType::Register:
@@ -85,7 +93,7 @@ void AsmObjWriter::OutputInstruction(
     throw "Unknown instruction";
 }
 
-void AsmObjWriter::OutputLabel(const char* pszLabel)
+void AsmObjWriter::OutputLabel(const char *pszLabel)
 {
     fprintf(_pOutFile, "%s:\n", pszLabel);
 }

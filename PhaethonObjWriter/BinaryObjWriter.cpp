@@ -2,24 +2,50 @@
 #include "ObjArgument.h"
 #include "../PhaethonISA/InstructionData.h"
 
-void BinaryObjWriter::OutputBytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned char b4)
+BinaryObjWriter::BinaryObjWriter(const char *pszFilename)
 {
-    fprintf(_pOutFile, "%02x %02x %02x %02x\n", b1, b2, b3, b4);
+    _pOutFile = ::fopen(pszFilename, "w");
 }
 
-void BinaryObjWriter::OutputWord(unsigned int w)
+BinaryObjWriter::~BinaryObjWriter()
 {
-    OutputBytes(
+    for (size_t i = 0; i < _wordCache.size(); i++)
+    {
+        WriteWordToFile(_wordCache[i]);
+    }
+
+    ::fprintf(_pOutFile, "@7ff\n");
+    ::fclose(_pOutFile);
+}
+
+void BinaryObjWriter::WriteWordToFile(unsigned int w)
+{
+    fprintf(
+        _pOutFile,
+        "%02x %02x %02x %02x\n",
         static_cast<unsigned char>(w & 0xFF),
         static_cast<unsigned char>(w >> 8 & 0xFF),
         static_cast<unsigned char>(w >> 16 & 0xFF),
         static_cast<unsigned char>(w >> 24 & 0xFF));
 }
 
+void BinaryObjWriter::OutputBytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned char b4)
+{
+    OutputWord(
+        ((unsigned int)b1) |
+        ((unsigned int)b2 << 8) |
+        ((unsigned int)b3 << 16) |
+        ((unsigned int)b4 << 24));
+}
+
+void BinaryObjWriter::OutputWord(unsigned int w)
+{
+    _wordCache.push_back(w);
+}
+
 void BinaryObjWriter::OutputInstruction(
     OpCodes::Enum opCode,
-    ObjArgument *args
-    )
+    ObjArgument *args)
 {
     OutputBytes(opCode, args[0]._value, args[1]._value, args[2]._value);
 
@@ -30,6 +56,12 @@ void BinaryObjWriter::OutputInstruction(
         {
             //printf("Output word %d\n", _args[_wordArg]._value);
             OutputWord(args[wordArg]._value);
+
+            if (args[wordArg]._fMemoryLocation)
+            {
+                // The index of the last word is a memory location
+                _memLocations.push_back(_wordCache.size() - 1);
+            }
         }
         else
         {
@@ -39,6 +71,19 @@ void BinaryObjWriter::OutputInstruction(
     }
 }
 
-void BinaryObjWriter::OutputLabel(const char* pszLabel)
+void BinaryObjWriter::OutputLabel(const char *pszLabel)
 {
+}
+
+void BinaryObjWriter::FinishCode()
+{
+    // All of the following words are going to be memory so we know
+    // where memory starts now.
+    unsigned int memStart = _wordCache.size() * 4;
+
+    // All of the memory locations can be updated now
+    for (size_t i = 0; i < _memLocations.size(); i++)
+    {
+        _wordCache[_memLocations[i]] += memStart;
+    }
 }

@@ -1,34 +1,31 @@
 #pragma once
 
 #include "ObjWriter.h"
+#include <vector>
 
 class BinaryObjWriter : public ObjWriter
 {
   public:
-    BinaryObjWriter(const char* pszFilename)
-    {
-        _pOutFile = ::fopen(pszFilename, "w");
-    }
+    BinaryObjWriter(const char *pszFilename);
+    ~BinaryObjWriter();
 
-     ~BinaryObjWriter()
-    {
-        ::fprintf(_pOutFile, "@7ff\n");
-        ::fclose(_pOutFile);
-    }
-
-   void OutputBytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned char b4);
+    void OutputBytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned char b4);
     void OutputWord(unsigned int w);
 
     void OutputInstruction(
         OpCodes::Enum opCode,
-        ObjArgument *args
-        ) override;
+        ObjArgument *args) override;
 
     void OutputLabel(
-        const char* pszLabel
-        ) override;
+        const char *pszLabel) override;
+
+    void FinishCode() override;
 
   private:
-    FILE* _pOutFile;
-};
+    void WriteWordToFile(unsigned int w);
 
+  private:
+    std::vector<unsigned int> _wordCache; // Cache of words to be output to object file
+    std::vector<size_t> _memLocations;    // Index of which words have memory locations that need offsetting
+    FILE *_pOutFile;
+};

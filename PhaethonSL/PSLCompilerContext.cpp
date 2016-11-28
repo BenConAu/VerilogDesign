@@ -7,10 +7,9 @@
 #include "../PhaethonObjWriter/BinaryObjWriter.h"
 
 PSLCompilerContext::PSLCompilerContext(
-    FILE *pFile, 
-    const char* pszAsmName, 
-    const char* pszObjName
-    ) : _varCollection(this)
+    FILE *pFile,
+    const char *pszAsmName,
+    const char *pszObjName) : _varCollection(this)
 {
     _pEntryPoint = nullptr;
     _numStructs = 0;
@@ -116,6 +115,12 @@ void PSLCompilerContext::Parse()
     {
         _rootNodes[i]->ProcessNode();
     }
+
+    // Code output is complete
+    for (size_t i = 0; i < _writers.size(); i++)
+    {
+        _writers[i]->FinishCode();
+    }
 }
 
 void PSLCompilerContext::SetEntryPoint(FunctionDeclaratorNode *pEntryPoint)
@@ -132,14 +137,12 @@ void PSLCompilerContext::OutputInstruction(
     OpCodes::Enum opCode,
     const Operand &a1,
     const Operand &a2,
-    const Operand &a3
-    )
+    const Operand &a3)
 {
     ObjArgument args[] = {
         a1.GetObjArgument(),
         a2.GetObjArgument(),
-        a3.GetObjArgument()
-    };
+        a3.GetObjArgument()};
 
     for (int i = 0; i < _writers.size(); i++)
     {
@@ -147,7 +150,7 @@ void PSLCompilerContext::OutputInstruction(
     }
 }
 
-void PSLCompilerContext::OutputLabel(const char* pszLabel)
+void PSLCompilerContext::OutputLabel(const char *pszLabel)
 {
     for (int i = 0; i < _writers.size(); i++)
     {

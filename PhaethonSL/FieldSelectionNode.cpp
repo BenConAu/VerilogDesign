@@ -40,9 +40,9 @@ ExpressionResult* FieldSelectionNode::CalculateResult()
         std::unique_ptr<ExpressionResult> childResult(pChildExpr->CalculateResult());
 
         // It needs to be something that we can select from
-        if (childResult.get()->_operand.GetType() != OperandType::DerefConstant)
+        if (childResult.get()->_operand.GetType() != OperandType::Constant)
         {
-            throw "Can only field select a memory struct";
+            throw "Can only field select a struct that has a this pointer in a register";
         }
 
         // Get the type of the child expression

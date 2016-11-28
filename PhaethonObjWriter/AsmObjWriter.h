@@ -5,7 +5,7 @@
 class AsmObjWriter : public ObjWriter
 {
   public:
-    AsmObjWriter(const char* pszFilename)
+    AsmObjWriter(const char *pszFilename)
     {
         _pOutFile = ::fopen(pszFilename, "w");
     }
@@ -19,13 +19,13 @@ class AsmObjWriter : public ObjWriter
 
     void OutputInstruction(
         OpCodes::Enum opCode,
-        ObjArgument* args
-        ) override;
+        ObjArgument *args) override;
 
     void OutputLabel(
-        const char* pszLabel
-        ) override;
+        const char *pszLabel) override;
+
+    void FinishCode() override {}
 
   private:
-    FILE* _pOutFile;
+    FILE *_pOutFile;
 };
