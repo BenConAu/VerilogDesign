@@ -31,6 +31,16 @@ BasicTypeInfo* TypeCollection::GetBasicType(int type)
     return nullptr;
 }
 
+PointerTypeInfo* TypeCollection::GetPointerType(int symIndex)
+{
+    if (_pointerTypes.find(symIndex) == _pointerTypes.end())
+    {
+        _pointerTypes[symIndex] = std::unique_ptr<PointerTypeInfo>(new PointerTypeInfo(symIndex));
+    }
+
+    return _pointerTypes[symIndex].get();
+}
+
 void TypeCollection::AddStructType(int symIndex, StructTypeInfo* pInfo)
 {
     _structTypes[symIndex] = std::unique_ptr<StructTypeInfo>(pInfo);

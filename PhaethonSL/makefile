@@ -17,6 +17,8 @@ PSLcc: lex.yy.c \
 	   PSLCompiler.cpp \
 	   TypeCollection.cpp \
 	   TypeCollection.h \
+	   BasicTypeInfo.h \
+	   PointerTypeInfo.h \
 	   StructDeclarationNode.cpp \
 	   StructSpecifierNode.cpp \
 	   TypeNode.cpp \

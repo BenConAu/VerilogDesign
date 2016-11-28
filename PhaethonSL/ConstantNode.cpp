@@ -23,18 +23,20 @@ ConstantNode::ConstantNode(PSLCompilerContext *pContext, ConstantType t) : Expre
 
 int ConstantNode::GetInteger()
 {
-    if (_type == Int)
+    switch (_type)
     {
+    case Int:
         return _intValue;
-    }
-    else if (_type == Float)
-    {
+
+    case Float:
         int intValue;
         ::memcpy(&intValue, &_floatValue, 4);
         return intValue;
-    }
-    else
-    {
+
+    case Pointer:
+        return _intValue;
+
+    default:
         throw "Not an integer";
     }
 }
@@ -50,16 +52,21 @@ ExpressionResult *ConstantNode::CalculateResult()
 {
     TypeInfo *pTypeInfo = nullptr;
 
-    if (_type == Int)
+    switch (_type)
     {
+    case Int:
         pTypeInfo = GetContext()->_typeCollection.GetBasicType(INT_TOKEN);
-    }
-    else if (_type == Float)
-    {
+        break;
+
+    case Float:
         pTypeInfo = GetContext()->_typeCollection.GetBasicType(FLOAT_TOKEN);
-    }
-    else
-    {
+        break;
+
+    case Pointer:
+        pTypeInfo = GetContext()->_typeCollection.GetPointerType(VOID_TOKEN);
+        break;
+
+    default:
         throw "Unknown type so cannot calculate result";
     }
 

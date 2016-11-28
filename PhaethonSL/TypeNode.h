@@ -10,7 +10,8 @@ public:
     enum TypeType
     {
         BasicType,
-        StructType
+        StructType,
+        PointerType
     };
 
 public:

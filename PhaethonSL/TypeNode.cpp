@@ -15,9 +15,17 @@ TypeInfo* TypeNode::GetTypeInfo()
     {
         return GetContext()->_typeCollection.GetBasicType(_type);
     }
-    else
+    else if (_typeType == StructType)
     {
         return GetContext()->_typeCollection.GetStructType(_type);
+    }
+    else if (_typeType == PointerType)
+    {
+        return GetContext()->_typeCollection.GetPointerType(_type);        
+    }
+    else
+    {
+        throw "Unknown type in type node";
     }
 }
 

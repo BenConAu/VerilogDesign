@@ -23,9 +23,12 @@
 "}"                  { return RIGHT_BRACE; }
 "("                  { return LEFT_PAREN; }
 ")"                  { return RIGHT_PAREN; }
+"<"                  { return LT; }
+">"                  { return GT; }
 "\."                 { return DOT; }
 ","                  { return COMMA; }
 "intptr"             { return INTPTR_TOKEN; }
+"ptr"                { return PTR_TOKEN; }
 "int"                { return INT_TOKEN; }
 "float"              { return FLOAT_TOKEN; }
 "void"               { return VOID_TOKEN; }

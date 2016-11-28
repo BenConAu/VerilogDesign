@@ -1,14 +1,14 @@
 struct Allocation
 {
-    uint length;
-    Allocation next;
+    int length;
+    ptr<Allocation> next;
 };
 
 struct AllocationHeader
 {
-    Allocation first;
-    Allocation last;
-    Allocation next;
+    ptr<Allocation> first;
+    ptr<Allocation> last;
+    ptr<Allocation> next;
 };
 
 AllocationHeader header;
