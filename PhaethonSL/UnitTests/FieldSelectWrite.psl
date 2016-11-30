@@ -1,12 +1,12 @@
 struct foo
 {
-    int a;
-    int b;
+    word a;
+    word b;
 };
 
 foo fooVar;
 
-void TestFunction(int v)
+void TestFunction(word v)
 {
     fooVar.b = v;
 }

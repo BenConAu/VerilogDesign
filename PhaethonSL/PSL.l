@@ -27,9 +27,8 @@
 ">"                  { return GT; }
 "\."                 { return DOT; }
 ","                  { return COMMA; }
-"intptr"             { return INTPTR_TOKEN; }
 "ptr"                { return PTR_TOKEN; }
-"int"                { return INT_TOKEN; }
+"word"               { return WORD_TOKEN; }
 "float"              { return FLOAT_TOKEN; }
 "void"               { return VOID_TOKEN; }
 "struct"             { return STRUCT_TOKEN; }

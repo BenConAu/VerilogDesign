@@ -47,9 +47,9 @@ the opcodes and operand forms for the instruction set.
 
 Shader Language Overview
 
-The shader language is not meant to be a high level language but rather a very low
-level procedural language in the spirit of B. Structure types are added on top of
-the register represented types of the hardware.
+The shader language is not meant to be a high level language like C# or Java but rather 
+a very low level procedural language in the spirit of B. Structure types are added on 
+top of the register represented types of the hardware.
 
 Expressions therefore output either a structure or a member of a structure. The only
 operators allowed on structures is field access.
@@ -58,7 +58,12 @@ The language is strongly typed with the following types:
 
 int
 float
-struct
+pointer (refined with template like syntax to codify type)
+struct (user defined)
+
+Locally defined variables in functions have to be non-struct types. Global variables
+must be structures. This allows the code generation to have structures always store
+a 'this' pointer into a register, and have other variables be assigned a register.
 
 How to update the ISA
 

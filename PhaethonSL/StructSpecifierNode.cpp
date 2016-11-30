@@ -33,4 +33,6 @@ void StructSpecifierNode::VerifyNodeImpl()
     }
 
     GetContext()->_typeCollection.AddStructType(_symIndex, pNewType);
+
+    //printf("Added a struct\n");
 }

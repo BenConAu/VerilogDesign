@@ -13,11 +13,11 @@ public:
     TypeCollection();
     StructTypeInfo* GetStructType(int symIndex);
     BasicTypeInfo* GetBasicType(int type);
-    PointerTypeInfo* GetPointerType(int symIndex);
+    PointerTypeInfo* GetPointerType(TypeInfo* pBaseType);
     void AddStructType(int symIndex, StructTypeInfo* pInfo);
 
 private:
     std::map<int, std::unique_ptr<StructTypeInfo> > _structTypes;
     std::map<int, std::unique_ptr<BasicTypeInfo> > _basicTypes;
-    std::map<int, std::unique_ptr<PointerTypeInfo> > _pointerTypes;
+    std::map<TypeInfo*, std::unique_ptr<PointerTypeInfo> > _pointerTypes;
 };

@@ -4,22 +4,26 @@
 
 class TypeInfo;
 
+enum class TypeClass
+{
+    Basic,
+    Struct,
+    Pointer,
+};
+
 class TypeNode : public ASTNode
 {
 public:
-    enum TypeType
-    {
-        BasicType,
-        StructType,
-        PointerType
-    };
-
-public:
-    TypeNode(PSLCompilerContext* pContext, TypeType t, int type);
+    TypeNode(PSLCompilerContext* pContext, TypeClass typeClass, int type);
+    TypeNode(PSLCompilerContext *pContext, ASTNode* pNode);
+    
     TypeInfo* GetTypeInfo();
     void VerifyNodeImpl() override;
 
 private:
-    int _type;
-    TypeType _typeType;
+    TypeClass _typeClass;
+    TypeNode* _pBaseTypeNode;
+    int _typeOrSymbol;
+
+    TypeInfo* _pTypeInfo;
 };

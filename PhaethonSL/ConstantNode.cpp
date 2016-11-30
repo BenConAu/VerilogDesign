@@ -45,7 +45,7 @@ bool ConstantNode::IsConstant() const { return true; }
 
 void ConstantNode::VerifyNodeImpl()
 {
-    SetType(GetContext()->_typeCollection.GetBasicType(INT_TOKEN));
+    SetType(GetContext()->_typeCollection.GetBasicType(WORD_TOKEN));
 }
 
 ExpressionResult *ConstantNode::CalculateResult()
@@ -55,7 +55,7 @@ ExpressionResult *ConstantNode::CalculateResult()
     switch (_type)
     {
     case Int:
-        pTypeInfo = GetContext()->_typeCollection.GetBasicType(INT_TOKEN);
+        pTypeInfo = GetContext()->_typeCollection.GetBasicType(WORD_TOKEN);
         break;
 
     case Float:
@@ -63,7 +63,7 @@ ExpressionResult *ConstantNode::CalculateResult()
         break;
 
     case Pointer:
-        pTypeInfo = GetContext()->_typeCollection.GetPointerType(VOID_TOKEN);
+        pTypeInfo = GetContext()->_typeCollection.GetPointerType(nullptr);
         break;
 
     default:

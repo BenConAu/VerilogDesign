@@ -18,6 +18,11 @@ VariableInfo::VariableInfo(
     _symIndex = symIndex;
     _pScope = pScope;
 
+    if (pInfo == nullptr)
+    {
+        throw "Variables must have types";
+    }
+
     if (_pScope == nullptr)
     {
         // Globals are always backed with memory storage

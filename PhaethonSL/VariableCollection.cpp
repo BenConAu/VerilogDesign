@@ -12,7 +12,7 @@ VariableCollection::VariableCollection(PSLCompilerContext* pContext)
 void VariableCollection::AddBuiltin()
 {
     int dseIndex = _pContext->AddSymbol("__datasegmentend");
-    TypeInfo *pDseType = new BasicTypeInfo(INTPTR_TOKEN);
+    PointerTypeInfo* pDseType = _pContext->_typeCollection.GetPointerType(nullptr);
     AddVariable(dseIndex, nullptr, pDseType, nullptr);
 }
 

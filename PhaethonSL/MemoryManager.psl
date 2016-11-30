@@ -1,6 +1,12 @@
+struct VoidPtr
+{
+    word pointerValue;
+    word length;
+};
+
 struct Allocation
 {
-    int length;
+    word length;
     ptr<Allocation> next;
 };
 
@@ -20,11 +26,11 @@ void MemoryInit()
     header.next = __datasegmentend;
 }
 
-IntPtr MemoryAlloc(uint size)
+ptr<void> MemoryAlloc(word size)
 {
 }
 
-void MemoryFree(IntPtr allocation)
+void MemoryFree(ptr<void> allocation)
 {
 }
 

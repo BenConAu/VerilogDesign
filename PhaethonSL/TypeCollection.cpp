@@ -7,7 +7,8 @@
 TypeCollection::TypeCollection()
 {
     // Built in types
-    _basicTypes[INT_TOKEN] = std::unique_ptr<BasicTypeInfo>(new BasicTypeInfo(INT_TOKEN));
+    _basicTypes[VOID_TOKEN] = std::unique_ptr<BasicTypeInfo>(new BasicTypeInfo(VOID_TOKEN));
+    _basicTypes[WORD_TOKEN] = std::unique_ptr<BasicTypeInfo>(new BasicTypeInfo(WORD_TOKEN));
     _basicTypes[FLOAT_TOKEN] = std::unique_ptr<BasicTypeInfo>(new BasicTypeInfo(FLOAT_TOKEN));
 }
 
@@ -28,17 +29,22 @@ BasicTypeInfo* TypeCollection::GetBasicType(int type)
         return _basicTypes[type].get();
     }
 
-    return nullptr;
+    throw "That basic type does not exist";
 }
 
-PointerTypeInfo* TypeCollection::GetPointerType(int symIndex)
+PointerTypeInfo* TypeCollection::GetPointerType(TypeInfo* pBaseType)
 {
-    if (_pointerTypes.find(symIndex) == _pointerTypes.end())
+    if (pBaseType == nullptr)
     {
-        _pointerTypes[symIndex] = std::unique_ptr<PointerTypeInfo>(new PointerTypeInfo(symIndex));
+        pBaseType = GetBasicType(VOID_TOKEN);
     }
 
-    return _pointerTypes[symIndex].get();
+    if (_pointerTypes.find(pBaseType) == _pointerTypes.end())
+    {
+        _pointerTypes[pBaseType] = std::unique_ptr<PointerTypeInfo>(new PointerTypeInfo(pBaseType));
+    }
+
+    return _pointerTypes[pBaseType].get();
 }
 
 void TypeCollection::AddStructType(int symIndex, StructTypeInfo* pInfo)

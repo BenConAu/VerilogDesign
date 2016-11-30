@@ -35,9 +35,8 @@ void yyerror(void*, const char *s);
 %token RIGHT_PAREN
 %token LT
 %token GT
-%token INTPTR_TOKEN
 %token PTR_TOKEN
-%token INT_TOKEN
+%token WORD_TOKEN
 %token FLOAT_TOKEN
 %token VOID_TOKEN
 %token STRUCT_TOKEN
@@ -177,11 +176,11 @@ parameter_declaration:
 	;
 
 fully_specified_type:
-      INT_TOKEN                                                     { $$ = new TypeNode(pContext, TypeNode::BasicType, INT_TOKEN); }
-    | FLOAT_TOKEN                                                   { $$ = new TypeNode(pContext, TypeNode::BasicType, FLOAT_TOKEN); }
-    | PTR_TOKEN LT IDENTIFIER GT                                    { $$ = new TypeNode(pContext, TypeNode::PointerType, $3); }
-	| VOID_TOKEN                                                    { $$ = new TypeNode(pContext, TypeNode::BasicType, VOID_TOKEN); }
-	| IDENTIFIER                                                    { $$ = new TypeNode(pContext, TypeNode::StructType, $1); }
+      WORD_TOKEN                                                    { $$ = new TypeNode(pContext, TypeClass::Basic, WORD_TOKEN); }
+    | FLOAT_TOKEN                                                   { $$ = new TypeNode(pContext, TypeClass::Basic, FLOAT_TOKEN); }
+	| VOID_TOKEN                                                    { $$ = new TypeNode(pContext, TypeClass::Basic, VOID_TOKEN); }
+	| IDENTIFIER                                                    { $$ = new TypeNode(pContext, TypeClass::Struct, $1); }
+    | PTR_TOKEN LT fully_specified_type GT                          { $$ = new TypeNode(pContext, $3); }
     ;
 
 struct_specifier:

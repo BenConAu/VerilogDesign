@@ -5,9 +5,9 @@
 class PointerTypeInfo : public TypeInfo
 {
 public:
-    PointerTypeInfo(int typeSym)
+    PointerTypeInfo(TypeInfo* pBaseType)
     {
-        _typeSymIndex = typeSym;
+        _pBaseType = pBaseType;
     }
 
     unsigned int GetSize() override
@@ -22,5 +22,5 @@ public:
     }
 
 private:
-    int _typeSymIndex;  // Symbol index for type that is being pointed to
+    TypeInfo* _pBaseType;  // Type being pointed to
 };

@@ -1,14 +1,14 @@
 struct foo
 {
-    int a;
-    int b;
+    word a;
+    word b;
 };
 
 foo fooVar;
 
 void TestFunction()
 {
-    int f;
+    word f;
     f = fooVar.a;
 }
 
@@ -16,8 +16,8 @@ void main()
 {
     fooVar.a = 1;
     fooVar.b = 2;
-    int c;
-    int d;
+    word c;
+    word d;
     c = fooVar.a;
     d = fooVar.b;
     debugout(c);
