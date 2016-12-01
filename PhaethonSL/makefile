@@ -49,8 +49,8 @@ PSLcc: lex.yy.c \
 	   FieldSelectionNode.cpp \
 	   FieldSelectionNode.h \
 	   DebugOutNode.h \
-	   MultiplyNode.h \
-	   MultiplyNode.cpp
+	   OperatorNode.h \
+	   OperatorNode.cpp
 	clang++ -std=c++11 -Wno-deprecated-register -g lex.yy.c \
 	   ../PhaethonObjWriter/AsmObjWriter.cpp \
 	   ../PhaethonObjWriter/BinaryObjWriter.cpp \
@@ -63,7 +63,7 @@ PSLcc: lex.yy.c \
 	   FunctionDeclaratorNode.cpp \
 	   FunctionParameterNode.cpp \
 	   IdentifierNode.cpp \
-	   MultiplyNode.cpp \
+	   OperatorNode.cpp \
 	   Operand.cpp \
 	   PSLCompiler.cpp \
 	   PSLCompilerContext.cpp \

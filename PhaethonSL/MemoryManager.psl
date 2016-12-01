@@ -1,33 +1,42 @@
-struct VoidPtr
-{
-    word pointerValue;
-    word length;
-};
-
 struct Allocation
 {
     word length;
     ptr<Allocation> next;
+    ptr<void> value;
 };
 
 struct AllocationHeader
 {
     ptr<Allocation> first;
     ptr<Allocation> last;
-    ptr<Allocation> next;
+    ptr<void> next;
 };
 
 AllocationHeader header;
+Allocation firstAlloc;
 
 void MemoryInit()
 {
-    header.first = nullptr;
-    header.last = nullptr;
+    firstAlloc.value = nullptr;
+    firstAlloc.length = 0;
+    firstAlloc.next = nullptr;
+
+    header.first = &firstAlloc;
+    header.last = &firstAlloc;
     header.next = __datasegmentend;
 }
 
 ptr<void> MemoryAlloc(word size)
 {
+    ptr<Allocation> next;
+    next = header.next;
+
+    next->length = size;
+    next->next = nullptr;
+    next->value = header.next + sizeof(Allocation);
+
+    header.last->next = next;
+    header.next = header.next + sizeof(Allocation) + size;
 }
 
 void MemoryFree(ptr<void> allocation)

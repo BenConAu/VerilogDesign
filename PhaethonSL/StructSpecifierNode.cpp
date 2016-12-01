@@ -24,6 +24,7 @@ void StructSpecifierNode::VerifyNodeImpl()
 
     // Make the info for the type we are creating
     StructTypeInfo* pNewType = new StructTypeInfo(_symIndex);
+    GetContext()->_typeCollection.AddStructType(_symIndex, pNewType);
 
     for (size_t i = 0; i < GetChildCount(); i++)
     {
@@ -31,8 +32,6 @@ void StructSpecifierNode::VerifyNodeImpl()
 
         pNewType->AddMember(pSpecifier->GetName(), pSpecifier->GetTypeInfo());
     }
-
-    GetContext()->_typeCollection.AddStructType(_symIndex, pNewType);
 
     //printf("Added a struct\n");
 }

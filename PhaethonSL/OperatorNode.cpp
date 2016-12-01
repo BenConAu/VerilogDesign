@@ -1,7 +1,7 @@
-#include "MultiplyNode.h"
+#include "OperatorNode.h"
 #include "FunctionDeclaratorNode.h"
 
-ExpressionResult *MultiplyNode::CalculateResult()
+ExpressionResult *OperatorNode::CalculateResult()
 {
     FunctionDeclaratorNode *pFunc = GetTypedParent<FunctionDeclaratorNode>();
 
@@ -31,7 +31,7 @@ ExpressionResult *MultiplyNode::CalculateResult()
         );
     
     GetContext()->OutputInstruction(
-        OpCodes::FmulRR,
+        (_op == Operator::Multiply) ? OpCodes::FmulRR : OpCodes::FaddRR,
         resultOperand,
         rightWrap.GetWrapped()
         );

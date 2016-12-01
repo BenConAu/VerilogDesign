@@ -1,7 +1,7 @@
 #include "ASTNode.h"
 #include "StatementListNode.h"
 #include "AssignmentNode.h"
-#include "MultiplyNode.h"
+#include "OperatorNode.h"
 #include "ConstantNode.h"
 #include "IdentifierNode.h"
 #include "FunctionDeclaratorNode.h"

@@ -31,10 +31,12 @@ void yyerror(void*, const char *s);
 %token SEMICOLON
 %token EQUAL
 %token STAR
+%token PLUS
 %token LEFT_PAREN
 %token RIGHT_PAREN
 %token LT
 %token GT
+%token ARROW
 %token PTR_TOKEN
 %token WORD_TOKEN
 %token FLOAT_TOKEN
@@ -51,6 +53,7 @@ void yyerror(void*, const char *s);
 %type <pNode> primary_expression
 %type <pNode> postfix_expression
 %type <pNode> multiplicative_expression
+%type <pNode> additive_expression
 %type <pNode> assignment_expression
 %type <pNode> expression_statement
 %type <pNode> expression
@@ -113,12 +116,17 @@ debugout_expression:
     ;
 
 assignment_expression:
-      write_expression assignment_operator multiplicative_expression { $$ = new AssignmentNode(pContext, $1, $3); }
+      write_expression assignment_operator additive_expression      { $$ = new AssignmentNode(pContext, $1, $3); }
+    ;
+
+additive_expression:
+      multiplicative_expression                                     { $$ = $1; }
+    | additive_expression PLUS multiplicative_expression            { $$ = new OperatorNode(pContext, $1, $3, Operator::Add); }
     ;
 
 multiplicative_expression:
       read_expression                                               { $$ = $1; }
-    | multiplicative_expression STAR read_expression                { $$ = new MultiplyNode(pContext, $1, $3); }
+    | multiplicative_expression STAR read_expression                { $$ = new OperatorNode(pContext, $1, $3, Operator::Multiply); }
     ;
 
 write_expression:
@@ -135,7 +143,8 @@ assignment_operator:
 
 postfix_expression:
       primary_expression                                            { $$ = $1; }
-	| postfix_expression DOT IDENTIFIER								{ $$ = new FieldSelectionNode(pContext, $1, $3); }
+	| postfix_expression DOT IDENTIFIER								{ $$ = new FieldSelectionNode(pContext, $1, false, $3); }
+	| postfix_expression ARROW IDENTIFIER							{ $$ = new FieldSelectionNode(pContext, $1, true, $3); }
     ;
 
 primary_expression:

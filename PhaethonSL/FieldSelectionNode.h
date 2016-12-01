@@ -5,7 +5,7 @@
 class FieldSelectionNode : public ExpressionNode
 {
 public:
-    FieldSelectionNode(PSLCompilerContext* pContext, ASTNode* pExpr, int symIndex);
+    FieldSelectionNode(PSLCompilerContext* pContext, ASTNode* pExpr, bool fPointer, int symIndex);
 
     void VerifyNodeImpl() override;
 
@@ -13,4 +13,5 @@ public:
 
 private:
     int _fieldSymIndex;
+    bool _fPointer;
 };

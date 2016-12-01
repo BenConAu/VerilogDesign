@@ -5,11 +5,12 @@
 #include "FunctionDeclaratorNode.h"
 #include "PSLCompilerContext.h"
 
-FieldSelectionNode::FieldSelectionNode(PSLCompilerContext* pContext, ASTNode* pExpr, int symIndex) : ExpressionNode(pContext)
+FieldSelectionNode::FieldSelectionNode(PSLCompilerContext* pContext, ASTNode* pExpr, bool fPointer, int symIndex) : ExpressionNode(pContext)
 {
     AddNode(pExpr);
 
     _fieldSymIndex = symIndex;
+    _fPointer = fPointer;
 }
 
 void FieldSelectionNode::VerifyNodeImpl()

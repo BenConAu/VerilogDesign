@@ -17,12 +17,14 @@
 "//".*"\n"           ;
 "\n"                 ;
 "*"                  { return STAR; }
+"+"                  { return PLUS; }
 "="                  { return EQUAL; }
 ";"                  { return SEMICOLON; }
 "{"                  { return LEFT_BRACE; }
 "}"                  { return RIGHT_BRACE; }
 "("                  { return LEFT_PAREN; }
 ")"                  { return RIGHT_PAREN; }
+"->"                 { return ARROW; }
 "<"                  { return LT; }
 ">"                  { return GT; }
 "\."                 { return DOT; }
