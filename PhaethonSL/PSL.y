@@ -48,6 +48,7 @@ void yyerror(void*, const char *s);
 %token COMMA
 %token NULLPTR_TOKEN
 %token DEBUGOUT_TOKEN
+%token SIZEOF_TOKEN
 %token <symIndex> IDENTIFIER
 %type <pNode> variable_identifier
 %type <pNode> primary_expression
@@ -78,6 +79,7 @@ void yyerror(void*, const char *s);
 %type <pNode> parameter_declaration
 %type <pNode> function_header_with_parameters
 %type <pNode> debugout_expression
+%type <pNode> sizeof_expression
 
 %%
 
@@ -152,6 +154,11 @@ primary_expression:
     | INTCONSTANT                                                   { $$ = new ConstantNode(pContext, $1); }
     | FLOATCONSTANT                                                 { $$ = new ConstantNode(pContext, $1); }
 	| NULLPTR_TOKEN                                                 { $$ = new ConstantNode(pContext, ConstantNode::Pointer); }
+    | sizeof_expression                                             { $$ = $1; }
+    ;
+
+sizeof_expression:
+      SIZEOF_TOKEN LEFT_PAREN variable_identifier RIGHT_PAREN       { $$ = new SizeOfNode(pContext, $3); }
     ;
 
 declaration:

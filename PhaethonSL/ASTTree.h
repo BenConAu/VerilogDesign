@@ -12,3 +12,4 @@
 #include "FieldSelectionNode.h"
 #include "FunctionParameterNode.h"
 #include "DebugOutNode.h"
+#include "SizeOfNode.h"

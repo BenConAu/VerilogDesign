@@ -67,7 +67,8 @@ extern int yydebug;
     COMMA = 277,
     NULLPTR_TOKEN = 278,
     DEBUGOUT_TOKEN = 279,
-    IDENTIFIER = 280
+    SIZEOF_TOKEN = 280,
+    IDENTIFIER = 281
   };
 #endif
 
@@ -83,7 +84,7 @@ union YYSTYPE
 	int symIndex;
     ASTNode* pNode;
 
-#line 87 "PSL.tab.h" /* yacc.c:1915  */
+#line 88 "PSL.tab.h" /* yacc.c:1915  */
 };
 
 typedef union YYSTYPE YYSTYPE;
