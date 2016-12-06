@@ -19,37 +19,37 @@ void FieldSelectionNode::VerifyNodeImpl()
 
     // Should verify that the type exists
     TypeInfo *pTypeInfo = pLeft->GetTypeInfo();
-
-    StructTypeInfo *pStructInfo = dynamic_cast<StructTypeInfo *>(pTypeInfo);
-    if (pStructInfo != nullptr)
+    StructTypeInfo *pStructInfo;
+    if (_fPointer)
     {
-        if (_fPointer)
+        PointerTypeInfo *pPointerInfo = dynamic_cast<PointerTypeInfo *>(pTypeInfo);
+        if (pPointerInfo == nullptr)
         {
-            throw "Cannot arrow a struct";
+            // Not using a pointer, bad for our health
+            throw "Can only field select a pointer with arrow operator";
         }
 
-        StructMember *pMember = pStructInfo->GetMember(_fieldSymIndex);
-
-        // The type of this expression is the type of the member
-        SetType(pMember->GetType());
+        pStructInfo = dynamic_cast<StructTypeInfo*>(pPointerInfo->GetBaseType());
+        if (pTypeInfo == nullptr)
+        {
+            // Not using a structure, bad for our health
+            throw "Can only field select a pointer to a struct with arrow operator";
+        }
     }
     else
     {
-        PointerTypeInfo *pPointerInfo = dynamic_cast<PointerTypeInfo *>(pTypeInfo);
-        if (pPointerInfo != nullptr)
+        pStructInfo = dynamic_cast<StructTypeInfo *>(pTypeInfo);
+        if (pStructInfo == nullptr)
         {
-            if (!_fPointer)
-            {
-                throw "Cannot dot a pointer";
-            }
-
-            SetType(pPointerInfo->GetBaseType());
-        }
-        else
-        {
-            throw "Cannot field select unless a pointer or a ";
+            // Not using a structure, bad for our health
+            throw "Can only field select a struct with dot operator";
         }
     }
+
+    StructMember *pMember = pStructInfo->GetMember(_fieldSymIndex);
+
+    // The type of this expression is the type of the member
+    SetType(pMember->GetType());
 }
 
 ExpressionResult *FieldSelectionNode::CalculateResult()
@@ -72,27 +72,11 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
         if (!_fPointer)
         {
             pTypeInfo = dynamic_cast<StructTypeInfo *>(childResult.get()->_pTypeInfo);
-            if (pTypeInfo == nullptr)
-            {
-                // Not using a structure, bad for our health
-                throw "Can only field select a struct with dot operator";
-            }
         }
         else
         {
-            PointerTypeInfo* pPointerInfo = dynamic_cast<PointerTypeInfo*>(childResult.get()->_pTypeInfo);
-            if (pPointerInfo == nullptr)
-            {
-                // Not using a pointer, bad for our health
-                throw "Can only field select a pointer with arrow operator";
-            }
-
-            pTypeInfo = dynamic_cast<StructTypeInfo*>(pPointerInfo->GetBaseType());
-            if (pTypeInfo == nullptr)
-            {
-                // Not using a structure, bad for our health
-                throw "Can only field select a pointer to a struct with arrow operator";
-            }
+            PointerTypeInfo *pPointerInfo = dynamic_cast<PointerTypeInfo *>(childResult.get()->_pTypeInfo);
+            pTypeInfo = dynamic_cast<StructTypeInfo *>(pPointerInfo->GetBaseType());
         }
 
         // Since this is always a struct, the operand has a memory location in
