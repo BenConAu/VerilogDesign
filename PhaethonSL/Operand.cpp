@@ -52,17 +52,14 @@ Operand::Operand(
 // An offset operand comes from a register (already allocated) and
 // a structure variable with member.
 Operand::Operand(
-    RegIndex regIndex, 
-    VariableInfo* pVarInfo, 
+    RegIndex regIndex,
+    StructTypeInfo* pTypeInfo,
     StructMember* pTypeMember, 
     PSLCompilerContext* pContext
     )
 {
     _objArg._argType = OperandType::DerefRegisterOffset;
     _objArg._value = regIndex;
-
-    // Need to be given a struct
-    StructTypeInfo* pTypeInfo = dynamic_cast<StructTypeInfo*>(pVarInfo->GetTypeInfo());
 
     // Fill in the actual byte offset
     _objArg._offset = pTypeInfo->GetOffset(pTypeMember->GetSymbolIndex());
@@ -92,4 +89,11 @@ RegIndex Operand::GetRegIndex() const
             // For register arguments, the value is the index of the register
             return _objArg._value;
     }
+}
+
+const char* Operand::DebugPrint()
+{
+    static char str[100];
+    sprintf(str, "%d", (int)_objArg._argType);
+    return str;
 }

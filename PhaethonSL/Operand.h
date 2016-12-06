@@ -7,6 +7,7 @@
 class PSLCompilerContext;
 class VariableInfo;
 class StructMember;
+class StructTypeInfo;
 
 // If you want an offset you need to make a register for it
 struct OffsetInfo
@@ -30,7 +31,7 @@ public:
 
     explicit Operand(
         RegIndex regIndex, 
-        VariableInfo* pVarInfo, 
+        StructTypeInfo* pTypeInfo,
         StructMember* pTypeMember, 
         PSLCompilerContext* pContext
         );
@@ -40,6 +41,7 @@ public:
     OperandType GetType() const { return _objArg._argType; }
     RegIndex GetRegIndex() const;
     const ObjArgument& GetObjArgument() const { return _objArg; }
+    const char* DebugPrint();
 
 private:
     // The information about the argument

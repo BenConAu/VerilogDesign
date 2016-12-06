@@ -58,9 +58,14 @@ public:
         throw "Unknown member";
     }
 
-    bool IsBasic() override
+    TypeClass GetTypeClass() override
     {
-        return false;
+        return TypeClass::Struct;
+    }
+
+    const char* DebugPrint() override
+    {
+        return "StructTypeInfo";
     }
 
     int GetSymbolIndex()

@@ -2,6 +2,7 @@
 #include "PSLCompilerContext.h"
 #include "FunctionDeclaratorNode.h"
 #include "Operand.h"
+#include "ExpressionResult.h"
 
 unsigned int VariableInfo::_dataSegEnd = 0;
 
@@ -9,8 +10,7 @@ VariableInfo::VariableInfo(
     PSLCompilerContext *pContext,   // The context that this variable lives in
     int symIndex,                   // The symbol index for the identifier for the variable
     FunctionDeclaratorNode *pScope, // The scope that the variable is declared in
-    TypeInfo *pInfo,                // The type of the variable
-    RegIndex *pRegIndex             // The register to use, if known
+    TypeInfo *pInfo                 // The type of the variable
     )
 {
     _pContext = pContext;
@@ -38,37 +38,40 @@ VariableInfo::VariableInfo(
     {
         _locationType = LocationType::Register;
         _memLocation = 0xFFFFFFFF;
-
-        if (pRegIndex != nullptr)
-        {
-            // We are being told which register to use
-            pScope->GetRegCollection()->ReserveRegister(*pRegIndex);
-            _regIndexMap[pScope] = (*pRegIndex);
-        }
     }
 }
 
-RegIndex VariableInfo::EnsureVariableRegister(FunctionDeclaratorNode *pScope)
+ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
 {
-    if (_regIndexMap.find(pScope) == _regIndexMap.end())
+    VariablePath *pVarPath = pScope->GetContext()->_pathCollection.EnsurePath(this);
+
+    switch (_pType->GetTypeClass())
     {
-        // Upon the first request for a register at a particular scope,
-        // allocate the register.
-        _regIndexMap[pScope] = pScope->GetRegCollection()->AllocateRegister();
+    case TypeClass::Basic:
+    {
+        // Basic things are always word sized and stored
+        // in registers allocated to them. Find out which register it is
+        // and make an operand out of that.
+        RegIndex regIndex = pVarPath->EnsurePathRegister(pScope);
 
-        // If we have a memory variable then it needs to be loaded when first ensured
-        if (_locationType == LocationType::Memory)
-        {
-            // An operand that represents the variable
-            Operand varOperand(this, pScope->GetContext());
-            Operand regOperand(_regIndexMap[pScope]);
-
-            // Spit out the code to load said register
-            pScope->GetContext()->OutputMovInstruction(
-                regOperand,
-                varOperand);
-        }
+        return new ExpressionResult(GetTypeInfo(), Operand(regIndex));
     }
 
-    return _regIndexMap[pScope];
+    case TypeClass::Pointer:
+    {
+        // Basic things are always word sized and stored
+        // in registers allocated to them. Find out which register it is
+        // and make an operand out of that.
+        RegIndex regIndex = pVarPath->EnsurePathRegister(pScope);
+
+        return new ExpressionResult(GetTypeInfo(), pVarPath, Operand(regIndex));
+    }
+    
+    case TypeClass::Struct:
+        // A pointer is always pointing to memory by definition, as is
+        // a struct. For memory located things, create an operand with
+        // the constant memory address involved. We might add an offset
+        // later.
+        return new ExpressionResult(GetTypeInfo(), pVarPath, Operand(this, pScope->GetContext()));
+    }
 }

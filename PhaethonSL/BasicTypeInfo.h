@@ -16,9 +16,14 @@ public:
         return 4;
     }
 
-    bool IsBasic() override
+    TypeClass GetTypeClass() override
     {
-        return true;
+        return TypeClass::Basic;
+    }
+
+    const char* DebugPrint() override
+    {
+        return "BasicTypeInfo";
     }
 
 private:

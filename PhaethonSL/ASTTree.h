@@ -13,3 +13,4 @@
 #include "FunctionParameterNode.h"
 #include "DebugOutNode.h"
 #include "SizeOfNode.h"
+#include "AddressofNode.h"

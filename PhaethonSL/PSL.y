@@ -46,6 +46,7 @@ void yyerror(void*, const char *s);
 %token RIGHT_BRACE
 %token DOT
 %token COMMA
+%token AMPERSAND
 %token NULLPTR_TOKEN
 %token DEBUGOUT_TOKEN
 %token SIZEOF_TOKEN
@@ -74,8 +75,6 @@ void yyerror(void*, const char *s);
 %type <pNode> struct_declaration_list
 %type <pNode> struct_declaration
 %type <pNode> external_declaration
-%type <pNode> read_expression
-%type <pNode> write_expression
 %type <pNode> parameter_declaration
 %type <pNode> function_header_with_parameters
 %type <pNode> debugout_expression
@@ -118,7 +117,7 @@ debugout_expression:
     ;
 
 assignment_expression:
-      write_expression assignment_operator additive_expression      { $$ = new AssignmentNode(pContext, $1, $3); }
+      postfix_expression assignment_operator additive_expression    { $$ = new AssignmentNode(pContext, $1, $3); }
     ;
 
 additive_expression:
@@ -127,17 +126,9 @@ additive_expression:
     ;
 
 multiplicative_expression:
-      read_expression                                               { $$ = $1; }
-    | multiplicative_expression STAR read_expression                { $$ = new OperatorNode(pContext, $1, $3, Operator::Multiply); }
+      postfix_expression                                            { $$ = $1; }
+    | multiplicative_expression STAR postfix_expression             { $$ = new OperatorNode(pContext, $1, $3, Operator::Multiply); }
     ;
-
-write_expression:
-      postfix_expression                                            { $$ = $1; dynamic_cast<ExpressionNode*>($$)->SetExpressionType(ExpressionType::Write); }
-    ;
-
-read_expression:
-      postfix_expression                                            { $$ = $1; dynamic_cast<ExpressionNode*>($$)->SetExpressionType(ExpressionType::Read); }
-	;
 
 assignment_operator:
       EQUAL
@@ -151,6 +142,7 @@ postfix_expression:
 
 primary_expression:
       variable_identifier                                           { $$ = $1; }
+    | AMPERSAND variable_identifier                                 { $$ = new AddressOfNode(pContext, $2); }
     | INTCONSTANT                                                   { $$ = new ConstantNode(pContext, $1); }
     | FLOATCONSTANT                                                 { $$ = new ConstantNode(pContext, $1); }
 	| NULLPTR_TOKEN                                                 { $$ = new ConstantNode(pContext, ConstantNode::Pointer); }
@@ -158,7 +150,7 @@ primary_expression:
     ;
 
 sizeof_expression:
-      SIZEOF_TOKEN LEFT_PAREN variable_identifier RIGHT_PAREN       { $$ = new SizeOfNode(pContext, $3); }
+      SIZEOF_TOKEN LEFT_PAREN fully_specified_type RIGHT_PAREN      { $$ = new SizeOfNode(pContext, $3); }
     ;
 
 declaration:

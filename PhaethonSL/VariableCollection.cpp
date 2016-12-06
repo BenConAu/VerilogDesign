@@ -13,21 +13,21 @@ void VariableCollection::AddBuiltin()
 {
     int dseIndex = _pContext->AddSymbol("__datasegmentend");
     PointerTypeInfo* pDseType = _pContext->_typeCollection.GetPointerType(nullptr);
-    AddVariable(dseIndex, nullptr, pDseType, nullptr);
+    AddVariable(dseIndex, nullptr, pDseType);
 }
 
-void VariableCollection::AddVariable(
+VariableInfo* VariableCollection::AddVariable(
     int symIndex, 
     FunctionDeclaratorNode* pScope, 
-    TypeInfo* pTypeInfo, 
-    RegIndex* pRegIndex
+    TypeInfo* pTypeInfo
     )
 {
     auto iter = _variables.find(symIndex);
 
     if (iter == _variables.end())
     {
-        _variables[symIndex] = std::unique_ptr<VariableInfo>(new VariableInfo(_pContext, symIndex, pScope, pTypeInfo, pRegIndex));
+        _variables[symIndex] = std::unique_ptr<VariableInfo>(new VariableInfo(_pContext, symIndex, pScope, pTypeInfo));
+        return _variables[symIndex].get();
     }
     else
     {
@@ -47,7 +47,7 @@ VariableInfo* VariableCollection::GetInfo(int symIndex)
     {
         std::stringstream sstr;
         sstr << "Attempting info get of nonexistent var " << _pContext->_symbols[symIndex];
-        std::string error = sstr.str();
+        static std::string error = sstr.str();
 
         throw error.c_str();
     }

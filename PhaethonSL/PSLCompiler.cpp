@@ -21,7 +21,7 @@ int main(int argc, char **argv)
 {
     try
     {
-		yydebug = 1;
+		//yydebug = 1;
 		// open a file handle to a particular file:
 		FILE *myfile = ::fopen(argv[1], "r");
 

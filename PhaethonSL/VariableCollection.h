@@ -13,11 +13,10 @@ public:
     VariableCollection(PSLCompilerContext* pContext);
     void AddBuiltin();
     
-    void AddVariable(
+    VariableInfo* AddVariable(
         int symIndex, 
         FunctionDeclaratorNode* pScope, 
-        TypeInfo* pTypeInfo, 
-        RegIndex* pRegIndex
+        TypeInfo* pTypeInfo
         );
     
     VariableInfo* GetInfo(int symIndex);

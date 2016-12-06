@@ -23,7 +23,7 @@ class OperatorNode : public ExpressionNode
     {
         ExpressionNode *pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));
 
-        SetType(pLeft->GetType());
+        SetType(pLeft->GetTypeInfo());
     }
 
     virtual ExpressionResult *CalculateResult() override;

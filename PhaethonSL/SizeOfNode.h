@@ -24,9 +24,9 @@ class SizeOfNode : public ExpressionNode
     ExpressionResult *CalculateResult() override
     {
         TypeInfo *pTypeInfo = GetContext()->_typeCollection.GetBasicType(WORD_TOKEN);
-        IdentifierNode *pId = dynamic_cast<IdentifierNode *>(GetChild(0));
-        VariableInfo *pInfo = GetContext()->_varCollection.GetInfo(pId->GetSymbolIndex());
+     
+        TypeNode *pTypeNode = dynamic_cast<TypeNode *>(GetChild(0));
 
-        return new ExpressionResult(pTypeInfo, Operand((int)pInfo->GetTypeInfo()->GetSize()));
+        return new ExpressionResult(pTypeInfo, Operand((int)pTypeNode->GetTypeInfo()->GetSize()));
     }
 };

@@ -20,7 +20,7 @@ public:
         _exprType = ExpressionType::Unset;
     }
 
-    TypeInfo* GetType()
+    TypeInfo* GetTypeInfo()
     {
         if (_pType == nullptr)
         {

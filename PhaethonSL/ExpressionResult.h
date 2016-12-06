@@ -6,7 +6,7 @@
 #include "Operand.h"
 
 class TypeInfo;
-class VariableInfo;
+class VariablePath;
 
 // An ExpressionResult stores everything needed when an expression finishes and
 // includes anything that will be freed when the result is no longer needed.
@@ -17,13 +17,15 @@ struct ExpressionResult
 {
     ExpressionResult(TypeInfo* pTypeInfo, Operand operand, RegisterCollection* pCollection);
     ExpressionResult(TypeInfo* pTypeInfo, Operand operand);
-    ExpressionResult(VariableInfo* pVarInfo, Operand operand);
+    ExpressionResult(TypeInfo* pTypeInfo, VariablePath* pVarInfo, Operand operand);
+
+    void DebugPrint();
 
     // The type of the result that is stored in the operand
     TypeInfo* _pTypeInfo;
 
     // Optional variable info that might be relevant
-    VariableInfo* _pVarInfo;
+    VariablePath* _pExprPath;
 
     // The operand with the result of the expression
     Operand _operand;

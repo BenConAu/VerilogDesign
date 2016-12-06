@@ -29,6 +29,7 @@
 ">"                  { return GT; }
 "\."                 { return DOT; }
 ","                  { return COMMA; }
+"&"                  { return AMPERSAND; }
 "ptr"                { return PTR_TOKEN; }
 "word"               { return WORD_TOKEN; }
 "float"              { return FLOAT_TOKEN; }

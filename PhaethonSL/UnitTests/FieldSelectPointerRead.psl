@@ -1,0 +1,13 @@
+struct foo
+{
+    word value;
+};
+
+foo fooVar;
+
+void main()
+{
+    ptr<foo> testPtr;
+    testPtr = &fooVar;
+    testPtr->value = 1;
+}

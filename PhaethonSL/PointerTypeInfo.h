@@ -16,9 +16,19 @@ public:
         return 4;
     }
 
-    bool IsBasic() override
+    TypeClass GetTypeClass() override
     {
-        return true;
+        return TypeClass::Pointer;
+    }
+
+    const char* DebugPrint() override
+    {
+        return "PointerTypeInfo";
+    }
+
+    TypeInfo* GetBaseType()
+    {
+        return _pBaseType;
     }
 
 private:

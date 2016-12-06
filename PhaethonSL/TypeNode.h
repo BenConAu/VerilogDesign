@@ -1,15 +1,7 @@
 #pragma once
 
 #include "ASTNode.h"
-
-class TypeInfo;
-
-enum class TypeClass
-{
-    Basic,
-    Struct,
-    Pointer,
-};
+#include "TypeInfo.h"
 
 class TypeNode : public ASTNode
 {

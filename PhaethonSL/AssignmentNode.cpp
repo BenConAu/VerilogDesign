@@ -27,6 +27,9 @@ void AssignmentNode::PostProcessNodeImpl()
     std::unique_ptr<ExpressionResult> leftResult(pLeft->CalculateResult());
     std::unique_ptr<ExpressionResult> rightResult(pRight->CalculateResult());
 
+    //leftResult->DebugPrint();
+    //rightResult->DebugPrint();
+
     // Figure out what kind of LHS expression we have
     switch (leftResult.get()->_operand.GetType())
     {
