@@ -27,6 +27,7 @@ class VariablePath
 
     void ReserveRegister(FunctionDeclaratorNode* pScope, RegIndex index);
     RegIndex EnsurePathRegister(FunctionDeclaratorNode* pScope);
+    bool HasRegister(FunctionDeclaratorNode* pScope);
 
     VariableInfo* GetVariableInfo() { return _pVarInfo; }
     size_t GetPathLength() { return _memberPath.size(); }

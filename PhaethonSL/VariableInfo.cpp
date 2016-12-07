@@ -66,12 +66,24 @@ ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
 
         return new ExpressionResult(GetTypeInfo(), pVarPath, Operand(regIndex));
     }
-    
+
     case TypeClass::Struct:
         // A pointer is always pointing to memory by definition, as is
         // a struct. For memory located things, create an operand with
         // the constant memory address involved. We might add an offset
         // later.
-        return new ExpressionResult(GetTypeInfo(), pVarPath, Operand(this, pScope->GetContext()));
+        if (pVarPath->HasRegister(pScope))
+        {
+            // We already have a register for this thing, so we can make an operand
+            // out of that. That can be directly used by other things.
+            RegIndex index = pVarPath->EnsurePathRegister(pScope);
+
+            return new ExpressionResult(GetTypeInfo(), pVarPath, Operand(index));
+        }
+        else
+        {
+            // Don't make a register if you don't need one
+            return new ExpressionResult(GetTypeInfo(), pVarPath, Operand(this, pScope->GetContext()));
+        }
     }
 }

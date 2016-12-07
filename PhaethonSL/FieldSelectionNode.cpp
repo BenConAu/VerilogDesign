@@ -82,33 +82,52 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
     // it. This will now transform into an offset operation, which requires
     // that the path info be there so that we can get the register
     // that we associate with the path.
-    if (childResult.get()->_pExprPath == nullptr)
+    VariablePath *pPath = childResult->_pExprPath;
+    if (pPath == nullptr)
     {
         throw "Need path info to field select";
     }
 
-    // It needs to be something that we can select from
-    if (childResult.get()->_operand.GetType() != OperandType::Constant && childResult.get()->_operand.GetType() != OperandType::Register)
+    // We will base our operation on the child operand
+    Operand childOperand = childResult->_operand;
+
+    // We need a register to offset. If we have one already then great, otherwise
+    // we need to do the work to ensure that we have one for the path that arrived
+    // here.
+    if (childResult->_operand.GetType() == OperandType::Constant)
     {
-        printf("Type is %d\n", childResult.get()->_operand.GetType());
-        throw "Can only field select a struct that has a this pointer in a register or a constant this pointer";
+        // Get the appropriate scope
+        FunctionDeclaratorNode *pScope = GetTypedParent<FunctionDeclaratorNode>();
+
+        // If we have a constant, then we need to make it into a register
+        RegIndex pathIndex = pPath->EnsurePathRegister(pScope);
+
+        // An operand that represents the variable
+        Operand varOperand(pPath->GetVariableInfo(), pScope->GetContext());
+        Operand regOperand(pathIndex);
+
+        // Spit out the code to load said register
+        pScope->GetContext()->OutputMovInstruction(
+            regOperand,
+            varOperand);
+
+        // This is what we consider the child operand now
+        childOperand = regOperand;
     }
 
-    // Find the path for the thing we are selecting from
-    VariablePath *pPath = childResult.get()->_pExprPath;
-
-    // Ensure the register - this will return the existing one if this is a pointer
-    // or allocate one if this is a global. We do this here because we might not 
-    // need a register in this scope for the this global until somebody tries to
-    // select something from it.
-    RegIndex index = pPath->EnsurePathRegister(GetTypedParent<FunctionDeclaratorNode>());
+    // It needs to be something that we can select from
+    if (childOperand.GetType() != OperandType::Register)
+    {
+        printf("Type is %d\n", childOperand.GetType());
+        throw "This pointer needs to be in a register by now";
+    }
 
     // Get the member of the struct that we are selecting
     StructMember *pMember = pTypeInfo->GetMember(_fieldSymIndex);
 
     // Create an offset operand using the index of the field
     Operand result(
-        index,
+        childOperand.GetRegIndex(),
         pTypeInfo,
         pMember,
         GetContext());
