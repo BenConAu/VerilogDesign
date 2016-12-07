@@ -2,6 +2,7 @@
 #include "VariableInfo.h"
 #include "TypeInfo.h"
 
+// ExpressionResult to represent something that needs a temporary register and has no type
 ExpressionResult::ExpressionResult(TypeInfo* pTypeInfo, Operand operand, RegisterCollection* pCollection) : 
     _tempRegister(operand.GetRegIndex(), pCollection)
 {
@@ -19,6 +20,7 @@ ExpressionResult::ExpressionResult(TypeInfo* pTypeInfo, Operand operand, Registe
     _operand = operand;
 }
 
+// ExpressionResult to represent a constant
 ExpressionResult::ExpressionResult(TypeInfo* pTypeInfo, Operand operand)
 {
     if (operand.GetType() == OperandType::None)
@@ -30,6 +32,7 @@ ExpressionResult::ExpressionResult(TypeInfo* pTypeInfo, Operand operand)
     _operand = operand;
 }
 
+// ExpressionResult to represent a variable path
 ExpressionResult::ExpressionResult(TypeInfo* pTypeInfo, VariablePath* pPathInfo, Operand operand)
 {
     if (operand.GetType() == OperandType::None)
