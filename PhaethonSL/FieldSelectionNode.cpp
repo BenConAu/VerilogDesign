@@ -64,7 +64,7 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
     // Find the result of the child
     std::unique_ptr<ExpressionResult> childResult(pChildExpr->CalculateResult());
 
-    // Get the type of the child expression
+    // Get the structure type out of the child expression
     StructTypeInfo *pTypeInfo;
     if (!_fPointer)
     {
@@ -98,18 +98,20 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
     VariablePath *pPath = childResult.get()->_pExprPath;
 
     // Ensure the register - this will return the existing one if this is a pointer
-    // or allocate one if this is a global.
+    // or allocate one if this is a global. We do this here because we might not 
+    // need a register in this scope for the this global until somebody tries to
+    // select something from it.
     RegIndex index = pPath->EnsurePathRegister(GetTypedParent<FunctionDeclaratorNode>());
+
+    // Get the member of the struct that we are selecting
+    StructMember *pMember = pTypeInfo->GetMember(_fieldSymIndex);
 
     // Create an offset operand using the index of the field
     Operand result(
         index,
         pTypeInfo,
-        pTypeInfo->GetMember(_fieldSymIndex),
+        pMember,
         GetContext());
-
-    // Get the type of the member we are selecting
-    StructMember *pMember = pTypeInfo->GetMember(_fieldSymIndex);
 
     // Find out the new path that we have for the expression
     VariablePath *pNewPath = GetContext()->_pathCollection.EnsurePath(pPath, pMember);
