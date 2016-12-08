@@ -41,6 +41,11 @@ VariableInfo::VariableInfo(
     }
 }
 
+const char*VariableInfo::GetSymbol()
+{
+    return _pContext->_symbols[_symIndex].c_str();
+}
+
 ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
 {
     VariablePath *pVarPath = pScope->GetContext()->_pathCollection.EnsurePath(this);
@@ -74,6 +79,8 @@ ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
         // later.
         if (pVarPath->HasRegister(pScope))
         {
+            printf("Ensuring register for %s\n", GetSymbol());
+
             // We already have a register for this thing, so we can make an operand
             // out of that. That can be directly used by other things.
             RegIndex index = pVarPath->EnsurePathRegister(pScope);
@@ -82,6 +89,8 @@ ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
         }
         else
         {
+            printf("No register for %s, returning constant Operand\n", GetSymbol());
+
             // Don't make a register if you don't need one
             return new ExpressionResult(GetTypeInfo(), pVarPath, Operand(this, pScope->GetContext()));
         }

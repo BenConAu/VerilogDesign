@@ -41,6 +41,8 @@ VariablePath *PathCollection::EnsurePath(VariablePath *pPath, StructMember *pAdd
         }
     }
 
+    printf ("Adding new path %s\n", pNewPath->DebugPrint());
+
     // Not found, add to the end
     _paths.emplace_back(std::unique_ptr<VariablePath>(pNewPath));
     return _paths[_paths.size() - 1].get();

@@ -4,6 +4,7 @@
 #include "VariableInfo.h"
 #include "FunctionDeclaratorNode.h"
 #include "PSLCompilerContext.h"
+#include "RegisterWrapper.h"
 
 FieldSelectionNode::FieldSelectionNode(PSLCompilerContext *pContext, ASTNode *pExpr, bool fPointer, int symIndex) : ExpressionNode(pContext)
 {
@@ -61,6 +62,9 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
     // Get the child expression
     ExpressionNode *pChildExpr = dynamic_cast<ExpressionNode *>(GetChild(0));
 
+    // Get the appropriate scope
+    FunctionDeclaratorNode *pScope = GetTypedParent<FunctionDeclaratorNode>();
+
     // Find the result of the child
     std::unique_ptr<ExpressionResult> childResult(pChildExpr->CalculateResult());
 
@@ -88,28 +92,52 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
         throw "Need path info to field select";
     }
 
+    // Declared here so that it will scope with this function
+    std::unique_ptr<RegisterWrapper> childWrapper;
+
     // We will base our operation on the child operand
     Operand childOperand = childResult->_operand;
+    printf("Field select child operand type = %d\n", childOperand.GetType());
+
+    // Remember if we allocate a register
+    RegisterCollection* pRegCollection = nullptr;
 
     // We need a register to offset. If we have one already then great, otherwise
     // we need to do the work to ensure that we have one for the path that arrived
     // here.
-    if (childResult->_operand.GetType() == OperandType::Constant)
+    if (childOperand.GetType() == OperandType::Constant)
     {
-        // Get the appropriate scope
-        FunctionDeclaratorNode *pScope = GetTypedParent<FunctionDeclaratorNode>();
+        printf("Need to upgrade operand from constant\n");
 
         // If we have a constant, then we need to make it into a register
         RegIndex pathIndex = pPath->EnsurePathRegister(pScope);
 
         // An operand that represents the variable
-        Operand varOperand(pPath->GetVariableInfo(), pScope->GetContext());
         Operand regOperand(pathIndex);
 
         // Spit out the code to load said register
         pScope->GetContext()->OutputMovInstruction(
             regOperand,
-            varOperand);
+            childOperand);
+
+        // This is what we consider the child operand now
+        childOperand = regOperand;
+    }
+    else if (childOperand.GetType() == OperandType::DerefRegisterOffset)
+    {
+        printf("Need to upgrade operand from offset operand\n");
+
+        // Get register for our result
+        pRegCollection = pScope->GetRegCollection();
+        RegIndex tempIndex = pRegCollection->AllocateRegister();
+
+        // An operand that represents the variable
+        Operand regOperand(tempIndex);
+
+        // Spit out the code to load said register
+        pScope->GetContext()->OutputMovInstruction(
+            regOperand,
+            childOperand);
 
         // This is what we consider the child operand now
         childOperand = regOperand;
@@ -135,5 +163,12 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
     // Find out the new path that we have for the expression
     VariablePath *pNewPath = GetContext()->_pathCollection.EnsurePath(pPath, pMember);
 
-    return new ExpressionResult(pMember->GetType(), pNewPath, result);
+    if (pRegCollection != nullptr)
+    {
+        return new ExpressionResult(pMember->GetType(), result, pRegCollection);
+    }
+    else
+    {
+        return new ExpressionResult(pMember->GetType(), pNewPath, result);
+    }
 }

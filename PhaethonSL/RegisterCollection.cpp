@@ -11,6 +11,7 @@ RegisterCollection::RegisterCollection(int regCount)
 RegIndex RegisterCollection::AllocateRegister()
 {
     RegIndex ret = _availableReg.front();
+    //printf("Allocated %d\n", (int)ret);
     _availableReg.pop_front();
     return ret;
 }

@@ -32,6 +32,7 @@ class VariablePath
     VariableInfo* GetVariableInfo() { return _pVarInfo; }
     size_t GetPathLength() { return _memberPath.size(); }
     StructMember* GetMember(size_t index) { return _memberPath[index]; }
+    const char* DebugPrint();
 
   private:
     // The variable that starts all of this

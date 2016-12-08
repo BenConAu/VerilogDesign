@@ -11,7 +11,7 @@ ExpressionResult::ExpressionResult(TypeInfo* pTypeInfo, Operand operand, Registe
         throw "Cannot give none operands to ExpressionResult";
     }
 
-    if (operand.GetType() != OperandType::Register)
+    if (operand.GetType() != OperandType::Register && operand.GetType() != OperandType::DerefRegisterOffset)
     {
         throw "Dude you can't go making a temporary register object without a register";
     }

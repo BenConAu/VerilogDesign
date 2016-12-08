@@ -1,0 +1,18 @@
+struct foo
+{
+    word value;
+    ptr<foo> next;
+};
+
+foo fooVar;
+foo other;
+
+void main()
+{
+    ptr<foo> testPtr;
+    testPtr = &fooVar;
+    testPtr->value = 1;
+    testPtr->next = &other;
+    testPtr->next->value = 2;
+    testPtr->next->next = nullptr;
+}

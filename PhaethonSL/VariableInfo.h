@@ -26,6 +26,7 @@ public:
     LocationType GetLocationType() const { return _locationType; }
     unsigned int GetMemLocation() const { return _memLocation; }
     int GetSymbolIndex() const { return _symIndex; }
+    const char* GetSymbol();
     ExpressionResult* CalculateResult(FunctionDeclaratorNode* pScope);
     FunctionDeclaratorNode* GetScope() { return _pScope; }
 
