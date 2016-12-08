@@ -6,7 +6,6 @@
 #include "Operand.h"
 
 class TypeInfo;
-class VariablePath;
 
 // An ExpressionResult stores everything needed when an expression finishes and
 // includes anything that will be freed when the result is no longer needed.

@@ -3,7 +3,6 @@
 #include "RegisterCollection.h"
 #include "VariableCollection.h"
 #include "TypeCollection.h"
-#include "PathCollection.h"
 #include "../PhaethonObjWriter/ObjWriter.h"
 #include "Operand.h"
 
@@ -42,7 +41,6 @@ class PSLCompilerContext
     void *pScanner;
     VariableCollection _varCollection;
     TypeCollection _typeCollection;
-    PathCollection _pathCollection;
     std::vector<std::string> _symbols;
 
   private:

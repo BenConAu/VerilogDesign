@@ -37,8 +37,6 @@ PSLcc: lex.yy.c \
 	   StructMember.h \
 	   Operand.cpp \
 	   Operand.h \
-	   PathCollection.cpp \
-	   PathCollection.h \
 	   ../PhaethonObjWriter/ObjWriter.h \
 	   ../PhaethonObjWriter/AsmObjWriter.cpp \
 	   ../PhaethonObjWriter/AsmObjWriter.h \
@@ -53,8 +51,6 @@ PSLcc: lex.yy.c \
 	   FieldSelectionNode.cpp \
 	   FieldSelectionNode.h \
 	   DebugOutNode.h \
-	   VariablePath.h \
-	   VariablePath.cpp \
 	   OperatorNode.h \
 	   OperatorNode.cpp
 	clang++ -std=c++11 -Wno-deprecated-register -g lex.yy.c \
@@ -71,7 +67,6 @@ PSLcc: lex.yy.c \
 	   IdentifierNode.cpp \
 	   OperatorNode.cpp \
 	   Operand.cpp \
-	   PathCollection.cpp \
 	   PSLCompiler.cpp \
 	   PSLCompilerContext.cpp \
 	   RegisterCollection.cpp \
@@ -83,7 +78,6 @@ PSLcc: lex.yy.c \
 	   VariableCollection.cpp \
 	   VariableDeclarationNode.cpp \
 	   VariableInfo.cpp \
-	   VariablePath.cpp \
 	   StructSpecifierNode.cpp -o PSLcc
 
 lex.yy.c: PSL.l

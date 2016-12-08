@@ -18,8 +18,5 @@ void FunctionParameterNode::VerifyNodeImpl()
         pFunc,
         dynamic_cast<TypeNode *>(GetChild(0))->GetTypeInfo());
 
-    VariablePath* pPath = GetContext()->_pathCollection.EnsurePath(
-        pParamInfo);
-
-    pPath->GetVariableInfo()->ReserveRegister(pFunc, regIndex);
+    pParamInfo->ReserveRegister(pFunc, regIndex);
 }
