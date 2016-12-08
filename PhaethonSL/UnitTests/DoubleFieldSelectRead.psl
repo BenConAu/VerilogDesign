@@ -6,6 +6,7 @@ struct foo
 
 foo fooVar;
 foo other;
+foo yetAnother;
 
 void main()
 {
@@ -14,5 +15,7 @@ void main()
     testPtr->value = 1;
     testPtr->next = &other;
     testPtr->next->value = 2;
-    testPtr->next->next = nullptr;
+    testPtr->next->next = &yetAnother;
+    testPtr->next->next->value = 3;
+    testPtr->next->next->next = nullptr;
 }
