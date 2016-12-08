@@ -21,5 +21,5 @@ void FunctionParameterNode::VerifyNodeImpl()
     VariablePath* pPath = GetContext()->_pathCollection.EnsurePath(
         pParamInfo);
 
-    pPath->ReserveRegister(pFunc, regIndex);
+    pPath->GetVariableInfo()->ReserveRegister(pFunc, regIndex);
 }

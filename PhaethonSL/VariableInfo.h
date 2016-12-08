@@ -30,6 +30,10 @@ public:
     ExpressionResult* CalculateResult(FunctionDeclaratorNode* pScope);
     FunctionDeclaratorNode* GetScope() { return _pScope; }
 
+    void ReserveRegister(FunctionDeclaratorNode* pScope, RegIndex index);
+    RegIndex EnsurePathRegister(FunctionDeclaratorNode* pScope);
+    bool HasRegister(FunctionDeclaratorNode* pScope);
+
     TypeInfo* GetTypeInfo() { return _pType; }
 
     PSLCompilerContext* _pContext;
@@ -47,6 +51,9 @@ private:
 
     // Scope variable was declared in (null if global)
     FunctionDeclaratorNode* _pScope;
+
+    // Register allocated by scope (globals have multiple register locations mapped)
+    std::map<FunctionDeclaratorNode*, RegIndex> _regIndexMap;
 
     // Track data segment allocations
     static unsigned int _dataSegEnd;

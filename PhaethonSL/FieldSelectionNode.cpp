@@ -110,7 +110,7 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
         printf("Need to upgrade operand from constant\n");
 
         // If we have a constant, then we need to make it into a register
-        RegIndex pathIndex = pPath->EnsurePathRegister(pScope);
+        RegIndex pathIndex = pPath->GetVariableInfo()->EnsurePathRegister(pScope);
 
         // An operand that represents the variable
         Operand regOperand(pathIndex);

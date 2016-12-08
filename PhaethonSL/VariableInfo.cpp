@@ -57,7 +57,7 @@ ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
         // Basic things are always word sized and stored
         // in registers allocated to them. Find out which register it is
         // and make an operand out of that.
-        RegIndex regIndex = pVarPath->EnsurePathRegister(pScope);
+        RegIndex regIndex = pVarPath->GetVariableInfo()->EnsurePathRegister(pScope);
 
         return new ExpressionResult(GetTypeInfo(), Operand(regIndex));
     }
@@ -67,7 +67,7 @@ ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
         // Basic things are always word sized and stored
         // in registers allocated to them. Find out which register it is
         // and make an operand out of that.
-        RegIndex regIndex = pVarPath->EnsurePathRegister(pScope);
+        RegIndex regIndex = pVarPath->GetVariableInfo()->EnsurePathRegister(pScope);
 
         return new ExpressionResult(GetTypeInfo(), pVarPath, Operand(regIndex));
     }
@@ -77,13 +77,13 @@ ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
         // a struct. For memory located things, create an operand with
         // the constant memory address involved. We might add an offset
         // later.
-        if (pVarPath->HasRegister(pScope))
+        if (pVarPath->GetVariableInfo()->HasRegister(pScope))
         {
             printf("Ensuring register for %s\n", GetSymbol());
 
             // We already have a register for this thing, so we can make an operand
             // out of that. That can be directly used by other things.
-            RegIndex index = pVarPath->EnsurePathRegister(pScope);
+            RegIndex index = pVarPath->GetVariableInfo()->EnsurePathRegister(pScope);
 
             return new ExpressionResult(GetTypeInfo(), pVarPath, Operand(index));
         }
@@ -96,3 +96,37 @@ ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
         }
     }
 }
+
+RegIndex VariableInfo::EnsurePathRegister(FunctionDeclaratorNode* pScope)
+{
+    printf("Ensuring register for VariableInfo %s\n", GetSymbol());
+
+    if (_regIndexMap.find(pScope) == _regIndexMap.end())
+    {
+        printf("Allocating register for VariableInfo %s\n", GetSymbol());
+
+        // Upon the first request for a register at a particular scope,
+        // allocate the register.
+        _regIndexMap[pScope] = pScope->GetRegCollection()->AllocateRegister();
+    }
+
+    return _regIndexMap[pScope];
+}
+
+bool VariableInfo::HasRegister(FunctionDeclaratorNode* pScope)
+{
+    if (_regIndexMap.find(pScope) == _regIndexMap.end())
+    {
+        return false;
+    }
+
+    return true;
+}
+
+void VariableInfo::ReserveRegister(FunctionDeclaratorNode* pScope, RegIndex index)
+{
+    // We are being told which register to use
+    pScope->GetRegCollection()->ReserveRegister(index);
+    _regIndexMap[pScope] = index;    
+}
+

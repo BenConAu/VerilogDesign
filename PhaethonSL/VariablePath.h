@@ -25,10 +25,6 @@ class VariablePath
             basePath._memberPath.end());
     }
 
-    void ReserveRegister(FunctionDeclaratorNode* pScope, RegIndex index);
-    RegIndex EnsurePathRegister(FunctionDeclaratorNode* pScope);
-    bool HasRegister(FunctionDeclaratorNode* pScope);
-
     VariableInfo* GetVariableInfo() { return _pVarInfo; }
     size_t GetPathLength() { return _memberPath.size(); }
     StructMember* GetMember(size_t index) { return _memberPath[index]; }
@@ -40,7 +36,4 @@ class VariablePath
 
     // The path of members from the struct
     std::vector<StructMember *> _memberPath;
-
-    // Register allocated by scope (globals have multiple register locations mapped)
-    std::map<FunctionDeclaratorNode*, RegIndex> _regIndexMap;
 };
