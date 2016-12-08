@@ -1,5 +1,6 @@
 PSLcc: lex.yy.c \
 	   PSL.tab.c \
+	   AddressOfNode.cpp \
 	   AddressOfNode.h \
 	   ASTNode.h \
 	   ASTTree.h \
@@ -58,6 +59,7 @@ PSLcc: lex.yy.c \
 	   ../PhaethonObjWriter/BinaryObjWriter.cpp \
 	   ../PhaethonISA/Generated/PhaethonOpCode.cpp \
 	   PSL.tab.c \
+	   AddressOfNode.cpp \
 	   AssignmentNode.cpp \
 	   ConstantNode.cpp \
 	   ExpressionResult.cpp \
