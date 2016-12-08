@@ -95,7 +95,7 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
     // here.
     if (childOperand.GetType() == OperandType::Constant)
     {
-        printf("Need to upgrade operand from constant\n");
+        //printf("Need to upgrade operand from constant\n");
 
         // Since the operand has a memory location in it, we figure that we must
         // have VariableInfo for when it was loaded. This will now transform into 
@@ -115,7 +115,7 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
     }
     else if (childOperand.GetType() == OperandType::DerefRegisterOffset)
     {
-        printf("Need to upgrade operand from offset operand\n");
+        //printf("Need to upgrade operand from offset operand\n");
 
         // Get register for our result
         pRegCollection = pScope->GetRegCollection();

@@ -77,7 +77,7 @@ ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
         // later.
         if (HasRegister(pScope))
         {
-            printf("Ensuring register for %s\n", GetSymbol());
+            //printf("Ensuring register for %s\n", GetSymbol());
 
             // We already have a register for this thing, so we can make an operand
             // out of that. That can be directly used by other things.
@@ -87,7 +87,7 @@ ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
         }
         else
         {
-            printf("No register for %s, returning constant Operand\n", GetSymbol());
+            //printf("No register for %s, returning constant Operand\n", GetSymbol());
 
             // Don't make a register if you don't need one
             return new ExpressionResult(this, Operand(this, pScope->GetContext()));
