@@ -82,15 +82,13 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
         pTypeInfo = dynamic_cast<StructTypeInfo *>(pPointerInfo->GetBaseType());
     }
 
-    // Declared here so that it will scope with this function
-    std::unique_ptr<RegisterWrapper> childWrapper;
-
     // We will base our operation on the child operand
     Operand childOperand = childResult->_operand;
-    printf("Field select child operand type = %d\n", childOperand.GetType());
+//    printf("Field select child operand type = %d\n", childOperand.GetType());
 
     // Remember if we allocate a register
     RegisterCollection *pRegCollection = nullptr;
+    Operand regOperand;
 
     // We need a register to offset. If we have one already then great, otherwise
     // we need to do the work to ensure that we have one for the path that arrived
@@ -113,15 +111,7 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
         RegIndex pathIndex = pInfo->EnsurePathRegister(pScope);
 
         // An operand that represents the variable
-        Operand regOperand(pathIndex);
-
-        // Spit out the code to load said register
-        pScope->GetContext()->OutputMovInstruction(
-            regOperand,
-            childOperand);
-
-        // This is what we consider the child operand now
-        childOperand = regOperand;
+        regOperand = Operand(pathIndex);
     }
     else if (childOperand.GetType() == OperandType::DerefRegisterOffset)
     {
@@ -132,15 +122,19 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
         RegIndex tempIndex = pRegCollection->AllocateRegister();
 
         // An operand that represents the variable
-        Operand regOperand(tempIndex);
+        regOperand = Operand(tempIndex);
+    }
 
+    // See if the operand that came in requires us to load up the register
+    if (regOperand.GetType() != OperandType::None)
+    {
         // Spit out the code to load said register
         pScope->GetContext()->OutputMovInstruction(
             regOperand,
             childOperand);
 
         // This is what we consider the child operand now
-        childOperand = regOperand;
+        childOperand = regOperand;        
     }
 
     // It needs to be something that we can select from
@@ -166,6 +160,6 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
     }
     else
     {
-        return new ExpressionResult(pMember->GetType(), nullptr, result);
+        return new ExpressionResult(pMember->GetType(), result);
     }
 }

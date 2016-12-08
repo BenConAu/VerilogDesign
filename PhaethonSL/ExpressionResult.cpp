@@ -35,14 +35,14 @@ ExpressionResult::ExpressionResult(TypeInfo* pTypeInfo, Operand operand)
 }
 
 // ExpressionResult to represent a variable
-ExpressionResult::ExpressionResult(TypeInfo* pTypeInfo, VariableInfo* pVarInfo, Operand operand)
+ExpressionResult::ExpressionResult(VariableInfo* pVarInfo, Operand operand)
 {
     if (operand.GetType() == OperandType::None)
     {
         throw "Cannot give none operands to ExpressionResult";
     }
 
-    _pTypeInfo = pTypeInfo;
+    _pTypeInfo = pVarInfo->GetTypeInfo();
     _pVarInfo = pVarInfo;
     _operand = operand;
 }

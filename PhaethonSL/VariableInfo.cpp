@@ -67,7 +67,7 @@ ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
         // and make an operand out of that.
         RegIndex regIndex = EnsurePathRegister(pScope);
 
-        return new ExpressionResult(GetTypeInfo(), this, Operand(regIndex));
+        return new ExpressionResult(this, Operand(regIndex));
     }
 
     case TypeClass::Struct:
@@ -83,14 +83,14 @@ ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
             // out of that. That can be directly used by other things.
             RegIndex index = EnsurePathRegister(pScope);
 
-            return new ExpressionResult(GetTypeInfo(), this, Operand(index));
+            return new ExpressionResult(this, Operand(index));
         }
         else
         {
             printf("No register for %s, returning constant Operand\n", GetSymbol());
 
             // Don't make a register if you don't need one
-            return new ExpressionResult(GetTypeInfo(), this, Operand(this, pScope->GetContext()));
+            return new ExpressionResult(this, Operand(this, pScope->GetContext()));
         }
     }
 }

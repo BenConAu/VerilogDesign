@@ -16,7 +16,7 @@ struct ExpressionResult
 {
     ExpressionResult(TypeInfo* pTypeInfo, Operand operand, RegisterCollection* pCollection);
     ExpressionResult(TypeInfo* pTypeInfo, Operand operand);
-    ExpressionResult(TypeInfo* pTypeInfo, VariableInfo* pVarInfo, Operand operand);
+    ExpressionResult(VariableInfo* pVarInfo, Operand operand);
 
     void DebugPrint();
 
