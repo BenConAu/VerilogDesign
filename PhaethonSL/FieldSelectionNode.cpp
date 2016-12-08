@@ -108,7 +108,7 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
         }
 
         // If we have a constant, then we need to make it into a register
-        RegIndex pathIndex = pInfo->EnsurePathRegister(pScope);
+        RegIndex pathIndex = pInfo->EnsureRegister(pScope);
 
         // An operand that represents the variable
         regOperand = Operand(pathIndex);

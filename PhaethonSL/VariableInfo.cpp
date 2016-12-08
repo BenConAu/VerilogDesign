@@ -55,7 +55,7 @@ ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
         // Basic things are always word sized and stored
         // in registers allocated to them. Find out which register it is
         // and make an operand out of that.
-        RegIndex regIndex = EnsurePathRegister(pScope);
+        RegIndex regIndex = EnsureRegister(pScope);
 
         return new ExpressionResult(GetTypeInfo(), Operand(regIndex));
     }
@@ -65,7 +65,7 @@ ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
         // Basic things are always word sized and stored
         // in registers allocated to them. Find out which register it is
         // and make an operand out of that.
-        RegIndex regIndex = EnsurePathRegister(pScope);
+        RegIndex regIndex = EnsureRegister(pScope);
 
         return new ExpressionResult(this, Operand(regIndex));
     }
@@ -81,7 +81,7 @@ ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
 
             // We already have a register for this thing, so we can make an operand
             // out of that. That can be directly used by other things.
-            RegIndex index = EnsurePathRegister(pScope);
+            RegIndex index = EnsureRegister(pScope);
 
             return new ExpressionResult(this, Operand(index));
         }
@@ -95,13 +95,13 @@ ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
     }
 }
 
-RegIndex VariableInfo::EnsurePathRegister(FunctionDeclaratorNode* pScope)
+RegIndex VariableInfo::EnsureRegister(FunctionDeclaratorNode* pScope)
 {
-    printf("Ensuring register for VariableInfo %s\n", GetSymbol());
+    //printf("Ensuring register for VariableInfo %s\n", GetSymbol());
 
     if (_regIndexMap.find(pScope) == _regIndexMap.end())
     {
-        printf("Allocating register for VariableInfo %s\n", GetSymbol());
+        //printf("Allocating register for VariableInfo %s\n", GetSymbol());
 
         // Upon the first request for a register at a particular scope,
         // allocate the register.

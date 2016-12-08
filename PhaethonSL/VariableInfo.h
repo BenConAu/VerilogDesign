@@ -31,7 +31,7 @@ public:
     FunctionDeclaratorNode* GetScope() { return _pScope; }
 
     void ReserveRegister(FunctionDeclaratorNode* pScope, RegIndex index);
-    RegIndex EnsurePathRegister(FunctionDeclaratorNode* pScope);
+    RegIndex EnsureRegister(FunctionDeclaratorNode* pScope);
     bool HasRegister(FunctionDeclaratorNode* pScope);
 
     TypeInfo* GetTypeInfo() { return _pType; }
