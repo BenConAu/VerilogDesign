@@ -49,6 +49,6 @@ class AddressOfNode : public ExpressionNode
         TypeInfo *pNewTypeInfo = GetContext()->_typeCollection.GetPointerType(pVariableInfo->GetTypeInfo());
 
         // The result has the new type but same path and same operand
-        return new ExpressionResult(pNewTypeInfo, childResult->_pExprPath, childResult->_operand);     
+        return new ExpressionResult(pNewTypeInfo, childResult->_pVarInfo, childResult->_operand);     
     }
 };

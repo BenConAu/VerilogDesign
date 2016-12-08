@@ -82,16 +82,6 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
         pTypeInfo = dynamic_cast<StructTypeInfo *>(pPointerInfo->GetBaseType());
     }
 
-    // Since this is always a struct, the operand has a memory location in
-    // it. This will now transform into an offset operation, which requires
-    // that the path info be there so that we can get the register
-    // that we associate with the path.
-    VariablePath *pPath = childResult->_pExprPath;
-    if (pPath == nullptr)
-    {
-        throw "Need path info to field select";
-    }
-
     // Declared here so that it will scope with this function
     std::unique_ptr<RegisterWrapper> childWrapper;
 
@@ -100,7 +90,7 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
     printf("Field select child operand type = %d\n", childOperand.GetType());
 
     // Remember if we allocate a register
-    RegisterCollection* pRegCollection = nullptr;
+    RegisterCollection *pRegCollection = nullptr;
 
     // We need a register to offset. If we have one already then great, otherwise
     // we need to do the work to ensure that we have one for the path that arrived
@@ -109,8 +99,18 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
     {
         printf("Need to upgrade operand from constant\n");
 
+        // Since the operand has a memory location in it, we figure that we must
+        // have VariableInfo for when it was loaded. This will now transform into 
+        // an offset operation, which requires that the variable info be there so 
+        // that we can get the register that we associate with the path.
+        VariableInfo *pInfo = childResult->_pVarInfo;
+        if (pInfo == nullptr)
+        {
+            throw "Need variable info to field select";
+        }
+
         // If we have a constant, then we need to make it into a register
-        RegIndex pathIndex = pPath->GetVariableInfo()->EnsurePathRegister(pScope);
+        RegIndex pathIndex = pInfo->EnsurePathRegister(pScope);
 
         // An operand that represents the variable
         Operand regOperand(pathIndex);
@@ -160,15 +160,12 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
         pMember,
         GetContext());
 
-    // Find out the new path that we have for the expression
-    VariablePath *pNewPath = GetContext()->_pathCollection.EnsurePath(pPath, pMember);
-
     if (pRegCollection != nullptr)
     {
         return new ExpressionResult(pMember->GetType(), result, pRegCollection);
     }
     else
     {
-        return new ExpressionResult(pMember->GetType(), pNewPath, result);
+        return new ExpressionResult(pMember->GetType(), nullptr, result);
     }
 }

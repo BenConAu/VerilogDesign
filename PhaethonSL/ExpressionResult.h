@@ -17,7 +17,7 @@ struct ExpressionResult
 {
     ExpressionResult(TypeInfo* pTypeInfo, Operand operand, RegisterCollection* pCollection);
     ExpressionResult(TypeInfo* pTypeInfo, Operand operand);
-    ExpressionResult(TypeInfo* pTypeInfo, VariablePath* pVarInfo, Operand operand);
+    ExpressionResult(TypeInfo* pTypeInfo, VariableInfo* pVarInfo, Operand operand);
 
     void DebugPrint();
 
@@ -25,7 +25,7 @@ struct ExpressionResult
     TypeInfo* _pTypeInfo;
 
     // Optional variable info that might be relevant
-    VariablePath* _pExprPath;
+    VariableInfo* _pVarInfo;
 
     // The operand with the result of the expression
     Operand _operand;

@@ -48,8 +48,6 @@ const char*VariableInfo::GetSymbol()
 
 ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
 {
-    VariablePath *pVarPath = pScope->GetContext()->_pathCollection.EnsurePath(this);
-
     switch (_pType->GetTypeClass())
     {
     case TypeClass::Basic:
@@ -57,7 +55,7 @@ ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
         // Basic things are always word sized and stored
         // in registers allocated to them. Find out which register it is
         // and make an operand out of that.
-        RegIndex regIndex = pVarPath->GetVariableInfo()->EnsurePathRegister(pScope);
+        RegIndex regIndex = EnsurePathRegister(pScope);
 
         return new ExpressionResult(GetTypeInfo(), Operand(regIndex));
     }
@@ -67,9 +65,9 @@ ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
         // Basic things are always word sized and stored
         // in registers allocated to them. Find out which register it is
         // and make an operand out of that.
-        RegIndex regIndex = pVarPath->GetVariableInfo()->EnsurePathRegister(pScope);
+        RegIndex regIndex = EnsurePathRegister(pScope);
 
-        return new ExpressionResult(GetTypeInfo(), pVarPath, Operand(regIndex));
+        return new ExpressionResult(GetTypeInfo(), this, Operand(regIndex));
     }
 
     case TypeClass::Struct:
@@ -77,22 +75,22 @@ ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
         // a struct. For memory located things, create an operand with
         // the constant memory address involved. We might add an offset
         // later.
-        if (pVarPath->GetVariableInfo()->HasRegister(pScope))
+        if (HasRegister(pScope))
         {
             printf("Ensuring register for %s\n", GetSymbol());
 
             // We already have a register for this thing, so we can make an operand
             // out of that. That can be directly used by other things.
-            RegIndex index = pVarPath->GetVariableInfo()->EnsurePathRegister(pScope);
+            RegIndex index = EnsurePathRegister(pScope);
 
-            return new ExpressionResult(GetTypeInfo(), pVarPath, Operand(index));
+            return new ExpressionResult(GetTypeInfo(), this, Operand(index));
         }
         else
         {
             printf("No register for %s, returning constant Operand\n", GetSymbol());
 
             // Don't make a register if you don't need one
-            return new ExpressionResult(GetTypeInfo(), pVarPath, Operand(this, pScope->GetContext()));
+            return new ExpressionResult(GetTypeInfo(), this, Operand(this, pScope->GetContext()));
         }
     }
 }

@@ -17,6 +17,7 @@ ExpressionResult::ExpressionResult(TypeInfo* pTypeInfo, Operand operand, Registe
     }
 
     _pTypeInfo = pTypeInfo;
+    _pVarInfo = nullptr;
     _operand = operand;
 }
 
@@ -29,11 +30,12 @@ ExpressionResult::ExpressionResult(TypeInfo* pTypeInfo, Operand operand)
     }
 
     _pTypeInfo = pTypeInfo;
+    _pVarInfo = nullptr;
     _operand = operand;
 }
 
-// ExpressionResult to represent a variable path
-ExpressionResult::ExpressionResult(TypeInfo* pTypeInfo, VariablePath* pPathInfo, Operand operand)
+// ExpressionResult to represent a variable
+ExpressionResult::ExpressionResult(TypeInfo* pTypeInfo, VariableInfo* pVarInfo, Operand operand)
 {
     if (operand.GetType() == OperandType::None)
     {
@@ -41,7 +43,7 @@ ExpressionResult::ExpressionResult(TypeInfo* pTypeInfo, VariablePath* pPathInfo,
     }
 
     _pTypeInfo = pTypeInfo;
-    _pExprPath = pPathInfo;
+    _pVarInfo = pVarInfo;
     _operand = operand;
 }
 
