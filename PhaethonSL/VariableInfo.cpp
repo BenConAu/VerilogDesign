@@ -67,7 +67,7 @@ ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
         // and make an operand out of that.
         RegIndex regIndex = EnsureRegister(pScope);
 
-        return new ExpressionResult(this, Operand(regIndex));
+        return new ExpressionResult(GetTypeInfo(), Operand(regIndex));
     }
 
     case TypeClass::Struct:
@@ -83,7 +83,7 @@ ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
             // out of that. That can be directly used by other things.
             RegIndex index = EnsureRegister(pScope);
 
-            return new ExpressionResult(this, Operand(index));
+            return new ExpressionResult(GetTypeInfo(), Operand(index));
         }
         else
         {
