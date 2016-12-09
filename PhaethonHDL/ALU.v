@@ -49,7 +49,7 @@ module ALU(
   reg        [31:0] ramValue;
   reg        [31:0] regValue[0:3];
   reg        [31:0] regValue2[0:3];
-  reg        [31:0] regValue3;
+  reg        [31:0] regValue3[0:3];
   reg        [31:0] opDataWord;
   reg        [7:0]  regAddress;
   reg        [7:0]  regAddress2;
@@ -67,14 +67,14 @@ module ALU(
   wire       [31:0] floatDebug;
   wire       [1:0]  fCompareResult;
 
-  FloatingAdd         fAdd0(regValue[0], regValue2[0], 1'b0, fAddResult[0], floatDebug, clk, fOpEnable[0:0]);
-  FloatingAdd         fAdd1(regValue[1], regValue2[1], 1'b0, fAddResult[1], floatDebug, clk, fOpEnable[0:0]);
-  FloatingAdd         fAdd2(regValue[2], regValue2[2], 1'b0, fAddResult[2], floatDebug, clk, fOpEnable[0:0]);
-  FloatingAdd         fAdd3(regValue[3], regValue2[3], 1'b0, fAddResult[3], floatDebug, clk, fOpEnable[0:0]);
+  FloatingAdd         fAdd0(regValue2[0], regValue3[0], 1'b0, fAddResult[0], floatDebug, clk, fOpEnable[0:0]);
+  FloatingAdd         fAdd1(regValue2[1], regValue3[1], 1'b0, fAddResult[1], floatDebug, clk, fOpEnable[0:0]);
+  FloatingAdd         fAdd2(regValue2[2], regValue3[2], 1'b0, fAddResult[2], floatDebug, clk, fOpEnable[0:0]);
+  FloatingAdd         fAdd3(regValue2[3], regValue3[3], 1'b0, fAddResult[3], floatDebug, clk, fOpEnable[0:0]);
   FloatingAdd         fSub(regValue[0], regValue2[0], 1'b1, fSubResult, floatDebug, clk, fOpEnable[1:1]);
   FloatingFromInt     fConv(regValue[0], fConvResult, floatDebug, clk, fOpEnable[2:2]);
   FloatingMultiply    fMul(regValue[0], regValue2[0], fMulResult, floatDebug, clk, fOpEnable[3:3]);
-  FloatingMultiplyAdd fMulAdd(regValue[0], regValue2[0], regValue3, fMulAddResult, floatDebug, clk, fOpEnable[4:4]);
+  FloatingMultiplyAdd fMulAdd(regValue[0], regValue2[0], regValue3[0], fMulAddResult, floatDebug, clk, fOpEnable[4:4]);
   FloatingCompare     fComp(regValue[0], regValue2[0], fCompareResult, floatDebug, clk, fOpEnable[5:5]);
   FloatingDivide      fDiv(regValue[0], regValue2[0], fDivResult, floatDebug, clk, fOpEnable[6:6]);
 
@@ -146,7 +146,7 @@ module ALU(
       2: begin
         // Read values from registers
         regValue[0] <= regarray[regAddress[7:0]];
-        if (opCode == `VfaddRR)
+        if (opCode == `VfaddRRR)
         begin
           regValue[1] <= regarray[regAddress[7:0] + 1];
           regValue[2] <= regarray[regAddress[7:0] + 2];
@@ -154,17 +154,23 @@ module ALU(
         end
 
         regValue2[0] <= regarray[regAddress2[7:0]];
-        if (opCode == `VfaddRR)
+        if (opCode == `VfaddRRR)
         begin
           regValue2[1] <= regarray[regAddress2[7:0] + 1];
           regValue2[2] <= regarray[regAddress2[7:0] + 2];
           regValue2[3] <= regarray[regAddress2[7:0] + 3];
         end
 
-        regValue3 <= regarray[regAddress3[7:0]];
+        regValue3[0] <= regarray[regAddress3[7:0]];
+        if (opCode == `VfaddRRR)
+        begin
+          regValue3[1] <= regarray[regAddress3[7:0] + 1];
+          regValue3[2] <= regarray[regAddress3[7:0] + 2];
+          regValue3[3] <= regarray[regAddress3[7:0] + 3];
+        end
 
         // Enable operation for module
-        if (opCode == `FaddRR || opCode == `VfaddRR) fOpEnable[0:0] <= 1;
+        if (opCode == `FaddRRR || opCode == `VfaddRRR) fOpEnable[0:0] <= 1;
         if (opCode == `FsubRR) fOpEnable[1:1] <= 1;
         if (opCode == `FconvR) fOpEnable[2:2] <= 1;
         if (opCode == `FmulRR) fOpEnable[3:3] <= 1;
@@ -439,7 +445,7 @@ module ALU(
           `JneC: begin end // Done above
           `JeC: begin end   // Done above
 
-          `FaddRR:     regarray[regAddress[7:0]] <= fAddResult[0];          // fadd reg, reg
+          `FaddRRR:    regarray[regAddress[7:0]] <= fAddResult[0];          // fadd reg, reg, reg
           `FsubRR:     regarray[regAddress[7:0]] <= fSubResult;             // fsub reg, reg
           `FconvR:     regarray[regAddress[7:0]] <= fConvResult;            // fconv reg
           `FmulRR:     regarray[regAddress[7:0]] <= fMulResult;             // fmul reg, reg
@@ -448,15 +454,15 @@ module ALU(
           `FminRR:     regarray[regAddress[7:0]] <= (fCompareResult == 'b01 ? regValue2[0] : regValue[0]);
           `FmaxRR:     regarray[regAddress[7:0]] <= (fCompareResult == 'b11 ? regValue2[0] : regValue[0]);
 
-          `VfaddRR: begin
+          `VfaddRRR: begin
             regarray[regAddress[7:0]] <= fAddResult[0];
             regarray[regAddress[7:0] + 1] <= fAddResult[1];
             regarray[regAddress[7:0] + 2] <= fAddResult[2];
             regarray[regAddress[7:0] + 3] <= fAddResult[3];
           end
 
-          `AddRRC:     regarray[regAddress[7:0]] <= regValue2[0] + opDataWord;    // add reg, reg, const
-          `AddRRR:     regarray[regAddress[7:0]] <= regValue2[0] + regValue3;     // add reg, reg, reg
+          `AddRRC:     regarray[regAddress[7:0]] <= regValue2[0] + opDataWord;   // add reg, reg, const
+          `AddRRR:     regarray[regAddress[7:0]] <= regValue2[0] + regValue3[0]; // add reg, reg, reg
           `IncR:       regarray[regAddress[7:0]] <= regValue[0] + 1;             // dec reg
           `DecR:       regarray[regAddress[7:0]] <= regValue[0] - 1;             // dec reg
           `MulAddRRC:  regarray[regAddress[7:0]] <= regValue[0] + regValue2[0] * opDataWord;

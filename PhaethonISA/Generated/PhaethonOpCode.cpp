@@ -55,7 +55,7 @@ OpCodeData OpCodeData::s_data[] = {
     { Instructions::MulAdd    , OpCodes::MulAddRRC      , { OperandType::Register              , OperandType::Register              , OperandType::Constant     }, 2, "MulAddRRC" },
     { Instructions::Inc       , OpCodes::IncR           , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "IncR" },
     { Instructions::Dec       , OpCodes::DecR           , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "DecR" },
-    { Instructions::Fadd      , OpCodes::FaddRR         , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "FaddRR" },
+    { Instructions::Fadd      , OpCodes::FaddRRR        , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "FaddRRR" },
     { Instructions::Fsub      , OpCodes::FsubRR         , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "FsubRR" },
     { Instructions::Fconv     , OpCodes::FconvR         , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "FconvR" },
     { Instructions::Fmul      , OpCodes::FmulRR         , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "FmulRR" },
@@ -63,7 +63,7 @@ OpCodeData OpCodeData::s_data[] = {
     { Instructions::Fmuladd   , OpCodes::FmuladdRRR     , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "FmuladdRRR" },
     { Instructions::Fmin      , OpCodes::FminRR         , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "FminRR" },
     { Instructions::Fmax      , OpCodes::FmaxRR         , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "FmaxRR" },
-    { Instructions::Vfadd     , OpCodes::VfaddRR        , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "VfaddRR" },
+    { Instructions::Vfadd     , OpCodes::VfaddRRR       , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "VfaddRRR" },
     { Instructions::Dout      , OpCodes::DoutR          , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "DoutR" },
     { Instructions::Stall     , OpCodes::Stall          , { OperandType::None                  , OperandType::None                  , OperandType::None         }, -1, "Stall" },
 };

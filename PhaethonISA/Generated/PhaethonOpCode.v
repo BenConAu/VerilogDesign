@@ -21,7 +21,7 @@
 `define MulAddRRC 21
 `define IncR 22
 `define DecR 23
-`define FaddRR 24
+`define FaddRRR 24
 `define FsubRR 25
 `define FconvR 26
 `define FmulRR 27
@@ -29,7 +29,7 @@
 `define FmuladdRRR 29
 `define FminRR 30
 `define FmaxRR 31
-`define VfaddRR 32
+`define VfaddRRR 32
 `define DoutR 33
 `define Stall 34
 

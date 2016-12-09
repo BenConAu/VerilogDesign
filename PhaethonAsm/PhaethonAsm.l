@@ -35,14 +35,14 @@ using namespace std;
 "f"[0-9]+"\."[0-9]*  { yylval.intVal = GetFloatAsInt(yytext + 1); return INT_TOKEN; }
 "mov"                { yylval.instrIndex = Instructions::Mov; return INSTR_TOKEN_2; }
 "fconv"              { yylval.instrIndex = Instructions::Fconv; return INSTR_TOKEN_1; }
-"fadd"               { yylval.instrIndex = Instructions::Fadd; return INSTR_TOKEN_2; }
+"fadd"               { yylval.instrIndex = Instructions::Fadd; return INSTR_TOKEN_3; }
 "fsub"               { yylval.instrIndex = Instructions::Fadd; return INSTR_TOKEN_2; }
 "fmuladd"            { yylval.instrIndex = Instructions::Fmuladd; return INSTR_TOKEN_3; }
 "fmin"               { yylval.instrIndex = Instructions::Fmin; return INSTR_TOKEN_2; }
 "fmax"               { yylval.instrIndex = Instructions::Fmax; return INSTR_TOKEN_2; }
 "fmul"               { yylval.instrIndex = Instructions::Fmul; return INSTR_TOKEN_2; }
 "fdiv"               { yylval.instrIndex = Instructions::Fdiv; return INSTR_TOKEN_2; }
-"vfadd"              { yylval.instrIndex = Instructions::Vfadd; return INSTR_TOKEN_2; }
+"vfadd"              { yylval.instrIndex = Instructions::Vfadd; return INSTR_TOKEN_3; }
 "cmp"                { yylval.instrIndex = Instructions::Cmp; return INSTR_TOKEN_2; }
 "jmp"                { yylval.instrIndex = Instructions::Jmp; return INSTR_TOKEN_1; }
 "jne"                { yylval.instrIndex = Instructions::Jne; return INSTR_TOKEN_1; }

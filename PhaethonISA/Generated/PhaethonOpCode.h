@@ -61,7 +61,7 @@ namespace OpCodes
         MulAddRRC = 21,
         IncR = 22,
         DecR = 23,
-        FaddRR = 24,
+        FaddRRR = 24,
         FsubRR = 25,
         FconvR = 26,
         FmulRR = 27,
@@ -69,7 +69,7 @@ namespace OpCodes
         FmuladdRRR = 29,
         FminRR = 30,
         FmaxRR = 31,
-        VfaddRR = 32,
+        VfaddRRR = 32,
         DoutR = 33,
         Stall = 34,
     };
