@@ -17,6 +17,7 @@ class OperatorNode : public ExpressionNode
     {
         AddNode(pLeft);
         AddNode(pRight);
+        _op = op;
     }
 
     void VerifyNodeImpl() override

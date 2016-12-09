@@ -33,10 +33,10 @@ ptr<void> MemoryAlloc(word size)
 
     next->length = size;
     next->next = nullptr;
-    next->value = header.next + sizeof(Allocation);
+    next->value = offsetptr(header.next, sizeof(Allocation));
 
     header.last->next = next;
-    header.next = header.next + sizeof(Allocation) + size;
+    header.next = offsetptr(header.next, sizeof(Allocation) + size);
 }
 
 void MemoryFree(ptr<void> allocation)

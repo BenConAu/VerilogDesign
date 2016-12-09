@@ -14,3 +14,4 @@
 #include "DebugOutNode.h"
 #include "SizeOfNode.h"
 #include "AddressofNode.h"
+#include "OffsetNode.h"

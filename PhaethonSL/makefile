@@ -21,6 +21,8 @@ PSLcc: lex.yy.c \
 	   TypeCollection.h \
 	   BasicTypeInfo.h \
 	   PointerTypeInfo.h \
+	   OffsetNode.cpp \
+	   OffsetNode.h \
 	   StructDeclarationNode.cpp \
 	   StructSpecifierNode.cpp \
 	   TypeNode.cpp \
@@ -67,6 +69,7 @@ PSLcc: lex.yy.c \
 	   FunctionDeclaratorNode.cpp \
 	   FunctionParameterNode.cpp \
 	   IdentifierNode.cpp \
+	   OffsetNode.cpp \
 	   OperatorNode.cpp \
 	   Operand.cpp \
 	   PSLCompiler.cpp \

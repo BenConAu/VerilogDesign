@@ -26,6 +26,11 @@ public:
         return "BasicTypeInfo";
     }
 
+    int GetTypeToken() const
+    {
+        return _typeToken;
+    }
+
 private:
     int _typeToken;
 };

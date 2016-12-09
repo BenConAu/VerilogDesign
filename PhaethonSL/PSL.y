@@ -50,6 +50,7 @@ void yyerror(void*, const char *s);
 %token NULLPTR_TOKEN
 %token DEBUGOUT_TOKEN
 %token SIZEOF_TOKEN
+%token OFFSETPTR_TOKEN
 %token <symIndex> IDENTIFIER
 %type <pNode> variable_identifier
 %type <pNode> primary_expression
@@ -79,6 +80,7 @@ void yyerror(void*, const char *s);
 %type <pNode> function_header_with_parameters
 %type <pNode> debugout_expression
 %type <pNode> sizeof_expression
+%type <pNode> offset_expression
 
 %%
 
@@ -147,10 +149,16 @@ primary_expression:
     | FLOATCONSTANT                                                 { $$ = new ConstantNode(pContext, $1); }
 	| NULLPTR_TOKEN                                                 { $$ = new ConstantNode(pContext, ConstantNode::Pointer); }
     | sizeof_expression                                             { $$ = $1; }
+    | offset_expression                                             { $$ = $1; }
     ;
 
 sizeof_expression:
       SIZEOF_TOKEN LEFT_PAREN fully_specified_type RIGHT_PAREN      { $$ = new SizeOfNode(pContext, $3); }
+    ;
+
+offset_expression:
+      OFFSETPTR_TOKEN LEFT_PAREN variable_identifier COMMA expression RIGHT_PAREN             
+                                                                    { $$ = new OffsetNode(pContext, $3, $5); }
     ;
 
 declaration:
