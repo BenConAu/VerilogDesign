@@ -40,7 +40,7 @@ using namespace std;
 "fmuladd"            { yylval.instrIndex = Instructions::Fmuladd; return INSTR_TOKEN_3; }
 "fmin"               { yylval.instrIndex = Instructions::Fmin; return INSTR_TOKEN_2; }
 "fmax"               { yylval.instrIndex = Instructions::Fmax; return INSTR_TOKEN_2; }
-"fmul"               { yylval.instrIndex = Instructions::Fmul; return INSTR_TOKEN_2; }
+"fmul"               { yylval.instrIndex = Instructions::Fmul; return INSTR_TOKEN_3; }
 "fdiv"               { yylval.instrIndex = Instructions::Fdiv; return INSTR_TOKEN_2; }
 "vfadd"              { yylval.instrIndex = Instructions::Vfadd; return INSTR_TOKEN_3; }
 "cmp"                { yylval.instrIndex = Instructions::Cmp; return INSTR_TOKEN_2; }

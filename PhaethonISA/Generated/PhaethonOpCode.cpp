@@ -58,7 +58,7 @@ OpCodeData OpCodeData::s_data[] = {
     { Instructions::Fadd      , OpCodes::FaddRRR        , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "FaddRRR" },
     { Instructions::Fsub      , OpCodes::FsubRR         , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "FsubRR" },
     { Instructions::Fconv     , OpCodes::FconvR         , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "FconvR" },
-    { Instructions::Fmul      , OpCodes::FmulRR         , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "FmulRR" },
+    { Instructions::Fmul      , OpCodes::FmulRRR        , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "FmulRRR" },
     { Instructions::Fdiv      , OpCodes::FdivRR         , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "FdivRR" },
     { Instructions::Fmuladd   , OpCodes::FmuladdRRR     , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "FmuladdRRR" },
     { Instructions::Fmin      , OpCodes::FminRR         , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "FminRR" },

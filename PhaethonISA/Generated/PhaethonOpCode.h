@@ -64,7 +64,7 @@ namespace OpCodes
         FaddRRR = 24,
         FsubRR = 25,
         FconvR = 26,
-        FmulRR = 27,
+        FmulRRR = 27,
         FdivRR = 28,
         FmuladdRRR = 29,
         FminRR = 30,

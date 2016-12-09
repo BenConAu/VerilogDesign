@@ -24,7 +24,7 @@
 `define FaddRRR 24
 `define FsubRR 25
 `define FconvR 26
-`define FmulRR 27
+`define FmulRRR 27
 `define FdivRR 28
 `define FmuladdRRR 29
 `define FminRR 30

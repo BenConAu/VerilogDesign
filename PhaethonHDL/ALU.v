@@ -73,7 +73,7 @@ module ALU(
   FloatingAdd         fAdd3(regValue2[3], regValue3[3], 1'b0, fAddResult[3], floatDebug, clk, fOpEnable[0:0]);
   FloatingAdd         fSub(regValue[0], regValue2[0], 1'b1, fSubResult, floatDebug, clk, fOpEnable[1:1]);
   FloatingFromInt     fConv(regValue[0], fConvResult, floatDebug, clk, fOpEnable[2:2]);
-  FloatingMultiply    fMul(regValue[0], regValue2[0], fMulResult, floatDebug, clk, fOpEnable[3:3]);
+  FloatingMultiply    fMul(regValue2[0], regValue3[0], fMulResult, floatDebug, clk, fOpEnable[3:3]);
   FloatingMultiplyAdd fMulAdd(regValue[0], regValue2[0], regValue3[0], fMulAddResult, floatDebug, clk, fOpEnable[4:4]);
   FloatingCompare     fComp(regValue[0], regValue2[0], fCompareResult, floatDebug, clk, fOpEnable[5:5]);
   FloatingDivide      fDiv(regValue[0], regValue2[0], fDivResult, floatDebug, clk, fOpEnable[6:6]);
@@ -173,7 +173,7 @@ module ALU(
         if (opCode == `FaddRRR || opCode == `VfaddRRR) fOpEnable[0:0] <= 1;
         if (opCode == `FsubRR) fOpEnable[1:1] <= 1;
         if (opCode == `FconvR) fOpEnable[2:2] <= 1;
-        if (opCode == `FmulRR) fOpEnable[3:3] <= 1;
+        if (opCode == `FmulRRR) fOpEnable[3:3] <= 1;
         if (opCode == `FmuladdRRR) fOpEnable[4:4] <= 1;
         if (opCode == `FminRR) fOpEnable[5:5] <= 1;
         if (opCode == `FmaxRR) fOpEnable[5:5] <= 1;
@@ -448,7 +448,7 @@ module ALU(
           `FaddRRR:    regarray[regAddress[7:0]] <= fAddResult[0];          // fadd reg, reg, reg
           `FsubRR:     regarray[regAddress[7:0]] <= fSubResult;             // fsub reg, reg
           `FconvR:     regarray[regAddress[7:0]] <= fConvResult;            // fconv reg
-          `FmulRR:     regarray[regAddress[7:0]] <= fMulResult;             // fmul reg, reg
+          `FmulRRR:    regarray[regAddress[7:0]] <= fMulResult;             // fmul reg, reg, reg
           `FdivRR:     regarray[regAddress[7:0]] <= fDivResult;
           `FmuladdRRR: regarray[regAddress[7:0]] <= fMulAddResult;          // fmul reg, reg
           `FminRR:     regarray[regAddress[7:0]] <= (fCompareResult == 'b01 ? regValue2[0] : regValue[0]);
