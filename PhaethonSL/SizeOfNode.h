@@ -16,7 +16,7 @@ class SizeOfNode : public ExpressionNode
 
     void VerifyNodeImpl() override
     {
-        // TODO: Make sure it is an identifier inside
+        SetType(GetContext()->_typeCollection.GetBasicType(WORD_TOKEN));
     }
 
     bool IsConstant() const override { return true; }

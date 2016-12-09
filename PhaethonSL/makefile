@@ -25,6 +25,7 @@ PSLcc: lex.yy.c \
 	   OffsetNode.h \
 	   StructDeclarationNode.cpp \
 	   StructSpecifierNode.cpp \
+	   SizeOfNode.h \
 	   TypeNode.cpp \
 	   TypeInfo.cpp \
 	   TypeInfo.h \

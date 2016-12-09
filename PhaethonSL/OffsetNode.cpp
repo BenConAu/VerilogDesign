@@ -4,15 +4,15 @@
 
 void OffsetNode::VerifyNodeImpl()
 {
-    IdentifierNode *pIdent = dynamic_cast<IdentifierNode *>(GetChild(0));
+    ExpressionNode *pPointerNode = dynamic_cast<ExpressionNode *>(GetChild(0));
     ExpressionNode *pExpr = dynamic_cast<ExpressionNode *>(GetChild(1));
 
-    if (pIdent == nullptr || pExpr == nullptr)
+    if (pPointerNode == nullptr || pExpr == nullptr)
     {
         throw "Wrong children nodes for OffsetPtr";
     }
 
-    PointerTypeInfo *pIdentInfo = dynamic_cast<PointerTypeInfo *>(pIdent->GetTypeInfo());
+    PointerTypeInfo *pIdentInfo = dynamic_cast<PointerTypeInfo *>(pPointerNode->GetTypeInfo());
     BasicTypeInfo *pExprInfo = dynamic_cast<BasicTypeInfo *>(pExpr->GetTypeInfo());
 
     if (pIdentInfo == nullptr || pExprInfo == nullptr)

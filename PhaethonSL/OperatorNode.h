@@ -24,6 +24,7 @@ class OperatorNode : public ExpressionNode
     {
         ExpressionNode *pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));
 
+        // TODO: Actually check types match like they should
         SetType(pLeft->GetTypeInfo());
     }
 

@@ -160,7 +160,7 @@ sizeof_expression:
     ;
 
 offset_expression:
-      OFFSETPTR_TOKEN LEFT_PAREN variable_identifier COMMA expression RIGHT_PAREN             
+      OFFSETPTR_TOKEN LEFT_PAREN expression COMMA expression RIGHT_PAREN             
                                                                     { $$ = new OffsetNode(pContext, $3, $5); }
     ;
 
