@@ -1,4 +1,4 @@
-all: *.asm
+all: *.asm *.result
 
 %.asm : %.psl ../PSLcc
 	../PSLcc $< $@ $*.pao

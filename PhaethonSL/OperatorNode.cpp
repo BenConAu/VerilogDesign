@@ -25,14 +25,10 @@ ExpressionResult *OperatorNode::CalculateResult()
     RegIndex resultIndex = pFunc->GetRegCollection()->AllocateRegister();
     Operand resultOperand(resultIndex);
 
-    GetContext()->OutputMovInstruction(
-        resultOperand,
-        leftWrap.GetWrapped()
-        );
-    
     GetContext()->OutputInstruction(
-        (_op == Operator::Multiply) ? OpCodes::FmulRR : OpCodes::FaddRR,
+        (_op == Operator::Multiply) ? OpCodes::FmulRRR : OpCodes::FaddRRR,
         resultOperand,
+        leftWrap.GetWrapped(),
         rightWrap.GetWrapped()
         );
 

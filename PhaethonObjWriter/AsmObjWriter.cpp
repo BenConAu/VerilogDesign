@@ -82,6 +82,16 @@ void AsmObjWriter::OutputInstruction(
                     GetOpString(args[1]).c_str());
                 break;
 
+            case 3:
+                fprintf(
+                    _pOutFile,
+                    "%s %s, %s, %s\n",
+                    InstructionData::s_data[index].pszName,
+                    GetOpString(args[0]).c_str(),
+                    GetOpString(args[1]).c_str(),
+                    GetOpString(args[2]).c_str());
+                break;
+
             default:
                 throw "Unsupported arg count";
             }
