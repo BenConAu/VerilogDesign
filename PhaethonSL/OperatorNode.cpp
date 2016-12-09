@@ -21,16 +21,46 @@ ExpressionResult *OperatorNode::CalculateResult()
     RegisterWrapper leftWrap(GetContext(), pFunc->GetRegCollection(), leftResult.get()->_operand);
     RegisterWrapper rightWrap(GetContext(), pFunc->GetRegCollection(), rightResult.get()->_operand);
 
+    OpCodes::Enum opCode = OpCodes::Unknown;
+
+    if (TypeInfo::IsFloat(leftResult->_pTypeInfo) && TypeInfo::IsFloat(rightResult->_pTypeInfo))
+    {
+        switch (_op)
+        {
+        case Operator::Multiply:
+            opCode = OpCodes::FmulRRR;
+            break;
+
+        case Operator::Add:
+            opCode = OpCodes::FaddRRR;
+            break;
+
+        default:
+            throw "Unknown operator";
+        }
+    }
+    else
+    {
+        switch (_op)
+        {
+        case Operator::Add:
+            opCode = OpCodes::AddRRR;
+            break;
+
+        default:
+            throw "Unknown operator";
+        }
+    }
+
     // Get register for our result
     RegIndex resultIndex = pFunc->GetRegCollection()->AllocateRegister();
     Operand resultOperand(resultIndex);
 
     GetContext()->OutputInstruction(
-        (_op == Operator::Multiply) ? OpCodes::FmulRRR : OpCodes::FaddRRR,
+        opCode,
         resultOperand,
         leftWrap.GetWrapped(),
-        rightWrap.GetWrapped()
-        );
+        rightWrap.GetWrapped());
 
     return new ExpressionResult(leftResult.get()->_pTypeInfo, resultOperand, pFunc->GetRegCollection());
 }

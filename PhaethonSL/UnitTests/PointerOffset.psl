@@ -1,0 +1,15 @@
+struct foo
+{
+    word a;
+};
+
+foo fooVar;
+
+void main()
+{
+    ptr<void> testPtr;
+    testPtr = &fooVar;
+    debugout(testPtr);
+    testPtr = offsetptr(testPtr, 100);
+    debugout(testPtr);
+}

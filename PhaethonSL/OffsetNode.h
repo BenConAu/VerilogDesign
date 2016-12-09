@@ -1,21 +1,17 @@
 #pragma once
 
 #include "PSLCompilerContext.h"
-#include "ExpressionNode.h"
+#include "OperatorNode.h"
 
-class OffsetNode : public ExpressionNode
+class OffsetNode : public OperatorNode
 {
   public:
     OffsetNode(
         PSLCompilerContext *pContext,
         ASTNode *pIdent,
-        ASTNode *pExpr) : ExpressionNode(pContext)
+        ASTNode *pExpr) : OperatorNode(pContext, pIdent, pExpr, Operator::Add)
     {
-        AddNode(pIdent);
-        AddNode(pExpr);
     }
 
     void VerifyNodeImpl() override;
-    bool IsConstant() const override;
-    ExpressionResult *CalculateResult() override;
 };

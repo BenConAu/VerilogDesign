@@ -119,7 +119,8 @@ debugout_expression:
     ;
 
 assignment_expression:
-      postfix_expression assignment_operator additive_expression    { $$ = new AssignmentNode(pContext, $1, $3); }
+      additive_expression                                           { $$ = $1; }
+    | postfix_expression assignment_operator additive_expression    { $$ = new AssignmentNode(pContext, $1, $3); }
     ;
 
 additive_expression:

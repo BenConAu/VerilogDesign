@@ -36,20 +36,3 @@ void OffsetNode::VerifyNodeImpl()
         throw "Can only offset pointer by a word";
     }
 }
-
-bool OffsetNode::IsConstant() const
-{
-    // Sometimes it might be, but basically not
-    return false;
-}
-
-ExpressionResult *OffsetNode::CalculateResult()
-{
-    IdentifierNode *pIdent = dynamic_cast<IdentifierNode *>(GetChild(0));
-    ExpressionNode *pExpr = dynamic_cast<ExpressionNode *>(GetChild(1));
-
-    PointerTypeInfo *pIdentInfo = dynamic_cast<PointerTypeInfo *>(pIdent->GetTypeInfo());
-    BasicTypeInfo *pExprInfo = dynamic_cast<BasicTypeInfo *>(pExpr->GetTypeInfo());
-
-    throw "Not yet implemented, coming soon!";
-}

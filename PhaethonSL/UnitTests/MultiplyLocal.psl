@@ -1,8 +1,8 @@
 struct foo
 {
-    word a;
-    word b;
-    word c;
+    float a;
+    float b;
+    float c;
 };
 
 foo fooVar;

@@ -26,6 +26,7 @@ PSLcc: lex.yy.c \
 	   StructDeclarationNode.cpp \
 	   StructSpecifierNode.cpp \
 	   TypeNode.cpp \
+	   TypeInfo.cpp \
 	   TypeInfo.h \
 	   IdentifierNode.cpp \
 	   IdentifierNode.h \
@@ -78,6 +79,7 @@ PSLcc: lex.yy.c \
 	   RegisterWrapper.cpp \
 	   SmartRegister.cpp \
 	   StructDeclarationNode.cpp \
+	   TypeInfo.cpp \
 	   TypeNode.cpp \
 	   TypeCollection.cpp \
 	   VariableCollection.cpp \
