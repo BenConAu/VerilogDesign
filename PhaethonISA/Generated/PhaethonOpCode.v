@@ -16,8 +16,8 @@
 `define Ret 16
 `define RCallRC 17
 `define RRet 18
-`define AddRC 19
-`define AddRR 20
+`define AddRRC 19
+`define AddRRR 20
 `define MulAddRRC 21
 `define IncR 22
 `define DecR 23
@@ -45,7 +45,7 @@ function [0:0] Is8ByteOpcode;
       opCodeParam == `JneC ||
       opCodeParam == `JeC ||
       opCodeParam == `RCallRC ||
-      opCodeParam == `AddRC ||
+      opCodeParam == `AddRRC ||
       opCodeParam == `MulAddRRC)
     Is8ByteOpcode = 1;
   else

@@ -1,4 +1,5 @@
 ALU_tb: \
+	../PhaethonISA/Generated/PhaethonOpCode.v \
 	ALU_tb.v \
 	ALU.v \
 	FloatingAdd.v \

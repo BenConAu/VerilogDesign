@@ -49,7 +49,7 @@ using namespace std;
 "je"                 { yylval.instrIndex = Instructions::Je; return INSTR_TOKEN_1; }
 "dout"               { yylval.instrIndex = Instructions::Dout; return INSTR_TOKEN_1; }
 "inc"                { yylval.instrIndex = Instructions::Inc; return INSTR_TOKEN_1; }
-"add"                { yylval.instrIndex = Instructions::Add; return INSTR_TOKEN_2; }
+"add"                { yylval.instrIndex = Instructions::Add; return INSTR_TOKEN_3; }
 "dec"                { yylval.instrIndex = Instructions::Dec; return INSTR_TOKEN_1; }
 "muladd"             { yylval.instrIndex = Instructions::MulAdd; return INSTR_TOKEN_3; }
 "push"               { yylval.instrIndex = Instructions::Push; return INSTR_TOKEN_1; }
