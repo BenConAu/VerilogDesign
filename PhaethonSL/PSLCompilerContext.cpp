@@ -209,3 +209,23 @@ void PSLCompilerContext::OutputLabel(const char *pszLabel)
         _writers[i]->OutputLabel(pszLabel);
     }
 }
+
+void PSLCompilerContext::UserAction(void *pVoidLocation, const char *pszText)
+{
+    YYLTYPE *pLocation = (YYLTYPE *)pVoidLocation;
+
+    pLocation->first_line = pLocation->last_line;
+    pLocation->first_column = pLocation->last_column;
+    for (int i = 0; pszText[i] != '\0'; i++)
+    {
+        if (pszText[i] == '\n')
+        {
+            pLocation->last_line++;
+            pLocation->last_column = 0;
+        }
+        else
+        {
+            pLocation->last_column++;
+        }
+    }
+}

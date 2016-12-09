@@ -5,9 +5,11 @@
 #include "PSL.tab.h"
 
 #define YY_EXTRA_TYPE PSLCompilerContext*
+#define YY_USER_ACTION yyextra->UserAction(yylloc, yytext);
 
 %}
 
+%option bison-locations
 %option reentrant
 %option bison-bridge
 %option noyywrap

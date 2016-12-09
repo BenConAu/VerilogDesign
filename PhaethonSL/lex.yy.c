@@ -509,8 +509,9 @@ static yyconst flex_int32_t yy_rule_can_match_eol[31] =
 #include "PSL.tab.h"
 
 #define YY_EXTRA_TYPE PSLCompilerContext*
+#define YY_USER_ACTION yyextra->UserAction(yylloc, yytext);
 
-#line 514 "lex.yy.c"
+#line 515 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -560,6 +561,8 @@ struct yyguts_t
 
     YYSTYPE * yylval_r;
 
+    YYLTYPE * yylloc_r;
+
     }; /* end struct yyguts_t */
 
 static int yy_init_globals (yyscan_t yyscanner );
@@ -567,6 +570,8 @@ static int yy_init_globals (yyscan_t yyscanner );
     /* This must go here because YYSTYPE and YYLTYPE are included
      * from bison output in section 1.*/
     #    define yylval yyg->yylval_r
+    
+    #    define yylloc yyg->yylloc_r
     
 int yylex_init (yyscan_t* scanner);
 
@@ -605,6 +610,10 @@ YYSTYPE * yyget_lval (yyscan_t yyscanner );
 
 void yyset_lval (YYSTYPE * yylval_param ,yyscan_t yyscanner );
 
+       YYLTYPE *yyget_lloc (yyscan_t yyscanner );
+    
+        void yyset_lloc (YYLTYPE * yylloc_param ,yyscan_t yyscanner );
+    
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
  */
@@ -713,10 +722,10 @@ static int input (yyscan_t yyscanner );
 #define YY_DECL_IS_OURS 1
 
 extern int yylex \
-               (YYSTYPE * yylval_param ,yyscan_t yyscanner);
+               (YYSTYPE * yylval_param,YYLTYPE * yylloc_param ,yyscan_t yyscanner);
 
 #define YY_DECL int yylex \
-               (YYSTYPE * yylval_param , yyscan_t yyscanner)
+               (YYSTYPE * yylval_param, YYLTYPE * yylloc_param , yyscan_t yyscanner)
 #endif /* !YY_DECL */
 
 /* Code executed at the beginning of each rule, after yytext and yyleng
@@ -743,11 +752,13 @@ YY_DECL
 	register int yy_act;
     struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 
-#line 16 "PSL.l"
+#line 18 "PSL.l"
 
-#line 749 "lex.yy.c"
+#line 758 "lex.yy.c"
 
     yylval = yylval_param;
+
+    yylloc = yylloc_param;
 
 	if ( !yyg->yy_init )
 		{
@@ -845,156 +856,156 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 17 "PSL.l"
+#line 19 "PSL.l"
 ;
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 18 "PSL.l"
+#line 20 "PSL.l"
 ;
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 19 "PSL.l"
+#line 21 "PSL.l"
 { return STAR; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 20 "PSL.l"
+#line 22 "PSL.l"
 { return PLUS; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 21 "PSL.l"
+#line 23 "PSL.l"
 { return EQUAL; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 22 "PSL.l"
+#line 24 "PSL.l"
 { return SEMICOLON; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 23 "PSL.l"
+#line 25 "PSL.l"
 { return LEFT_BRACE; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 24 "PSL.l"
+#line 26 "PSL.l"
 { return RIGHT_BRACE; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 25 "PSL.l"
+#line 27 "PSL.l"
 { return LEFT_PAREN; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 26 "PSL.l"
+#line 28 "PSL.l"
 { return RIGHT_PAREN; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 27 "PSL.l"
+#line 29 "PSL.l"
 { return ARROW; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 28 "PSL.l"
+#line 30 "PSL.l"
 { return LT; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 29 "PSL.l"
+#line 31 "PSL.l"
 { return GT; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 30 "PSL.l"
+#line 32 "PSL.l"
 { return DOT; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 31 "PSL.l"
+#line 33 "PSL.l"
 { return COMMA; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 32 "PSL.l"
+#line 34 "PSL.l"
 { return AMPERSAND; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 33 "PSL.l"
+#line 35 "PSL.l"
 { return PTR_TOKEN; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 34 "PSL.l"
+#line 36 "PSL.l"
 { return WORD_TOKEN; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 35 "PSL.l"
+#line 37 "PSL.l"
 { return FLOAT_TOKEN; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 36 "PSL.l"
+#line 38 "PSL.l"
 { return VOID_TOKEN; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 37 "PSL.l"
+#line 39 "PSL.l"
 { return STRUCT_TOKEN; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 38 "PSL.l"
+#line 40 "PSL.l"
 { return NULLPTR_TOKEN; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 39 "PSL.l"
+#line 41 "PSL.l"
 { return DEBUGOUT_TOKEN; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 40 "PSL.l"
+#line 42 "PSL.l"
 { return SIZEOF_TOKEN; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 41 "PSL.l"
+#line 43 "PSL.l"
 { return OFFSETPTR_TOKEN; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 42 "PSL.l"
+#line 44 "PSL.l"
 { yylval->intVal = atoi(yytext); return INTCONSTANT; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 43 "PSL.l"
+#line 45 "PSL.l"
 { yylval->floatVal = (float)atof(yytext + 1); return FLOATCONSTANT; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 44 "PSL.l"
+#line 46 "PSL.l"
 { yylval->symIndex = yyextra->AddSymbol(yytext); return IDENTIFIER; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 45 "PSL.l"
+#line 47 "PSL.l"
 ;
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 46 "PSL.l"
+#line 48 "PSL.l"
 ECHO;
 	YY_BREAK
-#line 998 "lex.yy.c"
+#line 1009 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1996,6 +2007,18 @@ void yyset_lval (YYSTYPE *  yylval_param , yyscan_t yyscanner)
     yylval = yylval_param;
 }
 
+YYLTYPE *yyget_lloc  (yyscan_t yyscanner)
+{
+    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+    return yylloc;
+}
+    
+void yyset_lloc (YYLTYPE *  yylloc_param , yyscan_t yyscanner)
+{
+    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+    yylloc = yylloc_param;
+}
+    
 /* User-visible API */
 
 /* yylex_init is special because it creates the scanner itself, so it is
@@ -2171,7 +2194,7 @@ void yyfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
-#line 46 "PSL.l"
+#line 48 "PSL.l"
 
 
 

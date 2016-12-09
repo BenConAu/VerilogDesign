@@ -17,6 +17,7 @@ class PSLCompilerContext
         const char *pszObjName);
 
     ~PSLCompilerContext();
+    void UserAction(void* pLocation, const char* pszText);
     int AddSymbol(const char *pszSymbol);
     void Parse();
     void SetEntryPoint(FunctionDeclaratorNode *pNode);

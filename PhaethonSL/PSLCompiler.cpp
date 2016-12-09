@@ -58,9 +58,10 @@ int main(int argc, char **argv)
     }
 }
 
-void yyerror(void *, const char *s)
+void yyerror(YYLTYPE* pLocation, void *, const char *pszError)
 {
-    std::cout << "EEK, parse error!  Message: " << s << std::endl;
+	printf("Error on line: %d with message: %s\n", pLocation->first_line, pszError);
+
     // might as well halt now:
     exit(-1);
 }

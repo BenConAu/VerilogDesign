@@ -8,7 +8,7 @@
 #define YY_EXTRA_TYPE PSLCompilerContext*
 #include "lex.h"
 
-void yyerror(void*, const char *s);
+void yyerror(YYLTYPE*, void*, const char *s);
 
 #define scanner pContext->pScanner
 
@@ -25,6 +25,8 @@ void yyerror(void*, const char *s);
 	int symIndex;
     ASTNode* pNode;
 }
+
+%locations
 
 %token <intVal> INTCONSTANT
 %token <floatVal> FLOATCONSTANT
