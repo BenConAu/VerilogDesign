@@ -10,12 +10,46 @@ class ASTNode;
 class TypeInfo;
 class ExpressionResult;
 
+class SymbolInfo
+{
+  public:
+    SymbolInfo(
+        PSLCompilerContext *pContext, // The context that this symbol lives in
+        int symIndex                  // The symbol index for the identifier for the symbol
+        );
+
+    virtual ~SymbolInfo() {}
+
+    PSLCompilerContext *GetContext() { return _pContext; }
+    int GetSymbolIndex() const { return _symIndex; }
+    const char *GetSymbol();
+
+  private:
+    PSLCompilerContext *_pContext;
+    int _symIndex;
+};
+
+class FunctionInfo : public SymbolInfo
+{
+  public:
+    FunctionInfo(
+        PSLCompilerContext *pContext, // The context that this function lives in
+        int symIndex,                 // The symbol index for the identifier for the function
+        TypeInfo *pReturnTypeInfo     // The return type
+        );
+
+    TypeInfo* GetReturnTypeInfo() { return _pReturnTypeInfo; }
+
+  private:
+    TypeInfo *_pReturnTypeInfo;
+};
+
 // Every variable that is declared has to have data tracked for it. This includes
 // where it resides in memory (if anywhere), whether it is assigned to a register
 // at all, and what type it is.
-class VariableInfo
+class VariableInfo : public SymbolInfo
 {
-public:
+  public:
     VariableInfo(
         PSLCompilerContext *pContext,   // The context that this variable lives in
         int symIndex,                   // The symbol index for the identifier for the variable
@@ -25,21 +59,16 @@ public:
 
     LocationType GetLocationType() const { return _locationType; }
     unsigned int GetMemLocation() const { return _memLocation; }
-    int GetSymbolIndex() const { return _symIndex; }
-    const char* GetSymbol();
-    ExpressionResult* CalculateResult(FunctionDeclaratorNode* pScope);
-    FunctionDeclaratorNode* GetScope() { return _pScope; }
+    ExpressionResult *CalculateResult(FunctionDeclaratorNode *pScope);
+    FunctionDeclaratorNode *GetScope() { return _pScope; }
 
-    void ReserveRegister(FunctionDeclaratorNode* pScope, RegIndex index);
-    RegIndex EnsureRegister(FunctionDeclaratorNode* pScope);
-    bool HasRegister(FunctionDeclaratorNode* pScope);
+    void ReserveRegister(FunctionDeclaratorNode *pScope, RegIndex index);
+    RegIndex EnsureRegister(FunctionDeclaratorNode *pScope);
+    bool HasRegister(FunctionDeclaratorNode *pScope);
 
-    TypeInfo* GetTypeInfo() { return _pType; }
+    TypeInfo *GetTypeInfo() { return _pType; }
 
-    PSLCompilerContext* _pContext;
-    int _symIndex;
-
-private:
+  private:
     // Type of location (globals are stored in data segment, local backed by register)
     LocationType _locationType;
 
@@ -47,13 +76,13 @@ private:
     unsigned int _memLocation;
 
     // C++ type of variable
-    TypeInfo* _pType;
+    TypeInfo *_pType;
 
     // Scope variable was declared in (null if global)
-    FunctionDeclaratorNode* _pScope;
+    FunctionDeclaratorNode *_pScope;
 
     // Register allocated by scope (globals have multiple register locations mapped)
-    std::map<FunctionDeclaratorNode*, RegIndex> _regIndexMap;
+    std::map<FunctionDeclaratorNode *, RegIndex> _regIndexMap;
 
     // Track data segment allocations
     static unsigned int _dataSegEnd;

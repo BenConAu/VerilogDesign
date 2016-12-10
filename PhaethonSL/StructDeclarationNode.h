@@ -15,6 +15,7 @@ public:
     int GetName() { return _symIndex; }
     void PreProcessNodeImpl() override;
     void VerifyNodeImpl() override;
+    const char* GetDebugName() override { return "StructDeclarationNode"; }
 
 private:
     int _symIndex;

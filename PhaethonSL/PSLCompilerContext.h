@@ -43,6 +43,8 @@ class PSLCompilerContext
     VariableCollection _varCollection;
     TypeCollection _typeCollection;
     std::vector<std::string> _symbols;
+    int _indent = 0;
+    void PrintIndent() { for (int i = 0; i < _indent; i++) { printf("  "); } }
 
   private:
     std::vector<std::unique_ptr<ASTNode>> _rootNodes;

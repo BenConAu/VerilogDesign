@@ -81,28 +81,18 @@ void PSLCompilerContext::AddGlobal(ASTNode *pNode)
 
 void PSLCompilerContext::AddFuncDef(ASTNode *pNode)
 {
-    // Add after most recent function node unless it is main
-    FunctionDeclaratorNode *pFuncNode = dynamic_cast<FunctionDeclaratorNode *>(pNode);
-
-    if (!pFuncNode->IsEntryPoint())
-    {
-        // Just tack onto the end
-        _rootNodes.push_back(std::unique_ptr<ASTNode>(pNode));
-    }
-    else
-    {
-        // Put after the structs
-        auto rootStart = _rootNodes.begin();
-
-        // Insert at seam
-        _rootNodes.insert(rootStart + _numStructs + _numGlobals, std::unique_ptr<ASTNode>(pNode));
-    }
+    // Just tack onto the end
+    _rootNodes.push_back(std::unique_ptr<ASTNode>(pNode));
 }
 
 void PSLCompilerContext::Parse()
 {
+    //printf("Doing Bison parse\n");
+
     // Parse through the input until there is no more:
     yyparse(this);
+
+    //printf("Doing Verify pass\n");
 
     // Verify the tree
     for (size_t i = 0; i < _rootNodes.size(); i++)
@@ -110,11 +100,32 @@ void PSLCompilerContext::Parse()
         _rootNodes[i]->VerifyNode();
     }
 
+    //printf("Doing Process pass\n");
+
+    // Before processing, reorder things so that the entry point is before
+    // all of the other functions. It needs to have the code first, because
+    // it is an entry point after all.
+    for (size_t i = _numStructs + _numGlobals + 1; i < _rootNodes.size(); i++)
+    {
+        // Add after most recent function node unless it is main
+        FunctionDeclaratorNode *pFuncNode = dynamic_cast<FunctionDeclaratorNode *>(_rootNodes[i].get());
+
+        if (pFuncNode->IsEntryPoint())
+        {
+            //printf("Moving entry point\n");
+            std::unique_ptr<ASTNode> temp = std::move(_rootNodes[i]);
+            _rootNodes[i] = std::move(_rootNodes[_numStructs + _numGlobals]);
+            _rootNodes[_numStructs + _numGlobals] = std::move(temp);
+        }
+    }
+
     // Process the tree
     for (size_t i = 0; i < _rootNodes.size(); i++)
     {
         _rootNodes[i]->ProcessNode();
     }
+
+    //printf("Doing Finish pass\n");
 
     // Code output is complete
     for (size_t i = 0; i < _writers.size(); i++)

@@ -11,6 +11,7 @@ public:
     
     TypeInfo* GetTypeInfo();
     void VerifyNodeImpl() override;
+    const char* GetDebugName() override { return "TypeNode"; }
 
 private:
     TypeClass _typeClass;

@@ -31,6 +31,8 @@ public:
 
     virtual void ProcessNode()
     {
+        //printf("Processing node %p\n", this);
+
         // Processing before children are done
         PreProcessNodeImpl();
 
@@ -46,18 +48,7 @@ public:
         PostProcessNodeImpl();
     }
 
-    void VerifyNode()
-    {
-        for (size_t i = 0; i < _children.size(); i++)
-        {
-            if (_children[i] != nullptr)
-            {
-                _children[i]->VerifyNode();
-            }
-        }
-
-        VerifyNodeImpl();
-    }
+    void VerifyNode();
 
     template<typename T>
     T* GetTypedParent()
@@ -85,6 +76,7 @@ public:
     }
 
     virtual bool IsConstant() const { return false; }
+    virtual const char* GetDebugName() { return "NoDebugName"; }
     virtual void VerifyNodeImpl() = 0;
     virtual void PreProcessNodeImpl() {}
     virtual void PostProcessNodeImpl() {}

@@ -6,16 +6,37 @@
 
 unsigned int VariableInfo::_dataSegEnd = 0;
 
+SymbolInfo::SymbolInfo(
+    PSLCompilerContext *pContext, // The context that this symbol lives in
+    int symIndex                  // The symbol index for the identifier for the symbol
+    )
+{
+    _pContext = pContext;
+    _symIndex = symIndex;
+}
+
+const char *SymbolInfo::GetSymbol()
+{
+    return _pContext->_symbols[_symIndex].c_str();
+}
+
+FunctionInfo::FunctionInfo(
+    PSLCompilerContext *pContext, // The context that this function lives in
+    int symIndex,                 // The symbol index for the identifier for the function
+    TypeInfo *pReturnTypeInfo     // The return type
+    ) : SymbolInfo(pContext, symIndex)
+{
+    _pReturnTypeInfo = pReturnTypeInfo;
+}
+
 VariableInfo::VariableInfo(
     PSLCompilerContext *pContext,   // The context that this variable lives in
     int symIndex,                   // The symbol index for the identifier for the variable
     FunctionDeclaratorNode *pScope, // The scope that the variable is declared in
     TypeInfo *pInfo                 // The type of the variable
-    )
+    ) : SymbolInfo(pContext, symIndex)
 {
-    _pContext = pContext;
     _pType = pInfo;
-    _symIndex = symIndex;
     _pScope = pScope;
 
     if (pInfo == nullptr)
@@ -39,11 +60,6 @@ VariableInfo::VariableInfo(
         _locationType = LocationType::Register;
         _memLocation = 0xFFFFFFFF;
     }
-}
-
-const char*VariableInfo::GetSymbol()
-{
-    return _pContext->_symbols[_symIndex].c_str();
 }
 
 ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
@@ -95,7 +111,7 @@ ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
     }
 }
 
-RegIndex VariableInfo::EnsureRegister(FunctionDeclaratorNode* pScope)
+RegIndex VariableInfo::EnsureRegister(FunctionDeclaratorNode *pScope)
 {
     //printf("Ensuring register for VariableInfo %s\n", GetSymbol());
 
@@ -111,7 +127,7 @@ RegIndex VariableInfo::EnsureRegister(FunctionDeclaratorNode* pScope)
     return _regIndexMap[pScope];
 }
 
-bool VariableInfo::HasRegister(FunctionDeclaratorNode* pScope)
+bool VariableInfo::HasRegister(FunctionDeclaratorNode *pScope)
 {
     if (_regIndexMap.find(pScope) == _regIndexMap.end())
     {
@@ -121,10 +137,9 @@ bool VariableInfo::HasRegister(FunctionDeclaratorNode* pScope)
     return true;
 }
 
-void VariableInfo::ReserveRegister(FunctionDeclaratorNode* pScope, RegIndex index)
+void VariableInfo::ReserveRegister(FunctionDeclaratorNode *pScope, RegIndex index)
 {
     // We are being told which register to use
     pScope->GetRegCollection()->ReserveRegister(index);
-    _regIndexMap[pScope] = index;    
+    _regIndexMap[pScope] = index;
 }
-

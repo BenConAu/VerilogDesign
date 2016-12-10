@@ -5,8 +5,9 @@
 
 class AssignmentNode : public ASTNode
 {
-public:
-    AssignmentNode(PSLCompilerContext* pContext, ASTNode* pLeft, ASTNode* pRight);
+  public:
+    AssignmentNode(PSLCompilerContext *pContext, ASTNode *pLeft, ASTNode *pRight);
     void VerifyNodeImpl() override;
     void PostProcessNodeImpl() override;
+    const char *GetDebugName() override { return "AssignmentNode"; }
 };

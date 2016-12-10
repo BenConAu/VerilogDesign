@@ -1,0 +1,17 @@
+struct foo
+{
+    word a;
+};
+
+foo fooVar;
+
+void Func(word p)
+{
+    debugout(p);
+}
+
+void main()
+{
+    fooVar.a = 1;
+    Func(fooVar.a);
+}

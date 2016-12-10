@@ -38,7 +38,13 @@ to push most code generation towards using registers.
 
 Function calls can be done through traditional stack means, or through using register
 window shifting. After a window shift, the r0 register becomes the first argument to
-the function being called.
+the function being called. The return address and the shift quantity are stored in
+registers themselves instead of on a stack in memory.
+
+Register calls basically divide register space into caller registers, call registers
+and callee registers. The caller needs to keep track of how many registers it needs
+to save and pass that as the argument. Registers beyond that point are assigned to
+the callee.
 
 Hardware definition
 

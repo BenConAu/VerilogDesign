@@ -10,6 +10,7 @@ public:
     void VerifyNodeImpl() override;
 
     ExpressionResult* CalculateResult() override;
+    const char* GetDebugName() override { return "FieldSelectionNode"; }
 
 private:
     int _fieldSymIndex;

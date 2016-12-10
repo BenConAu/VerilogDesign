@@ -45,4 +45,6 @@ void MemoryFree(ptr<void> allocation)
 
 void main()
 {
+    ptr<void> alloc1;
+    alloc1 = MemoryAlloc(100);
 }

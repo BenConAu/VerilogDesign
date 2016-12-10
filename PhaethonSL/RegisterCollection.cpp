@@ -16,6 +16,21 @@ RegIndex RegisterCollection::AllocateRegister()
     return ret;
 }
 
+RegIndex RegisterCollection::FirstUnused()
+{
+    RegIndex lowest = 0xFF;
+    
+    for (size_t i = 0 ; i < _availableReg.size(); i++)
+    {
+        if (_availableReg[i] < lowest)
+        {
+            lowest = _availableReg[i];
+        }
+    }
+
+    return lowest;
+}
+
 void RegisterCollection::DeallocateRegister(RegIndex reg)
 {
     _availableReg.push_front(reg);

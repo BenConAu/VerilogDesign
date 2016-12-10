@@ -11,4 +11,6 @@ public:
     void VerifyNodeImpl() override
     {
     }
+
+    const char* GetDebugName() override { return "StatementListNode"; }    
 };

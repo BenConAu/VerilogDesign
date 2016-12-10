@@ -9,6 +9,7 @@ public:
     void SetName(int symIndex);
     void PreProcessNodeImpl() override;
     void VerifyNodeImpl() override;
+    const char* GetDebugName() override { return "StructSpecifierNode"; }
 
 private:
     int _symIndex;

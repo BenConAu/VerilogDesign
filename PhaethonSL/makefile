@@ -3,6 +3,7 @@ PSLcc: lex.yy.c \
 	   AddressOfNode.cpp \
 	   AddressOfNode.h \
 	   ASTNode.h \
+	   ASTNode.cpp \
 	   ASTTree.h \
 	   AssignmentNode.cpp \
 	   AssignmentNode.h \
@@ -24,9 +25,12 @@ PSLcc: lex.yy.c \
 	   OffsetNode.cpp \
 	   OffsetNode.h \
 	   StructDeclarationNode.cpp \
+	   StructDeclarationNode.h \
 	   StructSpecifierNode.cpp \
+	   StructSpecifierNode.h \
 	   SizeOfNode.h \
 	   TypeNode.cpp \
+	   TypeNode.h \
 	   TypeInfo.cpp \
 	   TypeInfo.h \
 	   IdentifierNode.cpp \
@@ -42,6 +46,8 @@ PSLcc: lex.yy.c \
 	   StructMember.h \
 	   Operand.cpp \
 	   Operand.h \
+	   FunctionCallNode.h \
+	   FunctionCallNode.cpp \
 	   ../PhaethonObjWriter/ObjWriter.h \
 	   ../PhaethonObjWriter/AsmObjWriter.cpp \
 	   ../PhaethonObjWriter/AsmObjWriter.h \
@@ -57,17 +63,20 @@ PSLcc: lex.yy.c \
 	   FieldSelectionNode.h \
 	   DebugOutNode.h \
 	   OperatorNode.h \
+	   StatementListNode.h \
 	   OperatorNode.cpp
 	clang++ -std=c++11 -Wno-deprecated-register -g lex.yy.c \
 	   ../PhaethonObjWriter/AsmObjWriter.cpp \
 	   ../PhaethonObjWriter/BinaryObjWriter.cpp \
 	   ../PhaethonISA/Generated/PhaethonOpCode.cpp \
 	   PSL.tab.c \
+	   ASTNode.cpp \
 	   AddressOfNode.cpp \
 	   AssignmentNode.cpp \
 	   ConstantNode.cpp \
 	   ExpressionResult.cpp \
 	   FieldSelectionNode.cpp \
+   	   FunctionCallNode.cpp \
 	   FunctionDeclaratorNode.cpp \
 	   FunctionParameterNode.cpp \
 	   IdentifierNode.cpp \

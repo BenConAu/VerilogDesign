@@ -26,8 +26,9 @@ VariableInfo* VariableCollection::AddVariable(
 
     if (iter == _variables.end())
     {
-        _variables[symIndex] = std::unique_ptr<VariableInfo>(new VariableInfo(_pContext, symIndex, pScope, pTypeInfo));
-        return _variables[symIndex].get();
+        VariableInfo* pNewInfo = new VariableInfo(_pContext, symIndex, pScope, pTypeInfo);
+        _variables[symIndex] = std::unique_ptr<SymbolInfo>(pNewInfo);
+        return pNewInfo;
     }
     else
     {
@@ -35,8 +36,31 @@ VariableInfo* VariableCollection::AddVariable(
     }
 }
 
-VariableInfo* VariableCollection::GetInfo(int symIndex)
+FunctionInfo* VariableCollection::AddFunction(
+    int symIndex,
+    TypeInfo* pReturnTypeInfo
+    )
 {
+    //printf("Adding info for function %s\n", _pContext->_symbols[symIndex].c_str());
+
+    auto iter = _variables.find(symIndex);
+
+    if (iter == _variables.end())
+    {
+        FunctionInfo* pNewInfo = new FunctionInfo(_pContext, symIndex, pReturnTypeInfo);
+        _variables[symIndex] = std::unique_ptr<SymbolInfo>(pNewInfo);
+        return pNewInfo;
+    }
+    else
+    {
+        throw "Cannot add variable more than once";
+    }
+}
+
+SymbolInfo* VariableCollection::GetInfo(int symIndex)
+{
+    //printf("Attempting GetInfo of symbol %s\n", _pContext->_symbols[symIndex].c_str());
+
     auto iter = _variables.find(symIndex);
 
     if (iter != _variables.end())

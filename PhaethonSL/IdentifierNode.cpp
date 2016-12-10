@@ -11,14 +11,14 @@ IdentifierNode::IdentifierNode(PSLCompilerContext *pContext, int symIndex) : Exp
 void IdentifierNode::VerifyNodeImpl()
 {
     // Find the type of the expression
-    VariableInfo *pInfo = GetContext()->_varCollection.GetInfo(_symIndex);
+    VariableInfo *pInfo = GetVariableInfo();
 
     SetType(pInfo->GetTypeInfo());
 }
 
 ExpressionResult *IdentifierNode::CalculateResult()
 {
-    VariableInfo *pInfo = GetContext()->_varCollection.GetInfo(_symIndex);
+    VariableInfo *pInfo = GetVariableInfo();
     FunctionDeclaratorNode *pScope = GetTypedParent<FunctionDeclaratorNode>();
 
     return pInfo->CalculateResult(pScope);
@@ -26,5 +26,5 @@ ExpressionResult *IdentifierNode::CalculateResult()
 
 VariableInfo *IdentifierNode::GetVariableInfo()
 {
-    return GetContext()->_varCollection.GetInfo(_symIndex);
+    return dynamic_cast<VariableInfo*>(GetContext()->_varCollection.GetInfo(_symIndex));
 }

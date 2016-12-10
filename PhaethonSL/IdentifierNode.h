@@ -10,6 +10,7 @@ public:
     int GetSymbolIndex() const { return _symIndex; }
     VariableInfo* GetVariableInfo();
     ExpressionResult* CalculateResult() override;
+    const char* GetDebugName() override { return "IdentifierNode"; }
 
 private:
     int _symIndex;

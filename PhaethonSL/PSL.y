@@ -83,6 +83,8 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> debugout_expression
 %type <pNode> sizeof_expression
 %type <pNode> offset_expression
+%type <pNode> function_call_header
+%type <pNode> function_call
 
 %%
 
@@ -141,6 +143,7 @@ assignment_operator:
 
 postfix_expression:
       primary_expression                                            { $$ = $1; }
+    | function_call                                                 { $$ = $1; }
 	| postfix_expression DOT IDENTIFIER								{ $$ = new FieldSelectionNode(pContext, $1, false, $3); }
 	| postfix_expression ARROW IDENTIFIER							{ $$ = new FieldSelectionNode(pContext, $1, true, $3); }
     ;
@@ -235,6 +238,16 @@ declaration_statement:
 compound_statement:
       LEFT_BRACE RIGHT_BRACE                                        { $$ = nullptr; }
     | LEFT_BRACE statement_list RIGHT_BRACE                         { $$ = $2; }
+    ;
+
+function_call:
+      function_call_header RIGHT_PAREN                              { $$ = $1; }
+    ;
+
+function_call_header:
+      IDENTIFIER LEFT_PAREN RIGHT_PAREN                             { $$ = new FunctionCallNode(pContext, $1, nullptr); }
+    | IDENTIFIER LEFT_PAREN assignment_expression                   { $$ = new FunctionCallNode(pContext, $1, $3); }
+    | function_call_header COMMA assignment_expression              { $$ = $1; $$->AddNode($3); }
     ;
 
 %%

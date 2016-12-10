@@ -12,6 +12,7 @@ public:
     }
 
     void VerifyNodeImpl() override;
+    const char* GetDebugName() override { return "FunctionParameterNode"; }
 
 private:
     int _symIndex;

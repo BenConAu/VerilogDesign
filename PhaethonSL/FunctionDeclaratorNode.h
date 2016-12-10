@@ -18,6 +18,8 @@ public:
 
         _symIndex = symIndex;
         _paramCount = 0;
+
+        //printf("Creating function declarator node\n");
     }
 
     void AddParameter(ASTNode* pNode)
@@ -32,18 +34,10 @@ public:
         AddNode(pList);
     }
 
-    void VerifyNodeImpl() override
-    {
-        if (IsEntryPoint())
-        {
-            GetContext()->SetEntryPoint(this);
-        }
-
-        // TODO: Make sure function name is unique
-    }
-
+    void VerifyNodeImpl() override;
     void PreProcessNodeImpl() override;
     void PostProcessNodeImpl() override;
+    const char* GetDebugName() override { return "FunctionDeclaratorNode"; }
 
     bool IsEntryPoint()
     {

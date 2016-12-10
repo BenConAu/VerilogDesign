@@ -20,6 +20,7 @@ public:
     bool IsConstant() const override;
     void VerifyNodeImpl() override;
     ExpressionResult* CalculateResult() override;
+    const char* GetDebugName() override { return "ConstantNode"; }
 
 private:
     int GetInteger();
