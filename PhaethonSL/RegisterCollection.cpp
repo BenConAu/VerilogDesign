@@ -19,7 +19,7 @@ RegIndex RegisterCollection::AllocateRegister()
 RegIndex RegisterCollection::FirstUnused()
 {
     RegIndex lowest = 0xFF;
-    
+
     for (size_t i = 0 ; i < _availableReg.size(); i++)
     {
         if (_availableReg[i] < lowest)
@@ -39,5 +39,10 @@ void RegisterCollection::DeallocateRegister(RegIndex reg)
 void RegisterCollection::ReserveRegister(RegIndex reg)
 {
     auto regIter = std::find(_availableReg.begin(), _availableReg.end(), reg);
+    if (regIter == _availableReg.end())
+    {
+        throw "Reserving register that is not available";
+    }
+    
     _availableReg.erase(regIter);
 }
