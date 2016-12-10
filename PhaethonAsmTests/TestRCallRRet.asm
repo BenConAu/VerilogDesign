@@ -3,7 +3,7 @@ mov r4, 256          // Something to pass to the first function
 dout r1
 dout r4
 mov r0, @testfunc1
-rcall r0, 2          // Save r0 and r1 away, store in r2 and r3, r4 becomes r0
+rcall r0, 2          // Save r0 and r1 away, store return stuff in r2 and r3, r4 becomes r0
 dout r1              // Should still be 128
 endlabel:
 jmp @endlabel

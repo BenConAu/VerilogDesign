@@ -12,6 +12,6 @@ void Func(word p)
 
 void main()
 {
-    fooVar.a = 1;
+    fooVar.a = 1337;
     Func(fooVar.a);
 }

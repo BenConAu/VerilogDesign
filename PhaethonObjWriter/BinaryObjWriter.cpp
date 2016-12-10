@@ -52,6 +52,18 @@ void BinaryObjWriter::OutputInstruction(
     int wordArg = OpCodeData::s_data[opCode - 1].wordArg;
     if (wordArg != -1)
     {
+        // See if we have a label, because if so, we need to store the index
+        // to the label info so we can replace it later.
+        if (OpCodeData::s_data[opCode - 1].argTypes[wordArg] == OperandType::Constant && args[wordArg]._label.length() != 0)
+        {
+            args[wordArg]._value = EnsureLabelInfo(args[wordArg]._label);
+
+            printf("Ensuring label info to store index %d and location %d\n", (int)args[wordArg]._value, (int)_wordCache.size());
+
+            // The index of the word we will write needs updating later
+            _labelLocations.push_back(_wordCache.size());
+        }
+
         if (args[wordArg]._offset == -1)
         {
             //printf("Output word %d\n", _args[_wordArg]._value);
@@ -71,8 +83,28 @@ void BinaryObjWriter::OutputInstruction(
     }
 }
 
+size_t BinaryObjWriter::EnsureLabelInfo(const std::string &label)
+{
+    for (size_t i = 0; i < _labels.size(); i++)
+    {
+        if (_labels[i]._name == label)
+        {
+            return i;
+        }
+    }
+
+    _labels.emplace_back(label);
+    return (_labels.size() - 1);
+}
+
 void BinaryObjWriter::OutputLabel(const char *pszLabel)
 {
+    size_t index = EnsureLabelInfo(pszLabel);
+
+    printf("Outputting label with index %d and location %d\n", (int)index, (int)(_wordCache.size()*4));
+
+    // Update label info with the address that it has
+    _labels[index]._location = _wordCache.size() * 4;
 }
 
 void BinaryObjWriter::FinishCode()
@@ -85,5 +117,19 @@ void BinaryObjWriter::FinishCode()
     for (size_t i = 0; i < _memLocations.size(); i++)
     {
         _wordCache[_memLocations[i]] += memStart;
+    }
+
+    for (size_t i = 0; i < _labelLocations.size(); i++)
+    {
+        // The location of the word in the cache that needs updating
+        size_t labelLoc = _labelLocations[i];
+
+        // We wrote the index of the label info into that spot
+        size_t index = _wordCache[labelLoc];
+
+        printf("Finish stage with label, location %d, index %d, final location %d\n", (int)labelLoc, (int)index, (int)_labels[index]._location);
+
+        // Change it to the real location
+        _wordCache[labelLoc] = _labels[index]._location;
     }
 }

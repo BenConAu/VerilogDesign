@@ -32,10 +32,11 @@ ExpressionResult *FunctionCallNode::CalculateResult()
     // We need a register to load our function address
     RegIndex callIndex = pScope->GetRegCollection()->AllocateRegister();
     Operand addrOperand(callIndex);
+    Operand labelOperand(GetContext()->_symbols[_symIndex]);
 
     GetContext()->OutputMovInstruction(
         addrOperand,
-        Operand((int)0));
+        labelOperand);
 
     // Figure out how many registers are in use in our scope
     RegIndex firstAvail = pScope->GetRegCollection()->FirstUnused();
@@ -65,7 +66,7 @@ ExpressionResult *FunctionCallNode::CalculateResult()
     GetContext()->OutputInstruction(
         OpCodes::RCallRC,
         addrOperand,
-        Operand((int)GetChildCount()));
+        Operand((int)firstAvail));
 
     return nullptr;
 }

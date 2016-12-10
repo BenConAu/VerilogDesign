@@ -16,6 +16,10 @@ std::string AsmObjWriter::GetOpString(const ObjArgument &objArg) const
             // The constant was derived from a variable, use that
             result << "&" << objArg._memberName;
         }
+        else if (objArg._label.length() != 0)
+        {
+            result << "@" << objArg._label;
+        }
         else
         {
             // If no symbol is given, then we can just go with the constant

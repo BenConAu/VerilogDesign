@@ -72,6 +72,17 @@ Operand::Operand(
     _objArg._fMemoryLocation = false;
 }
 
+Operand::Operand(
+    const std::string &label
+    )
+{
+    // Fill in the actual byte position
+    _objArg._argType = OperandType::Constant;
+    _objArg._value = -1;
+    _objArg._offset = -1;
+    _objArg._label = label;
+}
+
 bool Operand::IsNone() const
 {
     return (GetType() == OperandType::None);

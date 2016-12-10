@@ -36,6 +36,10 @@ public:
         PSLCompilerContext* pContext
         );
 
+    explicit Operand(
+        const std::string &label
+        );
+
     bool IsNone() const;
     std::string GetOpString() const;
     OperandType GetType() const { return _objArg._argType; }
