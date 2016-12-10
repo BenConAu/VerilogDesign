@@ -1,6 +1,7 @@
 #include "Operand.h"
 #include "PSLCompilerContext.h"
 #include "StructTypeInfo.h"
+#include "VariableInfo.h"
 #include <sstream>
 
 // Default operand constructor makes a 'none' operand and puts

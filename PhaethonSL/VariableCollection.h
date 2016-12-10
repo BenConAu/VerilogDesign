@@ -1,11 +1,13 @@
 #pragma once
 
 #include <map>
-#include "VariableInfo.h"
+#include "SymbolInfo.h"
 
-class VariableDeclarationNode;
-class ASTNode;
 class PSLCompilerContext;
+class VariableInfo;
+class FunctionInfo;
+class TypeInfo;
+class FunctionDeclaratorNode;
 
 class VariableCollection
 {

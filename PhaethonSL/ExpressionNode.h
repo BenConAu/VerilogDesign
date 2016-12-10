@@ -20,49 +20,14 @@ public:
         _exprType = ExpressionType::Unset;
     }
 
-    TypeInfo* GetTypeInfo()
-    {
-        if (_pType == nullptr)
-        {
-            throw "Unset type";
-        }
+    TypeInfo* GetTypeInfo();
+    void SetExpressionType(ExpressionType t);
 
-        return _pType;
-    }
-
-    void SetExpressionType(ExpressionType t)
-    {
-        _exprType = t;
-    }
-
-    virtual ExpressionType GetExpressionType()
-    {
-        if (_exprType == ExpressionType::Unset)
-        {
-            ExpressionNode* pParentExpr = dynamic_cast<ExpressionNode*>(GetParent());
-            if (pParentExpr == nullptr)
-            {
-                return ExpressionType::Unset;
-            }
-
-            return pParentExpr->GetExpressionType();
-        }
-
-        return _exprType;
-    }
-
+    virtual ExpressionType GetExpressionType();
     virtual ExpressionResult* CalculateResult() = 0;
 
 protected:
-    void SetType(TypeInfo* pInfo)
-    {
-        if (pInfo == nullptr)
-        {
-            throw "Should not set type to null";
-        }
-
-        _pType = pInfo;
-    }
+    void SetType(TypeInfo* pInfo);
 
 private:
     ExpressionType _exprType;

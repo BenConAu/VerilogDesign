@@ -19,34 +19,8 @@ public:
         _pParent = nullptr;
     }
 
-    void AddNode(ASTNode* pNode)
-    {
-        _children.push_back(std::unique_ptr<ASTNode>(pNode));
-
-        if (pNode != nullptr)
-        {
-            pNode->_pParent = this;
-        }
-    }
-
-    virtual void ProcessNode()
-    {
-        //printf("Processing node %p\n", this);
-
-        // Processing before children are done
-        PreProcessNodeImpl();
-
-        for (size_t i = 0; i < _children.size(); i++)
-        {
-            if (_children[i] != nullptr)
-            {
-                _children[i]->ProcessNode();
-            }
-        }
-
-        // Processing after children are done
-        PostProcessNodeImpl();
-    }
+    void AddNode(ASTNode* pNode);
+    virtual void ProcessNode();
 
     void VerifyNode();
 
@@ -85,18 +59,7 @@ public:
     ASTNode* GetChild(size_t i) { return _children[i].get(); }
     ASTNode* GetParent() { return _pParent; }
     
-    int GetChildIndex(ASTNode* pNode)
-    {
-        for (size_t i = 0; i < _children.size(); i++)
-        {
-            if (_children[i].get() == pNode)
-            {
-                return i;
-            }
-        }
-
-        throw "Invalid child given for index query";
-    }
+    int GetChildIndex(ASTNode* pNode);
 
     PSLCompilerContext* GetContext() { return _pContext; }
 

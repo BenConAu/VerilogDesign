@@ -1,6 +1,7 @@
 #include "VariableCollection.h"
 #include "VariableDeclarationNode.h"
 #include "VariableInfo.h"
+#include "FunctionInfo.h"
 #include "PSL.tab.h"
 #include <sstream>
 

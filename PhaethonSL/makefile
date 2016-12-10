@@ -24,26 +24,30 @@ PSLcc: lex.yy.c \
 	   PointerTypeInfo.h \
 	   OffsetNode.cpp \
 	   OffsetNode.h \
+	   ExpressionNode.cpp \
+	   ExpressionNode.h \
+	   ExpressionResult.cpp \
+	   ExpressionResult.h \
+	   IdentifierNode.cpp \
+	   IdentifierNode.h \
+	   RegisterWrapper.cpp \
+	   RegisterWrapper.h \
+	   SizeOfNode.h \
+	   StructMember.h \
+	   SmartRegister.cpp \
+	   SmartRegister.h \
 	   StructDeclarationNode.cpp \
 	   StructDeclarationNode.h \
 	   StructSpecifierNode.cpp \
 	   StructSpecifierNode.h \
-	   SizeOfNode.h \
-	   TypeNode.cpp \
-	   TypeNode.h \
+	   SymbolInfo.cpp \
+	   SymbolInfo.h \
 	   TypeInfo.cpp \
 	   TypeInfo.h \
-	   IdentifierNode.cpp \
-	   IdentifierNode.h \
-	   ExpressionResult.cpp \
-	   ExpressionResult.h \
-	   RegisterWrapper.cpp \
-	   RegisterWrapper.h \
+	   TypeNode.cpp \
+	   TypeNode.h \
 	   VariableInfo.cpp \
 	   VariableInfo.h \
-	   SmartRegister.cpp \
-	   SmartRegister.h \
-	   StructMember.h \
 	   Operand.cpp \
 	   Operand.h \
 	   FunctionCallNode.h \
@@ -57,6 +61,8 @@ PSLcc: lex.yy.c \
   	   ../PhaethonISA/Generated/PhaethonOpCode.h \
 	   FunctionDeclaratorNode.cpp \
 	   FunctionDeclaratorNode.h \
+	   FunctionInfo.cpp \
+	   FunctionInfo.h \
 	   FunctionParameterNode.cpp \
 	   FunctionParameterNode.h \
 	   FieldSelectionNode.cpp \
@@ -74,10 +80,12 @@ PSLcc: lex.yy.c \
 	   AddressOfNode.cpp \
 	   AssignmentNode.cpp \
 	   ConstantNode.cpp \
+	   ExpressionNode.cpp \
 	   ExpressionResult.cpp \
 	   FieldSelectionNode.cpp \
    	   FunctionCallNode.cpp \
 	   FunctionDeclaratorNode.cpp \
+	   FunctionInfo.cpp \
 	   FunctionParameterNode.cpp \
 	   IdentifierNode.cpp \
 	   OffsetNode.cpp \
@@ -89,6 +97,7 @@ PSLcc: lex.yy.c \
 	   RegisterWrapper.cpp \
 	   SmartRegister.cpp \
 	   StructDeclarationNode.cpp \
+	   SymbolInfo.cpp \
 	   TypeInfo.cpp \
 	   TypeNode.cpp \
 	   TypeCollection.cpp \

@@ -3,46 +3,12 @@
 #include <map>
 #include "RegisterCollection.h"
 #include "VariableLocation.h"
+#include "SymbolInfo.h"
 
-class PSLCompilerContext;
 class FunctionDeclaratorNode;
 class ASTNode;
 class TypeInfo;
 class ExpressionResult;
-
-class SymbolInfo
-{
-  public:
-    SymbolInfo(
-        PSLCompilerContext *pContext, // The context that this symbol lives in
-        int symIndex                  // The symbol index for the identifier for the symbol
-        );
-
-    virtual ~SymbolInfo() {}
-
-    PSLCompilerContext *GetContext() { return _pContext; }
-    int GetSymbolIndex() const { return _symIndex; }
-    const char *GetSymbol();
-
-  private:
-    PSLCompilerContext *_pContext;
-    int _symIndex;
-};
-
-class FunctionInfo : public SymbolInfo
-{
-  public:
-    FunctionInfo(
-        PSLCompilerContext *pContext, // The context that this function lives in
-        int symIndex,                 // The symbol index for the identifier for the function
-        TypeInfo *pReturnTypeInfo     // The return type
-        );
-
-    TypeInfo* GetReturnTypeInfo() { return _pReturnTypeInfo; }
-
-  private:
-    TypeInfo *_pReturnTypeInfo;
-};
 
 // Every variable that is declared has to have data tracked for it. This includes
 // where it resides in memory (if anywhere), whether it is assigned to a register

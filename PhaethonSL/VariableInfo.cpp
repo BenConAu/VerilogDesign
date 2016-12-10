@@ -6,29 +6,6 @@
 
 unsigned int VariableInfo::_dataSegEnd = 0;
 
-SymbolInfo::SymbolInfo(
-    PSLCompilerContext *pContext, // The context that this symbol lives in
-    int symIndex                  // The symbol index for the identifier for the symbol
-    )
-{
-    _pContext = pContext;
-    _symIndex = symIndex;
-}
-
-const char *SymbolInfo::GetSymbol()
-{
-    return _pContext->_symbols[_symIndex].c_str();
-}
-
-FunctionInfo::FunctionInfo(
-    PSLCompilerContext *pContext, // The context that this function lives in
-    int symIndex,                 // The symbol index for the identifier for the function
-    TypeInfo *pReturnTypeInfo     // The return type
-    ) : SymbolInfo(pContext, symIndex)
-{
-    _pReturnTypeInfo = pReturnTypeInfo;
-}
-
 VariableInfo::VariableInfo(
     PSLCompilerContext *pContext,   // The context that this variable lives in
     int symIndex,                   // The symbol index for the identifier for the variable

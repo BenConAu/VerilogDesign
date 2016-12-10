@@ -1,6 +1,7 @@
 #include "FunctionParameterNode.h"
 #include "FunctionDeclaratorNode.h"
 #include "TypeNode.h"
+#include "VariableInfo.h"
 
 void FunctionParameterNode::VerifyNodeImpl()
 {

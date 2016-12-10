@@ -5,6 +5,7 @@
 #include "TypeCollection.h"
 #include "../PhaethonObjWriter/ObjWriter.h"
 #include "Operand.h"
+#include "ASTNode.h"
 
 class FunctionDeclaratorNode;
 

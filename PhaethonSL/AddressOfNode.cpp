@@ -1,5 +1,6 @@
 #include "AddressOfNode.h"
 #include "IdentifierNode.h"
+#include "VariableInfo.h"
 
 void AddressOfNode::VerifyNodeImpl()
 {
