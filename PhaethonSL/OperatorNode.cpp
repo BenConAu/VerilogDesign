@@ -14,12 +14,12 @@ ExpressionResult *OperatorNode::CalculateResult()
     // after consumption. The result holds the location of the expression result
     // (either a register or memory or such) as well as the lifetime of the usage
     // of the resources it needs (if any).
-    std::unique_ptr<ExpressionResult> leftResult(pLeft->CalculateResult());
-    std::unique_ptr<ExpressionResult> rightResult(pRight->CalculateResult());
+    std::unique_ptr<ExpressionResult> leftResult(pLeft->TakeResult());
+    std::unique_ptr<ExpressionResult> rightResult(pRight->TakeResult());
 
     // Multiplication only works with registers so we make wrappers
-    RegisterWrapper leftWrap(GetContext(), pFunc->GetRegCollection(), leftResult.get()->_operand);
-    RegisterWrapper rightWrap(GetContext(), pFunc->GetRegCollection(), rightResult.get()->_operand);
+    RegisterWrapper leftWrap(GetContext(), pFunc->GetRegCollection(), leftResult->_operand);
+    RegisterWrapper rightWrap(GetContext(), pFunc->GetRegCollection(), rightResult->_operand);
 
     OpCodes::Enum opCode = OpCodes::Unknown;
 
@@ -62,5 +62,7 @@ ExpressionResult *OperatorNode::CalculateResult()
         leftWrap.GetWrapped(),
         rightWrap.GetWrapped());
 
-    return new ExpressionResult(leftResult.get()->_pTypeInfo, resultOperand, pFunc->GetRegCollection());
+    //printf("Making result for %p with register collection %p\n", this, pFunc->GetRegCollection());
+
+    return new ExpressionResult(leftResult->_pTypeInfo, resultOperand, pFunc->GetRegCollection());
 }

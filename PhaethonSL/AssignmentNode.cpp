@@ -24,21 +24,21 @@ void AssignmentNode::PostProcessNodeImpl()
     ExpressionNode* pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));
     ExpressionNode* pRight = dynamic_cast<ExpressionNode *>(GetChild(1));
 
-    std::unique_ptr<ExpressionResult> leftResult(pLeft->CalculateResult());
-    std::unique_ptr<ExpressionResult> rightResult(pRight->CalculateResult());
+    std::unique_ptr<ExpressionResult> leftResult(pLeft->TakeResult());
+    std::unique_ptr<ExpressionResult> rightResult(pRight->TakeResult());
 
     //leftResult->DebugPrint();
     //rightResult->DebugPrint();
 
     // Figure out what kind of LHS expression we have
-    switch (leftResult.get()->_operand.GetType())
+    switch (leftResult->_operand.GetType())
     {
     case OperandType::Register:
     {
         // The great thing about registers is that everything can move into them
         GetContext()->OutputMovInstruction(
-            leftResult.get()->_operand,
-            rightResult.get()->_operand
+            leftResult->_operand,
+            rightResult->_operand
             );
     }
     break;
@@ -50,12 +50,12 @@ void AssignmentNode::PostProcessNodeImpl()
         RegisterWrapper wrapper(
             GetContext(), 
             pFunc->GetRegCollection(), 
-            rightResult.get()->_operand
+            rightResult->_operand
             );
 
         // Push the wrapped register into the memory
         GetContext()->OutputMovInstruction(
-            leftResult.get()->_operand,
+            leftResult->_operand,
             wrapper.GetWrapped()
             );
 

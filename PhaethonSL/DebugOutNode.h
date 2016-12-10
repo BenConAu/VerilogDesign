@@ -25,11 +25,10 @@ class DebugOutNode : public ASTNode
         // The input to the debug is an expression
         ExpressionNode *pChild = dynamic_cast<ExpressionNode *>(GetChild(0));
 
-        // Calculate the result
-        std::unique_ptr<ExpressionResult> childResult(pChild->CalculateResult());
+        std::unique_ptr<ExpressionResult> childResult(pChild->TakeResult());
 
         // Wrap in a register
-        RegisterWrapper wrapper(GetContext(), pFunc->GetRegCollection(), childResult.get()->_operand);
+        RegisterWrapper wrapper(GetContext(), pFunc->GetRegCollection(), childResult->_operand);
 
         GetContext()->OutputInstruction(
             OpCodes::DoutR,

@@ -66,19 +66,19 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
     FunctionDeclaratorNode *pScope = GetTypedParent<FunctionDeclaratorNode>();
 
     // Find the result of the child
-    std::unique_ptr<ExpressionResult> childResult(pChildExpr->CalculateResult());
+    std::unique_ptr<ExpressionResult> childResult(pChildExpr->TakeResult());
 
     // Get the structure type out of the child expression
     StructTypeInfo *pTypeInfo;
     if (!_fPointer)
     {
         // The expression of the child has to represent a struct
-        pTypeInfo = dynamic_cast<StructTypeInfo *>(childResult.get()->_pTypeInfo);
+        pTypeInfo = dynamic_cast<StructTypeInfo *>(childResult->_pTypeInfo);
     }
     else
     {
         // The expression of the child has to represent a pointer to a struct
-        PointerTypeInfo *pPointerInfo = dynamic_cast<PointerTypeInfo *>(childResult.get()->_pTypeInfo);
+        PointerTypeInfo *pPointerInfo = dynamic_cast<PointerTypeInfo *>(childResult->_pTypeInfo);
         pTypeInfo = dynamic_cast<StructTypeInfo *>(pPointerInfo->GetBaseType());
     }
 

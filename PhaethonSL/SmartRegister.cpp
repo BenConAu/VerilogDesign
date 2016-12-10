@@ -5,18 +5,13 @@ SmartRegister::SmartRegister(RegIndex index, RegisterCollection* pCollection)
 {
     _index = index;
     _pCollection = pCollection;
-}
 
-SmartRegister::SmartRegister()
-{
-    _index = 0xFF;
-    _pCollection = nullptr;
+    //printf("SmartRegister %p constructor with collection = %p\n", this, _pCollection);
 }
 
 SmartRegister::~SmartRegister()
 {
-    if (_pCollection != nullptr)
-    {
-        _pCollection->DeallocateRegister(_index);
-    }
+    //printf("SmartRegister %p destructor with collection = %p\n", this, _pCollection);
+
+    _pCollection->DeallocateRegister(_index);
 }

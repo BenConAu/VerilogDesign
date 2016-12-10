@@ -40,3 +40,9 @@ void ExpressionNode::SetType(TypeInfo *pInfo)
 
     _pType = pInfo;
 }
+
+void ExpressionNode::PostProcessNodeImpl()
+{
+    // Calculate our result using the result of the children
+    _pResult = CalculateResult();
+}

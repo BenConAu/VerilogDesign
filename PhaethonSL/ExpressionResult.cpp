@@ -3,8 +3,7 @@
 #include "TypeInfo.h"
 
 // ExpressionResult to represent something that needs a temporary register and has no type
-ExpressionResult::ExpressionResult(TypeInfo* pTypeInfo, Operand operand, RegisterCollection* pCollection) : 
-    _tempRegister(operand.GetRegIndex(), pCollection)
+ExpressionResult::ExpressionResult(TypeInfo* pTypeInfo, Operand operand, RegisterCollection* pCollection)
 {
     if (operand.GetType() == OperandType::None)
     {
@@ -19,6 +18,7 @@ ExpressionResult::ExpressionResult(TypeInfo* pTypeInfo, Operand operand, Registe
     _pTypeInfo = pTypeInfo;
     _pVarInfo = nullptr;
     _operand = operand;
+    _tempRegister.reset(new SmartRegister(operand.GetRegIndex(), pCollection));
 }
 
 // ExpressionResult to represent a constant

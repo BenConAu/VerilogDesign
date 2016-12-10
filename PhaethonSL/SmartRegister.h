@@ -7,9 +7,11 @@ class RegisterCollection;
 class SmartRegister
 {
 public:
-    SmartRegister(RegIndex index, RegisterCollection* pCollection);
-    SmartRegister();
+    explicit SmartRegister(RegIndex index, RegisterCollection* pCollection);
     ~SmartRegister();
+
+    void operator=(SmartRegister&) = delete;
+    void operator=(SmartRegister&&) = delete;
 
 private:
     RegIndex _index;

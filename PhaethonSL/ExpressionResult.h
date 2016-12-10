@@ -18,6 +18,11 @@ struct ExpressionResult
     ExpressionResult(TypeInfo* pTypeInfo, Operand operand);
     ExpressionResult(VariableInfo* pVarInfo, Operand operand);
 
+    ~ExpressionResult()
+    {
+        //printf("ExpressionResult destructor\n");
+    }
+
     void DebugPrint();
 
     // The type of the result that is stored in the operand
@@ -30,5 +35,5 @@ struct ExpressionResult
     Operand _operand;
 
     // If the operation had a temporary register it is stored here
-    SmartRegister _tempRegister;
+    std::unique_ptr<SmartRegister> _tempRegister;
 };

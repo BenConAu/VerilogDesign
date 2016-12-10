@@ -34,7 +34,9 @@ void ASTNode::AddNode(ASTNode *pNode)
 
 void ASTNode::ProcessNode()
 {
-    //printf("Processing node %p\n", this);
+    //_pContext->PrintIndent();
+    //printf("Begin processing %s node %p\n", GetDebugName(), this);
+    _pContext->_indent++;
 
     // Processing before children are done
     PreProcessNodeImpl();
@@ -49,6 +51,10 @@ void ASTNode::ProcessNode()
 
     // Processing after children are done
     PostProcessNodeImpl();
+
+    _pContext->_indent--;
+    //_pContext->PrintIndent();
+    //printf("End processing %s node %p\n", GetDebugName(), this);
 }
 
 int ASTNode::GetChildIndex(ASTNode *pNode)
