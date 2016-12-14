@@ -2,6 +2,7 @@
 #include "PSLCompilerContext.h"
 #include "BasicTypeInfo.h"
 #include "StructTypeInfo.h"
+#include "FunctionDeclaratorNode.h"
 #include <sstream>
 
 TypeNode::TypeNode(PSLCompilerContext *pContext, TypeClass typeClass, int type) : ASTNode(pContext)
@@ -22,6 +23,8 @@ TypeNode::TypeNode(PSLCompilerContext *pContext, ASTNode *pNode) : ASTNode(pCont
 
 TypeInfo *TypeNode::GetTypeInfo()
 {
+    FunctionDeclaratorNode *pScope = GetTypedParent<FunctionDeclaratorNode>();
+
     if (_pTypeInfo == nullptr)
     {
         switch (_typeClass)
@@ -40,11 +43,16 @@ TypeInfo *TypeNode::GetTypeInfo()
 
             if (_pTypeInfo == nullptr)
             {
-                std::stringstream sstr;
-                sstr << "Failed to find struct type with name " << GetContext()->_symbols[_typeOrSymbol];
-                std::string error = sstr.str();
+                // It was a good guess - perhaps it was a generic?
+                _pTypeInfo = GetContext()->_typeCollection.GetGenericType(_typeOrSymbol, pScope);
+                _typeClass = TypeClass::Generic;
 
-                throw error.c_str();
+                // Wat
+                //std::stringstream sstr;
+                //sstr << "Failed to find struct type with name " << GetContext()->_symbols[_typeOrSymbol];
+                //static std::string error = sstr.str();
+
+                //throw error.c_str();
             }
             break;
 
@@ -56,6 +64,16 @@ TypeInfo *TypeNode::GetTypeInfo()
                 throw "That pointer type was a fail";
             }
             break;
+
+        case TypeClass::Generic:
+            _pTypeInfo = GetContext()->_typeCollection.GetGenericType(_typeOrSymbol, pScope);
+
+            if (_pTypeInfo == nullptr)
+            {
+                throw "That pointer type was a fail";
+            }
+            break;
+        
         }
     }
 

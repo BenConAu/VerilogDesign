@@ -5,6 +5,7 @@ enum class TypeClass
     Basic,
     Struct,
     Pointer,
+    Generic
 };
 
 class TypeInfo

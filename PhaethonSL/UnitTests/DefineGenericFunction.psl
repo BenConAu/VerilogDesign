@@ -1,0 +1,7 @@
+ptr<T> Func<T>()
+{
+}
+
+void main()
+{
+}

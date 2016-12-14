@@ -9,7 +9,8 @@ public:
     FunctionDeclaratorNode(
         PSLCompilerContext* pContext, 
         ASTNode* pTypeNode, 
-        int symIndex
+        int symIndex,
+        int genericSym
         ) : 
             ASTNode(pContext),
             _regCollection(32)  // TODO: Shrink registers on function calls somehow

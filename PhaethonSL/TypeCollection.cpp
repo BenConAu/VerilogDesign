@@ -47,6 +47,21 @@ PointerTypeInfo* TypeCollection::GetPointerType(TypeInfo* pBaseType)
     return _pointerTypes[pBaseType].get();
 }
 
+GenericTypeInfo* TypeCollection::GetGenericType(int symIndex, FunctionDeclaratorNode* pScope)
+{
+    for (size_t i = 0; i < _genericTypes.size(); i++)
+    {
+        if (_genericTypes[i]->GetSymbolIndex() == symIndex && _genericTypes[i]->GetScope() == pScope)
+        {
+            return _genericTypes[i].get();
+        }
+    }
+
+    GenericTypeInfo* pNewType = new GenericTypeInfo(symIndex, pScope);
+    _genericTypes.emplace_back(pNewType);
+    return pNewType;
+}
+
 void TypeCollection::AddStructType(int symIndex, StructTypeInfo* pInfo)
 {
     _structTypes[symIndex] = std::unique_ptr<StructTypeInfo>(pInfo);

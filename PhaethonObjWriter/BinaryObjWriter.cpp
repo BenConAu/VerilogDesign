@@ -101,7 +101,7 @@ void BinaryObjWriter::OutputLabel(const char *pszLabel)
 {
     size_t index = EnsureLabelInfo(pszLabel);
 
-    printf("Outputting label with index %d and location %d\n", (int)index, (int)(_wordCache.size()*4));
+    //printf("Outputting label with index %d and location %d\n", (int)index, (int)(_wordCache.size()*4));
 
     // Update label info with the address that it has
     _labels[index]._location = _wordCache.size() * 4;
@@ -127,7 +127,7 @@ void BinaryObjWriter::FinishCode()
         // We wrote the index of the label info into that spot
         size_t index = _wordCache[labelLoc];
 
-        printf("Finish stage with label, location %d, index %d, final location %d\n", (int)labelLoc, (int)index, (int)_labels[index]._location);
+        //printf("Finish stage with label, location %d, index %d, final location %d\n", (int)labelLoc, (int)index, (int)_labels[index]._location);
 
         // Change it to the real location
         _wordCache[labelLoc] = _labels[index]._location;
