@@ -15,7 +15,6 @@ public:
 
 private:
     TypeClass _typeClass;
-    TypeNode* _pBaseTypeNode;
     int _typeOrSymbol;
 
     TypeInfo* _pTypeInfo;

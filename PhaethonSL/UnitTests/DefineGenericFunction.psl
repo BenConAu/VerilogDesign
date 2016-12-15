@@ -1,7 +1,11 @@
-ptr<T> Func<T>()
+void Func<T>(ptr<T> param)
 {
+    debugout(param);
 }
 
 void main()
 {
+    ptr<word> testPtr;
+    testPtr = 0;
+    Func<word>(testPtr);
 }

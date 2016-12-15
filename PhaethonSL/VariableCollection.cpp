@@ -39,6 +39,7 @@ VariableInfo* VariableCollection::AddVariable(
 
 FunctionInfo* VariableCollection::AddFunction(
     int symIndex,
+    GenericTypeInfo *pGenType,
     TypeInfo* pReturnTypeInfo
     )
 {
@@ -48,7 +49,7 @@ FunctionInfo* VariableCollection::AddFunction(
 
     if (iter == _variables.end())
     {
-        FunctionInfo* pNewInfo = new FunctionInfo(_pContext, symIndex, pReturnTypeInfo);
+        FunctionInfo* pNewInfo = new FunctionInfo(_pContext, symIndex, pGenType, pReturnTypeInfo);
         _variables[symIndex] = std::unique_ptr<SymbolInfo>(pNewInfo);
         return pNewInfo;
     }

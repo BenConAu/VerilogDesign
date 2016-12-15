@@ -10,6 +10,7 @@ PSLcc: lex.yy.c \
 	   ConstantNode.cpp \
 	   ConstantNode.h \
 	   ExpressionNode.h \
+	   GenericTypeInfo.h \
 	   RegisterCollection.cpp \
 	   RegisterCollection.h \
 	   VariableCollection.cpp \

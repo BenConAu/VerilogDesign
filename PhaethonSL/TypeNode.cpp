@@ -8,7 +8,6 @@
 TypeNode::TypeNode(PSLCompilerContext *pContext, TypeClass typeClass, int type) : ASTNode(pContext)
 {
     _typeClass = typeClass;
-    _pBaseTypeNode = nullptr;
     _typeOrSymbol = type;
     _pTypeInfo = nullptr;
 }
@@ -16,14 +15,15 @@ TypeNode::TypeNode(PSLCompilerContext *pContext, TypeClass typeClass, int type) 
 TypeNode::TypeNode(PSLCompilerContext *pContext, ASTNode *pNode) : ASTNode(pContext)
 {
     _typeClass = TypeClass::Pointer;
-    _pBaseTypeNode = dynamic_cast<TypeNode *>(pNode);
     _typeOrSymbol = -1;
     _pTypeInfo = nullptr;
+    AddNode(pNode);
 }
 
 TypeInfo *TypeNode::GetTypeInfo()
 {
     FunctionDeclaratorNode *pScope = GetTypedParent<FunctionDeclaratorNode>();
+    //printf("Scope for typeNode is %p\n", pScope);
 
     if (_pTypeInfo == nullptr)
     {
@@ -47,17 +47,19 @@ TypeInfo *TypeNode::GetTypeInfo()
                 _pTypeInfo = GetContext()->_typeCollection.GetGenericType(_typeOrSymbol, pScope);
                 _typeClass = TypeClass::Generic;
 
-                // Wat
-                //std::stringstream sstr;
-                //sstr << "Failed to find struct type with name " << GetContext()->_symbols[_typeOrSymbol];
-                //static std::string error = sstr.str();
+                if (_pTypeInfo == nullptr)
+                {
+                    std::stringstream sstr;
+                    sstr << "Failed to find struct or generic type with name " << GetContext()->_symbols[_typeOrSymbol];
+                    static std::string error = sstr.str();
 
-                //throw error.c_str();
+                    throw error.c_str();
+                }
             }
             break;
 
         case TypeClass::Pointer:
-            _pTypeInfo = GetContext()->_typeCollection.GetPointerType(_pBaseTypeNode->GetTypeInfo());
+            _pTypeInfo = GetContext()->_typeCollection.GetPointerType(dynamic_cast<TypeNode*>(GetChild(0))->GetTypeInfo());
 
             if (_pTypeInfo == nullptr)
             {
@@ -66,14 +68,8 @@ TypeInfo *TypeNode::GetTypeInfo()
             break;
 
         case TypeClass::Generic:
-            _pTypeInfo = GetContext()->_typeCollection.GetGenericType(_typeOrSymbol, pScope);
-
-            if (_pTypeInfo == nullptr)
-            {
-                throw "That pointer type was a fail";
-            }
+            throw "Not expected here";
             break;
-        
         }
     }
 

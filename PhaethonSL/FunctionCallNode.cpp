@@ -6,8 +6,11 @@
 FunctionCallNode::FunctionCallNode(
     PSLCompilerContext *pContext,
     int symIndex,
+    ASTNode *pGenericType,
     ASTNode *pFirstArg) : ExpressionNode(pContext)
 {
+    AddNode(pGenericType);
+
     if (pFirstArg != nullptr)
     {
         AddNode(pFirstArg);
@@ -46,9 +49,10 @@ ExpressionResult *FunctionCallNode::CalculateResult()
     std::vector<std::unique_ptr<ExpressionResult>> paramResults;
 
     // We need to move all of the arguments into the registers
-    for (size_t i = 0; i < GetChildCount(); i++)
+    for (size_t i = 0; i < GetChildCount() - 1; i++)
     {
-        ExpressionNode *pExprChild = dynamic_cast<ExpressionNode *>(GetChild(i));
+        // First child is generic type node, so we skip it
+        ExpressionNode *pExprChild = dynamic_cast<ExpressionNode *>(GetChild(i + 1));
         paramResults.emplace_back(pExprChild->TakeResult());
 
         // No matter where it is, we need to move into the correct register

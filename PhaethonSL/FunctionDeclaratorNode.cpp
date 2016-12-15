@@ -2,6 +2,19 @@
 #include "FunctionParameterNode.h"
 #include "TypeNode.h"
 
+void FunctionDeclaratorNode::PreVerifyNodeImpl()
+{
+    // We need to add this here before the children look for it
+    GenericTypeInfo* pGenType = nullptr;
+    if (_genericIndex != -1)
+    {
+        pGenType = GetContext()->_typeCollection.AddGenericType(
+            _genericIndex,
+            this
+            );
+    }
+}
+
 void FunctionDeclaratorNode::VerifyNodeImpl()
 {
     //printf("Verifying function declaration of %s\n", GetContext()->_symbols[_symIndex].c_str());
@@ -13,9 +26,10 @@ void FunctionDeclaratorNode::VerifyNodeImpl()
 
     TypeNode *pReturnTypeNode = dynamic_cast<TypeNode *>(GetChild(0));
 
-    // Add variable to collection
+    // Add function to collection
     GetContext()->_varCollection.AddFunction(
         _symIndex,
+        (_genericIndex != -1) ? GetContext()->_typeCollection.GetGenericType(_genericIndex, this) : nullptr,
         pReturnTypeNode->GetTypeInfo());
 }
 

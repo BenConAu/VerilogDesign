@@ -51,6 +51,7 @@ public:
 
     virtual bool IsConstant() const { return false; }
     virtual const char* GetDebugName() { return "NoDebugName"; }
+    virtual void PreVerifyNodeImpl() {}
     virtual void VerifyNodeImpl() = 0;
     virtual void PreProcessNodeImpl() {}
     virtual void PostProcessNodeImpl() {}

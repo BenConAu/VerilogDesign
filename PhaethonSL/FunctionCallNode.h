@@ -10,6 +10,7 @@ class FunctionCallNode : public ExpressionNode
     FunctionCallNode(
         PSLCompilerContext *pContext,
         int symIndex,
+        ASTNode *pGenericType,
         ASTNode *pFirstArg);
 
     void VerifyNodeImpl() override;

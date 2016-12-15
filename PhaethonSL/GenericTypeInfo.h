@@ -10,6 +10,7 @@ public:
     GenericTypeInfo(int symIndex, FunctionDeclaratorNode* pScope)
     {
         _symIndex = symIndex;
+        _pScope = pScope;
     }
 
     unsigned int GetSize() override

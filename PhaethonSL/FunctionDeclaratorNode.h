@@ -18,6 +18,7 @@ public:
         AddNode(pTypeNode);
 
         _symIndex = symIndex;
+        _genericIndex = genericSym;
         _paramCount = 0;
 
         //printf("Creating function declarator node\n");
@@ -35,6 +36,7 @@ public:
         AddNode(pList);
     }
 
+    void PreVerifyNodeImpl() override;
     void VerifyNodeImpl() override;
     void PreProcessNodeImpl() override;
     void PostProcessNodeImpl() override;
@@ -50,6 +52,9 @@ public:
 private:
     // The symbol index of the function identifier
     int _symIndex;
+
+    // The symbol index of the generic type
+    int _genericIndex;
 
     // The register allocator for this function
     RegisterCollection _regCollection;

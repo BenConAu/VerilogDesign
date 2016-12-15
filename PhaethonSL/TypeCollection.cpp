@@ -47,8 +47,19 @@ PointerTypeInfo* TypeCollection::GetPointerType(TypeInfo* pBaseType)
     return _pointerTypes[pBaseType].get();
 }
 
+GenericTypeInfo* TypeCollection::AddGenericType(int symIndex, FunctionDeclaratorNode* pScope)
+{
+    //printf("Adding generic type %d for function %p\n", symIndex, pScope);
+    
+    GenericTypeInfo* pNewType = new GenericTypeInfo(symIndex, pScope);
+    _genericTypes.emplace_back(pNewType);
+    return pNewType;
+}
+
 GenericTypeInfo* TypeCollection::GetGenericType(int symIndex, FunctionDeclaratorNode* pScope)
 {
+    //printf("Searching for generic type %d for function %p\n", symIndex, pScope);
+
     for (size_t i = 0; i < _genericTypes.size(); i++)
     {
         if (_genericTypes[i]->GetSymbolIndex() == symIndex && _genericTypes[i]->GetScope() == pScope)
@@ -57,9 +68,7 @@ GenericTypeInfo* TypeCollection::GetGenericType(int symIndex, FunctionDeclarator
         }
     }
 
-    GenericTypeInfo* pNewType = new GenericTypeInfo(symIndex, pScope);
-    _genericTypes.emplace_back(pNewType);
-    return pNewType;
+    throw "Generic type not found";
 }
 
 void TypeCollection::AddStructType(int symIndex, StructTypeInfo* pInfo)

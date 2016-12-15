@@ -18,7 +18,9 @@ public:
     BasicTypeInfo* GetBasicType(int type);
     PointerTypeInfo* GetPointerType(TypeInfo* pBaseType);
     GenericTypeInfo* GetGenericType(int symIndex, FunctionDeclaratorNode* pScope);
+
     void AddStructType(int symIndex, StructTypeInfo* pInfo);
+    GenericTypeInfo* AddGenericType(int symIndex, FunctionDeclaratorNode* pScope);
 
 private:
     std::map<int, std::unique_ptr<StructTypeInfo> > _structTypes;

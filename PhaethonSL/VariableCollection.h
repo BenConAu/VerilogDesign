@@ -7,6 +7,7 @@ class PSLCompilerContext;
 class VariableInfo;
 class FunctionInfo;
 class TypeInfo;
+class GenericTypeInfo;
 class FunctionDeclaratorNode;
 
 class VariableCollection
@@ -22,6 +23,7 @@ class VariableCollection
 
     FunctionInfo *AddFunction(
         int symIndex,
+        GenericTypeInfo *pGenType,
         TypeInfo *pReturnTypeInfo);
 
     SymbolInfo *GetInfo(int symIndex);
