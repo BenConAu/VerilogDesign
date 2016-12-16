@@ -1,11 +1,24 @@
-void Func<T>(ptr<T> param)
+ptr<T> Func<T>(ptr<T> param)
 {
-    debugout(param);
+    return param;
 }
+
+struct TestStruct
+{
+    word Member;
+};
+
+TestStruct TestVar;
 
 void main()
 {
-    ptr<word> testPtr;
-    testPtr = 0;
-    Func<word>(testPtr);
+    TestVar.Member = 1337;
+
+    ptr<TestStruct> testPtr;
+    testPtr = &TestVar;
+    
+    ptr<TestStruct> newPtr;
+    newPtr = Func<word>(testPtr);
+
+    debugout(newPtr->Member);
 }
