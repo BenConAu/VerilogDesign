@@ -7,35 +7,45 @@ PSLcc: lex.yy.c \
 	   ASTTree.h \
 	   AssignmentNode.cpp \
 	   AssignmentNode.h \
+	   BasicTypeInfo.h \
 	   ConstantNode.cpp \
 	   ConstantNode.h \
-	   ExpressionNode.h \
-	   GenericTypeInfo.h \
-	   RegisterCollection.cpp \
-	   RegisterCollection.h \
-	   VariableCollection.cpp \
-	   VariableDeclarationNode.cpp \
-	   VariableDeclarationNode.h \
-	   PSLCompilerContext.cpp \
-	   PSLCompilerContext.h \
-	   PSLCompiler.cpp \
-	   ReturnNode.cpp \
-	   ReturnNode.h \
-	   TypeCollection.cpp \
-	   TypeCollection.h \
-	   BasicTypeInfo.h \
-	   PointerTypeInfo.h \
-	   OffsetNode.cpp \
-	   OffsetNode.h \
+	   DebugOutNode.h \
 	   ExpressionNode.cpp \
 	   ExpressionNode.h \
 	   ExpressionResult.cpp \
 	   ExpressionResult.h \
+	   FieldSelectionNode.cpp \
+	   FieldSelectionNode.h \
+	   FunctionCallNode.h \
+	   FunctionCallNode.cpp \
+	   FunctionDeclaratorNode.cpp \
+	   FunctionDeclaratorNode.h \
+	   FunctionInfo.cpp \
+	   FunctionInfo.h \
+	   FunctionParameterNode.cpp \
+	   FunctionParameterNode.h \
+	   GenericTypeInfo.h \
 	   IdentifierNode.cpp \
 	   IdentifierNode.h \
+	   OffsetNode.cpp \
+	   OffsetNode.h \
+	   Operand.cpp \
+	   Operand.h \
+	   OperatorNode.cpp \
+	   OperatorNode.h \
+	   PointerTypeInfo.h \
+	   PSLCompilerContext.cpp \
+	   PSLCompilerContext.h \
+	   PSLCompiler.cpp \
+	   RegisterCollection.cpp \
+	   RegisterCollection.h \
 	   RegisterWrapper.cpp \
 	   RegisterWrapper.h \
+	   ReturnNode.cpp \
+	   ReturnNode.h \
 	   SizeOfNode.h \
+	   StatementListNode.h \
 	   StructMember.h \
 	   SmartRegister.cpp \
 	   SmartRegister.h \
@@ -46,35 +56,24 @@ PSLcc: lex.yy.c \
 	   StructTypeInfo.h \
 	   SymbolInfo.cpp \
 	   SymbolInfo.h \
+	   TypeCollection.cpp \
+	   TypeCollection.h \
 	   TypeInfo.cpp \
 	   TypeInfo.h \
 	   TypeNode.cpp \
 	   TypeNode.h \
+	   VariableCollection.cpp \
+	   VariableDeclarationNode.cpp \
+	   VariableDeclarationNode.h \
 	   VariableInfo.cpp \
 	   VariableInfo.h \
-	   Operand.cpp \
-	   Operand.h \
-	   FunctionCallNode.h \
-	   FunctionCallNode.cpp \
-	   ../PhaethonObjWriter/ObjWriter.h \
+  	   ../PhaethonISA/Generated/PhaethonOpCode.cpp \
+  	   ../PhaethonISA/Generated/PhaethonOpCode.h \
 	   ../PhaethonObjWriter/AsmObjWriter.cpp \
 	   ../PhaethonObjWriter/AsmObjWriter.h \
 	   ../PhaethonObjWriter/BinaryObjWriter.cpp \
 	   ../PhaethonObjWriter/BinaryObjWriter.h \
-  	   ../PhaethonISA/Generated/PhaethonOpCode.cpp \
-  	   ../PhaethonISA/Generated/PhaethonOpCode.h \
-	   FunctionDeclaratorNode.cpp \
-	   FunctionDeclaratorNode.h \
-	   FunctionInfo.cpp \
-	   FunctionInfo.h \
-	   FunctionParameterNode.cpp \
-	   FunctionParameterNode.h \
-	   FieldSelectionNode.cpp \
-	   FieldSelectionNode.h \
-	   DebugOutNode.h \
-	   OperatorNode.h \
-	   StatementListNode.h \
-	   OperatorNode.cpp
+	   ../PhaethonObjWriter/ObjWriter.h
 	clang++ -std=c++11 -Wno-deprecated-register -g lex.yy.c \
 	   ../PhaethonObjWriter/AsmObjWriter.cpp \
 	   ../PhaethonObjWriter/BinaryObjWriter.cpp \
@@ -102,14 +101,14 @@ PSLcc: lex.yy.c \
 	   ReturnNode.cpp \
 	   SmartRegister.cpp \
 	   StructDeclarationNode.cpp \
+	   StructSpecifierNode.cpp \
 	   SymbolInfo.cpp \
 	   TypeInfo.cpp \
 	   TypeNode.cpp \
 	   TypeCollection.cpp \
 	   VariableCollection.cpp \
 	   VariableDeclarationNode.cpp \
-	   VariableInfo.cpp \
-	   StructSpecifierNode.cpp -o PSLcc
+	   VariableInfo.cpp -o PSLcc
 
 lex.yy.c: PSL.l
 	flex --header-file=lex.h PSL.l
