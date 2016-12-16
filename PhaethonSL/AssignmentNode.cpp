@@ -3,8 +3,9 @@
 #include "RegisterWrapper.h"
 #include "FunctionDeclaratorNode.h"
 #include "../PhaethonObjWriter/ObjWriter.h"
+#include "PSL.tab.h"
 
-AssignmentNode::AssignmentNode(PSLCompilerContext* pContext, ASTNode* pLeft, ASTNode* pRight) : ASTNode(pContext)
+AssignmentNode::AssignmentNode(PSLCompilerContext *pContext, ASTNode *pLeft, ASTNode *pRight) : ASTNode(pContext)
 {
     AddNode(pLeft);
     AddNode(pRight);
@@ -12,24 +13,45 @@ AssignmentNode::AssignmentNode(PSLCompilerContext* pContext, ASTNode* pLeft, AST
 
 void AssignmentNode::VerifyNodeImpl()
 {
-    ExpressionNode* pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));
-    ExpressionNode* pRight = dynamic_cast<ExpressionNode *>(GetChild(0));
-
-    TypeInfo* pLeftType = pLeft->GetTypeInfo();
-    TypeInfo* pRightType = pRight->GetTypeInfo();
-
-    if (!pLeftType->EqualType(pRightType))
+    if (!ExpressionNode::EqualType(GetChild(0), GetChild(1)))
     {
-        throw "Assignment must have equal types on each side";
+        ExpressionNode *pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));
+        ExpressionNode *pRight = dynamic_cast<ExpressionNode *>(GetChild(1));
+
+        PointerTypeInfo *pLeftType = dynamic_cast<PointerTypeInfo *>(pLeft->GetTypeInfo());
+        PointerTypeInfo *pRightType = dynamic_cast<PointerTypeInfo *>(pRight->GetTypeInfo());
+
+        if (pLeftType != nullptr &&
+            pRightType != nullptr &&
+            pLeftType->GetBaseType()->GetTypeClass() == TypeClass::Basic &&
+            dynamic_cast<BasicTypeInfo *>(pLeftType->GetBaseType())->GetTypeToken() == VOID_TOKEN)
+        {
+            // We can allow void pointers to be on the left if there is another pointer on the right
+        }
+        else if (
+            pLeftType != nullptr &&
+            pRightType != nullptr &&
+            pRightType->GetBaseType()->GetTypeClass() == TypeClass::Basic &&
+            dynamic_cast<BasicTypeInfo *>(pRightType->GetBaseType())->GetTypeToken() == VOID_TOKEN &&
+            pRight->IsConstant())
+        {
+            // We can allow void pointers to be on the right if they are constant
+        }
+        else
+        {
+            printf("Type %s and type %s are not equal\n", pLeft->GetTypeInfo()->DebugPrint().c_str(), pRight->GetTypeInfo()->DebugPrint().c_str());
+
+            throw "Assignment must have equal types on each side";
+        }
     }
 }
 
 void AssignmentNode::PostProcessNodeImpl()
 {
-    FunctionDeclaratorNode* pFunc = GetTypedParent<FunctionDeclaratorNode>();
+    FunctionDeclaratorNode *pFunc = GetTypedParent<FunctionDeclaratorNode>();
 
-    ExpressionNode* pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));
-    ExpressionNode* pRight = dynamic_cast<ExpressionNode *>(GetChild(1));
+    ExpressionNode *pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));
+    ExpressionNode *pRight = dynamic_cast<ExpressionNode *>(GetChild(1));
 
     std::unique_ptr<ExpressionResult> leftResult(pLeft->TakeResult());
     std::unique_ptr<ExpressionResult> rightResult(pRight->TakeResult());
@@ -50,8 +72,7 @@ void AssignmentNode::PostProcessNodeImpl()
         // The great thing about registers is that everything can move into them
         GetContext()->OutputMovInstruction(
             leftResult->_operand,
-            rightResult->_operand
-            );
+            rightResult->_operand);
     }
     break;
 
@@ -60,16 +81,14 @@ void AssignmentNode::PostProcessNodeImpl()
     {
         // Need to make a register for this to work
         RegisterWrapper wrapper(
-            GetContext(), 
-            pFunc->GetRegCollection(), 
-            rightResult->_operand
-            );
+            GetContext(),
+            pFunc->GetRegCollection(),
+            rightResult->_operand);
 
         // Push the wrapped register into the memory
         GetContext()->OutputMovInstruction(
             leftResult->_operand,
-            wrapper.GetWrapped()
-            );
+            wrapper.GetWrapped());
 
         // Now we have generated code, the temporary register will
         // go out of scope and be returned back.

@@ -49,5 +49,5 @@ ExpressionResult::ExpressionResult(VariableInfo* pVarInfo, Operand operand)
 
 void ExpressionResult::DebugPrint()
 {
-    printf("ExpressionResult _pTypeInfo = %s, _operand = %s\n", _pTypeInfo->DebugPrint(), _operand.DebugPrint());
+    printf("ExpressionResult _pTypeInfo = %s, _operand = %s\n", _pTypeInfo->DebugPrint().c_str(), _operand.DebugPrint());
 }

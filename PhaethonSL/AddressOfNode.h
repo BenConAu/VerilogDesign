@@ -17,4 +17,5 @@ class AddressOfNode : public ExpressionNode
     void VerifyNodeImpl() override;
     bool IsConstant() const override { return true; }
     ExpressionResult *CalculateResult() override;
+    const char *GetDebugName() override { return "AddressOfNode"; }
 };

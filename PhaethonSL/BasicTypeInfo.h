@@ -1,6 +1,7 @@
 #pragma once
 
 #include "TypeInfo.h"
+#include <string>
 
 class BasicTypeInfo : public TypeInfo
 {
@@ -21,7 +22,7 @@ public:
         return TypeClass::Basic;
     }
 
-    const char* DebugPrint() override
+    std::string DebugPrint() override
     {
         return "BasicTypeInfo";
     }
@@ -45,6 +46,12 @@ public:
         }
 
         return true;
+    }
+
+    TypeInfo* MakeSpecificType(TypeInfo* pGenericArgType, TypeCollection* pCollection) override
+    {
+        // Basic types cannot have generic arguments
+        return this;
     }
 
 private:

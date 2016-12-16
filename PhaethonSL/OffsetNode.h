@@ -14,4 +14,5 @@ class OffsetNode : public OperatorNode
     }
 
     void VerifyNodeImpl() override;
+    const char* GetDebugName() override { return "OffsetNode"; }    
 };

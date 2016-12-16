@@ -18,6 +18,10 @@ void AddressOfNode::VerifyNodeImpl()
     {
         throw "Can only take address of structs";
     }
+
+    // Our expression type is pointer to the other expression type
+    TypeInfo *pNewTypeInfo = GetContext()->_typeCollection.GetPointerType(pVariableInfo->GetTypeInfo());
+    SetType(pNewTypeInfo);
 }
 
 ExpressionResult *AddressOfNode::CalculateResult()
@@ -26,14 +30,6 @@ ExpressionResult *AddressOfNode::CalculateResult()
     IdentifierNode *pIdentifierNode = dynamic_cast<IdentifierNode *>(GetChild(0));
     std::unique_ptr<ExpressionResult> childResult(pIdentifierNode->CalculateResult());
 
-    // Since we know it is always a struct, we just need to return the new type with the same
-    // operand, since the operand was always loading up the address. Start by getting the
-    // child identifier node and the variable info out of it.
-    VariableInfo *pVariableInfo = pIdentifierNode->GetVariableInfo();
-
-    // Our expression type is pointer to the other expression type
-    TypeInfo *pNewTypeInfo = GetContext()->_typeCollection.GetPointerType(pVariableInfo->GetTypeInfo());
-
     // The result has the new type but same path and same operand
-    return new ExpressionResult(pNewTypeInfo, childResult->_operand);
+    return new ExpressionResult(GetTypeInfo(), childResult->_operand);
 }

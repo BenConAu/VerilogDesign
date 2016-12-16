@@ -3,6 +3,7 @@
 #include "FunctionInfo.h"
 #include "FunctionDeclaratorNode.h"
 #include "PSLCompilerContext.h"
+#include "TypeNode.h"
 #include "PSL.tab.h"
 
 FunctionCallNode::FunctionCallNode(
@@ -25,8 +26,30 @@ void FunctionCallNode::VerifyNodeImpl()
 {
     // Function needs to be defined
     FunctionInfo *pInfo = GetFunctionInfo();
+    GenericTypeInfo *pGenericTypeInfo = pInfo->GetGenericTypeInfo();
 
-    SetType(pInfo->GetReturnTypeInfo());
+    if (GetChild(0) != nullptr)
+    {
+        if (pGenericTypeInfo == nullptr)
+        {
+            throw "Generic function called with no generic type argument";
+        }
+
+        // Called with template syntax so we need to replace the type
+        TypeNode *pReplaceTypeNode = dynamic_cast<TypeNode *>(GetChild(0));
+        TypeInfo *pReplaceType = pReplaceTypeNode->GetTypeInfo();
+
+        SetType(pInfo->GetReturnTypeInfo()->MakeSpecificType(pReplaceType, &(GetContext()->_typeCollection)));
+    }
+    else
+    {
+        if (pGenericTypeInfo != nullptr)
+        {
+            throw "Non-generic function called with generic type argument";
+        }
+
+        SetType(pInfo->GetReturnTypeInfo());
+    }
 }
 
 ExpressionResult *FunctionCallNode::CalculateResult()
@@ -74,7 +97,7 @@ ExpressionResult *FunctionCallNode::CalculateResult()
         Operand((int)firstAvail));
 
     FunctionInfo *pInfo = GetFunctionInfo();
-    if (pInfo->GetReturnTypeInfo()->GetTypeClass() == TypeClass::Basic && dynamic_cast<BasicTypeInfo*>(pInfo->GetReturnTypeInfo())->GetTypeToken() == VOID_TOKEN)
+    if (pInfo->GetReturnTypeInfo()->GetTypeClass() == TypeClass::Basic && dynamic_cast<BasicTypeInfo *>(pInfo->GetReturnTypeInfo())->GetTypeToken() == VOID_TOKEN)
     {
         return nullptr;
     }

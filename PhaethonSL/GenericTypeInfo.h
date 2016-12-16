@@ -1,6 +1,7 @@
 #pragma once
 
 #include "TypeInfo.h"
+#include <string>
 
 class FunctionDeclaratorNode;
 
@@ -23,9 +24,11 @@ public:
         return TypeClass::Generic;
     }
 
-    const char* DebugPrint() override
+    std::string DebugPrint() override
     {
-        return "GenericTypeInfo";
+        char buffer[100];
+        sprintf(buffer, "GenericTypeInfo (to %d in %p)", _symIndex, _pScope);
+        return buffer;
     }
 
     int GetSymbolIndex() const
@@ -42,21 +45,30 @@ public:
     {
         if (pOther->GetTypeClass() != TypeClass::Generic)
         {
+            printf("Other is not a generic type\n");
             return false;
         }
 
         GenericTypeInfo* pOtherGen = dynamic_cast<GenericTypeInfo*>(pOther);
         if (_symIndex != pOtherGen->GetSymbolIndex())
         {
+            printf("Other is different symbol\n");
             return false;
         }
 
         if (_pScope != pOtherGen->GetScope())
         {
+            printf("Other is different scope");
             return false;
         }
 
+        printf("Generic types are equal\n");
         return true;
+    }
+
+    TypeInfo* MakeSpecificType(TypeInfo* pGenericArgType, TypeCollection* pCollection) override
+    {
+        return pGenericArgType;
     }
 
 private:

@@ -35,4 +35,6 @@ void OffsetNode::VerifyNodeImpl()
     {
         throw "Can only offset pointer by a word";
     }
+
+    SetType(pIdentInfo);
 }

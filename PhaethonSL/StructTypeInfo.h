@@ -63,7 +63,7 @@ public:
         return TypeClass::Struct;
     }
 
-    const char* DebugPrint() override
+    std::string DebugPrint() override
     {
         return "StructTypeInfo";
     }
@@ -78,6 +78,12 @@ public:
         // Could do this for all of them, but maybe not forever
         return (static_cast<TypeInfo*>(this) == pOther);
     }
+
+    TypeInfo* MakeSpecificType(TypeInfo* pGenericArgType, TypeCollection* pCollection) override
+    {
+        // Structs cannot currently have generic arguments
+        return this;
+    }    
 
 private:
     int _symIndex;

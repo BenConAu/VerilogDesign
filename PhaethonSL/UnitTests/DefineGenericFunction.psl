@@ -18,7 +18,7 @@ void main()
     testPtr = &TestVar;
     
     ptr<TestStruct> newPtr;
-    newPtr = Func<word>(testPtr);
+    newPtr = Func<TestStruct>(testPtr);
 
     debugout(newPtr->Member);
 }

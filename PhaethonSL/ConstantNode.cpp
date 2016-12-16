@@ -41,14 +41,12 @@ int ConstantNode::GetInteger()
     }
 }
 
-bool ConstantNode::IsConstant() const { return true; }
-
-void ConstantNode::VerifyNodeImpl()
-{
-    SetType(GetContext()->_typeCollection.GetBasicType(WORD_TOKEN));
+bool ConstantNode::IsConstant() const 
+{ 
+    return true; 
 }
 
-ExpressionResult *ConstantNode::CalculateResult()
+void ConstantNode::VerifyNodeImpl()
 {
     TypeInfo *pTypeInfo = nullptr;
 
@@ -70,5 +68,10 @@ ExpressionResult *ConstantNode::CalculateResult()
         throw "Unknown type so cannot calculate result";
     }
 
-    return new ExpressionResult(pTypeInfo, Operand(GetInteger()));
+    SetType(pTypeInfo);
+}
+
+ExpressionResult *ConstantNode::CalculateResult()
+{
+    return new ExpressionResult(GetTypeInfo(), Operand(GetInteger()));
 }

@@ -1,46 +1,20 @@
 #pragma once
 
 #include "TypeInfo.h"
+#include <string>
 
 class PointerTypeInfo : public TypeInfo
 {
 public:
-    PointerTypeInfo(TypeInfo* pBaseType)
-    {
-        _pBaseType = pBaseType;
-    }
+    PointerTypeInfo(TypeInfo* pBaseType);
 
-    unsigned int GetSize() override
-    {
-        // Pointers are word sized
-        return 4;
-    }
+    unsigned int GetSize() override;
+    TypeClass GetTypeClass() override;
+    std::string DebugPrint() override;
+    bool EqualType(TypeInfo* pOther) override;
+    TypeInfo* MakeSpecificType(TypeInfo* pGenericArgType, TypeCollection* pCollection) override;
 
-    TypeClass GetTypeClass() override
-    {
-        return TypeClass::Pointer;
-    }
-
-    const char* DebugPrint() override
-    {
-        return "PointerTypeInfo";
-    }
-
-    TypeInfo* GetBaseType()
-    {
-        return _pBaseType;
-    }
-
-    bool EqualType(TypeInfo* pOther) override
-    {
-        if (pOther->GetTypeClass() != TypeClass::Pointer)
-        {
-            return false;
-        }
-
-        PointerTypeInfo* pOtherPointer = dynamic_cast<PointerTypeInfo*>(pOther);
-        return _pBaseType->EqualType(pOtherPointer->GetBaseType());
-    }
+    TypeInfo* GetBaseType();
 
 private:
     TypeInfo* _pBaseType;  // Type being pointed to
