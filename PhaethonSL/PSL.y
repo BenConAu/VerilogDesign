@@ -81,7 +81,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> external_declaration
 %type <pNode> parameter_declaration
 %type <pNode> function_header_with_parameters
-%type <pNode> debugout_expression
+%type <pNode> debugout_statement
 %type <pNode> sizeof_expression
 %type <pNode> offset_expression
 %type <pNode> function_call_header
@@ -111,6 +111,7 @@ statement:
       expression_statement                                          { $$ = $1; }
     | declaration_statement                                         { $$ = $1; }
     | jump_statement                                                { $$ = $1; }
+    | debugout_statement                                            { $$ = $1; }
     ;
 
 expression_statement:
@@ -119,19 +120,6 @@ expression_statement:
 
 expression:
       assignment_expression                                         { $$ = $1; }
-    | debugout_expression                                           { $$ = $1; }
-    ;
-
-jump_statement:
-      return_statement                                              { $$ = $1; }
-    ;
-
-return_statement:
-      RETURN_TOKEN assignment_expression SEMICOLON                  { $$ = new ReturnNode(pContext, $2); }
-    ;
-
-debugout_expression:
-      DEBUGOUT_TOKEN LEFT_PAREN postfix_expression RIGHT_PAREN      { $$ = new DebugOutNode(pContext, $3); }
     ;
 
 assignment_expression:
@@ -264,6 +252,19 @@ function_call_header:
     | IDENTIFIER LT fully_specified_type GT LEFT_PAREN assignment_expression  
                                                                     { $$ = new FunctionCallNode(pContext, $1, $3, $6); }
     | function_call_header COMMA assignment_expression              { $$ = $1; $$->AddNode($3); }
+    ;
+
+jump_statement:
+      return_statement                                              { $$ = $1; }
+    ;
+
+return_statement:
+      RETURN_TOKEN assignment_expression SEMICOLON                  { $$ = new ReturnNode(pContext, $2); }
+    ;
+
+debugout_statement:
+      DEBUGOUT_TOKEN LEFT_PAREN postfix_expression RIGHT_PAREN SEMICOLON      
+                                                                    { $$ = new DebugOutNode(pContext, $3); }
     ;
 
 %%
