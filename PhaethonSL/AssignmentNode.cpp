@@ -13,8 +13,15 @@ AssignmentNode::AssignmentNode(PSLCompilerContext* pContext, ASTNode* pLeft, AST
 void AssignmentNode::VerifyNodeImpl()
 {
     ExpressionNode* pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));
+    ExpressionNode* pRight = dynamic_cast<ExpressionNode *>(GetChild(0));
 
-    // TODO: Check types on left and right match
+    TypeInfo* pLeftType = pLeft->GetTypeInfo();
+    TypeInfo* pRightType = pRight->GetTypeInfo();
+
+    if (!pLeftType->EqualType(pRightType))
+    {
+        throw "Assignment must have equal types on each side";
+    }
 }
 
 void AssignmentNode::PostProcessNodeImpl()

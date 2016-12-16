@@ -43,6 +43,7 @@ PSLcc: lex.yy.c \
 	   StructDeclarationNode.h \
 	   StructSpecifierNode.cpp \
 	   StructSpecifierNode.h \
+	   StructTypeInfo.h \
 	   SymbolInfo.cpp \
 	   SymbolInfo.h \
 	   TypeInfo.cpp \

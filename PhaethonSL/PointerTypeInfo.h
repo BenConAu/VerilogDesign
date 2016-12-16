@@ -31,6 +31,17 @@ public:
         return _pBaseType;
     }
 
+    bool EqualType(TypeInfo* pOther) override
+    {
+        if (pOther->GetTypeClass() != TypeClass::Pointer)
+        {
+            return false;
+        }
+
+        PointerTypeInfo* pOtherPointer = dynamic_cast<PointerTypeInfo*>(pOther);
+        return _pBaseType->EqualType(pOtherPointer->GetBaseType());
+    }
+
 private:
     TypeInfo* _pBaseType;  // Type being pointed to
 };

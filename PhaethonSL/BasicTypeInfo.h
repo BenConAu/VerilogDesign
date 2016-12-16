@@ -31,6 +31,22 @@ public:
         return _typeToken;
     }
 
+    bool EqualType(TypeInfo* pOther) override
+    {
+        if (pOther->GetTypeClass() != TypeClass::Basic)
+        {
+            return false;
+        }
+
+        BasicTypeInfo* pOtherBasic = dynamic_cast<BasicTypeInfo*>(pOther);
+        if (_typeToken != pOtherBasic->GetTypeToken())
+        {
+            return false;
+        }
+
+        return true;
+    }
+
 private:
     int _typeToken;
 };

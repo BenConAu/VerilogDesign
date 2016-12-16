@@ -38,6 +38,27 @@ public:
         return _pScope;
     }
 
+    bool EqualType(TypeInfo* pOther) override
+    {
+        if (pOther->GetTypeClass() != TypeClass::Generic)
+        {
+            return false;
+        }
+
+        GenericTypeInfo* pOtherGen = dynamic_cast<GenericTypeInfo*>(pOther);
+        if (_symIndex != pOtherGen->GetSymbolIndex())
+        {
+            return false;
+        }
+
+        if (_pScope != pOtherGen->GetScope())
+        {
+            return false;
+        }
+
+        return true;
+    }
+
 private:
     int _symIndex;
     FunctionDeclaratorNode* _pScope;

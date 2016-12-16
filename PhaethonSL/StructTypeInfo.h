@@ -73,6 +73,12 @@ public:
         return _symIndex;
     }
 
+    bool EqualType(TypeInfo* pOther) override
+    {
+        // Could do this for all of them, but maybe not forever
+        return (static_cast<TypeInfo*>(this) == pOther);
+    }
+
 private:
     int _symIndex;
     std::vector<std::unique_ptr<StructMember> > _members;

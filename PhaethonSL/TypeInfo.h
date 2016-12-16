@@ -10,10 +10,11 @@ enum class TypeClass
 
 class TypeInfo
 {
-public:
+  public:
     virtual unsigned int GetSize() = 0;
     virtual TypeClass GetTypeClass() = 0;
-    virtual const char* DebugPrint() = 0;
+    virtual const char *DebugPrint() = 0;
+    virtual bool EqualType(TypeInfo *pOther) = 0;
 
-    static bool IsFloat(TypeInfo*);
+    static bool IsFloat(TypeInfo *);
 };
