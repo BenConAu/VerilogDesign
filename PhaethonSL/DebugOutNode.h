@@ -34,4 +34,6 @@ class DebugOutNode : public ASTNode
             OpCodes::DoutR,
             wrapper.GetWrapped());
     }
+
+    const char *GetDebugName() override { return "DebugOutNode"; }    
 };

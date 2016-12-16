@@ -68,7 +68,7 @@ GenericTypeInfo* TypeCollection::GetGenericType(int symIndex, FunctionDeclarator
         }
     }
 
-    throw "Generic type not found";
+    return nullptr;
 }
 
 void TypeCollection::AddStructType(int symIndex, StructTypeInfo* pInfo)

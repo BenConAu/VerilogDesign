@@ -27,6 +27,11 @@ void AssignmentNode::PostProcessNodeImpl()
     std::unique_ptr<ExpressionResult> leftResult(pLeft->TakeResult());
     std::unique_ptr<ExpressionResult> rightResult(pRight->TakeResult());
 
+    if (leftResult.get() == nullptr || rightResult.get() == nullptr)
+    {
+        throw "Assignment needs a valid expression on each side";
+    }
+
     //leftResult->DebugPrint();
     //rightResult->DebugPrint();
 

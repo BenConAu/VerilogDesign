@@ -5,13 +5,16 @@ struct foo
 
 foo fooVar;
 
-void Func(word p)
+word Func(word p)
 {
     debugout(p);
+    return 1338;
 }
 
 void main()
 {
     fooVar.a = 1337;
-    Func(fooVar.a);
+    word t;
+    t = Func(fooVar.a);
+    debugout(t);
 }

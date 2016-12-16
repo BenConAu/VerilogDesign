@@ -1,17 +1,35 @@
 #include "FunctionDeclaratorNode.h"
 #include "FunctionParameterNode.h"
 #include "TypeNode.h"
+#include "StatementListNode.h"
+#include "ReturnNode.h"
 
 void FunctionDeclaratorNode::PreVerifyNodeImpl()
 {
     // We need to add this here before the children look for it
-    GenericTypeInfo* pGenType = nullptr;
+    GenericTypeInfo *pGenType = nullptr;
     if (_genericIndex != -1)
     {
         pGenType = GetContext()->_typeCollection.AddGenericType(
             _genericIndex,
-            this
-            );
+            this);
+    }
+
+    //for (size_t i = 0; i < GetChildCount(); i++)
+    //{
+      //  printf("FuncDecl child %d is %s\n", (int)i, GetChild(i)->GetDebugName());
+    //}
+
+    // Add a return node to the end of the function if it does not have one
+    if (!IsEntryPoint())
+    {
+        StatementListNode *pStatementList = dynamic_cast<StatementListNode *>(GetChild(GetChildCount() - 1));
+        ReturnNode *pReturnNode = dynamic_cast<ReturnNode *>(pStatementList->GetChild(pStatementList->GetChildCount() - 1));
+
+        if (pReturnNode == nullptr)
+        {
+            pStatementList->AddNode(new ReturnNode(GetContext(), nullptr));
+        }
     }
 }
 
@@ -55,9 +73,5 @@ void FunctionDeclaratorNode::PostProcessNodeImpl()
     if (IsEntryPoint())
     {
         GetContext()->OutputInstruction(OpCodes::Stall);
-    }
-    else
-    {
-        GetContext()->OutputInstruction(OpCodes::RRet);
     }
 }

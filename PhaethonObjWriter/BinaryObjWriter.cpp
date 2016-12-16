@@ -58,7 +58,7 @@ void BinaryObjWriter::OutputInstruction(
         {
             args[wordArg]._value = EnsureLabelInfo(args[wordArg]._label);
 
-            printf("Ensuring label info to store index %d and location %d\n", (int)args[wordArg]._value, (int)_wordCache.size());
+            //printf("Ensuring label info to store index %d and location %d\n", (int)args[wordArg]._value, (int)_wordCache.size());
 
             // The index of the word we will write needs updating later
             _labelLocations.push_back(_wordCache.size());

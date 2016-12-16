@@ -19,6 +19,8 @@ PSLcc: lex.yy.c \
 	   PSLCompilerContext.cpp \
 	   PSLCompilerContext.h \
 	   PSLCompiler.cpp \
+	   ReturnNode.cpp \
+	   ReturnNode.h \
 	   TypeCollection.cpp \
 	   TypeCollection.h \
 	   BasicTypeInfo.h \
@@ -96,6 +98,7 @@ PSLcc: lex.yy.c \
 	   PSLCompilerContext.cpp \
 	   RegisterCollection.cpp \
 	   RegisterWrapper.cpp \
+	   ReturnNode.cpp \
 	   SmartRegister.cpp \
 	   StructDeclarationNode.cpp \
 	   SymbolInfo.cpp \

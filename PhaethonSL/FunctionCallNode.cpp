@@ -2,6 +2,8 @@
 #include "VariableInfo.h"
 #include "FunctionInfo.h"
 #include "FunctionDeclaratorNode.h"
+#include "PSLCompilerContext.h"
+#include "PSL.tab.h"
 
 FunctionCallNode::FunctionCallNode(
     PSLCompilerContext *pContext,
@@ -57,7 +59,6 @@ ExpressionResult *FunctionCallNode::CalculateResult()
 
         // No matter where it is, we need to move into the correct register
         RegIndex argIndex = firstArg + i;
-        pScope->GetRegCollection()->ReserveRegister(argIndex);
 
         // Put out the instruction for this
         // Push the wrapped register into the memory
@@ -72,7 +73,18 @@ ExpressionResult *FunctionCallNode::CalculateResult()
         addrOperand,
         Operand((int)firstAvail));
 
-    return nullptr;
+    FunctionInfo *pInfo = GetFunctionInfo();
+    if (pInfo->GetReturnTypeInfo()->GetTypeClass() == TypeClass::Basic && dynamic_cast<BasicTypeInfo*>(pInfo->GetReturnTypeInfo())->GetTypeToken() == VOID_TOKEN)
+    {
+        return nullptr;
+    }
+    else
+    {
+        // The register we return stuff with needs to be reserved
+        pScope->GetRegCollection()->ReserveRegister(firstArg);
+
+        return new ExpressionResult(pInfo->GetReturnTypeInfo(), Operand(firstArg), pScope->GetRegCollection());
+    }
 }
 
 FunctionInfo *FunctionCallNode::GetFunctionInfo()

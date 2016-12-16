@@ -44,6 +44,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token FLOAT_TOKEN
 %token VOID_TOKEN
 %token STRUCT_TOKEN
+%token RETURN_TOKEN
 %token LEFT_BRACE
 %token RIGHT_BRACE
 %token DOT
@@ -85,6 +86,8 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> offset_expression
 %type <pNode> function_call_header
 %type <pNode> function_call
+%type <pNode> return_statement
+%type <pNode> jump_statement
 
 %%
 
@@ -107,6 +110,7 @@ statement_list:
 statement:
       expression_statement                                          { $$ = $1; }
     | declaration_statement                                         { $$ = $1; }
+    | jump_statement                                                { $$ = $1; }
     ;
 
 expression_statement:
@@ -116,6 +120,14 @@ expression_statement:
 expression:
       assignment_expression                                         { $$ = $1; }
     | debugout_expression                                           { $$ = $1; }
+    ;
+
+jump_statement:
+      return_statement                                              { $$ = $1; }
+    ;
+
+return_statement:
+      RETURN_TOKEN assignment_expression SEMICOLON                  { $$ = new ReturnNode(pContext, $2); }
     ;
 
 debugout_expression:
@@ -237,7 +249,7 @@ declaration_statement:
     ;
 
 compound_statement:
-      LEFT_BRACE RIGHT_BRACE                                        { $$ = nullptr; }
+      LEFT_BRACE RIGHT_BRACE                                        { $$ = new StatementListNode(pContext, nullptr); }
     | LEFT_BRACE statement_list RIGHT_BRACE                         { $$ = $2; }
     ;
 
