@@ -17,14 +17,18 @@ void FunctionDeclaratorNode::PreVerifyNodeImpl()
 
     //for (size_t i = 0; i < GetChildCount(); i++)
     //{
-      //  printf("FuncDecl child %d is %s\n", (int)i, GetChild(i)->GetDebugName());
+    //  printf("FuncDecl child %d is %s\n", (int)i, GetChild(i)->GetDebugName());
     //}
 
     // Add a return node to the end of the function if it does not have one
     if (!IsEntryPoint())
     {
         StatementListNode *pStatementList = dynamic_cast<StatementListNode *>(GetChild(GetChildCount() - 1));
-        ReturnNode *pReturnNode = dynamic_cast<ReturnNode *>(pStatementList->GetChild(pStatementList->GetChildCount() - 1));
+        ReturnNode *pReturnNode = nullptr;
+        if (pStatementList->GetChildCount() != 0)
+        {
+            pReturnNode = dynamic_cast<ReturnNode *>(pStatementList->GetChild(pStatementList->GetChildCount() - 1));
+        }
 
         if (pReturnNode == nullptr)
         {
