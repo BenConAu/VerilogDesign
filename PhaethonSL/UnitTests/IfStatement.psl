@@ -1,0 +1,9 @@
+void main()
+{
+    word t;
+    t = 1;
+    if (t)
+    {
+        debugout(1);
+    }
+}

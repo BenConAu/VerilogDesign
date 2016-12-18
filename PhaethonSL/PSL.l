@@ -43,6 +43,8 @@
 "offsetptr"          { return OFFSETPTR_TOKEN; }
 "castptr"            { return CASTPTR_TOKEN; }
 "return"             { return RETURN_TOKEN; }
+"if"                 { return IF_TOKEN; }
+"else"               { return ELSE_TOKEN; }
 [0-9]+               { yylval->intVal = atoi(yytext); return INTCONSTANT; }
 "f"[0-9]+"\."[0-9]*  { yylval->floatVal = (float)atof(yytext + 1); return FLOATCONSTANT; }
 [A-Za-z_][A-Za-z0-9_]* { yylval->symIndex = yyextra->AddSymbol(yytext); return IDENTIFIER; }

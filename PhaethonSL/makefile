@@ -30,6 +30,8 @@ PSLcc: lex.yy.c \
 	   GenericTypeInfo.h \
 	   IdentifierNode.cpp \
 	   IdentifierNode.h \
+	   IfStatementNode.cpp \
+	   IfStatementNode.h \
 	   OffsetNode.cpp \
 	   OffsetNode.h \
 	   Operand.cpp \
@@ -95,6 +97,7 @@ PSLcc: lex.yy.c \
 	   FunctionInfo.cpp \
 	   FunctionParameterNode.cpp \
 	   IdentifierNode.cpp \
+	   IfStatementNode.cpp \
 	   OffsetNode.cpp \
 	   OperatorNode.cpp \
 	   Operand.cpp \

@@ -47,6 +47,8 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token RETURN_TOKEN
 %token LEFT_BRACE
 %token RIGHT_BRACE
+%token IF_TOKEN
+%token ELSE_TOKEN
 %token DOT
 %token COMMA
 %token AMPERSAND
@@ -90,6 +92,8 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> return_statement
 %type <pNode> jump_statement
 %type <pNode> cast_expression
+%type <pNode> selection_statement
+%type <pNode> selection_rest_statement
 
 %%
 
@@ -111,6 +115,7 @@ statement_list:
 
 statement:
       expression_statement                                          { $$ = $1; }
+    | selection_statement                                           { $$ = $1; }
     | declaration_statement                                         { $$ = $1; }
     | jump_statement                                                { $$ = $1; }
     | debugout_statement                                            { $$ = $1; }
@@ -118,6 +123,16 @@ statement:
 
 expression_statement:
       expression SEMICOLON                                          { $$ = $1; }
+    ;
+
+selection_statement:
+      IF_TOKEN LEFT_PAREN expression RIGHT_PAREN selection_rest_statement 
+                                                                    { $$ = $5; dynamic_cast<IfStatementNode*>($$)->SetStatementList($3); }
+    ;
+
+selection_rest_statement:
+      compound_statement ELSE_TOKEN compound_statement              { $$ = new IfStatementNode(pContext, $1, $3); }
+    | compound_statement                                            { $$ = new IfStatementNode(pContext, $1, nullptr); }
     ;
 
 expression:
