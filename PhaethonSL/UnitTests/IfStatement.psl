@@ -6,4 +6,26 @@ void main()
     {
         debugout(1);
     }
+
+    word t2;
+    t2 = 1;
+    if (t2)
+    {
+        debugout(2);
+    }
+    else
+    {
+        debugout(3);
+    }
+
+    word t3;
+    t3 = 0;
+    if (t3)
+    {
+        debugout(2);
+    }
+    else
+    {
+        debugout(3);
+    }
 }

@@ -15,4 +15,9 @@ public:
   }
 
   const char *GetDebugName() override { return "IfStatementNode"; }
+
+private:
+  static int s_instanceCount;
+
+  int _instance;
 };

@@ -7,8 +7,13 @@
 #include "../PhaethonObjWriter/ObjWriter.h"
 #include "PSL.tab.h"
 
+int IfStatementNode::s_instanceCount = 0;
+
 IfStatementNode::IfStatementNode(PSLCompilerContext *pContext, ASTNode *pTrue, ASTNode *pFalse) : ASTNode(pContext)
 {
+    s_instanceCount++;
+    _instance = s_instanceCount;
+
     AddNode(pTrue);
     AddNode(pFalse);
 }
@@ -53,16 +58,34 @@ void IfStatementNode::ProcessNode()
         wrapper.GetWrapped(),
         Operand(0));
 
-    char labelString[256];
-    sprintf(labelString, "label%p", this);
+    char falseLabel[256];
+    sprintf(falseLabel, "false_%d", _instance);
+
+    char trueLabel[256];
+    sprintf(trueLabel, "true_%d", _instance);
 
     GetContext()->OutputInstruction(
         OpCodes::JeC,
-        Operand(labelString));
+        Operand(falseLabel));
 
     // Now the statement list
     pTrue->ProcessNode();
 
+    if (pFalse != nullptr)
+    {
+        // Jump to the end of the else clause
+        GetContext()->OutputInstruction(
+            OpCodes::JmpC,
+            Operand(trueLabel));
+    }
+
     // Now put the label we jump to for test false
-    GetContext()->OutputLabel(labelString);
+    GetContext()->OutputLabel(falseLabel);
+
+    // If we have an else clause then we do more now
+    if (pFalse != nullptr)
+    {
+        pFalse->ProcessNode();
+        GetContext()->OutputLabel(trueLabel);
+    }
 }
