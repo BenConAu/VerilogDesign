@@ -17,3 +17,4 @@
 #include "OffsetNode.h"
 #include "FunctionCallNode.h"
 #include "ReturnNode.h"
+#include "CastNode.h"

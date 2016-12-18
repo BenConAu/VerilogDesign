@@ -3,8 +3,8 @@
 
 void ASTNode::VerifyNode()
 {
-    //_pContext->PrintIndent();
-    //printf("Begin verifying %s node %p\n", GetDebugName(), this);
+    _pContext->PrintIndent();
+    printf("Begin verifying %s node %p\n", GetDebugName(), this);
     _pContext->_indent++;
 
     PreVerifyNodeImpl();
@@ -20,8 +20,8 @@ void ASTNode::VerifyNode()
     VerifyNodeImpl();
 
     _pContext->_indent--;
-    //_pContext->PrintIndent();
-    //printf("End verifying %s node %p\n", GetDebugName(), this);
+    _pContext->PrintIndent();
+    printf("End verifying %s node %p\n", GetDebugName(), this);
 }
 
 void ASTNode::AddNode(ASTNode *pNode)

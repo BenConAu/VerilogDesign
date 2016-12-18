@@ -54,6 +54,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token DEBUGOUT_TOKEN
 %token SIZEOF_TOKEN
 %token OFFSETPTR_TOKEN
+%token CASTPTR_TOKEN
 %token <symIndex> IDENTIFIER
 %type <pNode> variable_identifier
 %type <pNode> primary_expression
@@ -88,6 +89,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> function_call
 %type <pNode> return_statement
 %type <pNode> jump_statement
+%type <pNode> cast_expression
 
 %%
 
@@ -156,6 +158,7 @@ primary_expression:
 	| NULLPTR_TOKEN                                                 { $$ = new ConstantNode(pContext, ConstantNode::Pointer); }
     | sizeof_expression                                             { $$ = $1; }
     | offset_expression                                             { $$ = $1; }
+    | cast_expression                                               { $$ = $1; }
     ;
 
 sizeof_expression:
@@ -165,6 +168,11 @@ sizeof_expression:
 offset_expression:
       OFFSETPTR_TOKEN LEFT_PAREN expression COMMA expression RIGHT_PAREN             
                                                                     { $$ = new OffsetNode(pContext, $3, $5); }
+    ;
+
+cast_expression:
+      CASTPTR_TOKEN LT fully_specified_type GT LEFT_PAREN expression RIGHT_PAREN
+                                                                    { $$ = new CastNode(pContext, $3, $6); }
     ;
 
 declaration:

@@ -8,6 +8,8 @@ PSLcc: lex.yy.c \
 	   AssignmentNode.cpp \
 	   AssignmentNode.h \
 	   BasicTypeInfo.h \
+	   CastNode.cpp \
+	   CastNode.h \
 	   ConstantNode.cpp \
 	   ConstantNode.h \
 	   DebugOutNode.h \
@@ -83,6 +85,7 @@ PSLcc: lex.yy.c \
 	   ASTNode.cpp \
 	   AddressOfNode.cpp \
 	   AssignmentNode.cpp \
+	   CastNode.cpp \
 	   ConstantNode.cpp \
 	   ExpressionNode.cpp \
 	   ExpressionResult.cpp \

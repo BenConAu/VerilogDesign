@@ -29,4 +29,6 @@ class SizeOfNode : public ExpressionNode
 
         return new ExpressionResult(pTypeInfo, Operand((int)pTypeNode->GetTypeInfo()->GetSize()));
     }
+
+    const char *GetDebugName() override { return "SizeOfNode"; }
 };
