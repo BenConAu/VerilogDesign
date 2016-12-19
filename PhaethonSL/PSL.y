@@ -252,7 +252,8 @@ init_declarator_list:
     ;
 
 single_declaration:
-      fully_specified_type IDENTIFIER                               { $$ = new VariableDeclarationNode(pContext, $1, $2); }
+      fully_specified_type IDENTIFIER                               { $$ = new VariableDeclarationNode(pContext, $1, $2, nullptr); }
+    | fully_specified_type IDENTIFIER EQUAL expression              { $$ = new VariableDeclarationNode(pContext, $1, $2, $4); }
     ;
 
 declaration_statement:

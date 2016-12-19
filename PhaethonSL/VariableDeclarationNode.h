@@ -5,13 +5,18 @@
 
 class VariableDeclarationNode : public ASTNode
 {
-public:
-    VariableDeclarationNode(PSLCompilerContext* pContext, ASTNode* pType, int symIndex);
-    void VerifyNodeImpl() override;
-    void PostProcessNodeImpl() override;
-    const char* GetDebugName() override { return "VariableDeclarationNode"; }
+  public:
+    VariableDeclarationNode(
+        PSLCompilerContext *pContext,
+        ASTNode *pType,
+        int symIndex,
+        ASTNode *pInitExpr);
 
-private:
+    void PreVerifyNodeImpl() override;
+    void PostProcessNodeImpl() override;
+    const char *GetDebugName() override { return "VariableDeclarationNode"; }
+
+  private:
     int _symIndex;
     bool _fGlobal;
 };

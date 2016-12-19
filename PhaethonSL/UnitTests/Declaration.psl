@@ -1,0 +1,17 @@
+struct foo
+{
+    word a;
+};
+
+foo fooVar;
+
+void main()
+{
+    float v1;
+    v1 = f0.0;
+    float v2 = f1.0;
+    float v3 = v2 * f4.0;
+    debugout(v1);
+    debugout(v2);
+    debugout(v3);
+}
