@@ -34,6 +34,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token EQUAL
 %token STAR
 %token PLUS
+%token MINUS
 %token LEFT_PAREN
 %token RIGHT_PAREN
 %token LT
@@ -49,6 +50,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token RIGHT_BRACE
 %token IF_TOKEN
 %token ELSE_TOKEN
+%token WHILE_TOKEN
 %token DOT
 %token COMMA
 %token AMPERSAND
@@ -128,6 +130,8 @@ expression_statement:
 selection_statement:
       IF_TOKEN LEFT_PAREN expression RIGHT_PAREN selection_rest_statement 
                                                                     { $$ = $5; dynamic_cast<IfStatementNode*>($$)->SetStatementList($3); }
+    | WHILE_TOKEN LEFT_PAREN expression RIGHT_PAREN compound_statement
+                                                                    { $$ = new WhileStatementNode(pContext, $3, $5); }
     ;
 
 selection_rest_statement:
@@ -147,6 +151,7 @@ assignment_expression:
 additive_expression:
       multiplicative_expression                                     { $$ = $1; }
     | additive_expression PLUS multiplicative_expression            { $$ = new OperatorNode(pContext, $1, $3, Operator::Add); }
+    | additive_expression MINUS multiplicative_expression           { $$ = new OperatorNode(pContext, $1, $3, Operator::Subtract); }
     ;
 
 multiplicative_expression:

@@ -18,20 +18,22 @@
 `define RRet 18
 `define AddRRC 19
 `define AddRRR 20
-`define MulAddRRC 21
-`define IncR 22
-`define DecR 23
-`define FaddRRR 24
-`define FsubRR 25
-`define FconvR 26
-`define FmulRRR 27
-`define FdivRR 28
-`define FmuladdRRR 29
-`define FminRR 30
-`define FmaxRR 31
-`define VfaddRRR 32
-`define DoutR 33
-`define Stall 34
+`define SubRRC 21
+`define SubRRR 22
+`define MulAddRRC 23
+`define IncR 24
+`define DecR 25
+`define FaddRRR 26
+`define FsubRR 27
+`define FconvR 28
+`define FmulRRR 29
+`define FdivRR 30
+`define FmuladdRRR 31
+`define FminRR 32
+`define FmaxRR 33
+`define VfaddRRR 34
+`define DoutR 35
+`define Stall 36
 
 function [0:0] Is8ByteOpcode;
   input [7:0] opCodeParam;
@@ -46,6 +48,7 @@ function [0:0] Is8ByteOpcode;
       opCodeParam == `JeC ||
       opCodeParam == `RCallRC ||
       opCodeParam == `AddRRC ||
+      opCodeParam == `SubRRC ||
       opCodeParam == `MulAddRRC)
     Is8ByteOpcode = 1;
   else

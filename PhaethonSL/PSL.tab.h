@@ -51,30 +51,32 @@ extern int yydebug;
     EQUAL = 261,
     STAR = 262,
     PLUS = 263,
-    LEFT_PAREN = 264,
-    RIGHT_PAREN = 265,
-    LT = 266,
-    GT = 267,
-    ARROW = 268,
-    PTR_TOKEN = 269,
-    WORD_TOKEN = 270,
-    FLOAT_TOKEN = 271,
-    VOID_TOKEN = 272,
-    STRUCT_TOKEN = 273,
-    RETURN_TOKEN = 274,
-    LEFT_BRACE = 275,
-    RIGHT_BRACE = 276,
-    IF_TOKEN = 277,
-    ELSE_TOKEN = 278,
-    DOT = 279,
-    COMMA = 280,
-    AMPERSAND = 281,
-    NULLPTR_TOKEN = 282,
-    DEBUGOUT_TOKEN = 283,
-    SIZEOF_TOKEN = 284,
-    OFFSETPTR_TOKEN = 285,
-    CASTPTR_TOKEN = 286,
-    IDENTIFIER = 287
+    MINUS = 264,
+    LEFT_PAREN = 265,
+    RIGHT_PAREN = 266,
+    LT = 267,
+    GT = 268,
+    ARROW = 269,
+    PTR_TOKEN = 270,
+    WORD_TOKEN = 271,
+    FLOAT_TOKEN = 272,
+    VOID_TOKEN = 273,
+    STRUCT_TOKEN = 274,
+    RETURN_TOKEN = 275,
+    LEFT_BRACE = 276,
+    RIGHT_BRACE = 277,
+    IF_TOKEN = 278,
+    ELSE_TOKEN = 279,
+    WHILE_TOKEN = 280,
+    DOT = 281,
+    COMMA = 282,
+    AMPERSAND = 283,
+    NULLPTR_TOKEN = 284,
+    DEBUGOUT_TOKEN = 285,
+    SIZEOF_TOKEN = 286,
+    OFFSETPTR_TOKEN = 287,
+    CASTPTR_TOKEN = 288,
+    IDENTIFIER = 289
   };
 #endif
 
@@ -90,7 +92,7 @@ union YYSTYPE
 	int symIndex;
     ASTNode* pNode;
 
-#line 94 "PSL.tab.h" /* yacc.c:1915  */
+#line 96 "PSL.tab.h" /* yacc.c:1915  */
 };
 
 typedef union YYSTYPE YYSTYPE;

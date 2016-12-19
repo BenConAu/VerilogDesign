@@ -47,6 +47,10 @@ ExpressionResult *OperatorNode::CalculateResult()
             opCode = OpCodes::AddRRR;
             break;
 
+        case Operator::Subtract:
+            opCode = OpCodes::SubRRR;
+            break;
+
         default:
             throw "Unknown operator";
         }

@@ -20,6 +20,7 @@
 "\n"                 ;
 "*"                  { return STAR; }
 "+"                  { return PLUS; }
+"-"                  { return MINUS; }
 "="                  { return EQUAL; }
 ";"                  { return SEMICOLON; }
 "{"                  { return LEFT_BRACE; }
@@ -44,6 +45,7 @@
 "castptr"            { return CASTPTR_TOKEN; }
 "return"             { return RETURN_TOKEN; }
 "if"                 { return IF_TOKEN; }
+"while"              { return WHILE_TOKEN; }
 "else"               { return ELSE_TOKEN; }
 [0-9]+               { yylval->intVal = atoi(yytext); return INTCONSTANT; }
 "f"[0-9]+"\."[0-9]*  { yylval->floatVal = (float)atof(yytext + 1); return FLOATCONSTANT; }

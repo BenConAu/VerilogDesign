@@ -7,7 +7,8 @@
 enum class Operator
 {
     Multiply,
-    Add
+    Add,
+    Subtract
 };
 
 class OperatorNode : public ExpressionNode

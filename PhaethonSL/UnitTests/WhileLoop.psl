@@ -1,0 +1,11 @@
+void main()
+{
+    word i = 10;
+    while (i)
+    {
+        debugout(i);
+        i = i - 1;
+    }
+
+    debugout(i);
+}

@@ -72,6 +72,8 @@ PSLcc: lex.yy.c \
 	   VariableDeclarationNode.h \
 	   VariableInfo.cpp \
 	   VariableInfo.h \
+	   WhileStatementNode.cpp \
+	   WhileStatementNode.h \
   	   ../PhaethonISA/Generated/PhaethonOpCode.cpp \
   	   ../PhaethonISA/Generated/PhaethonOpCode.h \
 	   ../PhaethonObjWriter/AsmObjWriter.cpp \
@@ -116,7 +118,8 @@ PSLcc: lex.yy.c \
 	   TypeCollection.cpp \
 	   VariableCollection.cpp \
 	   VariableDeclarationNode.cpp \
-	   VariableInfo.cpp -o PSLcc
+	   VariableInfo.cpp \
+	   WhileStatementNode.cpp -o PSLcc
 
 lex.yy.c: PSL.l
 	flex --header-file=lex.h PSL.l

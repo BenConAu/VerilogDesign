@@ -463,6 +463,8 @@ module ALU(
 
           `AddRRC:     regarray[regAddress[7:0]] <= regValue2[0] + opDataWord;   // add reg, reg, const
           `AddRRR:     regarray[regAddress[7:0]] <= regValue2[0] + regValue3[0]; // add reg, reg, reg
+          `SubRRC:     regarray[regAddress[7:0]] <= regValue2[0] - opDataWord;   // add reg, reg, const
+          `SubRRR:     regarray[regAddress[7:0]] <= regValue2[0] - regValue3[0]; // add reg, reg, reg
           `IncR:       regarray[regAddress[7:0]] <= regValue[0] + 1;             // dec reg
           `DecR:       regarray[regAddress[7:0]] <= regValue[0] - 1;             // dec reg
           `MulAddRRC:  regarray[regAddress[7:0]] <= regValue[0] + regValue2[0] * opDataWord;

@@ -19,3 +19,4 @@
 #include "ReturnNode.h"
 #include "CastNode.h"
 #include "IfStatementNode.h"
+#include "WhileStatementNode.h"

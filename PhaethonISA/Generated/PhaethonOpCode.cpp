@@ -13,6 +13,7 @@ InstructionData InstructionData::s_data[] = {
     { Instructions::RCall     , "rcall" },
     { Instructions::RRet      , "rret" },
     { Instructions::Add       , "add" },
+    { Instructions::Sub       , "sub" },
     { Instructions::MulAdd    , "muladd" },
     { Instructions::Inc       , "inc" },
     { Instructions::Dec       , "dec" },
@@ -52,6 +53,8 @@ OpCodeData OpCodeData::s_data[] = {
     { Instructions::RRet      , OpCodes::RRet           , { OperandType::None                  , OperandType::None                  , OperandType::None         }, -1, "RRet" },
     { Instructions::Add       , OpCodes::AddRRC         , { OperandType::Register              , OperandType::Register              , OperandType::Constant     }, 2, "AddRRC" },
     { Instructions::Add       , OpCodes::AddRRR         , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "AddRRR" },
+    { Instructions::Sub       , OpCodes::SubRRC         , { OperandType::Register              , OperandType::Register              , OperandType::Constant     }, 2, "SubRRC" },
+    { Instructions::Sub       , OpCodes::SubRRR         , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "SubRRR" },
     { Instructions::MulAdd    , OpCodes::MulAddRRC      , { OperandType::Register              , OperandType::Register              , OperandType::Constant     }, 2, "MulAddRRC" },
     { Instructions::Inc       , OpCodes::IncR           , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "IncR" },
     { Instructions::Dec       , OpCodes::DecR           , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "DecR" },
@@ -83,6 +86,7 @@ bool Is8ByteOpcode(OpCodes::Enum opCodeParam)
         opCodeParam == OpCodes::JeC ||
         opCodeParam == OpCodes::RCallRC ||
         opCodeParam == OpCodes::AddRRC ||
+        opCodeParam == OpCodes::SubRRC ||
         opCodeParam == OpCodes::MulAddRRC)
         return true;
     else
