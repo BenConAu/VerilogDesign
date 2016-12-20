@@ -9,9 +9,12 @@ Push     Register              None                  None      RAM
 Pop      Register              None                  None      RAM
 Cmp      Register              Register              None      NoFlags
 Cmp      Register              Constant              None      NoFlags
+CmpE     Register              Register              Register  NoFlags
 Jmp      Constant              None                  None      NoFlags
 Jne      Constant              None                  None      NoFlags
 Je       Constant              None                  None      NoFlags
+Jz       Register              Constant              None      NoFlags
+Jnz      Register              Constant              None      NoFlags
 Call     Register              None                  None      RAM
 Ret      None                  None                  None      RAM
 RCall    Register              Constant              None      NoFlags

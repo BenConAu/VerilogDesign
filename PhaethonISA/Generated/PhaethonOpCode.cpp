@@ -5,9 +5,12 @@ InstructionData InstructionData::s_data[] = {
     { Instructions::Push      , "push" },
     { Instructions::Pop       , "pop" },
     { Instructions::Cmp       , "cmp" },
+    { Instructions::CmpE      , "cmpe" },
     { Instructions::Jmp       , "jmp" },
     { Instructions::Jne       , "jne" },
     { Instructions::Je        , "je" },
+    { Instructions::Jz        , "jz" },
+    { Instructions::Jnz       , "jnz" },
     { Instructions::Call      , "call" },
     { Instructions::Ret       , "ret" },
     { Instructions::RCall     , "rcall" },
@@ -44,9 +47,12 @@ OpCodeData OpCodeData::s_data[] = {
     { Instructions::Pop       , OpCodes::PopR           , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "PopR" },
     { Instructions::Cmp       , OpCodes::CmpRR          , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "CmpRR" },
     { Instructions::Cmp       , OpCodes::CmpRC          , { OperandType::Register              , OperandType::Constant              , OperandType::None         }, 1, "CmpRC" },
+    { Instructions::CmpE      , OpCodes::CmpERRR        , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "CmpERRR" },
     { Instructions::Jmp       , OpCodes::JmpC           , { OperandType::Constant              , OperandType::None                  , OperandType::None         }, 0, "JmpC" },
     { Instructions::Jne       , OpCodes::JneC           , { OperandType::Constant              , OperandType::None                  , OperandType::None         }, 0, "JneC" },
     { Instructions::Je        , OpCodes::JeC            , { OperandType::Constant              , OperandType::None                  , OperandType::None         }, 0, "JeC" },
+    { Instructions::Jz        , OpCodes::JzRC           , { OperandType::Register              , OperandType::Constant              , OperandType::None         }, 1, "JzRC" },
+    { Instructions::Jnz       , OpCodes::JnzRC          , { OperandType::Register              , OperandType::Constant              , OperandType::None         }, 1, "JnzRC" },
     { Instructions::Call      , OpCodes::CallR          , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "CallR" },
     { Instructions::Ret       , OpCodes::Ret            , { OperandType::None                  , OperandType::None                  , OperandType::None         }, -1, "Ret" },
     { Instructions::RCall     , OpCodes::RCallRC        , { OperandType::Register              , OperandType::Constant              , OperandType::None         }, 1, "RCallRC" },
@@ -84,6 +90,8 @@ bool Is8ByteOpcode(OpCodes::Enum opCodeParam)
         opCodeParam == OpCodes::JmpC ||
         opCodeParam == OpCodes::JneC ||
         opCodeParam == OpCodes::JeC ||
+        opCodeParam == OpCodes::JzRC ||
+        opCodeParam == OpCodes::JnzRC ||
         opCodeParam == OpCodes::RCallRC ||
         opCodeParam == OpCodes::AddRRC ||
         opCodeParam == OpCodes::SubRRC ||

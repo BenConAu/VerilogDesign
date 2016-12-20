@@ -182,6 +182,8 @@ module ALU(
         // Determine if a conditional jump needs to happen
         if (opCode == `JneC && regarray[1][0:0] == 1'b0) condJump <= 1'b1;
         if (opCode == `JeC && regarray[1][0:0] == 1'b1) condJump <= 1'b1;
+        if (opCode == `JzRC && regarray[regAddress3[7:0]] == 0) condJump <= 1'b1;
+        if (opCode == `JnzRC && regarray[regAddress3[7:0]] != 0) condJump <= 1'b1;
 
         if (Is8ByteOpcode(opCode) == 1)
         begin
@@ -434,6 +436,10 @@ module ALU(
             regarray[1][2:2] <= (regValue[0] > regValue2[0] ? 1 : 0);
           end
 
+          `CmpERRR: begin                                                 // cmpe reg, reg, reg
+            regarray[regAddress[7:0]] <= (regValue2[0] == regValue3[0] ? 1 : 0);
+          end
+
           `CmpRC: begin
             regarray[1][0:0] <= (regValue[0] == opDataWord ? 1 : 0);
             regarray[1][1:1] <= (regValue[0] < opDataWord ? 1 : 0);
@@ -444,6 +450,8 @@ module ALU(
 
           `JneC: begin end // Done above
           `JeC: begin end   // Done above
+          `JzRC: begin end // Done above
+          `JnzRC: begin end   // Done above
 
           `FaddRRR:    regarray[regAddress[7:0]] <= fAddResult[0];          // fadd reg, reg, reg
           `FsubRR:     regarray[regAddress[7:0]] <= fSubResult;             // fsub reg, reg
