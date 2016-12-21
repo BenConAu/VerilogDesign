@@ -436,14 +436,18 @@ module ALU(
             regarray[1][2:2] <= (regValue[0] > regValue2[0] ? 1 : 0);
           end
 
-          `CmpERRR: begin                                                 // cmpe reg, reg, reg
-            regarray[regAddress[7:0]] <= (regValue2[0] == regValue3[0] ? 1 : 0);
-          end
-
           `CmpRC: begin
             regarray[1][0:0] <= (regValue[0] == opDataWord ? 1 : 0);
             regarray[1][1:1] <= (regValue[0] < opDataWord ? 1 : 0);
             regarray[1][2:2] <= (regValue[0] > opDataWord ? 1 : 0);
+          end
+
+          `CmpERRR: begin                                                 // cmpe reg, reg, reg
+            regarray[regAddress[7:0]] <= (regValue2[0] == regValue3[0] ? 1 : 0);
+          end
+
+          `CmpNeRRR: begin                                                 // cmpne reg, reg, reg
+            regarray[regAddress[7:0]] <= (regValue2[0] != regValue3[0] ? 1 : 0);
           end
 
           `JmpC:  ipointer <= opDataWord;                              // jmp address
