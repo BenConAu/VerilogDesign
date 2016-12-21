@@ -1,5 +1,49 @@
 #include "OperatorNode.h"
 #include "FunctionDeclaratorNode.h"
+#include "PSL.tab.h"
+
+OperatorInfo OperatorNode::_opTable[5] = {
+    {Operator::Multiply,    OpCodes::Unknown,   OpCodes::FmulRRR, ResultTypeMethod::Both},
+    {Operator::Add,         OpCodes::AddRRR,    OpCodes::FaddRRR, ResultTypeMethod::Both},
+    {Operator::Subtract,    OpCodes::SubRRR,    OpCodes::Unknown, ResultTypeMethod::Both},
+    {Operator::Equal,       OpCodes::CmpERRR,   OpCodes::Unknown, ResultTypeMethod::Bool},
+    {Operator::NotEqual,    OpCodes::CmpNeRRR,  OpCodes::Unknown, ResultTypeMethod::Bool},
+};
+
+void OperatorNode::VerifyNodeImpl()
+{
+    // The inputs to the multiply must be expressions themselves. Ideally this part
+    // could be factored into the expression class itself.
+    ExpressionNode *pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));
+    ExpressionNode *pRight = dynamic_cast<ExpressionNode *>(GetChild(1));
+
+    TypeInfo *pResultType = nullptr;
+    for (int i = 0; i < sizeof(_opTable) / sizeof(_opTable[0]); i++)
+    {
+        if (_opTable[i]._operator == _op)
+        {
+            _opInfo = _opTable[i];
+
+            // Figure out type
+            if (_opTable[i]._resultType == ResultTypeMethod::Both)
+            {
+                pResultType = pLeft->GetTypeInfo();
+            }
+            else if (_opTable[i]._resultType == ResultTypeMethod::Bool)
+            {
+                pResultType = GetContext()->_typeCollection.GetBasicType(BOOL_TOKEN);
+            }
+            else
+            {
+                throw "Unknown type for result of binary operation";
+            }
+
+            break;
+        }
+    }
+
+    SetType(pResultType);
+}
 
 ExpressionResult *OperatorNode::CalculateResult()
 {
@@ -21,39 +65,34 @@ ExpressionResult *OperatorNode::CalculateResult()
     RegisterWrapper leftWrap(GetContext(), pFunc->GetRegCollection(), leftResult->_operand);
     RegisterWrapper rightWrap(GetContext(), pFunc->GetRegCollection(), rightResult->_operand);
 
-    OpCodes::Enum opCode = OpCodes::Unknown;
-
-    if (TypeInfo::IsFloat(leftResult->_pTypeInfo) && TypeInfo::IsFloat(rightResult->_pTypeInfo))
+    int bothType = -1;
+    if (TypeInfo::IsFloat(pLeft->GetTypeInfo()) && TypeInfo::IsFloat(pRight->GetTypeInfo()))
     {
-        switch (_op)
-        {
-        case Operator::Multiply:
-            opCode = OpCodes::FmulRRR;
-            break;
-
-        case Operator::Add:
-            opCode = OpCodes::FaddRRR;
-            break;
-
-        default:
-            throw "Unknown operator";
-        }
+        bothType = FLOAT_TOKEN;
+    }
+    else if (TypeInfo::IsNonFloat(pLeft->GetTypeInfo()) && TypeInfo::IsNonFloat(pRight->GetTypeInfo()))
+    {
+        bothType = WORD_TOKEN;
     }
     else
     {
-        switch (_op)
-        {
-        case Operator::Add:
-            opCode = OpCodes::AddRRR;
-            break;
+        throw "Invalid arguments to binary operator";
+    }
 
-        case Operator::Subtract:
-            opCode = OpCodes::SubRRR;
-            break;
+    // Figure out opCode
+    OpCodes::Enum opCode = OpCodes::Unknown;
+    if (bothType == FLOAT_TOKEN)
+    {
+        opCode = _opInfo._opCodeFloat;
+    }
+    else if (bothType == WORD_TOKEN)
+    {
+        opCode = _opInfo._opCodeWord;
+    }
 
-        default:
-            throw "Unknown operator";
-        }
+    if (opCode == OpCodes::Unknown)
+    {
+        throw "Unknown opcode for binary operation";
     }
 
     // Get register for our result
@@ -66,7 +105,8 @@ ExpressionResult *OperatorNode::CalculateResult()
         leftWrap.GetWrapped(),
         rightWrap.GetWrapped());
 
-    //printf("Making result for %p with register collection %p\n", this, pFunc->GetRegCollection());
+    printf("Operator with result of type = %s\n", GetTypeInfo()->DebugPrint().c_str());
 
-    return new ExpressionResult(leftResult->_pTypeInfo, resultOperand, pFunc->GetRegCollection());
+    //printf("Making result for %p with register collection %p\n", this, pFunc->GetRegCollection());
+    return new ExpressionResult(GetTypeInfo(), resultOperand, pFunc->GetRegCollection());
 }

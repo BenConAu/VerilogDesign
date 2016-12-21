@@ -1,7 +1,7 @@
 void main()
 {
     word i = 10;
-    while (i)
+    while (i != 0)
     {
         debugout(i);
         i = i - 1;

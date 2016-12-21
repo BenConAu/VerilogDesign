@@ -4,6 +4,8 @@
 
 void OffsetNode::VerifyNodeImpl()
 {
+    OperatorNode::VerifyNodeImpl();
+
     ExpressionNode *pPointerNode = dynamic_cast<ExpressionNode *>(GetChild(0));
     ExpressionNode *pExpr = dynamic_cast<ExpressionNode *>(GetChild(1));
 

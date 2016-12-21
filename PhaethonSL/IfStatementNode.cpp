@@ -22,9 +22,9 @@ void IfStatementNode::VerifyNodeImpl()
 {
     ExpressionNode *pTest = dynamic_cast<ExpressionNode *>(GetChild(2));
     BasicTypeInfo *pTestType = dynamic_cast<BasicTypeInfo *>(pTest->GetTypeInfo());
-    if (pTestType == nullptr || pTestType->GetTypeToken() != WORD_TOKEN)
+    if (pTestType == nullptr || pTestType->GetTypeToken() != BOOL_TOKEN)
     {
-        throw "If statement must have word type expression for test";
+        throw "If statement must have bool type expression for test";
     }
 }
 

@@ -7,13 +7,14 @@ class ConstantNode : public ExpressionNode
 public:
     enum ConstantType
     {
-        Int,
+        Bool,
+        Word,
         Float,
         Pointer,
     };
 
 public:
-    ConstantNode(PSLCompilerContext* pContext, int v);
+    ConstantNode(PSLCompilerContext* pContext, ConstantType t, int v);
     ConstantNode(PSLCompilerContext* pContext, float v);
     ConstantNode(PSLCompilerContext* pContext, ConstantType t);
 

@@ -47,36 +47,40 @@ extern int yydebug;
   {
     INTCONSTANT = 258,
     FLOATCONSTANT = 259,
-    SEMICOLON = 260,
-    EQUAL = 261,
-    STAR = 262,
-    PLUS = 263,
-    MINUS = 264,
-    LEFT_PAREN = 265,
-    RIGHT_PAREN = 266,
-    LT = 267,
-    GT = 268,
-    ARROW = 269,
-    PTR_TOKEN = 270,
-    WORD_TOKEN = 271,
-    FLOAT_TOKEN = 272,
-    VOID_TOKEN = 273,
-    STRUCT_TOKEN = 274,
-    RETURN_TOKEN = 275,
-    LEFT_BRACE = 276,
-    RIGHT_BRACE = 277,
-    IF_TOKEN = 278,
-    ELSE_TOKEN = 279,
-    WHILE_TOKEN = 280,
-    DOT = 281,
-    COMMA = 282,
-    AMPERSAND = 283,
-    NULLPTR_TOKEN = 284,
-    DEBUGOUT_TOKEN = 285,
-    SIZEOF_TOKEN = 286,
-    OFFSETPTR_TOKEN = 287,
-    CASTPTR_TOKEN = 288,
-    IDENTIFIER = 289
+    BOOLCONSTANT = 260,
+    SEMICOLON = 261,
+    EQUAL = 262,
+    STAR = 263,
+    PLUS = 264,
+    MINUS = 265,
+    LEFT_PAREN = 266,
+    RIGHT_PAREN = 267,
+    LT = 268,
+    GT = 269,
+    ARROW = 270,
+    DOT = 271,
+    COMMA = 272,
+    AMPERSAND = 273,
+    EQUAL_OP = 274,
+    NOTEQUAL_OP = 275,
+    PTR_TOKEN = 276,
+    WORD_TOKEN = 277,
+    BOOL_TOKEN = 278,
+    FLOAT_TOKEN = 279,
+    VOID_TOKEN = 280,
+    STRUCT_TOKEN = 281,
+    RETURN_TOKEN = 282,
+    LEFT_BRACE = 283,
+    RIGHT_BRACE = 284,
+    IF_TOKEN = 285,
+    ELSE_TOKEN = 286,
+    WHILE_TOKEN = 287,
+    NULLPTR_TOKEN = 288,
+    DEBUGOUT_TOKEN = 289,
+    SIZEOF_TOKEN = 290,
+    OFFSETPTR_TOKEN = 291,
+    CASTPTR_TOKEN = 292,
+    IDENTIFIER = 293
   };
 #endif
 
@@ -92,7 +96,7 @@ union YYSTYPE
 	int symIndex;
     ASTNode* pNode;
 
-#line 96 "PSL.tab.h" /* yacc.c:1915  */
+#line 100 "PSL.tab.h" /* yacc.c:1915  */
 };
 
 typedef union YYSTYPE YYSTYPE;

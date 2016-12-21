@@ -22,4 +22,5 @@ class TypeInfo
     virtual TypeInfo* MakeSpecificType(TypeInfo* pGenericArgType, TypeCollection* pCollection) = 0;
 
     static bool IsFloat(TypeInfo *);
+    static bool IsNonFloat(TypeInfo *);
 };

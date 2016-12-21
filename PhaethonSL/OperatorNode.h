@@ -8,7 +8,23 @@ enum class Operator
 {
     Multiply,
     Add,
-    Subtract
+    Subtract,
+    Equal,
+    NotEqual
+};
+
+enum class ResultTypeMethod
+{
+    Both,   // Type of arguments
+    Bool,   // Returns bool
+};
+
+struct OperatorInfo
+{
+    Operator _operator;
+    OpCodes::Enum _opCodeWord;
+    OpCodes::Enum _opCodeFloat;
+    ResultTypeMethod _resultType;
 };
 
 class OperatorNode : public ExpressionNode
@@ -21,16 +37,12 @@ class OperatorNode : public ExpressionNode
         _op = op;
     }
 
-    void VerifyNodeImpl() override
-    {
-        ExpressionNode *pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));
-
-        // TODO: Actually check types match like they should
-        SetType(pLeft->GetTypeInfo());
-    }
-
+    void VerifyNodeImpl() override;
     virtual ExpressionResult *CalculateResult() override;
 
   private:
     Operator _op;
+    OperatorInfo _opInfo;
+
+    static OperatorInfo _opTable[5];
 };

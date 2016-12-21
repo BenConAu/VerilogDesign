@@ -1,14 +1,12 @@
 void main()
 {
-    word t;
-    t = 1;
+    bool t = true;
     if (t)
     {
         debugout(1);
     }
 
-    word t2;
-    t2 = 1;
+    bool t2 = true;
     if (t2)
     {
         debugout(2);
@@ -18,8 +16,7 @@ void main()
         debugout(3);
     }
 
-    word t3;
-    t3 = 0;
+    bool t3 = false;
     if (t3)
     {
         debugout(2);

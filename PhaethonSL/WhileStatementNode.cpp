@@ -22,9 +22,9 @@ void WhileStatementNode::VerifyNodeImpl()
 {
     ExpressionNode *pExpr = dynamic_cast<ExpressionNode *>(GetChild(0));
     BasicTypeInfo *pTestType = dynamic_cast<BasicTypeInfo *>(pExpr->GetTypeInfo());
-    if (pTestType == nullptr || pTestType->GetTypeToken() != WORD_TOKEN)
+    if (pTestType == nullptr || pTestType->GetTypeToken() != BOOL_TOKEN)
     {
-        throw "If statement must have word type expression for test";
+        throw "While statement must have bool type expression for test";
     }
 }
 

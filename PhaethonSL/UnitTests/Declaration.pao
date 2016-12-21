@@ -4,10 +4,10 @@
 00 00 80 3f
 02 03 00 ef
 00 00 80 40
-1d 04 01 03
+21 04 01 03
 01 02 04 ef
-23 00 ef ef
-23 01 ef ef
-23 02 ef ef
-24 ef ef ef
+27 00 ef ef
+27 01 ef ef
+27 02 ef ef
+28 ef ef ef
 @7ff

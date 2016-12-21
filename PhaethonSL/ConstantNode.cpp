@@ -3,10 +3,10 @@
 #include "PSL.tab.h"
 #include "BasicTypeInfo.h"
 
-ConstantNode::ConstantNode(PSLCompilerContext *pContext, int v) : ExpressionNode(pContext)
+ConstantNode::ConstantNode(PSLCompilerContext *pContext, ConstantType t, int v) : ExpressionNode(pContext)
 {
     _intValue = v;
-    _type = Int;
+    _type = t;
 }
 
 ConstantNode::ConstantNode(PSLCompilerContext *pContext, float v) : ExpressionNode(pContext)
@@ -25,16 +25,15 @@ int ConstantNode::GetInteger()
 {
     switch (_type)
     {
-    case Int:
+    case Word:
+    case Pointer:
+    case Bool:
         return _intValue;
 
     case Float:
         int intValue;
         ::memcpy(&intValue, &_floatValue, 4);
         return intValue;
-
-    case Pointer:
-        return _intValue;
 
     default:
         throw "Not an integer";
@@ -52,7 +51,11 @@ void ConstantNode::VerifyNodeImpl()
 
     switch (_type)
     {
-    case Int:
+    case Bool:
+        pTypeInfo = GetContext()->_typeCollection.GetBasicType(BOOL_TOKEN);
+        break;
+
+    case Word:
         pTypeInfo = GetContext()->_typeCollection.GetBasicType(WORD_TOKEN);
         break;
 

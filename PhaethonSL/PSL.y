@@ -30,6 +30,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 
 %token <intVal> INTCONSTANT
 %token <floatVal> FLOATCONSTANT
+%token <intVal> BOOLCONSTANT
 %token SEMICOLON
 %token EQUAL
 %token STAR
@@ -40,8 +41,14 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token LT
 %token GT
 %token ARROW
+%token DOT
+%token COMMA
+%token AMPERSAND
+%token EQUAL_OP
+%token NOTEQUAL_OP
 %token PTR_TOKEN
 %token WORD_TOKEN
+%token BOOL_TOKEN
 %token FLOAT_TOKEN
 %token VOID_TOKEN
 %token STRUCT_TOKEN
@@ -51,9 +58,6 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token IF_TOKEN
 %token ELSE_TOKEN
 %token WHILE_TOKEN
-%token DOT
-%token COMMA
-%token AMPERSAND
 %token NULLPTR_TOKEN
 %token DEBUGOUT_TOKEN
 %token SIZEOF_TOKEN
@@ -96,6 +100,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> cast_expression
 %type <pNode> selection_statement
 %type <pNode> selection_rest_statement
+%type <pNode> equality_expression
 
 %%
 
@@ -144,8 +149,14 @@ expression:
     ;
 
 assignment_expression:
+      equality_expression                                           { $$ = $1; }
+    | postfix_expression assignment_operator equality_expression    { $$ = new AssignmentNode(pContext, $1, $3); }
+    ;
+
+equality_expression:
       additive_expression                                           { $$ = $1; }
-    | postfix_expression assignment_operator additive_expression    { $$ = new AssignmentNode(pContext, $1, $3); }
+    | equality_expression EQUAL_OP additive_expression              { $$ = new OperatorNode(pContext, $1, $3, Operator::Equal); }
+    | equality_expression NOTEQUAL_OP additive_expression           { $$ = new OperatorNode(pContext, $1, $3, Operator::NotEqual); }
     ;
 
 additive_expression:
@@ -173,7 +184,8 @@ postfix_expression:
 primary_expression:
       variable_identifier                                           { $$ = $1; }
     | AMPERSAND variable_identifier                                 { $$ = new AddressOfNode(pContext, $2); }
-    | INTCONSTANT                                                   { $$ = new ConstantNode(pContext, $1); }
+    | INTCONSTANT                                                   { $$ = new ConstantNode(pContext, ConstantNode::Word, $1); }
+    | BOOLCONSTANT                                                  { $$ = new ConstantNode(pContext, ConstantNode::Bool, $1); }
     | FLOATCONSTANT                                                 { $$ = new ConstantNode(pContext, $1); }
 	| NULLPTR_TOKEN                                                 { $$ = new ConstantNode(pContext, ConstantNode::Pointer); }
     | sizeof_expression                                             { $$ = $1; }
@@ -230,6 +242,7 @@ fully_specified_type:
       WORD_TOKEN                                                    { $$ = new TypeNode(pContext, TypeClass::Basic, WORD_TOKEN); }
     | FLOAT_TOKEN                                                   { $$ = new TypeNode(pContext, TypeClass::Basic, FLOAT_TOKEN); }
 	| VOID_TOKEN                                                    { $$ = new TypeNode(pContext, TypeClass::Basic, VOID_TOKEN); }
+	| BOOL_TOKEN                                                    { $$ = new TypeNode(pContext, TypeClass::Basic, BOOL_TOKEN); }
 	| IDENTIFIER                                                    { $$ = new TypeNode(pContext, TypeClass::Struct, $1); }
     | PTR_TOKEN LT fully_specified_type GT                          { $$ = new TypeNode(pContext, $3); }
     ;
@@ -275,8 +288,8 @@ function_call:
     ;
 
 function_call_header:
-      IDENTIFIER LEFT_PAREN RIGHT_PAREN                             { $$ = new FunctionCallNode(pContext, $1, nullptr, nullptr); }
-    | IDENTIFIER LT fully_specified_type GT LEFT_PAREN RIGHT_PAREN  { $$ = new FunctionCallNode(pContext, $1, $3, nullptr); }
+      IDENTIFIER LEFT_PAREN                                         { $$ = new FunctionCallNode(pContext, $1, nullptr, nullptr); }
+    | IDENTIFIER LT fully_specified_type GT LEFT_PAREN              { $$ = new FunctionCallNode(pContext, $1, $3, nullptr); }
     | IDENTIFIER LEFT_PAREN assignment_expression                   { $$ = new FunctionCallNode(pContext, $1, nullptr, $3); }
     | IDENTIFIER LT fully_specified_type GT LEFT_PAREN assignment_expression  
                                                                     { $$ = new FunctionCallNode(pContext, $1, $3, $6); }

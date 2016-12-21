@@ -8,6 +8,7 @@ TypeCollection::TypeCollection()
 {
     // Built in types
     _basicTypes[VOID_TOKEN] = std::unique_ptr<BasicTypeInfo>(new BasicTypeInfo(VOID_TOKEN));
+    _basicTypes[BOOL_TOKEN] = std::unique_ptr<BasicTypeInfo>(new BasicTypeInfo(BOOL_TOKEN));
     _basicTypes[WORD_TOKEN] = std::unique_ptr<BasicTypeInfo>(new BasicTypeInfo(WORD_TOKEN));
     _basicTypes[FLOAT_TOKEN] = std::unique_ptr<BasicTypeInfo>(new BasicTypeInfo(FLOAT_TOKEN));
 }
