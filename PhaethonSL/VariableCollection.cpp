@@ -69,12 +69,6 @@ SymbolInfo* VariableCollection::GetInfo(int symIndex)
     {
         return _variables[symIndex].get();
     }
-    else
-    {
-        std::stringstream sstr;
-        sstr << "Attempting info get of nonexistent var " << _pContext->_symbols[symIndex];
-        static std::string error = sstr.str();
 
-        throw error.c_str();
-    }
+    return nullptr;
 }

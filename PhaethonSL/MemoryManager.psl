@@ -1,42 +1,50 @@
+// Each allocation has one of these
 struct Allocation
 {
-    word length;
     ptr<Allocation> next;
-    ptr<void> value;
+    word length;
 };
 
+// Something to hold the start of the allocations
 struct AllocationHeader
 {
     ptr<Allocation> first;
-    ptr<Allocation> last;
-    ptr<void> next;
 };
 
+// The actual header
 AllocationHeader header;
-Allocation firstAlloc;
 
 void MemoryInit()
 {
-    firstAlloc.value = nullptr;
-    firstAlloc.length = 0;
-    firstAlloc.next = nullptr;
-
-    header.first = &firstAlloc;
-    header.last = &firstAlloc;
-    header.next = __datasegmentend;
+    // Initialize the first one with an empty allocation
+    header.first = castptr<Allocation>(__datasegmentend);
+    header.first->next = nullptr;
+    header.first->length = 0;
 }
 
 ptr<T> MemoryAlloc<T>(word size)
 {
-    ptr<Allocation> next;
-    next = header.next;
+    // Loop through the allocations to find the end
+    ptr<Allocation> last = header.first;
+    while(last->next != nullptr)
+    {
+        last = last->next;
+    }
 
-    next->length = size;
-    next->next = nullptr;
-    next->value = offsetptr(header.next, sizeof(Allocation));
+    // Calculate where the next one is
+    ptr<void> newPos = offsetptr(castptr<void>(last), sizeof(Allocation) + last->length);
+    ptr<void> newMem = offsetptr(newPos, sizeof(Allocation));
 
-    header.last->next = next;
-    header.next = offsetptr(header.next, sizeof(Allocation) + size);
+    // Fill in the new one
+    ptr<Allocation> newAlloc = castptr<Allocation>(newPos);
+    newAlloc->next = nullptr;
+    newAlloc->length = size;
+
+    // Attach it
+    last->next = newAlloc;
+
+    // return new pointer value
+    return castptr<T>(newMem);
 }
 
 void MemoryFree(ptr<void> allocation)
@@ -45,6 +53,8 @@ void MemoryFree(ptr<void> allocation)
 
 void main()
 {
+    MemoryInit();
+
     ptr<void> alloc1;
     alloc1 = MemoryAlloc(100);
 }

@@ -204,7 +204,7 @@ offset_expression:
 
 cast_expression:
       CASTPTR_TOKEN LT fully_specified_type GT LEFT_PAREN expression RIGHT_PAREN
-                                                                    { $$ = new CastNode(pContext, $3, $6); }
+                                                                    { $$ = new CastNode(pContext, @$, $3, $6); }
     ;
 
 declaration:
@@ -212,7 +212,7 @@ declaration:
     ;
 
 variable_identifier:
-      IDENTIFIER                                                    { $$ = new IdentifierNode(pContext, $1); }
+      IDENTIFIER                                                    { $$ = new IdentifierNode(pContext, @$, $1); }
     ;
 
 function_prototype:
@@ -270,8 +270,8 @@ init_declarator_list:
     ;
 
 single_declaration:
-      fully_specified_type IDENTIFIER                               { $$ = new VariableDeclarationNode(pContext, $1, $2, nullptr); }
-    | fully_specified_type IDENTIFIER EQUAL expression              { $$ = new VariableDeclarationNode(pContext, $1, $2, $4); }
+      fully_specified_type IDENTIFIER                               { $$ = new VariableDeclarationNode(pContext, @$, $1, $2, nullptr); }
+    | fully_specified_type IDENTIFIER EQUAL expression              { $$ = new VariableDeclarationNode(pContext, @$, $1, $2, $4); }
     ;
 
 declaration_statement:

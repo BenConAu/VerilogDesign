@@ -6,6 +6,7 @@
 #include "../PhaethonObjWriter/ObjWriter.h"
 #include "Operand.h"
 #include "ASTNode.h"
+#include "PSL.tab.h"
 
 class FunctionDeclaratorNode;
 
@@ -46,6 +47,13 @@ class PSLCompilerContext
     std::vector<std::string> _symbols;
     int _indent = 0;
     void PrintIndent() { for (int i = 0; i < _indent; i++) { printf("  "); } }
+
+    void ReportError(const YYLTYPE &location, const char *pError)
+    {
+        char errorText[256];
+        sprintf(errorText, "Line %d: %s", location.first_line, pError);
+        throw std::string(errorText);
+    }
 
   private:
     std::vector<std::unique_ptr<ASTNode>> _rootNodes;

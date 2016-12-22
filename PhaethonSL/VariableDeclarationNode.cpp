@@ -6,6 +6,7 @@
 
 VariableDeclarationNode::VariableDeclarationNode(
     PSLCompilerContext *pContext,
+    const YYLTYPE &location,
     ASTNode *pType,
     int symIndex,
     ASTNode *pInitExpr) : ASTNode(pContext)
@@ -14,7 +15,7 @@ VariableDeclarationNode::VariableDeclarationNode(
 
     if (pInitExpr != nullptr)
     {
-        IdentifierNode *pLeft = new IdentifierNode(pContext, symIndex);
+        IdentifierNode *pLeft = new IdentifierNode(pContext, location, symIndex);
         AssignmentNode *pAssignment = new AssignmentNode(pContext, pLeft, pInitExpr);
 
         AddNode(pAssignment);

@@ -9,7 +9,7 @@ void CastNode::VerifyNodeImpl()
 
     if (pTypeNode == nullptr || pExpr == nullptr)
     {
-        throw "Wrong children nodes for CastPtr";
+        GetContext()->ReportError(_location, "Wrong children nodes for CastPtr");
     }
 
     TypeInfo *pGivenTypeInfo = pTypeNode->GetTypeInfo();
@@ -18,18 +18,7 @@ void CastNode::VerifyNodeImpl()
 
     if (pExprTypeInfo == nullptr)
     {
-        throw "Wrong type given to CastPtr";
-    }
-
-    BasicTypeInfo *pPointerBase = dynamic_cast<BasicTypeInfo *>(pExprTypeInfo->GetBaseType());
-    if (pPointerBase == nullptr)
-    {
-        throw "Not a pointer to basic type in castptr";
-    }
-
-    if (pPointerBase->GetTypeToken() != VOID_TOKEN)
-    {
-        throw "Can only cast a pointer to void";
+        GetContext()->ReportError(_location, "Wrong type given to CastPtr");
     }
 
     SetType(pCastTypeInfo);

@@ -1745,7 +1745,7 @@ yyreduce:
 
   case 46:
 #line 207 "PSL.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new CastNode(pContext, (yyvsp[-4].pNode), (yyvsp[-1].pNode)); }
+    { (yyval.pNode) = new CastNode(pContext, (yyloc), (yyvsp[-4].pNode), (yyvsp[-1].pNode)); }
 #line 1750 "PSL.tab.c" /* yacc.c:1661  */
     break;
 
@@ -1757,7 +1757,7 @@ yyreduce:
 
   case 48:
 #line 215 "PSL.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new IdentifierNode(pContext, (yyvsp[0].symIndex)); }
+    { (yyval.pNode) = new IdentifierNode(pContext, (yyloc), (yyvsp[0].symIndex)); }
 #line 1762 "PSL.tab.c" /* yacc.c:1661  */
     break;
 
@@ -1884,13 +1884,13 @@ yyreduce:
 
   case 69:
 #line 273 "PSL.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new VariableDeclarationNode(pContext, (yyvsp[-1].pNode), (yyvsp[0].symIndex), nullptr); }
+    { (yyval.pNode) = new VariableDeclarationNode(pContext, (yyloc), (yyvsp[-1].pNode), (yyvsp[0].symIndex), nullptr); }
 #line 1889 "PSL.tab.c" /* yacc.c:1661  */
     break;
 
   case 70:
 #line 274 "PSL.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new VariableDeclarationNode(pContext, (yyvsp[-3].pNode), (yyvsp[-2].symIndex), (yyvsp[0].pNode)); }
+    { (yyval.pNode) = new VariableDeclarationNode(pContext, (yyloc), (yyvsp[-3].pNode), (yyvsp[-2].symIndex), (yyvsp[0].pNode)); }
 #line 1895 "PSL.tab.c" /* yacc.c:1661  */
     break;
 

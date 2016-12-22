@@ -2,21 +2,24 @@
 
 #include "ASTNode.h"
 #include "PSLCompilerContext.h"
+#include "PSL.tab.h"
 
 class VariableDeclarationNode : public ASTNode
 {
-  public:
-    VariableDeclarationNode(
-        PSLCompilerContext *pContext,
-        ASTNode *pType,
-        int symIndex,
-        ASTNode *pInitExpr);
+public:
+  VariableDeclarationNode(
+      PSLCompilerContext *pContext,
+      const YYLTYPE &location,
+      ASTNode *pType,
+      int symIndex,
+      ASTNode *pInitExpr);
 
-    void PreVerifyNodeImpl() override;
-    void PostProcessNodeImpl() override;
-    const char *GetDebugName() override { return "VariableDeclarationNode"; }
+  void PreVerifyNodeImpl() override;
+  void PostProcessNodeImpl() override;
+  const char *GetDebugName() override { return "VariableDeclarationNode"; }
 
-  private:
-    int _symIndex;
-    bool _fGlobal;
+private:
+  int _symIndex;
+  YYLTYPE _location;
+  bool _fGlobal;
 };

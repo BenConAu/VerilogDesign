@@ -56,6 +56,10 @@ int main(int argc, char **argv)
     {
 		printf("Error: %s\n", pszMessage);
     }
+	catch (const std::string message)
+	{
+		printf("Error: %s\n", message.c_str());
+	}
 }
 
 void yyerror(YYLTYPE* pLocation, void *, const char *pszError)
