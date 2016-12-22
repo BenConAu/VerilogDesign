@@ -13,13 +13,13 @@ VariableInfo::VariableInfo(
     TypeInfo *pInfo                 // The type of the variable
     ) : SymbolInfo(pContext, symIndex)
 {
-    _pType = pInfo;
-    _pScope = pScope;
-
     if (pInfo == nullptr)
     {
         throw "Variables must have types";
     }
+
+    _pType = pInfo;
+    _pScope = pScope;
 
     if (_pScope == nullptr)
     {
@@ -30,7 +30,7 @@ VariableInfo::VariableInfo(
         _memLocation = _dataSegEnd;
 
         // And adjust for the new location
-        _dataSegEnd += 4;
+        _dataSegEnd += pInfo->GetSize();
     }
     else
     {

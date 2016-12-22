@@ -28,6 +28,11 @@ void FunctionCallNode::VerifyNodeImpl()
 {
     // Function needs to be defined
     FunctionInfo *pInfo = GetFunctionInfo();
+    if (pInfo == nullptr)
+    {
+        GetContext()->ReportError(_location, "Unknown function called");
+    }
+
     GenericTypeInfo *pGenericTypeInfo = pInfo->GetGenericTypeInfo();
 
     if (GetChild(0) != nullptr)

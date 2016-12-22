@@ -63,6 +63,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token SIZEOF_TOKEN
 %token OFFSETPTR_TOKEN
 %token CASTPTR_TOKEN
+%token DATASEGEND_TOKEN
 %token <symIndex> IDENTIFIER
 %type <pNode> variable_identifier
 %type <pNode> primary_expression
@@ -188,6 +189,7 @@ primary_expression:
     | BOOLCONSTANT                                                  { $$ = new ConstantNode(pContext, ConstantNode::Bool, $1); }
     | FLOATCONSTANT                                                 { $$ = new ConstantNode(pContext, $1); }
 	| NULLPTR_TOKEN                                                 { $$ = new ConstantNode(pContext, ConstantNode::Pointer); }
+    | DATASEGEND_TOKEN                                              { $$ = new KnownConstantNode(pContext, KnownConstants::DataSegmentEnd); }
     | sizeof_expression                                             { $$ = $1; }
     | offset_expression                                             { $$ = $1; }
     | cast_expression                                               { $$ = $1; }

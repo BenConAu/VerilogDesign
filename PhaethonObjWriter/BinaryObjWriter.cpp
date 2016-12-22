@@ -71,6 +71,8 @@ void BinaryObjWriter::OutputInstruction(
 
             if (args[wordArg]._fMemoryLocation)
             {
+                //printf("Adding a memory location\n");
+
                 // The index of the last word is a memory location
                 _memLocations.push_back(_wordCache.size() - 1);
             }

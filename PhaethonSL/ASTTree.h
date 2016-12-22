@@ -20,3 +20,4 @@
 #include "CastNode.h"
 #include "IfStatementNode.h"
 #include "WhileStatementNode.h"
+#include "KnownConstantNode.h"

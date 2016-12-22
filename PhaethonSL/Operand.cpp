@@ -50,6 +50,22 @@ Operand::Operand(
     _objArg._fMemoryLocation = true;
 }
 
+// An operand that loads a known constant into a register 
+// so that it can be used later
+Operand::Operand(
+    KnownConstants constant
+    )
+{
+    // Fill in the actual byte position
+    _objArg._argType = OperandType::Constant;
+    _objArg._value = VariableInfo::GetDataSegmentEnd();
+    _objArg._offset = -1;
+
+    // This is a memory location, because it is pointing to memory
+    _objArg._memberName = "__datasegmentend";
+    _objArg._fMemoryLocation = true;
+}
+
 // An offset operand comes from a register (already allocated) and
 // a structure variable with member.
 Operand::Operand(

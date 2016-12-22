@@ -32,6 +32,8 @@ PSLcc: lex.yy.c \
 	   IdentifierNode.h \
 	   IfStatementNode.cpp \
 	   IfStatementNode.h \
+	   KnownConstantNode.cpp \
+	   KnownConstantNode.h \
 	   OffsetNode.cpp \
 	   OffsetNode.h \
 	   Operand.cpp \
@@ -100,6 +102,7 @@ PSLcc: lex.yy.c \
 	   FunctionParameterNode.cpp \
 	   IdentifierNode.cpp \
 	   IfStatementNode.cpp \
+	   KnownConstantNode.cpp \
 	   OffsetNode.cpp \
 	   OperatorNode.cpp \
 	   Operand.cpp \

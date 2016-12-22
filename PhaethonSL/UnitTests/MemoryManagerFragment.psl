@@ -1,0 +1,32 @@
+// Each allocation has one of these
+struct Allocation
+{
+    ptr<Allocation> next;
+    word length;
+};
+
+// Something to hold the start of the allocations
+struct AllocationHeader
+{
+    ptr<Allocation> first;
+};
+
+// The actual header
+AllocationHeader header;
+
+void MemoryInit()
+{
+    // Initialize the first one with an empty allocation
+    header.first = castptr<Allocation>(__datasegmentend);
+    header.first->next = nullptr;
+    header.first->length = 0;
+}
+
+void main()
+{
+    MemoryInit();
+
+    debugout(header.first);
+    debugout(header.first->next);
+    debugout(header.first->length);
+}

@@ -34,6 +34,8 @@ class VariableInfo : public SymbolInfo
 
     TypeInfo *GetTypeInfo() { return _pType; }
 
+    static unsigned int GetDataSegmentEnd() { return _dataSegEnd; }
+
   private:
     // Type of location (globals are stored in data segment, local backed by register)
     LocationType _locationType;
