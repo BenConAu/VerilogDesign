@@ -1920,25 +1920,25 @@ yyreduce:
 
   case 75:
 #line 291 "PSL.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new FunctionCallNode(pContext, (yyvsp[-1].symIndex), nullptr, nullptr); }
+    { (yyval.pNode) = new FunctionCallNode(pContext, (yyloc), (yyvsp[-1].symIndex), nullptr, nullptr); }
 #line 1925 "PSL.tab.c" /* yacc.c:1661  */
     break;
 
   case 76:
 #line 292 "PSL.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new FunctionCallNode(pContext, (yyvsp[-4].symIndex), (yyvsp[-2].pNode), nullptr); }
+    { (yyval.pNode) = new FunctionCallNode(pContext, (yyloc), (yyvsp[-4].symIndex), (yyvsp[-2].pNode), nullptr); }
 #line 1931 "PSL.tab.c" /* yacc.c:1661  */
     break;
 
   case 77:
 #line 293 "PSL.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new FunctionCallNode(pContext, (yyvsp[-2].symIndex), nullptr, (yyvsp[0].pNode)); }
+    { (yyval.pNode) = new FunctionCallNode(pContext, (yyloc), (yyvsp[-2].symIndex), nullptr, (yyvsp[0].pNode)); }
 #line 1937 "PSL.tab.c" /* yacc.c:1661  */
     break;
 
   case 78:
 #line 295 "PSL.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new FunctionCallNode(pContext, (yyvsp[-5].symIndex), (yyvsp[-3].pNode), (yyvsp[0].pNode)); }
+    { (yyval.pNode) = new FunctionCallNode(pContext, (yyloc), (yyvsp[-5].symIndex), (yyvsp[-3].pNode), (yyvsp[0].pNode)); }
 #line 1943 "PSL.tab.c" /* yacc.c:1661  */
     break;
 

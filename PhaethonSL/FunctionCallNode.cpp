@@ -8,6 +8,7 @@
 
 FunctionCallNode::FunctionCallNode(
     PSLCompilerContext *pContext,
+    const YYLTYPE &location,
     int symIndex,
     ASTNode *pGenericType,
     ASTNode *pFirstArg) : ExpressionNode(pContext)
@@ -20,6 +21,7 @@ FunctionCallNode::FunctionCallNode(
     }
 
     _symIndex = symIndex;
+    _location = location;
 }
 
 void FunctionCallNode::VerifyNodeImpl()
@@ -32,7 +34,7 @@ void FunctionCallNode::VerifyNodeImpl()
     {
         if (pGenericTypeInfo == nullptr)
         {
-            throw "Generic function called with no generic type argument";
+            GetContext()->ReportError(_location, "Generic function called with no generic type argument");
         }
 
         // Called with template syntax so we need to replace the type
@@ -45,7 +47,7 @@ void FunctionCallNode::VerifyNodeImpl()
     {
         if (pGenericTypeInfo != nullptr)
         {
-            throw "Non-generic function called with generic type argument";
+            GetContext()->ReportError(_location, "Non-generic function called with generic type argument");
         }
 
         SetType(pInfo->GetReturnTypeInfo());

@@ -288,11 +288,11 @@ function_call:
     ;
 
 function_call_header:
-      IDENTIFIER LEFT_PAREN                                         { $$ = new FunctionCallNode(pContext, $1, nullptr, nullptr); }
-    | IDENTIFIER LT fully_specified_type GT LEFT_PAREN              { $$ = new FunctionCallNode(pContext, $1, $3, nullptr); }
-    | IDENTIFIER LEFT_PAREN assignment_expression                   { $$ = new FunctionCallNode(pContext, $1, nullptr, $3); }
+      IDENTIFIER LEFT_PAREN                                         { $$ = new FunctionCallNode(pContext, @$, $1, nullptr, nullptr); }
+    | IDENTIFIER LT fully_specified_type GT LEFT_PAREN              { $$ = new FunctionCallNode(pContext, @$, $1, $3, nullptr); }
+    | IDENTIFIER LEFT_PAREN assignment_expression                   { $$ = new FunctionCallNode(pContext, @$, $1, nullptr, $3); }
     | IDENTIFIER LT fully_specified_type GT LEFT_PAREN assignment_expression  
-                                                                    { $$ = new FunctionCallNode(pContext, $1, $3, $6); }
+                                                                    { $$ = new FunctionCallNode(pContext, @$, $1, $3, $6); }
     | function_call_header COMMA assignment_expression              { $$ = $1; $$->AddNode($3); }
     ;
 

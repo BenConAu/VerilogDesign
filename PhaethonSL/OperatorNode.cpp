@@ -105,8 +105,7 @@ ExpressionResult *OperatorNode::CalculateResult()
         leftWrap.GetWrapped(),
         rightWrap.GetWrapped());
 
-    printf("Operator with result of type = %s\n", GetTypeInfo()->DebugPrint().c_str());
-
+    //printf("Operator with result of type = %s\n", GetTypeInfo()->DebugPrint().c_str());
     //printf("Making result for %p with register collection %p\n", this, pFunc->GetRegCollection());
     return new ExpressionResult(GetTypeInfo(), resultOperand, pFunc->GetRegCollection());
 }
