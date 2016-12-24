@@ -28,6 +28,8 @@
 "("                  { return LEFT_PAREN; }
 ")"                  { return RIGHT_PAREN; }
 "->"                 { return ARROW; }
+"<<"                 { return SHIFTLEFT; }
+">>"                 { return SHIFTRIGHT; }
 "<"                  { return LT; }
 ">"                  { return GT; }
 "\."                 { return DOT; }

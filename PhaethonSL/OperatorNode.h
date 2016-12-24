@@ -9,6 +9,8 @@ enum class Operator
     Multiply,
     Add,
     Subtract,
+    ShiftLeft,
+    ShiftRight,
     Equal,
     NotEqual
 };
@@ -44,5 +46,5 @@ class OperatorNode : public ExpressionNode
     Operator _op;
     OperatorInfo _opInfo;
 
-    static OperatorInfo _opTable[5];
+    static OperatorInfo _opTable[7];
 };

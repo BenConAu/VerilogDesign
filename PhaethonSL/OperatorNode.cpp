@@ -2,10 +2,12 @@
 #include "FunctionDeclaratorNode.h"
 #include "PSL.tab.h"
 
-OperatorInfo OperatorNode::_opTable[5] = {
+OperatorInfo OperatorNode::_opTable[7] = {
     {Operator::Multiply,    OpCodes::Unknown,   OpCodes::FmulRRR, ResultTypeMethod::Both},
     {Operator::Add,         OpCodes::AddRRR,    OpCodes::FaddRRR, ResultTypeMethod::Both},
     {Operator::Subtract,    OpCodes::SubRRR,    OpCodes::Unknown, ResultTypeMethod::Both},
+    {Operator::ShiftLeft,   OpCodes::ShlRRR,    OpCodes::Unknown, ResultTypeMethod::Both},
+    {Operator::ShiftRight,  OpCodes::ShrRRR,    OpCodes::Unknown, ResultTypeMethod::Both},
     {Operator::Equal,       OpCodes::CmpERRR,   OpCodes::Unknown, ResultTypeMethod::Bool},
     {Operator::NotEqual,    OpCodes::CmpNeRRR,  OpCodes::Unknown, ResultTypeMethod::Bool},
 };

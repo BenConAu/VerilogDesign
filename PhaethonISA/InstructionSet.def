@@ -27,6 +27,8 @@ Sub      Register              Register              Register  NoFlags
 MulAdd   Register              Register              Constant  NoFlags
 Inc      Register              None                  None      NoFlags
 Dec      Register              None                  None      NoFlags
+Shl      Register              Register              Register  NoFlags
+Shr      Register              Register              Register  NoFlags
 Fadd     Register              Register              Register  NoFlags
 Fsub     Register              Register              None      NoFlags
 Fconv    Register              None                  None      NoFlags

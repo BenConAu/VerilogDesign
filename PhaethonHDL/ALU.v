@@ -479,6 +479,9 @@ module ALU(
           `SubRRR:     regarray[regAddress[7:0]] <= regValue2[0] - regValue3[0]; // add reg, reg, reg
           `IncR:       regarray[regAddress[7:0]] <= regValue[0] + 1;             // dec reg
           `DecR:       regarray[regAddress[7:0]] <= regValue[0] - 1;             // dec reg
+          `ShlRRR:     regarray[regAddress[7:0]] <= regValue2[0] << regValue3[0];// shl reg, reg, reg
+          `ShrRRR:     regarray[regAddress[7:0]] <= regValue2[0] >> regValue3[0];// shl reg, reg, reg
+
           `MulAddRRC:  regarray[regAddress[7:0]] <= regValue[0] + regValue2[0] * opDataWord;
 
           `DoutR: begin

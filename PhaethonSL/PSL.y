@@ -40,6 +40,8 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token RIGHT_PAREN
 %token LT
 %token GT
+%token SHIFTLEFT
+%token SHIFTRIGHT
 %token ARROW
 %token DOT
 %token COMMA
@@ -102,6 +104,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> selection_statement
 %type <pNode> selection_rest_statement
 %type <pNode> equality_expression
+%type <pNode> shift_expression
 
 %%
 
@@ -155,9 +158,15 @@ assignment_expression:
     ;
 
 equality_expression:
+      shift_expression                                              { $$ = $1; }
+    | equality_expression EQUAL_OP shift_expression                 { $$ = new OperatorNode(pContext, $1, $3, Operator::Equal); }
+    | equality_expression NOTEQUAL_OP shift_expression              { $$ = new OperatorNode(pContext, $1, $3, Operator::NotEqual); }
+    ;
+
+shift_expression:
       additive_expression                                           { $$ = $1; }
-    | equality_expression EQUAL_OP additive_expression              { $$ = new OperatorNode(pContext, $1, $3, Operator::Equal); }
-    | equality_expression NOTEQUAL_OP additive_expression           { $$ = new OperatorNode(pContext, $1, $3, Operator::NotEqual); }
+    | equality_expression SHIFTLEFT additive_expression             { $$ = new OperatorNode(pContext, $1, $3, Operator::ShiftLeft); }
+    | equality_expression SHIFTRIGHT additive_expression            { $$ = new OperatorNode(pContext, $1, $3, Operator::ShiftRight); }
     ;
 
 additive_expression:
