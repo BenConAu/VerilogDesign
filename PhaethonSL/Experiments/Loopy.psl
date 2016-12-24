@@ -1,0 +1,13 @@
+void main()
+{
+    word i = 1;
+    while (true)
+    {
+        i = i << 1;
+        if (i == 0)
+        {
+            i = 1;
+        }
+        debugout(i);
+    }
+}
