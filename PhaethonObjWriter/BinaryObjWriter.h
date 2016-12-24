@@ -15,15 +15,8 @@ struct LabelInfo
   size_t _location;  // The location for that label in the stream
 };
 
-class BinaryObjWriter : public ObjWriter
+class BinaryWriterBase : public ObjWriter
 {
-public:
-  BinaryObjWriter(const char *pszFilename);
-  ~BinaryObjWriter();
-
-  void OutputBytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned char b4);
-  void OutputWord(unsigned int w);
-
   void OutputInstruction(
       OpCodes::Enum opCode,
       ObjArgument *args) override;
@@ -33,14 +26,41 @@ public:
 
   void FinishCode() override;
 
-private:
-  void WriteWordToFile(unsigned int w);
+protected:
+  virtual void WriteWordToFile(unsigned int w) = 0;
+
+protected:
   size_t EnsureLabelInfo(const std::string &label);
+  void OutputWord(unsigned int w);
+  void OutputBytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned char b4);
 
 private:
   std::vector<unsigned int> _wordCache; // Cache of words to be output to object file
   std::vector<size_t> _memLocations;    // Index of which words have memory locations that need offsetting
   std::vector<size_t> _labelLocations;
   std::vector<LabelInfo> _labels;
+};
+
+class BinaryObjWriter : public BinaryWriterBase
+{
+public:
+  BinaryObjWriter(const char *pszFilename);
+  ~BinaryObjWriter();
+
+  void WriteWordToFile(unsigned int w) override;
+
+private:
+  FILE *_pOutFile;
+};
+
+class BinObjWriter : public BinaryWriterBase
+{
+public:
+  BinObjWriter(const char *pszFilename);
+  ~BinObjWriter();
+
+  void WriteWordToFile(unsigned int w) override;
+
+private:
   FILE *_pOutFile;
 };

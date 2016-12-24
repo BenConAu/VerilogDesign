@@ -4,16 +4,11 @@
 
 BinaryObjWriter::BinaryObjWriter(const char *pszFilename)
 {
-    _pOutFile = ::fopen(pszFilename, "w");
+    _pOutFile = ::fopen(pszFilename, "w");    
 }
 
 BinaryObjWriter::~BinaryObjWriter()
 {
-    for (size_t i = 0; i < _wordCache.size(); i++)
-    {
-        WriteWordToFile(_wordCache[i]);
-    }
-
     ::fprintf(_pOutFile, "@7ff\n");
     ::fclose(_pOutFile);
 }
@@ -29,7 +24,22 @@ void BinaryObjWriter::WriteWordToFile(unsigned int w)
         static_cast<unsigned char>(w >> 24 & 0xFF));
 }
 
-void BinaryObjWriter::OutputBytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned char b4)
+BinObjWriter::BinObjWriter(const char *pszFilename)
+{
+    _pOutFile = ::fopen(pszFilename, "wb");    
+}
+
+BinObjWriter::~BinObjWriter()
+{
+    ::fclose(_pOutFile);
+}
+
+void BinObjWriter::WriteWordToFile(unsigned int w)
+{
+    ::fwrite(&w, 1, sizeof(w), _pOutFile);
+}
+
+void BinaryWriterBase::OutputBytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned char b4)
 {
     OutputWord(
         ((unsigned int)b1) |
@@ -38,12 +48,12 @@ void BinaryObjWriter::OutputBytes(unsigned char b1, unsigned char b2, unsigned c
         ((unsigned int)b4 << 24));
 }
 
-void BinaryObjWriter::OutputWord(unsigned int w)
+void BinaryWriterBase::OutputWord(unsigned int w)
 {
     _wordCache.push_back(w);
 }
 
-void BinaryObjWriter::OutputInstruction(
+void BinaryWriterBase::OutputInstruction(
     OpCodes::Enum opCode,
     ObjArgument *args)
 {
@@ -85,7 +95,7 @@ void BinaryObjWriter::OutputInstruction(
     }
 }
 
-size_t BinaryObjWriter::EnsureLabelInfo(const std::string &label)
+size_t BinaryWriterBase::EnsureLabelInfo(const std::string &label)
 {
     for (size_t i = 0; i < _labels.size(); i++)
     {
@@ -99,7 +109,7 @@ size_t BinaryObjWriter::EnsureLabelInfo(const std::string &label)
     return (_labels.size() - 1);
 }
 
-void BinaryObjWriter::OutputLabel(const char *pszLabel)
+void BinaryWriterBase::OutputLabel(const char *pszLabel)
 {
     size_t index = EnsureLabelInfo(pszLabel);
 
@@ -109,7 +119,7 @@ void BinaryObjWriter::OutputLabel(const char *pszLabel)
     _labels[index]._location = _wordCache.size() * 4;
 }
 
-void BinaryObjWriter::FinishCode()
+void BinaryWriterBase::FinishCode()
 {
     // All of the following words are going to be memory so we know
     // where memory starts now.
@@ -134,4 +144,9 @@ void BinaryObjWriter::FinishCode()
         // Change it to the real location
         _wordCache[labelLoc] = _labels[index]._location;
     }
+
+    for (size_t i = 0; i < _wordCache.size(); i++)
+    {
+        WriteWordToFile(_wordCache[i]);
+    }    
 }

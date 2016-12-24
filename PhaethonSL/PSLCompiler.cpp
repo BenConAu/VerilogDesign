@@ -34,6 +34,7 @@ int main(int argc, char **argv)
 
 		const char *pszAsmName = nullptr;
 		const char *pszObjName = nullptr;
+		const char *pszBinName = nullptr;
 
 		for (int i = 2; i < argc; i++)
 		{
@@ -46,9 +47,14 @@ int main(int argc, char **argv)
 		    {
 				pszObjName = argv[i];
 		    }
+
+		    if (ends_with(argv[i], ".bin"))
+		    {
+				pszBinName = argv[i];
+		    }
 		}
 
-	    PSLCompilerContext context(myfile, pszAsmName, pszObjName);
+	    PSLCompilerContext context(myfile, pszAsmName, pszObjName, pszBinName);
 
 		context.Parse();
     }

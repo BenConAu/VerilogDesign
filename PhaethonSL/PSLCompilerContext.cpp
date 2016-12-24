@@ -9,7 +9,8 @@
 PSLCompilerContext::PSLCompilerContext(
     FILE *pFile,
     const char *pszAsmName,
-    const char *pszObjName) : _varCollection(this)
+    const char *pszObjName,
+    const char *pszBinName) : _varCollection(this)
 {
     _pEntryPoint = nullptr;
     _numStructs = 0;
@@ -25,6 +26,11 @@ PSLCompilerContext::PSLCompilerContext(
     if (pszObjName != nullptr)
     {
         _writers.push_back(std::unique_ptr<ObjWriter>(new BinaryObjWriter(pszObjName)));
+    }
+
+    if (pszBinName != nullptr)
+    {
+        _writers.push_back(std::unique_ptr<ObjWriter>(new BinObjWriter(pszBinName)));
     }
 
     if (_writers.size() == 0)
