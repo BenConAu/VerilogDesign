@@ -7,7 +7,7 @@ module FloatingMultiply(a, b, out, debug, clk, enable);
   input wire [31:0] b;
   integer i;
 
-  `include "FloatingHelper.v"
+  `include "FloatingHelper.sv"
 
   reg [1:0] sign;
   reg [7:0] aExp;

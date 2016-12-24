@@ -9,7 +9,7 @@ module FloatingMultiplyAdd(a, b, c, out, debug, clk, enable);
   input wire [31:0] b;
   input wire [31:0] c;
 
-  `include "FloatingHelper.v"
+  `include "FloatingHelper.sv"
 
   // Intermediates for a and b
   reg [7:0] aExp;

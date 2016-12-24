@@ -5,7 +5,7 @@ module FloatingFromInt(aSigned, out, debug, clk, enable);
   input wire [31:0] aSigned;
   input wire [0:0] enable;
 
-  `include "FloatingHelper.v"
+  `include "FloatingHelper.sv"
 
   reg [63:0] aBeforeMant;
   reg [31:0] clz;
