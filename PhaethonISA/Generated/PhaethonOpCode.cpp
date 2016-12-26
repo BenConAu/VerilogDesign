@@ -43,9 +43,11 @@ OpCodeData OpCodeData::s_data[] = {
     { Instructions::Mov       , OpCodes::MovRC          , { OperandType::Register              , OperandType::Constant              , OperandType::None         }, 1, "MovRC" },
     { Instructions::Mov       , OpCodes::MovRdR         , { OperandType::Register              , OperandType::DerefRegister         , OperandType::None         }, -1, "MovRdR" },
     { Instructions::Mov       , OpCodes::MovRdRo        , { OperandType::Register              , OperandType::DerefRegisterOffset   , OperandType::None         }, 1, "MovRdRo" },
+    { Instructions::Mov       , OpCodes::MovRdRiR       , { OperandType::Register              , OperandType::DerefRegisterIndex    , OperandType::Register     }, 1, "MovRdRiR" },
     { Instructions::Mov       , OpCodes::MovRdC         , { OperandType::Register              , OperandType::DerefConstant         , OperandType::None         }, 1, "MovRdC" },
     { Instructions::Mov       , OpCodes::MovdCR         , { OperandType::DerefConstant         , OperandType::Register              , OperandType::None         }, 0, "MovdCR" },
     { Instructions::Mov       , OpCodes::MovdRoR        , { OperandType::DerefRegisterOffset   , OperandType::Register              , OperandType::None         }, 0, "MovdRoR" },
+    { Instructions::Mov       , OpCodes::MovdRiRR       , { OperandType::DerefRegisterIndex    , OperandType::Register              , OperandType::Register     }, 0, "MovdRiRR" },
     { Instructions::Push      , OpCodes::PushR          , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "PushR" },
     { Instructions::Pop       , OpCodes::PopR           , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "PopR" },
     { Instructions::Cmp       , OpCodes::CmpRR          , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "CmpRR" },
@@ -89,9 +91,11 @@ bool Is8ByteOpcode(OpCodes::Enum opCodeParam)
 {
     if (opCodeParam == OpCodes::MovRC ||
         opCodeParam == OpCodes::MovRdRo ||
+        opCodeParam == OpCodes::MovRdRiR ||
         opCodeParam == OpCodes::MovRdC ||
         opCodeParam == OpCodes::MovdCR ||
         opCodeParam == OpCodes::MovdRoR ||
+        opCodeParam == OpCodes::MovdRiRR ||
         opCodeParam == OpCodes::CmpRC ||
         opCodeParam == OpCodes::JmpC ||
         opCodeParam == OpCodes::JneC ||
@@ -111,9 +115,11 @@ bool IsRAMOpcode(OpCodes::Enum opCodeParam)
 {
     if (opCodeParam == OpCodes::MovRdR ||
         opCodeParam == OpCodes::MovRdRo ||
+        opCodeParam == OpCodes::MovRdRiR ||
         opCodeParam == OpCodes::MovRdC ||
         opCodeParam == OpCodes::MovdCR ||
         opCodeParam == OpCodes::MovdRoR ||
+        opCodeParam == OpCodes::MovdRiRR ||
         opCodeParam == OpCodes::PushR ||
         opCodeParam == OpCodes::PopR ||
         opCodeParam == OpCodes::CallR ||

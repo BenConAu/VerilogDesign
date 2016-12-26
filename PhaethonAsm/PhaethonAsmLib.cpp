@@ -99,4 +99,6 @@ void OutputCode(const char* pszName)
 			pDS->OutputDataSegment();
 		}
 	}
+
+	s_pWriter->FinishCode();
 }

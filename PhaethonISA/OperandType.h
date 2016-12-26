@@ -13,6 +13,7 @@ enum class OperandType : int
     DerefConstant,  		// The operand is a memory location at the given constant location
 	DerefRegister,  		// The operand is a memory location at the given register location
     DerefRegisterOffset,	// Just like above, but with a constant offset
+    DerefRegisterIndex,	    // Just like above, but with an index offset
 };
 
 class OperandTypeHelper

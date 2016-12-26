@@ -2,52 +2,56 @@
 `define MovRC 2
 `define MovRdR 3
 `define MovRdRo 4
-`define MovRdC 5
-`define MovdCR 6
-`define MovdRoR 7
-`define PushR 8
-`define PopR 9
-`define CmpRR 10
-`define CmpRC 11
-`define CmpERRR 12
-`define CmpNeRRR 13
-`define JmpC 14
-`define JneC 15
-`define JeC 16
-`define JzRC 17
-`define JnzRC 18
-`define CallR 19
-`define Ret 20
-`define RCallRC 21
-`define RRet 22
-`define AddRRC 23
-`define AddRRR 24
-`define SubRRC 25
-`define SubRRR 26
-`define MulAddRRC 27
-`define IncR 28
-`define DecR 29
-`define ShlRRR 30
-`define ShrRRR 31
-`define FaddRRR 32
-`define FsubRR 33
-`define FconvR 34
-`define FmulRRR 35
-`define FdivRR 36
-`define FmuladdRRR 37
-`define FminRR 38
-`define FmaxRR 39
-`define VfaddRRR 40
-`define DoutR 41
-`define Stall 42
+`define MovRdRiR 5
+`define MovRdC 6
+`define MovdCR 7
+`define MovdRoR 8
+`define MovdRiRR 9
+`define PushR 10
+`define PopR 11
+`define CmpRR 12
+`define CmpRC 13
+`define CmpERRR 14
+`define CmpNeRRR 15
+`define JmpC 16
+`define JneC 17
+`define JeC 18
+`define JzRC 19
+`define JnzRC 20
+`define CallR 21
+`define Ret 22
+`define RCallRC 23
+`define RRet 24
+`define AddRRC 25
+`define AddRRR 26
+`define SubRRC 27
+`define SubRRR 28
+`define MulAddRRC 29
+`define IncR 30
+`define DecR 31
+`define ShlRRR 32
+`define ShrRRR 33
+`define FaddRRR 34
+`define FsubRR 35
+`define FconvR 36
+`define FmulRRR 37
+`define FdivRR 38
+`define FmuladdRRR 39
+`define FminRR 40
+`define FmaxRR 41
+`define VfaddRRR 42
+`define DoutR 43
+`define Stall 44
 
 function [0:0] Is8ByteOpcode;
   input [7:0] opCodeParam;
   if (opCodeParam == `MovRC ||
       opCodeParam == `MovRdRo ||
+      opCodeParam == `MovRdRiR ||
       opCodeParam == `MovRdC ||
       opCodeParam == `MovdCR ||
       opCodeParam == `MovdRoR ||
+      opCodeParam == `MovdRiRR ||
       opCodeParam == `CmpRC ||
       opCodeParam == `JmpC ||
       opCodeParam == `JneC ||
@@ -67,9 +71,11 @@ function [0:0] IsRAMOpcode;
   input [7:0] opCodeParam;
   if (opCodeParam == `MovRdR ||
       opCodeParam == `MovRdRo ||
+      opCodeParam == `MovRdRiR ||
       opCodeParam == `MovRdC ||
       opCodeParam == `MovdCR ||
       opCodeParam == `MovdRoR ||
+      opCodeParam == `MovdRiRR ||
       opCodeParam == `PushR ||
       opCodeParam == `PopR ||
       opCodeParam == `CallR ||

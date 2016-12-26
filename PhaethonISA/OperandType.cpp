@@ -7,6 +7,7 @@ const char* OperandTypeHelper::ppszTypeText[] = {
     "DerefConstant",
     "DerefRegister",
     "DerefRegisterOffset",
+    "DerefRegisterIndex"
 };
 
 const char* OperandTypeHelper::ppszShortTypeText[] = {
@@ -16,4 +17,5 @@ const char* OperandTypeHelper::ppszShortTypeText[] = {
     "dC",
     "dR",
     "dRo",
+    "dRi",
 };

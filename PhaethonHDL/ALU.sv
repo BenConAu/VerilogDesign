@@ -259,6 +259,15 @@ module ALU(
           //$display("Requesting read from %h", opDataWord + regValue2);
         end
 
+        if (opCode == `MovRdRiR)
+        begin
+          // Read values from address encoded in code
+          readReq <= 1;
+          ramAddress <= regValue2[0] + opDataWord * regValue3[0];
+
+          //$display("Requesting read from %h", opDataWord + regValue2);
+        end
+
         if (opCode == `MovRdR)
         begin
           // Read values from address encoded in code
@@ -297,6 +306,16 @@ module ALU(
           //$display("Reqesting write %h to address value %h", regValue2[0], opDataWord + regValue[0]);
         end
 
+        if (opCode == `MovdRiRR)
+        begin
+          // Write values to ram requested by instruction
+          writeReq <= 1;
+          ramAddress <= regValue[0] + opDataWord * regValue2[0];
+          ramOut <= regValue3[0];
+
+          //$display("Reqesting write %h to address value %h", regValue2[0], opDataWord + regValue[0]);
+        end
+
         if (opCode == `PushR)
         begin
           // Write register value to stack
@@ -326,7 +345,7 @@ module ALU(
       // Mode 5: Complete data read or write if the instruction
       //         requires it.
       5: begin
-        if (opCode == `MovRdC || opCode == `MovRdRo || opCode == `MovRdR || opCode == `PopR || opCode == `Ret)
+        if (opCode == `MovRdC || opCode == `MovRdRo || opCode == `MovRdRiR || opCode == `MovRdR || opCode == `PopR || opCode == `Ret)
         begin
           // Stop request
           readReq <= 0;
@@ -342,7 +361,7 @@ module ALU(
             mode <= 6;
           end
         end
-        else if (opCode == `MovdCR || opCode == `MovdRoR || opCode == `PushR || opCode == `CallR)
+        else if (opCode == `MovdCR || opCode == `MovdRoR || opCode == `MovdRiRR || opCode == `PushR || opCode == `CallR)
         begin
           // Stop request
           writeReq <= 0;
@@ -371,9 +390,11 @@ module ALU(
           `MovRdC:   regarray[regAddress[7:0]] <= ramValue;               // mov reg, [addr]
           `MovRR:    regarray[regAddress[7:0]] <= regValue2[0];           // mov reg, reg
           `MovRdRo:  regarray[regAddress[7:0]] <= ramValue;               // mov reg, [reg + const]
+          `MovRdRiR: regarray[regAddress[7:0]] <= ramValue;               // mov reg, [reg + const * reg]
           `MovRdR:   regarray[regAddress[7:0]] <= ramValue;               // mov reg, [reg]
-          `MovdCR: begin end // Done above
-          `MovdRoR: begin end // Done above
+          `MovdCR:   begin end // Done above
+          `MovdRoR:  begin end // Done above
+          `MovdRiRR: begin end // Done above
 
           `PushR: begin
             regarray[0] <= regarray[0] + 4;                             // push reg

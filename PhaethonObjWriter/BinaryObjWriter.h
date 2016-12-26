@@ -17,6 +17,7 @@ struct LabelInfo
 
 class BinaryWriterBase : public ObjWriter
 {
+public:
   void OutputInstruction(
       OpCodes::Enum opCode,
       ObjArgument *args) override;
@@ -26,12 +27,13 @@ class BinaryWriterBase : public ObjWriter
 
   void FinishCode() override;
 
+  void OutputWord(unsigned int w);
+
 protected:
   virtual void WriteWordToFile(unsigned int w) = 0;
 
 protected:
   size_t EnsureLabelInfo(const std::string &label);
-  void OutputWord(unsigned int w);
   void OutputBytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned char b4);
 
 private:
