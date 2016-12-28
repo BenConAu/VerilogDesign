@@ -7,6 +7,7 @@ struct foo2
 {
     word a;
     word b[5];
+    word c;
 };
 
 foo fooVar;
@@ -19,6 +20,10 @@ void main()
 
     foo2Var.a = 1;
     foo2Var.b[0] = 2;
+    foo2Var.b[4] = 3;
+    foo2Var.c = 4;
     debugout(foo2Var.a);
     debugout(foo2Var.b[0]);
+    debugout(foo2Var.b[4]);
+    debugout(foo2Var.c);
 }
