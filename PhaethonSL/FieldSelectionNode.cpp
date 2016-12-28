@@ -102,7 +102,7 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
     // We need a register to offset. If we have one already then great, otherwise
     // we need to do the work to ensure that we have one for the path that arrived
     // here.
-    if (childResult->GetOperandType() == OperandType::Constant)
+    if (childResult->GetResultType() == ExpressionResultType::Constant)
     {
         //printf("Need to upgrade operand from constant\n");
 
@@ -121,8 +121,8 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
         fSetBaseRegister = true;
     }
     else if (
-        childResult->GetOperandType() == OperandType::DerefRegisterOffset ||
-        childResult->GetOperandType() == OperandType::DerefRegisterIndex)
+        childResult->GetResultType() == ExpressionResultType::DerefRegisterOffset ||
+        childResult->GetResultType() == ExpressionResultType::DerefRegisterIndex)
     {
         //printf("Need to upgrade operand from offset operand\n");
 
@@ -143,9 +143,9 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
     else
     {
         // It needs to be something that we can select from
-        if (childResult->GetOperandType() != OperandType::Register)
+        if (childResult->GetResultType() != ExpressionResultType::Register)
         {
-            printf("Type is %d\n", childResult->GetOperandType());
+            printf("Type is %d\n", childResult->GetResultType());
             throw "This pointer needs to be in a register by now";
         }
 

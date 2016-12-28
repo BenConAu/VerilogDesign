@@ -65,9 +65,9 @@ void AssignmentNode::PostProcessNodeImpl()
     //rightResult->DebugPrint();
 
     // Figure out what kind of LHS expression we have
-    switch (leftResult->GetOperandType())
+    switch (leftResult->GetResultType())
     {
-    case OperandType::Register:
+    case ExpressionResultType::Register:
     {
         // The great thing about registers is that everything can move into them
         GetContext()->OutputMovInstruction(
@@ -76,9 +76,9 @@ void AssignmentNode::PostProcessNodeImpl()
     }
     break;
 
-    case OperandType::DerefConstant:
-    case OperandType::DerefRegisterOffset:
-    case OperandType::DerefRegisterIndex:
+    case ExpressionResultType::DerefConstant:
+    case ExpressionResultType::DerefRegisterOffset:
+    case ExpressionResultType::DerefRegisterIndex:
     {
         // Need to make a register for this to work
         RegisterWrapper wrapper(

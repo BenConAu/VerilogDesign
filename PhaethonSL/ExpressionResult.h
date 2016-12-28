@@ -9,6 +9,17 @@
 
 class TypeInfo;
 
+enum class ExpressionResultType
+{
+    None = 0,       		// Used for error conditions and the such or unintialized types
+    Constant,       		// The operand is a constant
+    Register,       		// The operand is a register
+    DerefConstant,  		// The operand is a memory location at the given constant location
+	DerefRegister,  		// The operand is a memory location at the given register location
+    DerefRegisterOffset,	// Just like above, but with a constant offset
+    DerefRegisterIndex,	    // Just like above, but with an index offset
+};
+
 // An ExpressionResult stores everything needed when an expression finishes and
 // includes anything that will be freed when the result is no longer needed.
 //
@@ -32,13 +43,8 @@ struct ExpressionResult
         _pTypeInfo = pNewInfo;
     }
 
-    void AddOperand(const Operand& op, bool temp)
-    {
-        _operandList.push_back(op);
-        _tempRegisters.emplace_back(new SmartRegister(op.GetRegIndex(), _pCollection));
-    }
-
-    OperandType GetOperandType() const { return _operandList[0].GetObjArgument()._argType; }
+    void AddOperand(const Operand& op, bool temp);
+    ExpressionResultType GetResultType();
 
     OperandList &GetOperands() { return _operandList; }
 
@@ -51,6 +57,9 @@ struct ExpressionResult
     VariableInfo* _pVarInfo;
 
 private:
+    // The type of the result (how to interpret the operands)
+    ExpressionResultType _type;
+
     // The operand with the result of the expression
     OperandList _operandList;
 

@@ -2,6 +2,24 @@
 #include "VariableInfo.h"
 #include "TypeInfo.h"
 
+ExpressionResultType ConvertType(OperandType type)
+{
+    switch (type)
+    {
+    case OperandType::Constant:
+        return ExpressionResultType::Constant;
+
+    case OperandType::Register:
+        return ExpressionResultType::Register;
+
+    case OperandType::DerefRegisterOffset:
+        return ExpressionResultType::DerefRegisterOffset;
+
+    default:
+        throw "Unexpected operand type";
+    }
+}
+
 // ExpressionResult to represent something that needs a temporary register and has no type
 ExpressionResult::ExpressionResult(TypeInfo *pTypeInfo, Operand operand, RegisterCollection *pCollection)
 {
@@ -12,7 +30,7 @@ ExpressionResult::ExpressionResult(TypeInfo *pTypeInfo, Operand operand, Registe
 
     case OperandType::Register:
     case OperandType::DerefRegisterOffset:
-    case OperandType::DerefRegisterIndex:
+        _type = ConvertType(operand.GetType());
         _pTypeInfo = pTypeInfo;
         _pVarInfo = nullptr;
         _operandList.push_back(operand);
@@ -28,6 +46,7 @@ ExpressionResult::ExpressionResult(TypeInfo *pTypeInfo, Operand operand, Registe
 // ExpressionResult to represent something that needs a temporary register and has no type
 ExpressionResult::ExpressionResult(TypeInfo *pTypeInfo, RegisterCollection *pCollection)
 {
+    _type = ExpressionResultType::None;
     _pTypeInfo = pTypeInfo;
     _pVarInfo = nullptr;
     _pCollection = pCollection;
@@ -41,6 +60,7 @@ ExpressionResult::ExpressionResult(TypeInfo *pTypeInfo, Operand operand)
         throw "Cannot give none operands to ExpressionResult";
     }
 
+    _type = ConvertType(operand.GetType());
     _pTypeInfo = pTypeInfo;
     _pVarInfo = nullptr;
     _operandList.push_back(operand);
@@ -54,6 +74,7 @@ ExpressionResult::ExpressionResult(VariableInfo *pVarInfo, Operand operand)
         throw "Cannot give none operands to ExpressionResult";
     }
 
+    _type = ConvertType(operand.GetType());
     _pTypeInfo = pVarInfo->GetTypeInfo();
     _pVarInfo = pVarInfo;
     _operandList.push_back(operand);
@@ -62,4 +83,40 @@ ExpressionResult::ExpressionResult(VariableInfo *pVarInfo, Operand operand)
 void ExpressionResult::DebugPrint()
 {
     printf("ExpressionResult _pTypeInfo = %s, _operand = %s\n", _pTypeInfo->DebugPrint().c_str(), _operandList[0].DebugPrint());
+}
+
+void ExpressionResult::AddOperand(const Operand &op, bool temp)
+{
+    _operandList.push_back(op);
+    _tempRegisters.emplace_back(new SmartRegister(op.GetRegIndex(), _pCollection));
+}
+
+ExpressionResultType ExpressionResult::GetResultType()
+{
+    if (_type == ExpressionResultType::None)
+    {
+        // Try to calculate it now that somebody wants it
+        if (_operandList.size() == 1)
+        {
+            _type = ConvertType(_operandList[0].GetType());
+        }
+        else if (_operandList.size() == 2)
+        {
+            if (_operandList[0].GetType() == OperandType::DerefRegisterIndex &&
+                _operandList[1].GetType() == OperandType::Register)
+            {
+                _type = ExpressionResultType::DerefRegisterIndex;
+            }
+            else
+            {
+                throw "Unexpected double operand result";
+            }
+        }
+        else
+        {
+            throw "Unexpected multiple operand result";
+        }
+    }
+
+    return _type;
 }

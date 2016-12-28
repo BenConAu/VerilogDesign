@@ -94,7 +94,7 @@ ExpressionResult *IndexSelectionNode::CalculateResult()
 
     pResult->AddOperand(resultOperand, true);
 
-    if (indexResult->GetOperandType() != OperandType::Register)
+    if (indexResult->GetResultType() != ExpressionResultType::Register)
     {
         // If we don't have a register for the second operand then allocate it
         RegIndex sizeReg = pScope->GetRegCollection()->AllocateRegister();

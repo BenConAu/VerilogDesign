@@ -9,7 +9,7 @@ RegisterWrapper::RegisterWrapper(
 {
     _pCollection = pCollection;
 
-    if (pResult->GetOperandType() != OperandType::Register)
+    if (pResult->GetResultType() != ExpressionResultType::Register)
     {
         _converted = Operand(_pCollection->AllocateRegister());
         _fAllocated = true;
