@@ -1,9 +1,11 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include "VariableLocation.h"
 #include "SmartRegister.h"
 #include "Operand.h"
+#include "PSLCompilerContext.h"
 
 class TypeInfo;
 
@@ -14,6 +16,7 @@ class TypeInfo;
 // this form. 
 struct ExpressionResult
 {
+    ExpressionResult(TypeInfo* pTypeInfo, RegisterCollection* pCollection);
     ExpressionResult(TypeInfo* pTypeInfo, Operand operand, RegisterCollection* pCollection);
     ExpressionResult(TypeInfo* pTypeInfo, Operand operand);
     ExpressionResult(VariableInfo* pVarInfo, Operand operand);
@@ -23,6 +26,22 @@ struct ExpressionResult
         //printf("ExpressionResult destructor\n");
     }
 
+    void SetType(TypeInfo *pNewInfo)
+    {
+        // The assumption is that the variable info is the same...
+        _pTypeInfo = pNewInfo;
+    }
+
+    void AddOperand(const Operand& op, bool temp)
+    {
+        _operandList.push_back(op);
+        _tempRegisters.emplace_back(new SmartRegister(op.GetRegIndex(), _pCollection));
+    }
+
+    OperandType GetOperandType() const { return _operandList[0].GetObjArgument()._argType; }
+
+    OperandList &GetOperands() { return _operandList; }
+
     void DebugPrint();
 
     // The type of the result that is stored in the operand
@@ -31,9 +50,13 @@ struct ExpressionResult
     // Optional variable info that might be relevant
     VariableInfo* _pVarInfo;
 
+private:
     // The operand with the result of the expression
-    Operand _operand;
+    OperandList _operandList;
 
     // If the operation had a temporary register it is stored here
-    std::unique_ptr<SmartRegister> _tempRegister;
+    std::vector<std::unique_ptr<SmartRegister> > _tempRegisters;
+
+    // The collection we are keeping registers in
+    RegisterCollection* _pCollection;
 };

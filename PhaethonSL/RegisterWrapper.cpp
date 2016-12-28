@@ -4,28 +4,23 @@
 RegisterWrapper::RegisterWrapper(
     PSLCompilerContext* pContext,
     RegisterCollection* pCollection,
-    Operand result
+    ExpressionResult* pResult
     )
 {
     _pCollection = pCollection;
 
-    if (result.GetType() != OperandType::Register)
+    if (pResult->GetOperandType() != OperandType::Register)
     {
         _converted = Operand(_pCollection->AllocateRegister());
         _fAllocated = true;
 
-        pContext->OutputMovInstruction(_converted, result);
+        pContext->OutputMovInstruction(_converted, pResult->GetOperands());
     }
     else
     {
-        _converted = result;
+        _converted = pResult->GetOperands()[0];
         _fAllocated = false;
     }
-}
-
-const Operand &RegisterWrapper::GetWrapped()
-{
-    return _converted;
 }
 
 RegisterWrapper::~RegisterWrapper()

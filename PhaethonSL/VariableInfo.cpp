@@ -44,18 +44,9 @@ ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
     switch (_pType->GetTypeClass())
     {
     case TypeClass::Basic:
-    {
-        // Basic things are always word sized and stored
-        // in registers allocated to them. Find out which register it is
-        // and make an operand out of that.
-        RegIndex regIndex = EnsureRegister(pScope);
-
-        return new ExpressionResult(GetTypeInfo(), Operand(regIndex));
-    }
-
     case TypeClass::Pointer:
     {
-        // Basic things are always word sized and stored
+        // Basic things and pointers are always word sized and stored
         // in registers allocated to them. Find out which register it is
         // and make an operand out of that.
         RegIndex regIndex = EnsureRegister(pScope);
@@ -88,6 +79,9 @@ ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
 
     case TypeClass::Generic:
         throw "Cannot make an expression result from a generic";
+
+    case TypeClass::Array:
+        throw "Cannot make an expression result from an array";
     }
 }
 

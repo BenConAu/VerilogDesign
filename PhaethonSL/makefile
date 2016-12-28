@@ -2,6 +2,8 @@ PSLcc: lex.yy.c \
 	   PSL.tab.c \
 	   AddressOfNode.cpp \
 	   AddressOfNode.h \
+	   ArrayTypeInfo.cpp \
+	   ArrayTypeInfo.h \
 	   ASTNode.h \
 	   ASTNode.cpp \
 	   ASTTree.h \
@@ -32,6 +34,8 @@ PSLcc: lex.yy.c \
 	   IdentifierNode.h \
 	   IfStatementNode.cpp \
 	   IfStatementNode.h \
+	   IndexSelectionNode.cpp \
+	   IndexSelectionNode.h \
 	   KnownConstantNode.cpp \
 	   KnownConstantNode.h \
 	   OffsetNode.cpp \
@@ -60,6 +64,7 @@ PSLcc: lex.yy.c \
 	   StructDeclarationNode.h \
 	   StructSpecifierNode.cpp \
 	   StructSpecifierNode.h \
+	   StructTypeInfo.cpp \
 	   StructTypeInfo.h \
 	   SymbolInfo.cpp \
 	   SymbolInfo.h \
@@ -88,6 +93,7 @@ PSLcc: lex.yy.c \
 	   ../PhaethonObjWriter/BinaryObjWriter.cpp \
 	   ../PhaethonISA/Generated/PhaethonOpCode.cpp \
 	   PSL.tab.c \
+	   ArrayTypeInfo.cpp \
 	   ASTNode.cpp \
 	   AddressOfNode.cpp \
 	   AssignmentNode.cpp \
@@ -102,6 +108,7 @@ PSLcc: lex.yy.c \
 	   FunctionParameterNode.cpp \
 	   IdentifierNode.cpp \
 	   IfStatementNode.cpp \
+	   IndexSelectionNode.cpp \
 	   KnownConstantNode.cpp \
 	   OffsetNode.cpp \
 	   OperatorNode.cpp \
@@ -115,6 +122,7 @@ PSLcc: lex.yy.c \
 	   SmartRegister.cpp \
 	   StructDeclarationNode.cpp \
 	   StructSpecifierNode.cpp \
+	   StructTypeInfo.cpp \
 	   SymbolInfo.cpp \
 	   TypeInfo.cpp \
 	   TypeNode.cpp \

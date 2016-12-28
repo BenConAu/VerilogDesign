@@ -8,15 +8,18 @@ struct ObjArgument
 {
     ObjArgument()
     {
+        _argType = OperandType::None;
         _fMemoryLocation = false;
+        _value = 0xef;
+        _offset = -1;
     }
 
     // Type information
-   	OperandType _argType;
+    OperandType _argType;
 
     // Binary information
-    unsigned int _value;    // The constant value or the register index
-    unsigned int _offset;   // The offset (if any)
+    unsigned int _value;  // The constant value or the register index
+    unsigned int _offset; // The offset (if any)
 
     // Whether the argument stores a memory location
     bool _fMemoryLocation;
@@ -26,5 +29,5 @@ struct ObjArgument
 
     // Symbolic information (optional)
     std::string _typeName;
-    std::string _memberName;    
+    std::string _memberName;
 };

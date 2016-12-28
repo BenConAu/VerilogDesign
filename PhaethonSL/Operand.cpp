@@ -9,10 +9,6 @@
 // somewhat predictable.
 Operand::Operand()
 {
-    _objArg._argType = OperandType::None;
-    _objArg._value = 0xef;
-    _objArg._offset = -1;
-    _objArg._fMemoryLocation = false;
 }
 
 // A regster operand stores the register index.
@@ -36,9 +32,8 @@ Operand::Operand(int constant)
 // An operand that loads an address of a variable
 // into a register so that it can be used later
 Operand::Operand(
-    VariableInfo* pVarInfo, 
-    PSLCompilerContext* pContext
-    )
+    VariableInfo *pVarInfo,
+    PSLCompilerContext *pContext)
 {
     // Fill in the actual byte position
     _objArg._argType = OperandType::Constant;
@@ -50,11 +45,10 @@ Operand::Operand(
     _objArg._fMemoryLocation = true;
 }
 
-// An operand that loads a known constant into a register 
+// An operand that loads a known constant into a register
 // so that it can be used later
 Operand::Operand(
-    KnownConstants constant
-    )
+    KnownConstants constant)
 {
     // Fill in the actual byte position
     _objArg._argType = OperandType::Constant;
@@ -70,11 +64,11 @@ Operand::Operand(
 // a structure variable with member.
 Operand::Operand(
     RegIndex regIndex,
-    StructTypeInfo* pTypeInfo,
-    StructMember* pTypeMember, 
-    PSLCompilerContext* pContext
-    )
+    StructTypeInfo *pTypeInfo,
+    StructMember *pTypeMember,
+    PSLCompilerContext *pContext)
 {
+    // Non-pointer values are obtained through a deref with offset
     _objArg._argType = OperandType::DerefRegisterOffset;
     _objArg._value = regIndex;
 
@@ -88,9 +82,28 @@ Operand::Operand(
     _objArg._fMemoryLocation = false;
 }
 
+// An offset operand comes from a register (already allocated) and
+// a structure variable with member.
 Operand::Operand(
-    const std::string &label
-    )
+    RegIndex regIndex,
+    PointerTypeInfo *pTypeInfo,
+    PSLCompilerContext *pContext)
+{
+    _objArg._argType = OperandType::DerefRegisterIndex;
+    _objArg._value = regIndex;
+
+    // The offset stores the size of each item
+    TypeInfo *pBaseType = pTypeInfo->GetBaseType();
+    _objArg._offset = pBaseType->GetSize();
+
+    // Fill in symbolic information
+    _objArg._typeName = "NotDoneYet";
+
+    _objArg._fMemoryLocation = false;
+}
+
+Operand::Operand(
+    const std::string &label)
 {
     // Fill in the actual byte position
     _objArg._argType = OperandType::Constant;
@@ -108,20 +121,37 @@ RegIndex Operand::GetRegIndex() const
 {
     switch (GetType())
     {
-        case OperandType::None:
-        case OperandType::Constant:
-        case OperandType::DerefConstant:
-            throw "Attempt to retrieve register index from non-register operand";
+    case OperandType::None:
+    case OperandType::Constant:
+    case OperandType::DerefConstant:
+        throw "Attempt to retrieve register index from non-register operand";
 
-        default:
-            // For register arguments, the value is the index of the register
-            return _objArg._value;
+    default:
+        // For register arguments, the value is the index of the register
+        return _objArg._value;
     }
 }
 
-const char* Operand::DebugPrint()
+const char *Operand::DebugPrint()
 {
     static char str[100];
     sprintf(str, "%d", (int)_objArg._argType);
     return str;
+}
+
+int Operand::GetArgCount() const
+{
+    if (_objArg._argType != OperandType::DerefRegisterIndex)
+    {
+        return 1;
+    }
+    else
+    {
+        return 2;
+    }
+}
+
+const ObjArgument &Operand::GetObjArgument() const
+{
+    return _objArg;
 }

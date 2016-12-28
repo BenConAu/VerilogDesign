@@ -53,8 +53,17 @@ void FieldSelectionNode::VerifyNodeImpl()
 
     StructMember *pMember = pStructInfo->GetMember(_fieldSymIndex);
 
-    // The type of this expression is the type of the member
-    SetType(pMember->GetType());
+    if (pMember->GetType()->GetTypeClass() == TypeClass::Array)
+    {
+        // Accessing an array member returns a pointer
+        ArrayTypeInfo* pArrayInfo = dynamic_cast<ArrayTypeInfo*>(pMember->GetType());
+        SetType(GetContext()->_typeCollection.GetPointerType(pArrayInfo->GetBaseType()));
+    }
+    else
+    {
+        // The type of this expression is the type of the member
+        SetType(pMember->GetType());
+    }
 }
 
 ExpressionResult *FieldSelectionNode::CalculateResult()
@@ -82,9 +91,7 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
         pTypeInfo = dynamic_cast<StructTypeInfo *>(pPointerInfo->GetBaseType());
     }
 
-    // We will base our operation on the child operand
-    Operand childOperand = childResult->_operand;
-//    printf("Field select child operand type = %d\n", childOperand.GetType());
+    //    printf("Field select child operand type = %d\n", childOperand.GetType());
 
     // Remember if we allocate a register
     RegisterCollection *pRegCollection = nullptr;
@@ -93,13 +100,13 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
     // We need a register to offset. If we have one already then great, otherwise
     // we need to do the work to ensure that we have one for the path that arrived
     // here.
-    if (childOperand.GetType() == OperandType::Constant)
+    if (childResult->GetOperandType() == OperandType::Constant)
     {
         //printf("Need to upgrade operand from constant\n");
 
         // Since the operand has a memory location in it, we figure that we must
-        // have VariableInfo for when it was loaded. This will now transform into 
-        // an offset operation, which requires that the variable info be there so 
+        // have VariableInfo for when it was loaded. This will now transform into
+        // an offset operation, which requires that the variable info be there so
         // that we can get the register that we associate with the path.
         VariableInfo *pInfo = childResult->_pVarInfo;
         if (pInfo == nullptr)
@@ -113,7 +120,9 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
         // An operand that represents the variable
         regOperand = Operand(pathIndex);
     }
-    else if (childOperand.GetType() == OperandType::DerefRegisterOffset)
+    else if (
+        childResult->GetOperandType() == OperandType::DerefRegisterOffset ||
+        childResult->GetOperandType() == OperandType::DerefRegisterIndex)
     {
         //printf("Need to upgrade operand from offset operand\n");
 
@@ -125,34 +134,58 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
         regOperand = Operand(tempIndex);
     }
 
+    Operand childOperand;
+
     // See if the operand that came in requires us to load up the register
     if (regOperand.GetType() != OperandType::None)
     {
         // Spit out the code to load said register
         pScope->GetContext()->OutputMovInstruction(
             regOperand,
-            childOperand);
+            childResult->GetOperands());
 
         // This is what we consider the child operand now
-        childOperand = regOperand;        
+        childOperand = regOperand;
     }
-
-    // It needs to be something that we can select from
-    if (childOperand.GetType() != OperandType::Register)
+    else
     {
-        printf("Type is %d\n", childOperand.GetType());
-        throw "This pointer needs to be in a register by now";
+        // It needs to be something that we can select from
+        if (childResult->GetOperandType() != OperandType::Register)
+        {
+            printf("Type is %d\n", childResult->GetOperandType());
+            throw "This pointer needs to be in a register by now";
+        }
+
+        // We can assume this is the register operand we want
+        childOperand = childResult->GetOperands()[0];
     }
 
     // Get the member of the struct that we are selecting
     StructMember *pMember = pTypeInfo->GetMember(_fieldSymIndex);
 
-    // Create an offset operand using the index of the field
-    Operand result(
-        childOperand.GetRegIndex(),
-        pTypeInfo,
-        pMember,
-        GetContext());
+    Operand result;
+    if (pMember->GetType()->GetTypeClass() == TypeClass::Array)
+    {
+        // This operation will basically just offset the register
+        // which has the address in it.
+        result = Operand(childOperand.GetRegIndex());
+
+        // Spit out the code to add to said register
+        pScope->GetContext()->OutputInstruction(
+            OpCodes::AddRRC,
+            result,
+            result,
+            Operand((int)pTypeInfo->GetOffset(pMember->GetSymbolIndex())));
+    }
+    else
+    {
+        // Create an offset operand using the index of the field
+        result = Operand(
+            childOperand.GetRegIndex(),
+            pTypeInfo,
+            pMember,
+            GetContext());
+    }
 
     if (pRegCollection != nullptr)
     {

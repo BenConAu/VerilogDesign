@@ -3,10 +3,16 @@
 #include "StructSpecifierNode.h"
 #include "TypeNode.h"
 
-StructDeclarationNode::StructDeclarationNode(PSLCompilerContext* pContext, ASTNode* pTypeNode, int symId) : ASTNode(pContext)
+StructDeclarationNode::StructDeclarationNode(
+    PSLCompilerContext* pContext, 
+    ASTNode* pTypeNode, 
+    int symId,
+    int dimension
+    ) : ASTNode(pContext)
 {
     AddNode(pTypeNode);
     _symIndex = symId;
+    _dimension = dimension;
 }
 
 TypeInfo* StructDeclarationNode::GetTypeInfo()

@@ -30,6 +30,9 @@ ExpressionResult *AddressOfNode::CalculateResult()
     IdentifierNode *pIdentifierNode = dynamic_cast<IdentifierNode *>(GetChild(0));
     std::unique_ptr<ExpressionResult> childResult(pIdentifierNode->CalculateResult());
 
+    // Change its type
+    childResult->SetType(GetTypeInfo());
+
     // The result has the new type but same path and same operand
-    return new ExpressionResult(GetTypeInfo(), childResult->_operand);
+    return childResult.release();
 }

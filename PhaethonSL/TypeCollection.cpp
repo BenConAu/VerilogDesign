@@ -48,6 +48,21 @@ PointerTypeInfo* TypeCollection::GetPointerType(TypeInfo* pBaseType)
     return _pointerTypes[pBaseType].get();
 }
 
+ArrayTypeInfo* TypeCollection::GetArrayType(TypeInfo* pBaseType)
+{
+    if (pBaseType == nullptr)
+    {
+        throw "Cannot have array without base type";
+    }
+
+    if (_pointerTypes.find(pBaseType) == _pointerTypes.end())
+    {
+        _arrayTypes[pBaseType] = std::unique_ptr<ArrayTypeInfo>(new ArrayTypeInfo(pBaseType));
+    }
+
+    return _arrayTypes[pBaseType].get();
+}
+
 GenericTypeInfo* TypeCollection::AddGenericType(int symIndex, FunctionDeclaratorNode* pScope)
 {
     //printf("Adding generic type %d for function %p\n", symIndex, pScope);

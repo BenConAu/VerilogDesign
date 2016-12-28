@@ -21,3 +21,4 @@
 #include "IfStatementNode.h"
 #include "WhileStatementNode.h"
 #include "KnownConstantNode.h"
+#include "IndexSelectionNode.h"

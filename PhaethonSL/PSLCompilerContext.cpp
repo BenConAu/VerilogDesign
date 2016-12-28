@@ -152,30 +152,52 @@ void PSLCompilerContext::SetEntryPoint(FunctionDeclaratorNode *pEntryPoint)
 
 void PSLCompilerContext::OutputInstruction(
     OpCodes::Enum opCode,
-    const Operand &a1,
-    const Operand &a2,
-    const Operand &a3)
+    const OperandList &a1,
+    const OperandList &a2,
+    const OperandList &a3)
 {
-    ObjArgument args[] = {
-        a1.GetObjArgument(),
-        a2.GetObjArgument(),
-        a3.GetObjArgument()};
+    // Nice to operate on these like they are an array
+    OperandList rawArgs[3] = { a1, a2, a3 };
+
+    // The arguments are non by default if nothing else specified
+    ObjArgument passArgs[3];
+
+    int curr = 0;
+    for (int i = 0; i < 3; i++)
+    {
+        if (rawArgs[i].size() == 0)
+        {
+            // We are done processing the arguments
+            break;
+        }
+
+        for (size_t a = 0; a < rawArgs[i].size(); a++)
+        {
+            if (curr == 3)
+            {
+                throw "Too many operands passed to OutputInstrution";
+            }
+
+            passArgs[curr] = rawArgs[i][a].GetObjArgument();
+            curr++;
+        }
+    }
 
     for (int i = 0; i < _writers.size(); i++)
     {
-        _writers[i]->OutputInstruction(opCode, args);
+        _writers[i]->OutputInstruction(opCode, passArgs);
     }
 }
 
 void PSLCompilerContext::OutputMovInstruction(
-    const Operand &a1,
-    const Operand &a2)
+    const OperandList &a1,
+    const OperandList &a2)
 {
     OpCodes::Enum opCode = OpCodes::Unknown;
 
-    if (a1.GetType() == OperandType::Register)
+    if (a1[0].GetType() == OperandType::Register)
     {
-        switch (a2.GetType())
+        switch (a2[0].GetType())
         {
         case OperandType::Register:
             opCode = OpCodes::MovRR;
@@ -193,24 +215,39 @@ void PSLCompilerContext::OutputMovInstruction(
             opCode = OpCodes::MovRdRo;
             break;
 
+        case OperandType::DerefRegisterIndex:
+            opCode = OpCodes::MovRdRiR;
+            break;
+
         default:
-            throw "Unexpected operand type";
+            throw "Unexpected operand type for LHS is register";
         }
     }
-    else if (a1.GetType() == OperandType::DerefRegisterOffset)
+    else if (a1[0].GetType() == OperandType::DerefRegisterOffset)
     {
-        if (a2.GetType() == OperandType::Register)
+        if (a2[0].GetType() == OperandType::Register)
         {
             opCode = OpCodes::MovdRoR;
         }
         else
         {
-            throw "Unexpected operand type";
+            throw "Unexpected operand type for LHS is dRo";
+        }
+    }
+    else if (a1[0].GetType() == OperandType::DerefRegisterIndex)
+    {
+        if (a2[0].GetType() == OperandType::Register)
+        {
+            opCode = OpCodes::MovdRiRR;
+        }
+        else
+        {
+            throw "Unexpected operand type for LHS is dRiR";
         }
     }
     else
     {
-        throw "Unexpected operand type";
+        throw "Unexpected operand type for LHS";
     }
 
     OutputInstruction(

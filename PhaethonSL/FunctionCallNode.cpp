@@ -94,7 +94,7 @@ ExpressionResult *FunctionCallNode::CalculateResult()
         // Push the wrapped register into the memory
         GetContext()->OutputMovInstruction(
             Operand(argIndex),
-            paramResults[i]->_operand);
+            paramResults[i]->GetOperands());
     }
 
     // Now output call

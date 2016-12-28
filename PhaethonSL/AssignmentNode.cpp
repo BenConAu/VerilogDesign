@@ -65,29 +65,30 @@ void AssignmentNode::PostProcessNodeImpl()
     //rightResult->DebugPrint();
 
     // Figure out what kind of LHS expression we have
-    switch (leftResult->_operand.GetType())
+    switch (leftResult->GetOperandType())
     {
     case OperandType::Register:
     {
         // The great thing about registers is that everything can move into them
         GetContext()->OutputMovInstruction(
-            leftResult->_operand,
-            rightResult->_operand);
+            leftResult->GetOperands(),
+            rightResult->GetOperands());
     }
     break;
 
     case OperandType::DerefConstant:
     case OperandType::DerefRegisterOffset:
+    case OperandType::DerefRegisterIndex:
     {
         // Need to make a register for this to work
         RegisterWrapper wrapper(
             GetContext(),
             pFunc->GetRegCollection(),
-            rightResult->_operand);
+            rightResult.get());
 
         // Push the wrapped register into the memory
         GetContext()->OutputMovInstruction(
-            leftResult->_operand,
+            leftResult->GetOperands(),
             wrapper.GetWrapped());
 
         // Now we have generated code, the temporary register will

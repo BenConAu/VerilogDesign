@@ -51,7 +51,7 @@ void IfStatementNode::ProcessNode()
     RegisterWrapper wrapper(
         GetContext(),
         pScope->GetRegCollection(),
-        testResult->_operand);
+        testResult.get());
 
     GetContext()->OutputInstruction(
         OpCodes::CmpRC,

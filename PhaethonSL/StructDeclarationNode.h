@@ -9,9 +9,14 @@ class TypeInfo;
 class StructDeclarationNode : public ASTNode
 {
 public:
-    StructDeclarationNode(PSLCompilerContext* pContext, ASTNode* pTypeNode, int symId);
+    StructDeclarationNode(
+        PSLCompilerContext* pContext, 
+        ASTNode* pTypeNode, 
+        int symId, 
+        int dimension);
 
-    TypeInfo* GetTypeInfo();
+    TypeInfo* GetTypeInfo(); // Returns the type on the node, not the type the member eventually gets
+    int GetDimension() const { return _dimension; }
     int GetName() { return _symIndex; }
     void PreProcessNodeImpl() override;
     void VerifyNodeImpl() override;
@@ -19,4 +24,5 @@ public:
 
 private:
     int _symIndex;
+    int _dimension;
 };

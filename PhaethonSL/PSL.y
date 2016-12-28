@@ -57,6 +57,8 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token RETURN_TOKEN
 %token LEFT_BRACE
 %token RIGHT_BRACE
+%token LEFT_BRACKET
+%token RIGHT_BRACKET
 %token IF_TOKEN
 %token ELSE_TOKEN
 %token WHILE_TOKEN
@@ -165,8 +167,8 @@ equality_expression:
 
 shift_expression:
       additive_expression                                           { $$ = $1; }
-    | equality_expression SHIFTLEFT additive_expression             { $$ = new OperatorNode(pContext, $1, $3, Operator::ShiftLeft); }
-    | equality_expression SHIFTRIGHT additive_expression            { $$ = new OperatorNode(pContext, $1, $3, Operator::ShiftRight); }
+    | shift_expression SHIFTLEFT additive_expression                { $$ = new OperatorNode(pContext, $1, $3, Operator::ShiftLeft); }
+    | shift_expression SHIFTRIGHT additive_expression               { $$ = new OperatorNode(pContext, $1, $3, Operator::ShiftRight); }
     ;
 
 additive_expression:
@@ -186,6 +188,7 @@ assignment_operator:
 
 postfix_expression:
       primary_expression                                            { $$ = $1; }
+    | postfix_expression LEFT_BRACKET expression RIGHT_BRACKET      { $$ = new IndexSelectionNode(pContext, @$, $1, $3); }
     | function_call                                                 { $$ = $1; }
 	| postfix_expression DOT IDENTIFIER								{ $$ = new FieldSelectionNode(pContext, $1, false, $3); }
 	| postfix_expression ARROW IDENTIFIER							{ $$ = new FieldSelectionNode(pContext, $1, true, $3); }
@@ -269,7 +272,9 @@ struct_declaration_list:
     ;
 
 struct_declaration:
-      fully_specified_type IDENTIFIER SEMICOLON						{ $$ = new StructDeclarationNode(pContext, $1, $2); }
+      fully_specified_type IDENTIFIER SEMICOLON						{ $$ = new StructDeclarationNode(pContext, $1, $2, -1); }
+    | fully_specified_type IDENTIFIER LEFT_BRACKET INTCONSTANT RIGHT_BRACKET SEMICOLON
+                                                                    { $$ = new StructDeclarationNode(pContext, $1, $2, $4); }
     ;
 
 function_definition:

@@ -68,6 +68,7 @@ TypeInfo *TypeNode::GetTypeInfo()
             break;
 
         case TypeClass::Generic:
+        case TypeClass::Array:
             throw "Not expected here";
             break;
         }

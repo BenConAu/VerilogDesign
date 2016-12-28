@@ -8,6 +8,7 @@ class PSLCompilerContext;
 class VariableInfo;
 class StructMember;
 class StructTypeInfo;
+class PointerTypeInfo;
 
 enum class KnownConstants
 {
@@ -39,13 +40,19 @@ class Operand
         PSLCompilerContext *pContext);
 
     explicit Operand(
+        RegIndex regIndex,
+        PointerTypeInfo *pTypeInfo,
+        PSLCompilerContext *pContext);
+
+    explicit Operand(
         const std::string &label);
 
     bool IsNone() const;
     std::string GetOpString() const;
     OperandType GetType() const { return _objArg._argType; }
     RegIndex GetRegIndex() const;
-    const ObjArgument &GetObjArgument() const { return _objArg; }
+    int GetArgCount() const;
+    const ObjArgument &GetObjArgument() const;
     const char *DebugPrint();
 
   private:

@@ -30,7 +30,11 @@ void StructSpecifierNode::VerifyNodeImpl()
     {
         StructDeclarationNode* pSpecifier = dynamic_cast<StructDeclarationNode*>(GetChild(i));
 
-        pNewType->AddMember(pSpecifier->GetName(), pSpecifier->GetTypeInfo());
+        pNewType->AddMember(
+            GetContext(),
+            pSpecifier->GetName(), 
+            pSpecifier->GetTypeInfo(), 
+            pSpecifier->GetDimension());
     }
 
     //printf("Added a struct\n");

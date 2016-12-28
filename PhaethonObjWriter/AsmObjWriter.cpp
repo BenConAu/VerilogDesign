@@ -42,6 +42,10 @@ std::string AsmObjWriter::GetOpString(const ObjArgument &objArg) const
         result << "r" << objArg._value << "->" << objArg._typeName << "::" << objArg._memberName;
         break;
 
+    case OperandType::DerefRegisterIndex:
+        result << "r" << objArg._value << "[]";
+        break;
+
     default:
         throw "Unknown result type";
     }

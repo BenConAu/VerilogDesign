@@ -11,10 +11,10 @@ class RegisterWrapper
     RegisterWrapper(
         PSLCompilerContext* pContext,
         RegisterCollection* pCollection,
-        Operand result
+        ExpressionResult* pResult
         );
 
-    const Operand &GetWrapped();
+    const Operand &GetWrapped() { return _converted; }
 
     ~RegisterWrapper();
 

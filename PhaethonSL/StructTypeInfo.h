@@ -2,6 +2,9 @@
 
 #include "TypeInfo.h"
 #include "StructMember.h"
+#include <vector>
+
+class PSLCompilerContext;
 
 class StructTypeInfo : public TypeInfo
 {
@@ -11,10 +14,11 @@ public:
         _symIndex = symIndex;
     }
 
-    void AddMember(int symIndex, TypeInfo* pType)
-    {
-        _members.push_back(std::unique_ptr<StructMember>(new StructMember(symIndex, pType)));
-    }
+    void AddMember(
+        PSLCompilerContext *pContext,
+        int symIndex, 
+        TypeInfo* pType, 
+        int dimension);
 
     StructMember* GetMember(int symIndex)
     {

@@ -64,8 +64,8 @@ ExpressionResult *OperatorNode::CalculateResult()
     std::unique_ptr<ExpressionResult> rightResult(pRight->TakeResult());
 
     // Multiplication only works with registers so we make wrappers
-    RegisterWrapper leftWrap(GetContext(), pFunc->GetRegCollection(), leftResult->_operand);
-    RegisterWrapper rightWrap(GetContext(), pFunc->GetRegCollection(), rightResult->_operand);
+    RegisterWrapper leftWrap(GetContext(), pFunc->GetRegCollection(), leftResult.get());
+    RegisterWrapper rightWrap(GetContext(), pFunc->GetRegCollection(), rightResult.get());
 
     int bothType = -1;
     if (TypeInfo::IsFloat(pLeft->GetTypeInfo()) && TypeInfo::IsFloat(pRight->GetTypeInfo()))

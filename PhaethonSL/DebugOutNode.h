@@ -28,7 +28,7 @@ class DebugOutNode : public ASTNode
         std::unique_ptr<ExpressionResult> childResult(pChild->TakeResult());
 
         // Wrap in a register
-        RegisterWrapper wrapper(GetContext(), pFunc->GetRegCollection(), childResult->_operand);
+        RegisterWrapper wrapper(GetContext(), pFunc->GetRegCollection(), childResult.get());
 
         GetContext()->OutputInstruction(
             OpCodes::DoutR,
