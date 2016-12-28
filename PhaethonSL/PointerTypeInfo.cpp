@@ -24,6 +24,13 @@ std::string PointerTypeInfo::DebugPrint()
     return buffer;
 }
 
+std::string PointerTypeInfo::GetTypeName()
+{
+    char buffer[1024];
+    sprintf(buffer, "ptr<%s>", _pBaseType->GetTypeName().c_str());
+    return buffer;
+}
+
 TypeInfo *PointerTypeInfo::GetBaseType()
 {
     return _pBaseType;

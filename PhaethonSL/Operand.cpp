@@ -97,7 +97,7 @@ Operand::Operand(
     _objArg._offset = pBaseType->GetSize();
 
     // Fill in symbolic information
-    _objArg._typeName = "NotDoneYet";
+    _objArg._typeName = pTypeInfo->GetBaseType()->GetTypeName();
 
     _objArg._fMemoryLocation = false;
 }

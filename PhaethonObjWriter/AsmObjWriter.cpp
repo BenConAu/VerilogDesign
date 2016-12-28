@@ -38,8 +38,16 @@ std::string AsmObjWriter::GetOpString(const ObjArgument &objArg) const
         break;
 
     case OperandType::DerefRegisterOffset:
-        // C++ syntax for members of things
-        result << "r" << objArg._value << "->" << objArg._typeName << "::" << objArg._memberName;
+        if (objArg._memberName.length() != 0)
+        {
+            // C++ syntax for members of things
+            result << "r" << objArg._value << "->" << objArg._typeName << "::" << objArg._memberName;
+        }
+        else
+        {
+            // Syntax for array lookup
+            result << "[r" << objArg._value << ":sizeof(" << objArg._typeName << ")]";
+        }
         break;
 
     default:

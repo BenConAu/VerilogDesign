@@ -31,6 +31,11 @@ public:
         return buffer;
     }
 
+    std::string GetTypeName() override
+    {
+        throw "Should not be asking for type name of generic";
+    }
+
     int GetSymbolIndex() const
     {
         return _symIndex;

@@ -52,3 +52,8 @@ TypeInfo *ArrayTypeInfo::MakeSpecificType(TypeInfo *pGenericArgType, TypeCollect
 {
     return pCollection->GetArrayType(_pBaseType->MakeSpecificType(pGenericArgType, pCollection));
 }
+
+std::string ArrayTypeInfo::GetTypeName()
+{
+    throw "Should not be asking for type name of array";
+}

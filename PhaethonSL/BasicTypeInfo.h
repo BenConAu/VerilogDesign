@@ -5,55 +5,16 @@
 
 class BasicTypeInfo : public TypeInfo
 {
-public:
-    BasicTypeInfo(int typeToken)
-    {
-        _typeToken = typeToken;
-    }
+  public:
+    BasicTypeInfo(int typeToken);
+    unsigned int GetSize() override;
+    TypeClass GetTypeClass() override;
+    std::string DebugPrint() override;
+    std::string GetTypeName() override;
+    int GetTypeToken() const;
+    bool EqualType(TypeInfo *pOther) override;
+    TypeInfo *MakeSpecificType(TypeInfo *pGenericArgType, TypeCollection *pCollection) override;
 
-    unsigned int GetSize() override
-    {
-        // All basic types are size 4
-        return 4;
-    }
-
-    TypeClass GetTypeClass() override
-    {
-        return TypeClass::Basic;
-    }
-
-    std::string DebugPrint() override
-    {
-        return "BasicTypeInfo";
-    }
-
-    int GetTypeToken() const
-    {
-        return _typeToken;
-    }
-
-    bool EqualType(TypeInfo* pOther) override
-    {
-        if (pOther->GetTypeClass() != TypeClass::Basic)
-        {
-            return false;
-        }
-
-        BasicTypeInfo* pOtherBasic = dynamic_cast<BasicTypeInfo*>(pOther);
-        if (_typeToken != pOtherBasic->GetTypeToken())
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    TypeInfo* MakeSpecificType(TypeInfo* pGenericArgType, TypeCollection* pCollection) override
-    {
-        // Basic types cannot have generic arguments
-        return this;
-    }
-
-private:
+  private:
     int _typeToken;
 };

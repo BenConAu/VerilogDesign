@@ -9,9 +9,10 @@ class PSLCompilerContext;
 class StructTypeInfo : public TypeInfo
 {
 public:
-    StructTypeInfo(int symIndex)
+    StructTypeInfo(int symIndex, PSLCompilerContext* pContext)
     {
         _symIndex = symIndex;
+        _pContext = pContext;
     }
 
     void AddMember(
@@ -72,6 +73,8 @@ public:
         return "StructTypeInfo";
     }
 
+    std::string GetTypeName() override;
+
     int GetSymbolIndex()
     {
         return _symIndex;
@@ -91,5 +94,6 @@ public:
 
 private:
     int _symIndex;
+    PSLCompilerContext* _pContext;
     std::vector<std::unique_ptr<StructMember> > _members;
 };

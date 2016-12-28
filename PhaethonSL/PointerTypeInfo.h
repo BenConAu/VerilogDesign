@@ -11,6 +11,7 @@ public:
     unsigned int GetSize() override;
     TypeClass GetTypeClass() override;
     std::string DebugPrint() override;
+    std::string GetTypeName() override;
     bool EqualType(TypeInfo* pOther) override;
     TypeInfo* MakeSpecificType(TypeInfo* pGenericArgType, TypeCollection* pCollection) override;
 

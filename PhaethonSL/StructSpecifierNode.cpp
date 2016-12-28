@@ -23,7 +23,7 @@ void StructSpecifierNode::VerifyNodeImpl()
     // TODO: Struct cannot be declared twice
 
     // Make the info for the type we are creating
-    StructTypeInfo* pNewType = new StructTypeInfo(_symIndex);
+    StructTypeInfo* pNewType = new StructTypeInfo(_symIndex, GetContext());
     GetContext()->_typeCollection.AddStructType(_symIndex, pNewType);
 
     for (size_t i = 0; i < GetChildCount(); i++)

@@ -9,6 +9,7 @@ PSLcc: lex.yy.c \
 	   ASTTree.h \
 	   AssignmentNode.cpp \
 	   AssignmentNode.h \
+	   BasicTypeInfo.cpp \
 	   BasicTypeInfo.h \
 	   CastNode.cpp \
 	   CastNode.h \
@@ -99,6 +100,7 @@ PSLcc: lex.yy.c \
 	   ASTNode.cpp \
 	   AddressOfNode.cpp \
 	   AssignmentNode.cpp \
+	   BasicTypeInfo.cpp \
 	   CastNode.cpp \
 	   ConstantNode.cpp \
 	   ExpressionNode.cpp \

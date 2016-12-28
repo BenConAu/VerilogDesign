@@ -17,3 +17,8 @@ void StructTypeInfo::AddMember(
 
     _members.push_back(std::unique_ptr<StructMember>(new StructMember(symIndex, pMemberType, dimension)));
 }
+
+std::string StructTypeInfo::GetTypeName()
+{
+    return _pContext->_symbols[_symIndex];
+}
