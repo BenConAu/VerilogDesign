@@ -18,7 +18,7 @@ RegisterWrapper::RegisterWrapper(
     }
     else
     {
-        _converted = pResult->GetOperands()[0];
+        _converted = pResult->GetOperands().GetOperand(0);
         _fAllocated = false;
     }
 }

@@ -35,8 +35,7 @@ public:
 	{
 		if (_type == OperandType::DerefConstant ||
 			_type == OperandType::DerefRegister ||
-			_type == OperandType::DerefRegisterOffset ||
-			_type == OperandType::DerefRegisterIndex
+			_type == OperandType::DerefRegisterOffset
 			)
 		{
 			return true;
@@ -50,8 +49,7 @@ public:
 	{
 		if (_type == OperandType::Constant ||
 			_type == OperandType::DerefConstant ||
-			_type == OperandType::DerefRegisterOffset ||
-			_type == OperandType::DerefRegisterIndex
+			_type == OperandType::DerefRegisterOffset
 			)
 		{
 			return true;

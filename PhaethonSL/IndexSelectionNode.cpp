@@ -111,7 +111,7 @@ ExpressionResult *IndexSelectionNode::CalculateResult()
     else
     {
         // Just reuse what we have
-        pResult->AddOperand(indexResult->GetOperands()[0], false);
+        pResult->AddOperand(indexResult->GetOperands().GetOperand(0), false);
     }
 
     return pResult;

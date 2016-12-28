@@ -18,7 +18,7 @@ void ReturnNode::PostProcessNodeImpl()
         // Convention is to store the result in r0, so move it there if it
         // is not there already.
         if (childResult->GetResultType() != ExpressionResultType::Register ||
-            childResult->GetOperands()[0].GetRegIndex() != 0)
+            childResult->GetOperands().GetRegIndex() != 0)
         {
             GetContext()->OutputMovInstruction(
                 Operand((RegIndex)0),

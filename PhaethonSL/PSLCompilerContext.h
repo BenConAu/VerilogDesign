@@ -7,21 +7,10 @@
 #include "Operand.h"
 #include "ASTNode.h"
 #include "PSL.tab.h"
+#include "OperandList.h"
 
 class FunctionDeclaratorNode;
 class ExpressionResult;
-
-class OperandList : public std::vector<Operand>
-{
-  public:
-    OperandList(Operand o) : std::vector<Operand>(1, o)
-    {
-    }
-
-    OperandList()
-    {
-    }
-};
 
 class PSLCompilerContext
 {

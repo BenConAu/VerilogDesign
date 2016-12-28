@@ -17,7 +17,6 @@ using namespace std;
 "Constant"        { return CONSTANT_TOKEN; }
 "Deref"           { return DEREF_TOKEN; }
 "Offset"          { return OFFSET_TOKEN; }
-"Index"           { return INDEX_TOKEN; }
 "None"            { return NONE_TOKEN; }
 "RAM"             { return RAM_TOKEN; }
 "NoFlags"         { return NOFLAGS_TOKEN; }

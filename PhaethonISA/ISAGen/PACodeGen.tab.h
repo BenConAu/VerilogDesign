@@ -50,12 +50,11 @@ extern int yydebug;
     CONSTANT_TOKEN = 260,
     NONE_TOKEN = 261,
     OFFSET_TOKEN = 262,
-    INDEX_TOKEN = 263,
-    DEREF_TOKEN = 264,
-    ADDRESSOF_TOKEN = 265,
-    COLON_TOKEN = 266,
-    RAM_TOKEN = 267,
-    NOFLAGS_TOKEN = 268
+    DEREF_TOKEN = 263,
+    ADDRESSOF_TOKEN = 264,
+    COLON_TOKEN = 265,
+    RAM_TOKEN = 266,
+    NOFLAGS_TOKEN = 267
   };
 #endif
 
@@ -71,7 +70,7 @@ union YYSTYPE
     OperandType opType;
     ISAOperand argType;
 
-#line 75 "PACodeGen.tab.h" /* yacc.c:1915  */
+#line 74 "PACodeGen.tab.h" /* yacc.c:1915  */
 };
 
 typedef union YYSTYPE YYSTYPE;

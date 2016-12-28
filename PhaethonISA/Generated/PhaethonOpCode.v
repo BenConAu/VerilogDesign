@@ -2,11 +2,11 @@
 `define MovRC 2
 `define MovRdR 3
 `define MovRdRo 4
-`define MovRdRiR 5
+`define MovRdRoR 5
 `define MovRdC 6
 `define MovdCR 7
 `define MovdRoR 8
-`define MovdRiRR 9
+`define MovdRoRR 9
 `define PushR 10
 `define PopR 11
 `define CmpRR 12
@@ -47,11 +47,11 @@ function [0:0] Is8ByteOpcode;
   input [7:0] opCodeParam;
   if (opCodeParam == `MovRC ||
       opCodeParam == `MovRdRo ||
-      opCodeParam == `MovRdRiR ||
+      opCodeParam == `MovRdRoR ||
       opCodeParam == `MovRdC ||
       opCodeParam == `MovdCR ||
       opCodeParam == `MovdRoR ||
-      opCodeParam == `MovdRiRR ||
+      opCodeParam == `MovdRoRR ||
       opCodeParam == `CmpRC ||
       opCodeParam == `JmpC ||
       opCodeParam == `JneC ||
@@ -71,11 +71,11 @@ function [0:0] IsRAMOpcode;
   input [7:0] opCodeParam;
   if (opCodeParam == `MovRdR ||
       opCodeParam == `MovRdRo ||
-      opCodeParam == `MovRdRiR ||
+      opCodeParam == `MovRdRoR ||
       opCodeParam == `MovRdC ||
       opCodeParam == `MovdCR ||
       opCodeParam == `MovdRoR ||
-      opCodeParam == `MovdRiRR ||
+      opCodeParam == `MovdRoRR ||
       opCodeParam == `PushR ||
       opCodeParam == `PopR ||
       opCodeParam == `CallR ||

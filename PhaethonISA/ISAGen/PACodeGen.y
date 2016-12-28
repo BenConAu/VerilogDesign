@@ -28,7 +28,6 @@ void yyerror(const char *s);
 %token <opType> CONSTANT_TOKEN
 %token <opType> NONE_TOKEN
 %token OFFSET_TOKEN
-%token INDEX_TOKEN
 %token DEREF_TOKEN
 %token ADDRESSOF_TOKEN
 %token COLON_TOKEN
@@ -58,7 +57,6 @@ argument:
       operandType                                                   { $$ = ISAOperand::Construct($1, false); }
     | DEREF_TOKEN COLON_TOKEN operandType                           { $$ = ISAOperand::Construct($3, true); }
     | DEREF_TOKEN COLON_TOKEN REGISTER_TOKEN COLON_TOKEN OFFSET_TOKEN { $$ = ISAOperand::Construct(OperandType::DerefRegisterOffset, false); }
-    | DEREF_TOKEN COLON_TOKEN REGISTER_TOKEN COLON_TOKEN INDEX_TOKEN  { $$ = ISAOperand::Construct(OperandType::DerefRegisterIndex, false); }
     ;
 
 operandType:

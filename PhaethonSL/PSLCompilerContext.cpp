@@ -178,7 +178,7 @@ void PSLCompilerContext::OutputInstruction(
                 throw "Too many operands passed to OutputInstrution";
             }
 
-            passArgs[curr] = rawArgs[i][a].GetObjArgument();
+            passArgs[curr] = rawArgs[i].GetOperand(a).GetObjArgument();
             curr++;
         }
     }
@@ -195,37 +195,37 @@ void PSLCompilerContext::OutputMovInstruction(
 {
     OpCodes::Enum opCode = OpCodes::Unknown;
 
-    if (a1[0].GetType() == OperandType::Register)
+    if (a1.GetResultType() == ExpressionResultType::Register)
     {
-        switch (a2[0].GetType())
+        switch (a2.GetResultType())
         {
-        case OperandType::Register:
+        case ExpressionResultType::Register:
             opCode = OpCodes::MovRR;
             break;
 
-        case OperandType::Constant:
+        case ExpressionResultType::Constant:
             opCode = OpCodes::MovRC;
             break;
 
-        case OperandType::DerefConstant:
+        case ExpressionResultType::DerefConstant:
             opCode = OpCodes::MovRdC;
             break;
 
-        case OperandType::DerefRegisterOffset:
+        case ExpressionResultType::DerefRegisterOffset:
             opCode = OpCodes::MovRdRo;
             break;
 
-        case OperandType::DerefRegisterIndex:
-            opCode = OpCodes::MovRdRiR;
+        case ExpressionResultType::DerefRegisterIndex:
+            opCode = OpCodes::MovRdRoR;
             break;
 
         default:
             throw "Unexpected operand type for LHS is register";
         }
     }
-    else if (a1[0].GetType() == OperandType::DerefRegisterOffset)
+    else if (a1.GetResultType() == ExpressionResultType::DerefRegisterOffset)
     {
-        if (a2[0].GetType() == OperandType::Register)
+        if (a2.GetResultType() == ExpressionResultType::Register)
         {
             opCode = OpCodes::MovdRoR;
         }
@@ -234,11 +234,11 @@ void PSLCompilerContext::OutputMovInstruction(
             throw "Unexpected operand type for LHS is dRo";
         }
     }
-    else if (a1[0].GetType() == OperandType::DerefRegisterIndex)
+    else if (a1.GetResultType() == ExpressionResultType::DerefRegisterIndex)
     {
-        if (a2[0].GetType() == OperandType::Register)
+        if (a2.GetResultType() == ExpressionResultType::Register)
         {
-            opCode = OpCodes::MovdRiRR;
+            opCode = OpCodes::MovdRoRR;
         }
         else
         {

@@ -89,7 +89,7 @@ Operand::Operand(
     PointerTypeInfo *pTypeInfo,
     PSLCompilerContext *pContext)
 {
-    _objArg._argType = OperandType::DerefRegisterIndex;
+    _objArg._argType = OperandType::DerefRegisterOffset;
     _objArg._value = regIndex;
 
     // The offset stores the size of each item
@@ -137,18 +137,6 @@ const char *Operand::DebugPrint()
     static char str[100];
     sprintf(str, "%d", (int)_objArg._argType);
     return str;
-}
-
-int Operand::GetArgCount() const
-{
-    if (_objArg._argType != OperandType::DerefRegisterIndex)
-    {
-        return 1;
-    }
-    else
-    {
-        return 2;
-    }
 }
 
 const ObjArgument &Operand::GetObjArgument() const

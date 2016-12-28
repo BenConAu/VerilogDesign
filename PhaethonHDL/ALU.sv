@@ -252,20 +252,22 @@ module ALU(
 
         if (opCode == `MovRdRo)
         begin
-          // Read values from address encoded in code
+          // First register is destination, second register is base address, 
+          // constant stores offset in bytes.
           readReq <= 1;
           ramAddress <= opDataWord + regValue2[0];
 
           //$display("Requesting read from %h", opDataWord + regValue2);
         end
 
-        if (opCode == `MovRdRiR)
+        if (opCode == `MovRdRoR)
         begin
-          // Read values from address encoded in code
+          // First register is destination, second register is base address, 
+          // constant stores size of item, and third register stores index of item.
           readReq <= 1;
           ramAddress <= regValue2[0] + opDataWord * regValue3[0];
 
-          //$display("Requesting read from %h", opDataWord + regValue2);
+          //$display("Requesting read from %h", regValue2[0] + opDataWord * regValue3[0]);
         end
 
         if (opCode == `MovRdR)
@@ -306,14 +308,15 @@ module ALU(
           //$display("Reqesting write %h to address value %h", regValue2[0], opDataWord + regValue[0]);
         end
 
-        if (opCode == `MovdRiRR)
+        if (opCode == `MovdRoRR)
         begin
-          // Write values to ram requested by instruction
+          // first register is base address, constant stores size of items, 
+          // second register stores index of item, third register is destination, 
           writeReq <= 1;
           ramAddress <= regValue[0] + opDataWord * regValue2[0];
           ramOut <= regValue3[0];
 
-          //$display("Reqesting write %h to address value %h", regValue2[0], opDataWord + regValue[0]);
+          //$display("Reqesting write %h to address value %h", regValue2[0], regValue[0] + opDataWord * regValue2[0]);
         end
 
         if (opCode == `PushR)
@@ -345,7 +348,7 @@ module ALU(
       // Mode 5: Complete data read or write if the instruction
       //         requires it.
       5: begin
-        if (opCode == `MovRdC || opCode == `MovRdRo || opCode == `MovRdRiR || opCode == `MovRdR || opCode == `PopR || opCode == `Ret)
+        if (opCode == `MovRdC || opCode == `MovRdRo || opCode == `MovRdRoR || opCode == `MovRdR || opCode == `PopR || opCode == `Ret)
         begin
           // Stop request
           readReq <= 0;
@@ -361,7 +364,7 @@ module ALU(
             mode <= 6;
           end
         end
-        else if (opCode == `MovdCR || opCode == `MovdRoR || opCode == `MovdRiRR || opCode == `PushR || opCode == `CallR)
+        else if (opCode == `MovdCR || opCode == `MovdRoR || opCode == `MovdRoRR || opCode == `PushR || opCode == `CallR)
         begin
           // Stop request
           writeReq <= 0;
@@ -390,11 +393,11 @@ module ALU(
           `MovRdC:   regarray[regAddress[7:0]] <= ramValue;               // mov reg, [addr]
           `MovRR:    regarray[regAddress[7:0]] <= regValue2[0];           // mov reg, reg
           `MovRdRo:  regarray[regAddress[7:0]] <= ramValue;               // mov reg, [reg + const]
-          `MovRdRiR: regarray[regAddress[7:0]] <= ramValue;               // mov reg, [reg + const * reg]
+          `MovRdRoR: regarray[regAddress[7:0]] <= ramValue;               // mov reg, [reg + const * reg]
           `MovRdR:   regarray[regAddress[7:0]] <= ramValue;               // mov reg, [reg]
           `MovdCR:   begin end // Done above
           `MovdRoR:  begin end // Done above
-          `MovdRiRR: begin end // Done above
+          `MovdRoRR: begin end // Done above
 
           `PushR: begin
             regarray[0] <= regarray[0] + 4;                             // push reg

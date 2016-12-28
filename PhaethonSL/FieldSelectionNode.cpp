@@ -150,7 +150,7 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
         }
 
         // We can assume this is the register operand we want
-        baseRegister = childResult->GetOperands()[0].GetRegIndex();
+        baseRegister = childResult->GetOperands().GetRegIndex();
     }
 
     // Get the member of the struct that we are selecting
