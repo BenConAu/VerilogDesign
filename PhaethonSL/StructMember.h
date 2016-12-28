@@ -9,7 +9,7 @@ public:
         _dimension = dimension;
         _pType = pType;
 
-        //printf("Creating member with type %s\n", pType->DebugPrint().c_str());
+        //printf("Creating member with type %p:%s\n", pType, pType->DebugPrint().c_str());
     }
 
     int GetSymbolIndex()
@@ -30,6 +30,7 @@ public:
         }
         else
         {
+            //printf("About to deref type %p\n", _pType);
             return _pType->GetSize() * _dimension;
         }
     }

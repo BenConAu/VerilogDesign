@@ -55,7 +55,7 @@ ArrayTypeInfo* TypeCollection::GetArrayType(TypeInfo* pBaseType)
         throw "Cannot have array without base type";
     }
 
-    if (_pointerTypes.find(pBaseType) == _pointerTypes.end())
+    if (_arrayTypes.find(pBaseType) == _arrayTypes.end())
     {
         _arrayTypes[pBaseType] = std::unique_ptr<ArrayTypeInfo>(new ArrayTypeInfo(pBaseType));
     }

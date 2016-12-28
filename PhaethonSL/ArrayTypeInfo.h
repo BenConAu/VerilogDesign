@@ -7,6 +7,10 @@ class ArrayTypeInfo : public TypeInfo
 {
 public:
     ArrayTypeInfo(TypeInfo* pBaseType);
+    ~ArrayTypeInfo()
+    {
+        //printf("Destroying ArrayTypeInfo\n");
+    }
 
     unsigned int GetSize() override;
     TypeClass GetTypeClass() override;

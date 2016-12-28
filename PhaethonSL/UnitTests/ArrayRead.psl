@@ -3,10 +3,22 @@ struct foo
     word b[10];
 };
 
+struct foo2
+{
+    word a;
+    word b[5];
+};
+
 foo fooVar;
+foo2 foo2Var;
 
 void main()
 {
     fooVar.b[0] = 37;
     debugout(fooVar.b[0]);
+
+    foo2Var.a = 1;
+    foo2Var.b[0] = 2;
+    debugout(foo2Var.a);
+    debugout(foo2Var.b[0]);
 }

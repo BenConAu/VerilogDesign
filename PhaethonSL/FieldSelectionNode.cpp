@@ -93,9 +93,11 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
 
     //    printf("Field select child operand type = %d\n", childOperand.GetType());
 
-    // Remember if we allocate a register
+    // Remember if we allocate a register, and make sure we have a register
+    // which represents the base address of the struct that we are referencing
     RegisterCollection *pRegCollection = nullptr;
-    Operand regOperand;
+    RegIndex baseRegister;
+    bool fSetBaseRegister = false;
 
     // We need a register to offset. If we have one already then great, otherwise
     // we need to do the work to ensure that we have one for the path that arrived
@@ -115,10 +117,8 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
         }
 
         // If we have a constant, then we need to make it into a register
-        RegIndex pathIndex = pInfo->EnsureRegister(pScope);
-
-        // An operand that represents the variable
-        regOperand = Operand(pathIndex);
+        baseRegister = pInfo->EnsureRegister(pScope);
+        fSetBaseRegister = true;
     }
     else if (
         childResult->GetOperandType() == OperandType::DerefRegisterOffset ||
@@ -128,24 +128,17 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
 
         // Get register for our result
         pRegCollection = pScope->GetRegCollection();
-        RegIndex tempIndex = pRegCollection->AllocateRegister();
-
-        // An operand that represents the variable
-        regOperand = Operand(tempIndex);
+        baseRegister = pRegCollection->AllocateRegister();
+        fSetBaseRegister = true;
     }
 
-    Operand childOperand;
-
     // See if the operand that came in requires us to load up the register
-    if (regOperand.GetType() != OperandType::None)
+    if (fSetBaseRegister)
     {
         // Spit out the code to load said register
         pScope->GetContext()->OutputMovInstruction(
-            regOperand,
+            Operand(baseRegister),
             childResult->GetOperands());
-
-        // This is what we consider the child operand now
-        childOperand = regOperand;
     }
     else
     {
@@ -157,7 +150,7 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
         }
 
         // We can assume this is the register operand we want
-        childOperand = childResult->GetOperands()[0];
+        baseRegister = childResult->GetOperands()[0].GetRegIndex();
     }
 
     // Get the member of the struct that we are selecting
@@ -166,22 +159,33 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
     Operand result;
     if (pMember->GetType()->GetTypeClass() == TypeClass::Array)
     {
+        // If we have not allocated a register, then the register
+        // is the one mapped to the struct. We need to allocate one
+        // now because we don't want to fiddle with that register.
+        RegIndex resultRegister = baseRegister;
+        if (pRegCollection == nullptr)
+        {
+            pRegCollection = pScope->GetRegCollection();        
+            resultRegister = pRegCollection->AllocateRegister();
+        }
+
         // This operation will basically just offset the register
-        // which has the address in it.
-        result = Operand(childOperand.GetRegIndex());
+        // which has the address in it to create the pointer to
+        // the start of the member.
+        result = Operand(resultRegister);
 
         // Spit out the code to add to said register
         pScope->GetContext()->OutputInstruction(
             OpCodes::AddRRC,
             result,
-            result,
+            Operand(baseRegister),
             Operand((int)pTypeInfo->GetOffset(pMember->GetSymbolIndex())));
     }
     else
     {
         // Create an offset operand using the index of the field
         result = Operand(
-            childOperand.GetRegIndex(),
+            baseRegister,
             pTypeInfo,
             pMember,
             GetContext());
