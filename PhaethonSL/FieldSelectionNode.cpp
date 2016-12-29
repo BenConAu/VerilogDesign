@@ -12,6 +12,8 @@ FieldSelectionNode::FieldSelectionNode(PSLCompilerContext *pContext, ASTNode *pE
 
     _fieldSymIndex = symIndex;
     _fPointer = fPointer;
+
+    _pStructTypeInfo = nullptr;
 }
 
 void FieldSelectionNode::VerifyNodeImpl()
@@ -24,7 +26,6 @@ void FieldSelectionNode::VerifyNodeImpl()
 
     // Should verify that the type exists
     TypeInfo *pTypeInfo = pLeft->GetTypeInfo();
-    StructTypeInfo *pStructInfo;
     if (_fPointer)
     {
         PointerTypeInfo *pPointerInfo = dynamic_cast<PointerTypeInfo *>(pTypeInfo);
@@ -34,8 +35,8 @@ void FieldSelectionNode::VerifyNodeImpl()
             throw "Can only field select a pointer with arrow operator";
         }
 
-        pStructInfo = dynamic_cast<StructTypeInfo *>(pPointerInfo->GetBaseType());
-        if (pTypeInfo == nullptr)
+        _pStructTypeInfo = dynamic_cast<StructTypeInfo *>(pPointerInfo->GetBaseType());
+        if (_pStructTypeInfo == nullptr)
         {
             // Not using a structure, bad for our health
             throw "Can only field select a pointer to a struct with arrow operator";
@@ -43,15 +44,15 @@ void FieldSelectionNode::VerifyNodeImpl()
     }
     else
     {
-        pStructInfo = dynamic_cast<StructTypeInfo *>(pTypeInfo);
-        if (pStructInfo == nullptr)
+        _pStructTypeInfo = dynamic_cast<StructTypeInfo *>(pTypeInfo);
+        if (_pStructTypeInfo == nullptr)
         {
             // Not using a structure, bad for our health
             throw "Can only field select a struct with dot operator";
         }
     }
 
-    StructMember *pMember = pStructInfo->GetMember(_fieldSymIndex);
+    StructMember *pMember = _pStructTypeInfo->GetMember(_fieldSymIndex);
 
     if (pMember->GetType()->GetTypeClass() == TypeClass::Array)
     {
@@ -76,22 +77,6 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
 
     // Find the result of the child
     std::unique_ptr<ExpressionResult> childResult(pChildExpr->TakeResult());
-
-    // Get the structure type out of the child expression
-    StructTypeInfo *pTypeInfo;
-    if (!_fPointer)
-    {
-        // The expression of the child has to represent a struct
-        pTypeInfo = dynamic_cast<StructTypeInfo *>(childResult->_pTypeInfo);
-    }
-    else
-    {
-        // The expression of the child has to represent a pointer to a struct
-        PointerTypeInfo *pPointerInfo = dynamic_cast<PointerTypeInfo *>(childResult->_pTypeInfo);
-        pTypeInfo = dynamic_cast<StructTypeInfo *>(pPointerInfo->GetBaseType());
-    }
-
-    //    printf("Field select child operand type = %d\n", childOperand.GetType());
 
     // Remember if we allocate a register, and make sure we have a register
     // which represents the base address of the struct that we are referencing
@@ -154,7 +139,7 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
     }
 
     // Get the member of the struct that we are selecting
-    StructMember *pMember = pTypeInfo->GetMember(_fieldSymIndex);
+    StructMember *pMember = _pStructTypeInfo->GetMember(_fieldSymIndex);
 
     Operand result;
     if (pMember->GetType()->GetTypeClass() == TypeClass::Array)
@@ -179,14 +164,14 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
             OpCodes::AddRRC,
             result,
             Operand(baseRegister),
-            Operand((int)pTypeInfo->GetOffset(pMember->GetSymbolIndex())));
+            Operand((int)_pStructTypeInfo->GetOffset(pMember->GetSymbolIndex())));
     }
     else
     {
         // Create an offset operand using the index of the field
         result = Operand(
             baseRegister,
-            pTypeInfo,
+            _pStructTypeInfo,
             pMember,
             GetContext());
     }

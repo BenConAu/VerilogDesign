@@ -2,6 +2,8 @@
 
 #include "ExpressionNode.h"
 
+class StructTypeInfo;
+
 class FieldSelectionNode : public ExpressionNode
 {
 public:
@@ -15,4 +17,7 @@ public:
 private:
     int _fieldSymIndex;
     bool _fPointer;
+
+    // Stored during Verification
+    StructTypeInfo* _pStructTypeInfo;
 };
