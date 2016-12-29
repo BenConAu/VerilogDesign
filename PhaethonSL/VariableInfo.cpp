@@ -51,14 +51,14 @@ ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
             // Structs we don't ensure a register for until we absolutely need to, which
             // is currently only during field selection of the struct. So load the address
             // into a constant operand for now.
-            return new ExpressionResult(GetTypeInfo(), Operand(this, pScope->GetContext()));
+            return new ExpressionResult(Operand(this, pScope->GetContext()));
         }
         else
         {
             // Structs that already have registers and non-struct things can all go
             // down the path of being in a register and loading the operand with that.
             RegIndex regIndex = EnsureRegister(pScope);
-            return new ExpressionResult(GetTypeInfo(), Operand(regIndex));
+            return new ExpressionResult(Operand(regIndex));
         }
 
     case TypeClass::Generic:

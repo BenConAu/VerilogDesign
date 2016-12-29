@@ -27,7 +27,7 @@ class SizeOfNode : public ExpressionNode
      
         TypeNode *pTypeNode = dynamic_cast<TypeNode *>(GetChild(0));
 
-        return new ExpressionResult(pTypeInfo, Operand((int)pTypeNode->GetTypeInfo()->GetSize()));
+        return new ExpressionResult(Operand((int)pTypeNode->GetTypeInfo()->GetSize()));
     }
 
     const char *GetDebugName() override { return "SizeOfNode"; }

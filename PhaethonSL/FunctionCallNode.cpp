@@ -113,7 +113,7 @@ ExpressionResult *FunctionCallNode::CalculateResult()
         // The register we return stuff with needs to be reserved
         pScope->GetRegCollection()->ReserveRegister(firstArg);
 
-        return new ExpressionResult(pInfo->GetReturnTypeInfo(), Operand(firstArg), pScope->GetRegCollection());
+        return new ExpressionResult(Operand(firstArg), pScope->GetRegCollection());
     }
 }
 

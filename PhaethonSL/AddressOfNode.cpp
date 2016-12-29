@@ -28,11 +28,7 @@ ExpressionResult *AddressOfNode::CalculateResult()
 {
     // Find the result of the child
     IdentifierNode *pIdentifierNode = dynamic_cast<IdentifierNode *>(GetChild(0));
-    std::unique_ptr<ExpressionResult> childResult(pIdentifierNode->CalculateResult());
-
-    // Change its type
-    childResult->SetTypeInfo(GetTypeInfo());
 
     // The result has the new type but same path and same operand
-    return childResult.release();
+    return pIdentifierNode->CalculateResult();
 }

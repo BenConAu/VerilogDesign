@@ -16,18 +16,13 @@ class TypeInfo;
 // this form. 
 struct ExpressionResult
 {
-    ExpressionResult(TypeInfo* pTypeInfo, RegisterCollection* pCollection);
-    ExpressionResult(TypeInfo* pTypeInfo, Operand operand, RegisterCollection* pCollection);
-    ExpressionResult(TypeInfo* pTypeInfo, Operand operand);
+    ExpressionResult(RegisterCollection* pCollection);
+    ExpressionResult(Operand operand, RegisterCollection* pCollection);
+    ExpressionResult(Operand operand);
 
     ~ExpressionResult()
     {
         //printf("ExpressionResult destructor\n");
-    }
-
-    void SetTypeInfo(TypeInfo *pNewInfo)
-    {
-        _pTypeInfo = pNewInfo;
     }
 
     void AddOperand(const Operand& op, bool temp);
@@ -36,9 +31,6 @@ struct ExpressionResult
     ExpressionResultType GetResultType() { return _operandList.GetResultType(); }
 
     void DebugPrint();
-
-    // The type of the result that is stored in the operand
-    TypeInfo* _pTypeInfo;
 
 private:
     // The operand with the result of the expression

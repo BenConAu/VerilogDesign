@@ -76,5 +76,5 @@ void ConstantNode::VerifyNodeImpl()
 
 ExpressionResult *ConstantNode::CalculateResult()
 {
-    return new ExpressionResult(GetTypeInfo(), Operand(GetInteger()));
+    return new ExpressionResult(Operand(GetInteger()));
 }

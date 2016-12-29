@@ -76,7 +76,7 @@ ExpressionResult *IndexSelectionNode::CalculateResult()
     PointerTypeInfo *pPointerInfo = dynamic_cast<PointerTypeInfo *>(pTypeInfo);
 
     // Make the result object so we can build on it
-    ExpressionResult *pResult = new ExpressionResult(GetTypeInfo(), pScope->GetRegCollection());
+    ExpressionResult *pResult = new ExpressionResult(pScope->GetRegCollection());
 
     // Allocate a register for the first operand
     RegIndex resultIndex = pScope->GetRegCollection()->AllocateRegister();

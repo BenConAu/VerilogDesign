@@ -3,7 +3,7 @@
 #include "TypeInfo.h"
 
 // ExpressionResult to represent something that needs a temporary register and has no type
-ExpressionResult::ExpressionResult(TypeInfo *pTypeInfo, Operand operand, RegisterCollection *pCollection)
+ExpressionResult::ExpressionResult(Operand operand, RegisterCollection *pCollection)
 {
     switch (operand.GetType())
     {
@@ -12,7 +12,6 @@ ExpressionResult::ExpressionResult(TypeInfo *pTypeInfo, Operand operand, Registe
 
     case OperandType::Register:
     case OperandType::DerefRegisterOffset:
-        _pTypeInfo = pTypeInfo;
         _operandList.push_back(operand);
         _tempRegisters.emplace_back(new SmartRegister(operand.GetRegIndex(), pCollection));
         break;
@@ -24,29 +23,26 @@ ExpressionResult::ExpressionResult(TypeInfo *pTypeInfo, Operand operand, Registe
 }
 
 // ExpressionResult to represent something that needs a temporary register and has no type
-ExpressionResult::ExpressionResult(TypeInfo *pTypeInfo, RegisterCollection *pCollection)
+ExpressionResult::ExpressionResult(RegisterCollection *pCollection)
 {
-    _pTypeInfo = pTypeInfo;
     _pCollection = pCollection;
 }
 
 // ExpressionResult to represent a constant
-ExpressionResult::ExpressionResult(TypeInfo *pTypeInfo, Operand operand)
+ExpressionResult::ExpressionResult(Operand operand)
 {
     if (operand.GetType() == OperandType::None)
     {
         throw "Cannot give none operands to ExpressionResult";
     }
 
-    _pTypeInfo = pTypeInfo;
     _operandList.push_back(operand);
 }
 
 void ExpressionResult::DebugPrint()
 {
     printf(
-        "ExpressionResult _pTypeInfo = %s, _operand = %s\n",
-        _pTypeInfo->DebugPrint().c_str(),
+        "ExpressionResult _operand[0] = %s\n",
         _operandList.GetOperand(0).DebugPrint());
 }
 

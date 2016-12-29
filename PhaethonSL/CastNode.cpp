@@ -28,9 +28,6 @@ ExpressionResult *CastNode::CalculateResult()
 {
     ExpressionNode *pExpr = dynamic_cast<ExpressionNode *>(GetChild(1));
 
-    // Take over the child result and overwrite the type
-    std::unique_ptr<ExpressionResult> childResult(pExpr->TakeResult());
-    childResult->_pTypeInfo = GetTypeInfo();
-
-    return childResult.release();
+    // Take over the child result
+    return pExpr->TakeResult();
 }

@@ -178,10 +178,10 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
 
     if (pRegCollection != nullptr)
     {
-        return new ExpressionResult(pMember->GetType(), result, pRegCollection);
+        return new ExpressionResult(result, pRegCollection);
     }
     else
     {
-        return new ExpressionResult(pMember->GetType(), result);
+        return new ExpressionResult(result);
     }
 }

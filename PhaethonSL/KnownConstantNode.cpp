@@ -32,5 +32,5 @@ void KnownConstantNode::VerifyNodeImpl()
 
 ExpressionResult *KnownConstantNode::CalculateResult()
 {
-    return new ExpressionResult(GetTypeInfo(), Operand(_known));
+    return new ExpressionResult(Operand(_known));
 }
