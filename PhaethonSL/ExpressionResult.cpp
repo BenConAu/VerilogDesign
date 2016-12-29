@@ -13,7 +13,6 @@ ExpressionResult::ExpressionResult(TypeInfo *pTypeInfo, Operand operand, Registe
     case OperandType::Register:
     case OperandType::DerefRegisterOffset:
         _pTypeInfo = pTypeInfo;
-        _pVarInfo = nullptr;
         _operandList.push_back(operand);
         _tempRegisters.emplace_back(new SmartRegister(operand.GetRegIndex(), pCollection));
         break;
@@ -28,7 +27,6 @@ ExpressionResult::ExpressionResult(TypeInfo *pTypeInfo, Operand operand, Registe
 ExpressionResult::ExpressionResult(TypeInfo *pTypeInfo, RegisterCollection *pCollection)
 {
     _pTypeInfo = pTypeInfo;
-    _pVarInfo = nullptr;
     _pCollection = pCollection;
 }
 
@@ -41,20 +39,6 @@ ExpressionResult::ExpressionResult(TypeInfo *pTypeInfo, Operand operand)
     }
 
     _pTypeInfo = pTypeInfo;
-    _pVarInfo = nullptr;
-    _operandList.push_back(operand);
-}
-
-// ExpressionResult to represent a variable
-ExpressionResult::ExpressionResult(VariableInfo *pVarInfo, Operand operand)
-{
-    if (operand.GetType() == OperandType::None)
-    {
-        throw "Cannot give none operands to ExpressionResult";
-    }
-
-    _pTypeInfo = pVarInfo->GetTypeInfo();
-    _pVarInfo = pVarInfo;
     _operandList.push_back(operand);
 }
 

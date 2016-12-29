@@ -19,16 +19,14 @@ struct ExpressionResult
     ExpressionResult(TypeInfo* pTypeInfo, RegisterCollection* pCollection);
     ExpressionResult(TypeInfo* pTypeInfo, Operand operand, RegisterCollection* pCollection);
     ExpressionResult(TypeInfo* pTypeInfo, Operand operand);
-    ExpressionResult(VariableInfo* pVarInfo, Operand operand);
 
     ~ExpressionResult()
     {
         //printf("ExpressionResult destructor\n");
     }
 
-    void SetType(TypeInfo *pNewInfo)
+    void SetTypeInfo(TypeInfo *pNewInfo)
     {
-        // The assumption is that the variable info is the same...
         _pTypeInfo = pNewInfo;
     }
 
@@ -41,9 +39,6 @@ struct ExpressionResult
 
     // The type of the result that is stored in the operand
     TypeInfo* _pTypeInfo;
-
-    // Optional variable info that might be relevant
-    VariableInfo* _pVarInfo;
 
 private:
     // The operand with the result of the expression

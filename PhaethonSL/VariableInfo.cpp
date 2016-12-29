@@ -45,36 +45,20 @@ ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
     {
     case TypeClass::Basic:
     case TypeClass::Pointer:
-    {
-        // Basic things and pointers are always word sized and stored
-        // in registers allocated to them. Find out which register it is
-        // and make an operand out of that.
-        RegIndex regIndex = EnsureRegister(pScope);
-
-        return new ExpressionResult(GetTypeInfo(), Operand(regIndex));
-    }
-
     case TypeClass::Struct:
-        // A pointer is always pointing to memory by definition, as is
-        // a struct. For memory located things, create an operand with
-        // the constant memory address involved. We might add an offset
-        // later.
-        if (HasRegister(pScope))
+        if (_pType->GetTypeClass() == TypeClass::Struct && !HasRegister(pScope))
         {
-            //printf("Ensuring register for %s\n", GetSymbol());
-
-            // We already have a register for this thing, so we can make an operand
-            // out of that. That can be directly used by other things.
-            RegIndex index = EnsureRegister(pScope);
-
-            return new ExpressionResult(GetTypeInfo(), Operand(index));
+            // Structs we don't ensure a register for until we absolutely need to, which
+            // is currently only during field selection of the struct. So load the address
+            // into a constant operand for now.
+            return new ExpressionResult(GetTypeInfo(), Operand(this, pScope->GetContext()));
         }
         else
         {
-            //printf("No register for %s, returning constant Operand\n", GetSymbol());
-
-            // Don't make a register if you don't need one
-            return new ExpressionResult(this, Operand(this, pScope->GetContext()));
+            // Structs that already have registers and non-struct things can all go
+            // down the path of being in a register and loading the operand with that.
+            RegIndex regIndex = EnsureRegister(pScope);
+            return new ExpressionResult(GetTypeInfo(), Operand(regIndex));
         }
 
     case TypeClass::Generic:

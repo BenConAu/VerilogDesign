@@ -31,7 +31,7 @@ ExpressionResult *AddressOfNode::CalculateResult()
     std::unique_ptr<ExpressionResult> childResult(pIdentifierNode->CalculateResult());
 
     // Change its type
-    childResult->SetType(GetTypeInfo());
+    childResult->SetTypeInfo(GetTypeInfo());
 
     // The result has the new type but same path and same operand
     return childResult.release();

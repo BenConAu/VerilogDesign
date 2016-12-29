@@ -48,13 +48,16 @@ class Operand
         const std::string &label);
 
     bool IsNone() const;
-    std::string GetOpString() const;
     OperandType GetType() const { return _objArg._argType; }
     RegIndex GetRegIndex() const;
     const ObjArgument &GetObjArgument() const;
     const char *DebugPrint();
+    VariableInfo *GetVariableInfo() const { return _pVarInfo; }
 
   private:
     // The information about the argument
     ObjArgument _objArg;
+
+    // Variable info (if this is a constant address of a variable)
+    VariableInfo* _pVarInfo;    
 };

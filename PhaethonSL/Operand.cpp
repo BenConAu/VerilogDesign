@@ -9,6 +9,7 @@
 // somewhat predictable.
 Operand::Operand()
 {
+    _pVarInfo = nullptr;
 }
 
 // A regster operand stores the register index.
@@ -18,6 +19,8 @@ Operand::Operand(RegIndex index)
     _objArg._value = index;
     _objArg._offset = -1;
     _objArg._fMemoryLocation = false;
+    
+    _pVarInfo = nullptr;
 }
 
 // Constant operand stores a constant
@@ -27,6 +30,8 @@ Operand::Operand(int constant)
     _objArg._value = constant;
     _objArg._offset = -1;
     _objArg._fMemoryLocation = false;
+    
+    _pVarInfo = nullptr;
 }
 
 // An operand that loads an address of a variable
@@ -39,6 +44,7 @@ Operand::Operand(
     _objArg._argType = OperandType::Constant;
     _objArg._value = pVarInfo->GetMemLocation();
     _objArg._offset = -1;
+    _pVarInfo = pVarInfo;
 
     // Fill in symbolic information
     _objArg._memberName = pContext->_symbols[pVarInfo->GetSymbolIndex()];
@@ -58,6 +64,8 @@ Operand::Operand(
     // This is a memory location, because it is pointing to memory
     _objArg._memberName = "__datasegmentend";
     _objArg._fMemoryLocation = true;
+
+    _pVarInfo = nullptr;
 }
 
 // An offset operand comes from a register (already allocated) and
@@ -80,6 +88,7 @@ Operand::Operand(
     _objArg._memberName = pContext->_symbols[pTypeMember->GetSymbolIndex()];
 
     _objArg._fMemoryLocation = false;
+    _pVarInfo = nullptr;    
 }
 
 // An offset operand comes from a register (already allocated) and
@@ -100,6 +109,7 @@ Operand::Operand(
     _objArg._typeName = pTypeInfo->GetBaseType()->GetTypeName();
 
     _objArg._fMemoryLocation = false;
+    _pVarInfo = nullptr;    
 }
 
 Operand::Operand(
@@ -110,6 +120,8 @@ Operand::Operand(
     _objArg._value = -1;
     _objArg._offset = -1;
     _objArg._label = label;
+
+    _pVarInfo = nullptr;    
 }
 
 bool Operand::IsNone() const

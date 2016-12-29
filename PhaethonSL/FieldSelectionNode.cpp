@@ -94,8 +94,8 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
         // Since the operand has a memory location in it, we figure that we must
         // have VariableInfo for when it was loaded. This will now transform into
         // an offset operation, which requires that the variable info be there so
-        // that we can get the register that we associate with the path.
-        VariableInfo *pInfo = childResult->_pVarInfo;
+        // that we can get the register that we associate with the path. 
+        VariableInfo *pInfo = childResult->GetOperands().GetOperand(0).GetVariableInfo();
         if (pInfo == nullptr)
         {
             throw "Need variable info to field select";
