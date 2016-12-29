@@ -1,7 +1,7 @@
 #pragma once
 
 #include "RegisterCollection.h"
-#include "VariableCollection.h"
+#include "SymbolTable.h"
 #include "TypeCollection.h"
 #include "../PhaethonObjWriter/ObjWriter.h"
 #include "Operand.h"
@@ -45,7 +45,7 @@ class PSLCompilerContext
         const char *pszLabel);
 
     void *pScanner;
-    VariableCollection _varCollection;
+    SymbolTable _symbolTable;
     TypeCollection _typeCollection;
     std::vector<std::string> _symbols;
     int _indent = 0;

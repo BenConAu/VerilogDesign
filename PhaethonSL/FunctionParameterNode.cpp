@@ -14,7 +14,7 @@ void FunctionParameterNode::VerifyNodeImpl()
     RegIndex regIndex = static_cast<RegIndex>(index - 1);
 
     // Add variable to collection and mark first usage
-    VariableInfo *pParamInfo = GetContext()->_varCollection.AddVariable(
+    VariableInfo *pParamInfo = GetContext()->_symbolTable.AddVariable(
         _symIndex,
         pFunc,
         dynamic_cast<TypeNode *>(GetChild(0))->GetTypeInfo());

@@ -10,10 +10,10 @@ class TypeInfo;
 class GenericTypeInfo;
 class FunctionDeclaratorNode;
 
-class VariableCollection
+class SymbolTable
 {
   public:
-    VariableCollection(PSLCompilerContext *pContext);
+    SymbolTable(PSLCompilerContext *pContext);
     void AddBuiltin();
 
     VariableInfo *AddVariable(
@@ -30,5 +30,5 @@ class VariableCollection
 
   private:
     PSLCompilerContext *_pContext;
-    std::map<int, std::unique_ptr<SymbolInfo>> _variables;
+    std::map<int, std::unique_ptr<SymbolInfo>> _symbols;
 };

@@ -49,7 +49,7 @@ void FunctionDeclaratorNode::VerifyNodeImpl()
     TypeNode *pReturnTypeNode = dynamic_cast<TypeNode *>(GetChild(0));
 
     // Add function to collection
-    GetContext()->_varCollection.AddFunction(
+    GetContext()->_symbolTable.AddFunction(
         _symIndex,
         (_genericIndex != -1) ? GetContext()->_typeCollection.GetGenericType(_genericIndex, this) : nullptr,
         pReturnTypeNode->GetTypeInfo());

@@ -36,7 +36,7 @@ void VariableDeclarationNode::PreVerifyNodeImpl()
     }
 
     // Add variable to collection and mark first usage
-    GetContext()->_varCollection.AddVariable(
+    GetContext()->_symbolTable.AddVariable(
         _symIndex,
         pFunc,
         dynamic_cast<TypeNode *>(GetChild(0))->GetTypeInfo());

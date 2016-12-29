@@ -71,13 +71,14 @@ PSLcc: lex.yy.c \
 	   StructTypeInfo.h \
 	   SymbolInfo.cpp \
 	   SymbolInfo.h \
+	   SymbolTable.cpp \
+	   SymbolTable.h \
 	   TypeCollection.cpp \
 	   TypeCollection.h \
 	   TypeInfo.cpp \
 	   TypeInfo.h \
 	   TypeNode.cpp \
 	   TypeNode.h \
-	   VariableCollection.cpp \
 	   VariableDeclarationNode.cpp \
 	   VariableDeclarationNode.h \
 	   VariableInfo.cpp \
@@ -129,10 +130,10 @@ PSLcc: lex.yy.c \
 	   StructSpecifierNode.cpp \
 	   StructTypeInfo.cpp \
 	   SymbolInfo.cpp \
+	   SymbolTable.cpp \
 	   TypeInfo.cpp \
 	   TypeNode.cpp \
 	   TypeCollection.cpp \
-	   VariableCollection.cpp \
 	   VariableDeclarationNode.cpp \
 	   VariableInfo.cpp \
 	   WhileStatementNode.cpp -o PSLcc

@@ -27,7 +27,7 @@ ExpressionResult *IdentifierNode::CalculateResult()
 
 VariableInfo *IdentifierNode::GetVariableInfo()
 {
-    VariableInfo* pInfo = dynamic_cast<VariableInfo*>(GetContext()->_varCollection.GetInfo(_symIndex));
+    VariableInfo* pInfo = dynamic_cast<VariableInfo*>(GetContext()->_symbolTable.GetInfo(_symIndex));
     if (pInfo == nullptr)
     {
         char message[256];

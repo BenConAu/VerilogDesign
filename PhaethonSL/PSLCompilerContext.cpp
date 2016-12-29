@@ -10,13 +10,13 @@ PSLCompilerContext::PSLCompilerContext(
     FILE *pFile,
     const char *pszAsmName,
     const char *pszObjName,
-    const char *pszBinName) : _varCollection(this)
+    const char *pszBinName) : _symbolTable(this)
 {
     _pEntryPoint = nullptr;
     _numStructs = 0;
     _numGlobals = 0;
 
-    _varCollection.AddBuiltin();
+    _symbolTable.AddBuiltin();
 
     if (pszAsmName != nullptr)
     {
