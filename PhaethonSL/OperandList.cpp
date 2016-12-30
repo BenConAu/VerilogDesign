@@ -29,7 +29,7 @@ OperandList::OperandList()
     _type = ExpressionResultType::None;
 }
 
-void OperandList::push_back(const Operand &op)
+void OperandList::AddOperand(const Operand &op)
 {
     _operandList.push_back(op);
 }

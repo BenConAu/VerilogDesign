@@ -12,7 +12,7 @@ ExpressionResult::ExpressionResult(Operand operand, RegisterCollection *pCollect
 
     case OperandType::Register:
     case OperandType::DerefRegisterOffset:
-        _operandList.push_back(operand);
+        _operandList.AddOperand(operand);
         _tempRegisters.emplace_back(new SmartRegister(operand.GetRegIndex(), pCollection));
         break;
 
@@ -36,7 +36,7 @@ ExpressionResult::ExpressionResult(Operand operand)
         throw "Cannot give none operands to ExpressionResult";
     }
 
-    _operandList.push_back(operand);
+    _operandList.AddOperand(operand);
 }
 
 void ExpressionResult::DebugPrint()
@@ -48,6 +48,6 @@ void ExpressionResult::DebugPrint()
 
 void ExpressionResult::AddOperand(const Operand &op, bool temp)
 {
-    _operandList.push_back(op);
+    _operandList.AddOperand(op);
     _tempRegisters.emplace_back(new SmartRegister(op.GetRegIndex(), _pCollection));
 }
