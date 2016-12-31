@@ -152,12 +152,12 @@ void PSLCompilerContext::SetEntryPoint(FunctionDeclaratorNode *pEntryPoint)
 
 void PSLCompilerContext::OutputInstruction(
     OpCodes::Enum opCode,
-    const OperandList &a1,
-    const OperandList &a2,
-    const OperandList &a3)
+    const ExpressionResult &a1,
+    const ExpressionResult &a2,
+    const ExpressionResult &a3)
 {
     // Nice to operate on these like they are an array
-    OperandList rawArgs[3] = { a1, a2, a3 };
+    const ExpressionResult *rawArgs[3] = { &a1, &a2, &a3 };
 
     // The arguments are non by default if nothing else specified
     ObjArgument passArgs[3];
@@ -165,20 +165,20 @@ void PSLCompilerContext::OutputInstruction(
     int curr = 0;
     for (int i = 0; i < 3; i++)
     {
-        if (rawArgs[i].size() == 0)
+        if (rawArgs[i] == nullptr || rawArgs[i]->size() == 0)
         {
             // We are done processing the arguments
             break;
         }
 
-        for (size_t a = 0; a < rawArgs[i].size(); a++)
+        for (size_t a = 0; a < rawArgs[i]->size(); a++)
         {
             if (curr == 3)
             {
                 throw "Too many operands passed to OutputInstrution";
             }
 
-            passArgs[curr] = rawArgs[i].GetOperand(a).GetObjArgument();
+            passArgs[curr] = rawArgs[i]->GetOperand(a).GetObjArgument();
             curr++;
         }
     }
@@ -190,8 +190,8 @@ void PSLCompilerContext::OutputInstruction(
 }
 
 void PSLCompilerContext::OutputMovInstruction(
-    const OperandList &a1,
-    const OperandList &a2)
+    const ExpressionResult &a1,
+    const ExpressionResult &a2)
 {
     OpCodes::Enum opCode = OpCodes::Unknown;
 

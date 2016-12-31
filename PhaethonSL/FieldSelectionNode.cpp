@@ -95,7 +95,7 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
         // have VariableInfo for when it was loaded. This will now transform into
         // an offset operation, which requires that the variable info be there so
         // that we can get the register that we associate with the path. 
-        VariableInfo *pInfo = childResult->GetOperands().GetOperand(0).GetVariableInfo();
+        VariableInfo *pInfo = childResult->GetOperand(0).GetVariableInfo();
         if (pInfo == nullptr)
         {
             throw "Need variable info to field select";
@@ -123,7 +123,7 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
         // Spit out the code to load said register
         pScope->GetContext()->OutputMovInstruction(
             Operand(baseRegister),
-            childResult->GetOperands());
+            *childResult.get());
     }
     else
     {
@@ -135,7 +135,7 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
         }
 
         // We can assume this is the register operand we want
-        baseRegister = childResult->GetOperands().GetRegIndex();
+        baseRegister = childResult->GetRegIndex();
     }
 
     // Get the member of the struct that we are selecting

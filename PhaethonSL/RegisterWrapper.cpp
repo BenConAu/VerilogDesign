@@ -14,11 +14,11 @@ RegisterWrapper::RegisterWrapper(
         _converted = Operand(_pCollection->AllocateRegister());
         _fAllocated = true;
 
-        pContext->OutputMovInstruction(_converted, pResult->GetOperands());
+        pContext->OutputMovInstruction(_converted, *pResult);
     }
     else
     {
-        _converted = pResult->GetOperands().GetOperand(0);
+        _converted = pResult->GetOperand(0);
         _fAllocated = false;
     }
 }

@@ -7,10 +7,9 @@
 #include "Operand.h"
 #include "ASTNode.h"
 #include "PSL.tab.h"
-#include "OperandList.h"
+#include "ExpressionResult.h"
 
 class FunctionDeclaratorNode;
-class ExpressionResult;
 
 class PSLCompilerContext
 {
@@ -33,13 +32,13 @@ class PSLCompilerContext
 
     void OutputInstruction(
         OpCodes::Enum opCode,
-        const OperandList &a1 = OperandList(),
-        const OperandList &a2 = OperandList(),
-        const OperandList &a3 = OperandList());
+        const ExpressionResult &a1 = ExpressionResult(),
+        const ExpressionResult &a2 = ExpressionResult(),
+        const ExpressionResult &a3 = ExpressionResult());
 
     void OutputMovInstruction(
-        const OperandList &a1,
-        const OperandList &a2);
+        const ExpressionResult &a1,
+        const ExpressionResult &a2);
 
     void OutputLabel(
         const char *pszLabel);

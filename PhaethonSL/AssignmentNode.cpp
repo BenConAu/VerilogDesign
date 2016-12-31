@@ -71,8 +71,8 @@ void AssignmentNode::PostProcessNodeImpl()
     {
         // The great thing about registers is that everything can move into them
         GetContext()->OutputMovInstruction(
-            leftResult->GetOperands(),
-            rightResult->GetOperands());
+            *leftResult.get(),
+            *rightResult.get());
     }
     break;
 
@@ -88,7 +88,7 @@ void AssignmentNode::PostProcessNodeImpl()
 
         // Push the wrapped register into the memory
         GetContext()->OutputMovInstruction(
-            leftResult->GetOperands(),
+            *leftResult.get(),
             wrapper.GetWrapped());
 
         // Now we have generated code, the temporary register will

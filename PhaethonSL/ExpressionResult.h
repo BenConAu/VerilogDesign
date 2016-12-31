@@ -5,7 +5,18 @@
 #include "VariableLocation.h"
 #include "SmartRegister.h"
 #include "Operand.h"
-#include "PSLCompilerContext.h"
+
+enum class ExpressionResultType
+{
+    None = 0,            // Used for error conditions and the such or unintialized types
+    Constant,            // The operand is a constant
+    Register,            // The operand is a register
+    DerefConstant,       // The operand is a memory location at the given constant location
+    DerefRegisterOffset, // Just like above, but with a constant offset
+    DerefRegisterIndex,  // Just like above, but with an index offset
+};
+
+ExpressionResultType ConvertType(OperandType type);
 
 class TypeInfo;
 
@@ -16,9 +27,9 @@ class TypeInfo;
 // this form. 
 struct ExpressionResult
 {
-    ExpressionResult(RegisterCollection* pCollection);
-    ExpressionResult(Operand operand, RegisterCollection* pCollection);
-    ExpressionResult(Operand operand);
+    ExpressionResult(RegisterCollection* pCollection = nullptr);
+    ExpressionResult(const Operand &operand, RegisterCollection* pCollection);
+    ExpressionResult(const Operand &operand);
 
     ~ExpressionResult()
     {
@@ -27,18 +38,22 @@ struct ExpressionResult
 
     void AddOperand(const Operand& op, bool temp);
 
-    OperandList &GetOperands() { return _operandList; }
-    ExpressionResultType GetResultType() { return _operandList.GetResultType(); }
-
     void DebugPrint();
+    size_t size() const;
+    ExpressionResultType GetResultType() const;
+    RegIndex GetRegIndex();
+    const Operand& GetOperand(size_t index) const { return _operandList[index]; }
 
 private:
-    // The operand with the result of the expression
-    OperandList _operandList;
+    // The aggregate type of the operands (how to interpret them)
+    mutable ExpressionResultType _type;
 
     // If the operation had a temporary register it is stored here
     std::vector<std::unique_ptr<SmartRegister> > _tempRegisters;
 
     // The collection we are keeping registers in
     RegisterCollection* _pCollection;
+
+    // The operands
+    std::vector<Operand> _operandList;    
 };

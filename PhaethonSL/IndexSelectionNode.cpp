@@ -84,7 +84,7 @@ ExpressionResult *IndexSelectionNode::CalculateResult()
     // Fill the register with the address
     GetContext()->OutputMovInstruction(
         Operand(resultIndex),
-        childResult->GetOperands());
+        *childResult.get());
 
     // Create an operand with this register
     Operand resultOperand(
@@ -103,7 +103,7 @@ ExpressionResult *IndexSelectionNode::CalculateResult()
         // Move whatever we do have into that register
         GetContext()->OutputMovInstruction(
             sizeOperand,
-            indexResult->GetOperands());
+            *indexResult.get());
 
         // And that is our other operand
         pResult->AddOperand(sizeOperand, true);
@@ -111,7 +111,7 @@ ExpressionResult *IndexSelectionNode::CalculateResult()
     else
     {
         // Just reuse what we have
-        pResult->AddOperand(indexResult->GetOperands().GetOperand(0), false);
+        pResult->AddOperand(indexResult->GetOperand(0), false);
     }
 
     return pResult;
