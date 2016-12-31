@@ -39,7 +39,7 @@ struct ExpressionResult
     void AddOperand(const Operand& op, bool temp);
 
     void DebugPrint();
-    size_t size() const;
+    size_t GetOperandCount() const;
     ExpressionResultType GetResultType() const;
     RegIndex GetRegIndex();
     const Operand& GetOperand(size_t index) const { return _operandList[index]; }

@@ -165,13 +165,13 @@ void PSLCompilerContext::OutputInstruction(
     int curr = 0;
     for (int i = 0; i < 3; i++)
     {
-        if (rawArgs[i] == nullptr || rawArgs[i]->size() == 0)
+        if (rawArgs[i] == nullptr || rawArgs[i]->GetOperandCount() == 0)
         {
             // We are done processing the arguments
             break;
         }
 
-        for (size_t a = 0; a < rawArgs[i]->size(); a++)
+        for (size_t a = 0; a < rawArgs[i]->GetOperandCount(); a++)
         {
             if (curr == 3)
             {

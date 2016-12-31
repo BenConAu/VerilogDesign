@@ -80,7 +80,7 @@ void ExpressionResult::AddOperand(const Operand &op, bool temp)
     }
 }
 
-size_t ExpressionResult::size() const
+size_t ExpressionResult::GetOperandCount() const
 {
     return _operandList.size();
 }
