@@ -2,17 +2,21 @@
 
 #include "PSLCompilerContext.h"
 #include "OperatorNode.h"
+#include "PSL.tab.h"
 
 class OffsetNode : public OperatorNode
 {
   public:
     OffsetNode(
         PSLCompilerContext *pContext,
+        const YYLTYPE &location,
+        ASTNode *pType,
         ASTNode *pIdent,
-        ASTNode *pExpr) : OperatorNode(pContext, pIdent, pExpr, Operator::Add)
-    {
-    }
+        ASTNode *pExpr);
 
     void VerifyNodeImpl() override;
-    const char* GetDebugName() override { return "OffsetNode"; }    
+    const char *GetDebugName() override { return "OffsetNode"; }
+
+  private:
+    YYLTYPE _location;
 };
