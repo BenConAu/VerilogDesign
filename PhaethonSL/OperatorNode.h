@@ -12,7 +12,9 @@ enum class Operator
     ShiftLeft,
     ShiftRight,
     Equal,
-    NotEqual
+    NotEqual,
+    LessThan,
+    GreaterThan,
 };
 
 enum class ResultTypeMethod
@@ -46,5 +48,5 @@ class OperatorNode : public ExpressionNode
     Operator _op;
     OperatorInfo _opInfo;
 
-    static OperatorInfo _opTable[7];
+    static OperatorInfo _opTable[];
 };

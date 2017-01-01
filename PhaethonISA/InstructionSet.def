@@ -13,6 +13,8 @@ Cmp      Register              Register              None      NoFlags
 Cmp      Register              Constant              None      NoFlags
 CmpE     Register              Register              Register  NoFlags
 CmpNe    Register              Register              Register  NoFlags
+CmpLt    Register              Register              Register  NoFlags
+CmpGt    Register              Register              Register  NoFlags
 Jmp      Constant              None                  None      NoFlags
 Jne      Constant              None                  None      NoFlags
 Je       Constant              None                  None      NoFlags

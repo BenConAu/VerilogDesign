@@ -474,6 +474,14 @@ module ALU(
             regarray[regAddress[7:0]] <= (regValue2[0] != regValue3[0] ? 1 : 0);
           end
 
+          `CmpLtRRR: begin                                                 // cmplt reg, reg, reg
+            regarray[regAddress[7:0]] <= (regValue2[0] < regValue3[0] ? 1 : 0);
+          end
+
+          `CmpGtRRR: begin                                                 // cmpgt reg, reg, reg
+            regarray[regAddress[7:0]] <= (regValue2[0] > regValue3[0] ? 1 : 0);
+          end
+
           `JmpC:  ipointer <= opDataWord;                              // jmp address
 
           `JneC: begin end // Done above

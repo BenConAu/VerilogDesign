@@ -107,6 +107,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> selection_rest_statement
 %type <pNode> equality_expression
 %type <pNode> shift_expression
+%type <pNode> relational_expression
 
 %%
 
@@ -160,9 +161,15 @@ assignment_expression:
     ;
 
 equality_expression:
+      relational_expression                                         { $$ = $1; }
+    | equality_expression EQUAL_OP relational_expression            { $$ = new OperatorNode(pContext, $1, $3, Operator::Equal); }
+    | equality_expression NOTEQUAL_OP relational_expression         { $$ = new OperatorNode(pContext, $1, $3, Operator::NotEqual); }
+    ;
+
+relational_expression:
       shift_expression                                              { $$ = $1; }
-    | equality_expression EQUAL_OP shift_expression                 { $$ = new OperatorNode(pContext, $1, $3, Operator::Equal); }
-    | equality_expression NOTEQUAL_OP shift_expression              { $$ = new OperatorNode(pContext, $1, $3, Operator::NotEqual); }
+    | relational_expression LT shift_expression                     { $$ = new OperatorNode(pContext, $1, $3, Operator::LessThan); }
+    | relational_expression GT shift_expression                     { $$ = new OperatorNode(pContext, $1, $3, Operator::GreaterThan); }
     ;
 
 shift_expression:
@@ -212,8 +219,8 @@ sizeof_expression:
     ;
 
 offset_expression:
-      OFFSETPTR_TOKEN LEFT_PAREN expression COMMA expression RIGHT_PAREN             
-                                                                    { $$ = new OffsetNode(pContext, $3, $5); }
+      OFFSETPTR_TOKEN LT fully_specified_type GT LEFT_PAREN expression COMMA expression RIGHT_PAREN
+                                                                    { $$ = new OffsetNode(pContext, @$, $3, $6, $8); }
     ;
 
 cast_expression:

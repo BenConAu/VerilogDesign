@@ -2,7 +2,7 @@
 #include "FunctionDeclaratorNode.h"
 #include "PSL.tab.h"
 
-OperatorInfo OperatorNode::_opTable[7] = {
+OperatorInfo OperatorNode::_opTable[] = {
     {Operator::Multiply,    OpCodes::Unknown,   OpCodes::FmulRRR, ResultTypeMethod::Both},
     {Operator::Add,         OpCodes::AddRRR,    OpCodes::FaddRRR, ResultTypeMethod::Both},
     {Operator::Subtract,    OpCodes::SubRRR,    OpCodes::Unknown, ResultTypeMethod::Both},
@@ -10,6 +10,8 @@ OperatorInfo OperatorNode::_opTable[7] = {
     {Operator::ShiftRight,  OpCodes::ShrRRR,    OpCodes::Unknown, ResultTypeMethod::Both},
     {Operator::Equal,       OpCodes::CmpERRR,   OpCodes::Unknown, ResultTypeMethod::Bool},
     {Operator::NotEqual,    OpCodes::CmpNeRRR,  OpCodes::Unknown, ResultTypeMethod::Bool},
+    {Operator::LessThan,    OpCodes::CmpLtRRR,  OpCodes::Unknown, ResultTypeMethod::Bool},
+    {Operator::GreaterThan, OpCodes::CmpGtRRR,  OpCodes::Unknown, ResultTypeMethod::Bool},
 };
 
 void OperatorNode::VerifyNodeImpl()
