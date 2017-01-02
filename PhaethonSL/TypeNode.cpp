@@ -5,18 +5,28 @@
 #include "FunctionDeclaratorNode.h"
 #include <sstream>
 
-TypeNode::TypeNode(PSLCompilerContext *pContext, TypeClass typeClass, int type) : ASTNode(pContext)
+TypeNode::TypeNode(
+    PSLCompilerContext *pContext,
+    const YYLTYPE &location,
+    TypeClass typeClass,
+    int type) : ASTNode(pContext)
 {
     _typeClass = typeClass;
     _typeOrSymbol = type;
+    _location = location;
     _pTypeInfo = nullptr;
 }
 
-TypeNode::TypeNode(PSLCompilerContext *pContext, ASTNode *pNode) : ASTNode(pContext)
+TypeNode::TypeNode(
+    PSLCompilerContext *pContext, 
+    const YYLTYPE &location,
+    ASTNode *pNode) : ASTNode(pContext)
 {
     _typeClass = TypeClass::Pointer;
     _typeOrSymbol = -1;
+    _location = location;
     _pTypeInfo = nullptr;
+    
     AddNode(pNode);
 }
 
@@ -53,13 +63,13 @@ TypeInfo *TypeNode::GetTypeInfo()
                     sstr << "Failed to find struct or generic type with name " << GetContext()->_symbols[_typeOrSymbol];
                     static std::string error = sstr.str();
 
-                    throw error.c_str();
+                    GetContext()->ReportError(_location, sstr.str().c_str());
                 }
             }
             break;
 
         case TypeClass::Pointer:
-            _pTypeInfo = GetContext()->_typeCollection.GetPointerType(dynamic_cast<TypeNode*>(GetChild(0))->GetTypeInfo());
+            _pTypeInfo = GetContext()->_typeCollection.GetPointerType(dynamic_cast<TypeNode *>(GetChild(0))->GetTypeInfo());
 
             if (_pTypeInfo == nullptr)
             {

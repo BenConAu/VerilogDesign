@@ -266,12 +266,12 @@ parameter_declaration:
 	;
 
 fully_specified_type:
-      WORD_TOKEN                                                    { $$ = new TypeNode(pContext, TypeClass::Basic, WORD_TOKEN); }
-    | FLOAT_TOKEN                                                   { $$ = new TypeNode(pContext, TypeClass::Basic, FLOAT_TOKEN); }
-	| VOID_TOKEN                                                    { $$ = new TypeNode(pContext, TypeClass::Basic, VOID_TOKEN); }
-	| BOOL_TOKEN                                                    { $$ = new TypeNode(pContext, TypeClass::Basic, BOOL_TOKEN); }
-	| IDENTIFIER                                                    { $$ = new TypeNode(pContext, TypeClass::Struct, $1); }
-    | PTR_TOKEN LT fully_specified_type GT                          { $$ = new TypeNode(pContext, $3); }
+      WORD_TOKEN                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Basic, WORD_TOKEN); }
+    | FLOAT_TOKEN                                                   { $$ = new TypeNode(pContext, @$, TypeClass::Basic, FLOAT_TOKEN); }
+	| VOID_TOKEN                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Basic, VOID_TOKEN); }
+	| BOOL_TOKEN                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Basic, BOOL_TOKEN); }
+	| IDENTIFIER                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Struct, $1); }
+    | PTR_TOKEN LT fully_specified_type GT                          { $$ = new TypeNode(pContext, @$, $3); }
     ;
 
 struct_specifier:

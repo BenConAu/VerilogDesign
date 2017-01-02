@@ -2,12 +2,21 @@
 
 #include "ASTNode.h"
 #include "TypeInfo.h"
+#include "PSL.tab.h"
 
 class TypeNode : public ASTNode
 {
 public:
-    TypeNode(PSLCompilerContext* pContext, TypeClass typeClass, int type);
-    TypeNode(PSLCompilerContext *pContext, ASTNode* pNode);
+    TypeNode(
+        PSLCompilerContext* pContext, 
+        const YYLTYPE &location,
+        TypeClass typeClass, 
+        int type);
+
+    TypeNode(
+        PSLCompilerContext *pContext, 
+        const YYLTYPE &location,
+        ASTNode* pNode);
     
     TypeInfo* GetTypeInfo();
     void VerifyNodeImpl() override;
@@ -16,6 +25,7 @@ public:
 private:
     TypeClass _typeClass;
     int _typeOrSymbol;
+    YYLTYPE _location;
 
     TypeInfo* _pTypeInfo;
 };

@@ -1898,37 +1898,37 @@ yyreduce:
 
   case 67:
 #line 269 "PSL.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new TypeNode(pContext, TypeClass::Basic, WORD_TOKEN); }
+    { (yyval.pNode) = new TypeNode(pContext, (yyloc), TypeClass::Basic, WORD_TOKEN); }
 #line 1903 "PSL.tab.c" /* yacc.c:1661  */
     break;
 
   case 68:
 #line 270 "PSL.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new TypeNode(pContext, TypeClass::Basic, FLOAT_TOKEN); }
+    { (yyval.pNode) = new TypeNode(pContext, (yyloc), TypeClass::Basic, FLOAT_TOKEN); }
 #line 1909 "PSL.tab.c" /* yacc.c:1661  */
     break;
 
   case 69:
 #line 271 "PSL.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new TypeNode(pContext, TypeClass::Basic, VOID_TOKEN); }
+    { (yyval.pNode) = new TypeNode(pContext, (yyloc), TypeClass::Basic, VOID_TOKEN); }
 #line 1915 "PSL.tab.c" /* yacc.c:1661  */
     break;
 
   case 70:
 #line 272 "PSL.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new TypeNode(pContext, TypeClass::Basic, BOOL_TOKEN); }
+    { (yyval.pNode) = new TypeNode(pContext, (yyloc), TypeClass::Basic, BOOL_TOKEN); }
 #line 1921 "PSL.tab.c" /* yacc.c:1661  */
     break;
 
   case 71:
 #line 273 "PSL.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new TypeNode(pContext, TypeClass::Struct, (yyvsp[0].symIndex)); }
+    { (yyval.pNode) = new TypeNode(pContext, (yyloc), TypeClass::Struct, (yyvsp[0].symIndex)); }
 #line 1927 "PSL.tab.c" /* yacc.c:1661  */
     break;
 
   case 72:
 #line 274 "PSL.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new TypeNode(pContext, (yyvsp[-1].pNode)); }
+    { (yyval.pNode) = new TypeNode(pContext, (yyloc), (yyvsp[-1].pNode)); }
 #line 1933 "PSL.tab.c" /* yacc.c:1661  */
     break;
 
