@@ -45,15 +45,16 @@ ptr<T> MemoryAlloc<T>(word size)
         return nullptr; // Oh well
     }
 
-    // Remember what we will return
-    ptr<T> pReturn = castptr<T>(pCurrent->pLastStart);
+    // Push back from the end by the allocation size - this is the
+    // return value and also the next place we will return from.
+    pCurrent->pLastStart = offsetptr<void>(pCurrent->pLastStart, -size);
 
     // Calculate where the next one is
     pCurrent->Available = pCurrent->Available - size;
     pCurrent->Count = pCurrent->Count + 1;
-    pCurrent->pLastStart = offsetptr<void>(pCurrent->pLastStart, -size);
 
-    return pReturn;
+    // Return the appropriate pointer
+    return castptr<T>(pCurrent->pLastStart);
 }
 
 void MemoryFree(ptr<void> allocation)
@@ -67,8 +68,15 @@ void main()
     // Where does the data segment end?
     debugout(__datasegmentend);
 
-    ptr<void> alloc1 = MemoryAlloc<void>(100);
-
     // Where did this memory end up?
+    ptr<void> alloc1 = MemoryAlloc<void>(100);
     debugout(alloc1);
+
+    // Try another allocation
+    ptr<void> alloc2 = MemoryAlloc<void>(200);
+    debugout(alloc2);
+
+    // This one should fail
+    ptr<void> alloc3 = MemoryAlloc<void>(1000);
+    debugout(alloc3);
 }

@@ -7,6 +7,16 @@ mov r5, 100
 rcall r2, 3
 mov r1, r5
 dout r1
+mov r3, @MemoryAlloc
+mov r6, 200
+rcall r3, 4
+mov r5, r6
+dout r5
+mov r4, @MemoryAlloc
+mov r9, 1000
+rcall r4, 7
+mov r6, r9
+dout r6
 stall
 MemoryAlloc:
 mov r2, &Header
@@ -18,19 +28,18 @@ je @false_1
 mov r0, 0
 rret
 false_1:
-mov r4, r1->AllocationBlock::pLastStart
-mov r3, r1->AllocationBlock::Available
-sub r5, r3, r0
-mov r1->AllocationBlock::Available, r5
-mov r5, r1->AllocationBlock::Count
-mov r3, 1
-add r6, r5, r3
-mov r1->AllocationBlock::Count, r6
-neg r6, r0
-mov r5, r1->AllocationBlock::pLastStart
-add r3, r5, r6
-mov r1->AllocationBlock::pLastStart, r3
-mov r0, r4
+neg r4, r0
+mov r3, r1->AllocationBlock::pLastStart
+add r5, r3, r4
+mov r1->AllocationBlock::pLastStart, r5
+mov r5, r1->AllocationBlock::Available
+sub r4, r5, r0
+mov r1->AllocationBlock::Available, r4
+mov r4, r1->AllocationBlock::Count
+mov r5, 1
+add r3, r4, r5
+mov r1->AllocationBlock::Count, r3
+mov r0, r1->AllocationBlock::pLastStart
 rret
 MemoryFree:
 rret
