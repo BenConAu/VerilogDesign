@@ -16,7 +16,7 @@ VariableDeclarationNode::VariableDeclarationNode(
     if (pInitExpr != nullptr)
     {
         IdentifierNode *pLeft = new IdentifierNode(pContext, location, symIndex);
-        AssignmentNode *pAssignment = new AssignmentNode(pContext, pLeft, pInitExpr);
+        AssignmentNode *pAssignment = new AssignmentNode(pContext, location, pLeft, pInitExpr);
 
         AddNode(pAssignment);
     }

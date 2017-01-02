@@ -513,6 +513,7 @@ module ALU(
           `DecR:       regarray[regAddress[7:0]] <= regValue[0] - 1;             // dec reg
           `ShlRRR:     regarray[regAddress[7:0]] <= regValue2[0] << regValue3[0];// shl reg, reg, reg
           `ShrRRR:     regarray[regAddress[7:0]] <= regValue2[0] >> regValue3[0];// shl reg, reg, reg
+          `NegRR:      regarray[regAddress[7:0]] <= -regValue2[0];               // neg reg, reg
 
           `MulAddRRC:  regarray[regAddress[7:0]] <= regValue[0] + regValue2[0] * opDataWord;
 

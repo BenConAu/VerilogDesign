@@ -7,7 +7,7 @@ module test;
   initial begin
     # 0 reset = 1;
     # 1 reset = 0;
-    # 10000 $finish;
+    # 20000 $finish;
   end
 
   reg [7:0] fileRam[0:2047];

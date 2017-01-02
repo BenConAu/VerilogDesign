@@ -22,3 +22,4 @@
 #include "WhileStatementNode.h"
 #include "KnownConstantNode.h"
 #include "IndexSelectionNode.h"
+#include "UnaryOperatorNode.h"

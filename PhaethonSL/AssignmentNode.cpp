@@ -3,10 +3,15 @@
 #include "RegisterWrapper.h"
 #include "FunctionDeclaratorNode.h"
 #include "../PhaethonObjWriter/ObjWriter.h"
-#include "PSL.tab.h"
 
-AssignmentNode::AssignmentNode(PSLCompilerContext *pContext, ASTNode *pLeft, ASTNode *pRight) : ASTNode(pContext)
+AssignmentNode::AssignmentNode(
+    PSLCompilerContext *pContext, 
+    const YYLTYPE &location, 
+    ASTNode *pLeft, 
+    ASTNode *pRight) : ASTNode(pContext)
 {
+    _location = location;
+
     AddNode(pLeft);
     AddNode(pRight);
 }
@@ -41,7 +46,7 @@ void AssignmentNode::VerifyNodeImpl()
         {
             printf("Type %s and type %s are not equal\n", pLeft->GetTypeInfo()->DebugPrint().c_str(), pRight->GetTypeInfo()->DebugPrint().c_str());
 
-            throw "Assignment must have equal types on each side";
+            GetContext()->ReportError(_location, "Assignment must have equal types on each side");
         }
     }
 }
@@ -58,7 +63,7 @@ void AssignmentNode::PostProcessNodeImpl()
 
     if (leftResult.get() == nullptr || rightResult.get() == nullptr)
     {
-        throw "Assignment needs a valid expression on each side";
+        GetContext()->ReportError(_location, "Assignment needs a valid expression on each side");
     }
 
     //leftResult->DebugPrint();
@@ -97,6 +102,6 @@ void AssignmentNode::PostProcessNodeImpl()
     break;
 
     default:
-        throw "Unexpected LHS expression result";
+        GetContext()->ReportError(_location, "Unexpected LHS expression result");
     }
 }

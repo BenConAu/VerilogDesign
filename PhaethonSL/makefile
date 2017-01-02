@@ -77,6 +77,8 @@ PSLcc: lex.yy.c \
 	   TypeInfo.h \
 	   TypeNode.cpp \
 	   TypeNode.h \
+	   UnaryOperatorNode.cpp \
+	   UnaryOperatorNode.h \
 	   VariableDeclarationNode.cpp \
 	   VariableDeclarationNode.h \
 	   VariableInfo.cpp \
@@ -131,6 +133,7 @@ PSLcc: lex.yy.c \
 	   TypeInfo.cpp \
 	   TypeNode.cpp \
 	   TypeCollection.cpp \
+	   UnaryOperatorNode.cpp \
 	   VariableDeclarationNode.cpp \
 	   VariableInfo.cpp \
 	   WhileStatementNode.cpp -o PSLcc

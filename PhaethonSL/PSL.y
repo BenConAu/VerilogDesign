@@ -108,6 +108,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> equality_expression
 %type <pNode> shift_expression
 %type <pNode> relational_expression
+%type <pNode> unary_expression
 
 %%
 
@@ -157,7 +158,7 @@ expression:
 
 assignment_expression:
       equality_expression                                           { $$ = $1; }
-    | postfix_expression assignment_operator equality_expression    { $$ = new AssignmentNode(pContext, $1, $3); }
+    | postfix_expression assignment_operator equality_expression    { $$ = new AssignmentNode(pContext, @$, $1, $3); }
     ;
 
 equality_expression:
@@ -185,8 +186,13 @@ additive_expression:
     ;
 
 multiplicative_expression:
+      unary_expression                                              { $$ = $1; }
+    | multiplicative_expression STAR unary_expression               { $$ = new OperatorNode(pContext, $1, $3, Operator::Multiply); }
+    ;
+
+unary_expression:
       postfix_expression                                            { $$ = $1; }
-    | multiplicative_expression STAR postfix_expression             { $$ = new OperatorNode(pContext, $1, $3, Operator::Multiply); }
+    | MINUS postfix_expression                                      { $$ = new UnaryOperatorNode(pContext, $2, Operator::Negate); }
     ;
 
 assignment_operator:

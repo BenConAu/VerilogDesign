@@ -1,0 +1,9 @@
+void main()
+{
+    word a = 1;
+    word b = -a;
+    word c = -1;
+    debugout(a);
+    debugout(b);
+    debugout(c);
+}

@@ -5,13 +5,12 @@
 #include "RegisterWrapper.h"
 #include "OperatorInfo.h"
 
-class OperatorNode : public ExpressionNode
+class UnaryOperatorNode : public ExpressionNode
 {
   public:
-    OperatorNode(PSLCompilerContext *pContext, ASTNode *pLeft, ASTNode *pRight, Operator op) : ExpressionNode(pContext)
+    UnaryOperatorNode(PSLCompilerContext *pContext, ASTNode *pLeft, Operator op) : ExpressionNode(pContext)
     {
         AddNode(pLeft);
-        AddNode(pRight);
         _op = op;
     }
 

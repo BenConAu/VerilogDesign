@@ -59,6 +59,7 @@ using namespace std;
 "rcall"              { yylval.instrIndex = Instructions::RCall; return INSTR_TOKEN_2; }
 "rret"               { yylval.instrIndex = Instructions::RRet; return INSTR_TOKEN_0; }
 "stall"              { yylval.instrIndex = Instructions::Stall; return INSTR_TOKEN_0; }
+"neg"                { yylval.instrIndex = Instructions::Neg; return INSTR_TOKEN_2; }
 "struct"             { return STRUCT_TOKEN; }
 "ends"               { return ENDS_TOKEN; }
 "datasegment"        { return DATASEGMENT_TOKEN; }
