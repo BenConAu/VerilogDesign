@@ -67,7 +67,7 @@ public:
             return false;
         }
 
-        printf("Generic types are equal\n");
+        //printf("Generic types are equal\n");
         return true;
     }
 

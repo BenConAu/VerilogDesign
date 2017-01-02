@@ -1748,13 +1748,13 @@ yyreduce:
 
   case 42:
 #line 206 "PSL.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new FieldSelectionNode(pContext, (yyvsp[-2].pNode), false, (yyvsp[0].symIndex)); }
+    { (yyval.pNode) = new FieldSelectionNode(pContext, (yyloc), (yyvsp[-2].pNode), false, (yyvsp[0].symIndex)); }
 #line 1753 "PSL.tab.c" /* yacc.c:1661  */
     break;
 
   case 43:
 #line 207 "PSL.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new FieldSelectionNode(pContext, (yyvsp[-2].pNode), true, (yyvsp[0].symIndex)); }
+    { (yyval.pNode) = new FieldSelectionNode(pContext, (yyloc), (yyvsp[-2].pNode), true, (yyvsp[0].symIndex)); }
 #line 1759 "PSL.tab.c" /* yacc.c:1661  */
     break;
 

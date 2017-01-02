@@ -203,8 +203,8 @@ postfix_expression:
       primary_expression                                            { $$ = $1; }
     | postfix_expression LEFT_BRACKET expression RIGHT_BRACKET      { $$ = new IndexSelectionNode(pContext, @$, $1, $3); }
     | function_call                                                 { $$ = $1; }
-	| postfix_expression DOT IDENTIFIER								{ $$ = new FieldSelectionNode(pContext, $1, false, $3); }
-	| postfix_expression ARROW IDENTIFIER							{ $$ = new FieldSelectionNode(pContext, $1, true, $3); }
+	| postfix_expression DOT IDENTIFIER								{ $$ = new FieldSelectionNode(pContext, @$, $1, false, $3); }
+	| postfix_expression ARROW IDENTIFIER							{ $$ = new FieldSelectionNode(pContext, @$, $1, true, $3); }
     ;
 
 primary_expression:

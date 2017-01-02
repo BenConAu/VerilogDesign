@@ -6,12 +6,18 @@
 #include "PSLCompilerContext.h"
 #include "RegisterWrapper.h"
 
-FieldSelectionNode::FieldSelectionNode(PSLCompilerContext *pContext, ASTNode *pExpr, bool fPointer, int symIndex) : ExpressionNode(pContext)
+FieldSelectionNode::FieldSelectionNode(
+    PSLCompilerContext *pContext,
+    const YYLTYPE &location,
+    ASTNode *pExpr,
+    bool fPointer,
+    int symIndex) : ExpressionNode(pContext)
 {
     AddNode(pExpr);
 
     _fieldSymIndex = symIndex;
     _fPointer = fPointer;
+    _location = location;
 
     _pStructTypeInfo = nullptr;
 }
@@ -21,7 +27,7 @@ void FieldSelectionNode::VerifyNodeImpl()
     ExpressionNode *pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));
     if (pLeft == nullptr)
     {
-        throw "Can only field select expressions";
+        GetContext()->ReportError(_location, "Can only field select expressions");
     }
 
     // Should verify that the type exists
@@ -32,14 +38,14 @@ void FieldSelectionNode::VerifyNodeImpl()
         if (pPointerInfo == nullptr)
         {
             // Not using a pointer, bad for our health
-            throw "Can only field select a pointer with arrow operator";
+            GetContext()->ReportError(_location, "Can only field select a pointer with arrow operator");
         }
 
         _pStructTypeInfo = dynamic_cast<StructTypeInfo *>(pPointerInfo->GetBaseType());
         if (_pStructTypeInfo == nullptr)
         {
             // Not using a structure, bad for our health
-            throw "Can only field select a pointer to a struct with arrow operator";
+            GetContext()->ReportError(_location, "Can only field select a pointer to a struct with arrow operator");
         }
     }
     else
@@ -48,16 +54,20 @@ void FieldSelectionNode::VerifyNodeImpl()
         if (_pStructTypeInfo == nullptr)
         {
             // Not using a structure, bad for our health
-            throw "Can only field select a struct with dot operator";
+            GetContext()->ReportError(_location, "Can only field select a struct with dot operator");
         }
     }
 
     StructMember *pMember = _pStructTypeInfo->GetMember(_fieldSymIndex);
+    if (pMember == nullptr)
+    {
+        GetContext()->ReportError(_location, "Unknown member of struct");
+    }
 
     if (pMember->GetType()->GetTypeClass() == TypeClass::Array)
     {
         // Accessing an array member returns a pointer
-        ArrayTypeInfo* pArrayInfo = dynamic_cast<ArrayTypeInfo*>(pMember->GetType());
+        ArrayTypeInfo *pArrayInfo = dynamic_cast<ArrayTypeInfo *>(pMember->GetType());
         SetType(GetContext()->_typeCollection.GetPointerType(pArrayInfo->GetBaseType()));
     }
     else
@@ -94,11 +104,11 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
         // Since the operand has a memory location in it, we figure that we must
         // have VariableInfo for when it was loaded. This will now transform into
         // an offset operation, which requires that the variable info be there so
-        // that we can get the register that we associate with the path. 
+        // that we can get the register that we associate with the path.
         VariableInfo *pInfo = childResult->GetOperand(0).GetVariableInfo();
         if (pInfo == nullptr)
         {
-            throw "Need variable info to field select";
+            GetContext()->ReportError(_location, "Need variable info to field select");
         }
 
         // If we have a constant, then we need to make it into a register
@@ -131,7 +141,7 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
         if (childResult->GetResultType() != ExpressionResultType::Register)
         {
             printf("Type is %d\n", childResult->GetResultType());
-            throw "This pointer needs to be in a register by now";
+            GetContext()->ReportError(_location, "This pointer needs to be in a register by now");
         }
 
         // We can assume this is the register operand we want
@@ -150,7 +160,7 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
         RegIndex resultRegister = baseRegister;
         if (pRegCollection == nullptr)
         {
-            pRegCollection = pScope->GetRegCollection();        
+            pRegCollection = pScope->GetRegCollection();
             resultRegister = pRegCollection->AllocateRegister();
         }
 

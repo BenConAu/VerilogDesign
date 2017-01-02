@@ -31,7 +31,7 @@ public:
             }
         }
 
-        throw "Unknown member";
+        return nullptr;
     }
 
     unsigned int GetSize() override
