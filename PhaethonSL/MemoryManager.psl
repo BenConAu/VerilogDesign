@@ -1,50 +1,59 @@
 // Each allocation has one of these
-struct Allocation
+struct AllocationBlock
 {
-    ptr<Allocation> next;
-    word length;
+    ptr<AllocationBlock> Next;  // Pointer to next block
+    word Available;             // Available bytes left in this block
+    word Count;                 // Number of allocations in this block
+    ptr<void> pLastStart;       // Where to start subtracting the last allocation
+    word AllocLengths[1];       // Lengths of allocations, each one starting from the end
 };
 
 // Something to hold the start of the allocations
 struct AllocationHeader
 {
-    ptr<Allocation> first;
+    ptr<AllocationBlock> First;
+    ptr<void> NextBlockAddr;
 };
 
 // The actual header
-AllocationHeader header;
+AllocationHeader Header;
 
 void MemoryInit()
 {
     // Initialize the first one with an empty allocation
-    header.first = castptr<Allocation>(__datasegmentend);
-    header.first->next = nullptr;
-    header.first->length = 0;
+    Header.First = castptr<AllocationBlock>(__datasegmentend);
+    Header.First->Next = nullptr;
+
+    // The block info is eating some of the space
+    Header.First->Available = 512 - sizeof(AllocationBlock) + sizeof(word);
+    Header.First->Count = 0;
+    Header.First->pLastStart = offsetptr<void>(__datasegmentend, 512);
+
+    // First block ate 512
+    Header.NextBlockAddr = offsetptr<void>(__datasegmentend, 512);
 }
 
 ptr<T> MemoryAlloc<T>(word size)
 {
     // Loop through the allocations to find the end
-    ptr<Allocation> last = header.first;
-    while(last->next != nullptr)
+    ptr<AllocationBlock> pCurrent = Header.First;
+
+    // TODO: Loop through blocks
+
+    if (pCurrent->Available < size)
     {
-        last = last->next;
+        return nullptr; // Oh well
     }
 
+    // Remember what we will return
+    ptr<T> pReturn = castptr<T>(pCurrent->pLastStart);
+
     // Calculate where the next one is
-    ptr<void> newPos = offsetptr(castptr<void>(last), sizeof(Allocation) + last->length);
-    ptr<void> newMem = offsetptr(newPos, sizeof(Allocation));
+    pCurrent->Available = pCurrent->Available - size;
+    pCurrent->Count = pCurrent->Count + 1;
+    pCurrent->pLastStart = offsetptr<void>(pCurrent->pLastStart, -size);
 
-    // Fill in the new one
-    ptr<Allocation> newAlloc = castptr<Allocation>(newPos);
-    newAlloc->next = nullptr;
-    newAlloc->length = size;
-
-    // Attach it
-    last->next = newAlloc;
-
-    // return new pointer value
-    return castptr<T>(newMem);
+    return pReturn;
 }
 
 void MemoryFree(ptr<void> allocation)
