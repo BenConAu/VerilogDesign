@@ -8,7 +8,7 @@ void main()
     }
 
     i = 10;
-    while (i > 0)
+    while (i >. 0)
     {
         debugout(i);
         i = i - 1;

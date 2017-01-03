@@ -18,6 +18,7 @@
 %%
 "//".*"\n"           ;
 "\n"                 ;
+"@"                  { return AT; }
 "*"                  { return STAR; }
 "+"                  { return PLUS; }
 "-"                  { return MINUS; }
@@ -32,6 +33,8 @@
 "->"                 { return ARROW; }
 "<<"                 { return SHIFTLEFT; }
 ">>"                 { return SHIFTRIGHT; }
+".<"                 { return LT_OP; }
+">."                 { return GT_OP; }
 "<"                  { return LT; }
 ">"                  { return GT; }
 "\."                 { return DOT; }

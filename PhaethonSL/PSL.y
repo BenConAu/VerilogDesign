@@ -31,6 +31,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token <intVal> INTCONSTANT
 %token <floatVal> FLOATCONSTANT
 %token <intVal> BOOLCONSTANT
+%token AT
 %token SEMICOLON
 %token EQUAL
 %token STAR
@@ -40,6 +41,8 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token RIGHT_PAREN
 %token LT
 %token GT
+%token LT_OP
+%token GT_OP
 %token SHIFTLEFT
 %token SHIFTRIGHT
 %token ARROW
@@ -99,6 +102,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> sizeof_expression
 %type <pNode> offset_expression
 %type <pNode> function_call_header
+%type <pNode> function_call_header_no_param
 %type <pNode> function_call
 %type <pNode> return_statement
 %type <pNode> jump_statement
@@ -169,8 +173,8 @@ equality_expression:
 
 relational_expression:
       shift_expression                                              { $$ = $1; }
-    | relational_expression LT shift_expression                     { $$ = new OperatorNode(pContext, $1, $3, Operator::LessThan); }
-    | relational_expression GT shift_expression                     { $$ = new OperatorNode(pContext, $1, $3, Operator::GreaterThan); }
+    | relational_expression LT_OP shift_expression                  { $$ = new OperatorNode(pContext, $1, $3, Operator::LessThan); }
+    | relational_expression GT_OP shift_expression                  { $$ = new OperatorNode(pContext, $1, $3, Operator::GreaterThan); }
     ;
 
 shift_expression:
@@ -314,12 +318,16 @@ compound_statement:
 
 function_call:
       function_call_header RIGHT_PAREN                              { $$ = $1; }
+    | function_call_header_no_param RIGHT_PAREN                     { $$ = $1; }
+    ;
+
+function_call_header_no_param:
+      IDENTIFIER LEFT_PAREN                                         { $$ = new FunctionCallNode(pContext, @$, $1, nullptr, nullptr); }
+    | IDENTIFIER LT fully_specified_type GT LEFT_PAREN              { $$ = new FunctionCallNode(pContext, @$, $1, $3, nullptr); }
     ;
 
 function_call_header:
-      IDENTIFIER LEFT_PAREN                                         { $$ = new FunctionCallNode(pContext, @$, $1, nullptr, nullptr); }
-    | IDENTIFIER LT fully_specified_type GT LEFT_PAREN              { $$ = new FunctionCallNode(pContext, @$, $1, $3, nullptr); }
-    | IDENTIFIER LEFT_PAREN assignment_expression                   { $$ = new FunctionCallNode(pContext, @$, $1, nullptr, $3); }
+      IDENTIFIER LEFT_PAREN assignment_expression                   { $$ = new FunctionCallNode(pContext, @$, $1, nullptr, $3); }
     | IDENTIFIER LT fully_specified_type GT LEFT_PAREN assignment_expression  
                                                                     { $$ = new FunctionCallNode(pContext, @$, $1, $3, $6); }
     | function_call_header COMMA assignment_expression              { $$ = $1; $$->AddNode($3); }
