@@ -1,0 +1,137 @@
+Terminals unused in grammar
+
+   SEMICOLON
+
+
+State 1 conflicts: 1 shift/reduce
+
+
+Grammar
+
+    0 $accept: translation_unit $end
+
+    1 translation_unit: expression LT expression
+
+    2 expression: IDENTIFIER
+    3           | IDENTIFIER LT WORD_TOKEN GT LEFT_PAREN RIGHT_PAREN
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+SEMICOLON (258)
+LEFT_PAREN (259) 3
+RIGHT_PAREN (260) 3
+LT (261) 1 3
+GT (262) 3
+WORD_TOKEN (263) 3
+IDENTIFIER (264) 2 3
+
+
+Nonterminals, with rules where they appear
+
+$accept (10)
+    on left: 0
+translation_unit (11)
+    on left: 1, on right: 0
+expression (12)
+    on left: 2 3, on right: 1
+
+
+State 0
+
+    0 $accept: . translation_unit $end
+    1 translation_unit: . expression LT expression
+    2 expression: . IDENTIFIER
+    3           | . IDENTIFIER LT WORD_TOKEN GT LEFT_PAREN RIGHT_PAREN
+
+    IDENTIFIER  shift, and go to state 1
+
+    translation_unit  go to state 2
+    expression        go to state 3
+
+
+State 1
+
+    2 expression: IDENTIFIER .
+    3           | IDENTIFIER . LT WORD_TOKEN GT LEFT_PAREN RIGHT_PAREN
+
+    LT  shift, and go to state 4
+
+    LT        [reduce using rule 2 (expression)]
+    $default  reduce using rule 2 (expression)
+
+
+State 2
+
+    0 $accept: translation_unit . $end
+
+    $end  shift, and go to state 5
+
+
+State 3
+
+    1 translation_unit: expression . LT expression
+
+    LT  shift, and go to state 6
+
+
+State 4
+
+    3 expression: IDENTIFIER LT . WORD_TOKEN GT LEFT_PAREN RIGHT_PAREN
+
+    WORD_TOKEN  shift, and go to state 7
+
+
+State 5
+
+    0 $accept: translation_unit $end .
+
+    $default  accept
+
+
+State 6
+
+    1 translation_unit: expression LT . expression
+    2 expression: . IDENTIFIER
+    3           | . IDENTIFIER LT WORD_TOKEN GT LEFT_PAREN RIGHT_PAREN
+
+    IDENTIFIER  shift, and go to state 1
+
+    expression  go to state 8
+
+
+State 7
+
+    3 expression: IDENTIFIER LT WORD_TOKEN . GT LEFT_PAREN RIGHT_PAREN
+
+    GT  shift, and go to state 9
+
+
+State 8
+
+    1 translation_unit: expression LT expression .
+
+    $default  reduce using rule 1 (translation_unit)
+
+
+State 9
+
+    3 expression: IDENTIFIER LT WORD_TOKEN GT . LEFT_PAREN RIGHT_PAREN
+
+    LEFT_PAREN  shift, and go to state 10
+
+
+State 10
+
+    3 expression: IDENTIFIER LT WORD_TOKEN GT LEFT_PAREN . RIGHT_PAREN
+
+    RIGHT_PAREN  shift, and go to state 11
+
+
+State 11
+
+    3 expression: IDENTIFIER LT WORD_TOKEN GT LEFT_PAREN RIGHT_PAREN .
+
+    $default  reduce using rule 3 (expression)
