@@ -119,5 +119,5 @@ ExpressionResult *FunctionCallNode::CalculateResult()
 
 FunctionInfo *FunctionCallNode::GetFunctionInfo()
 {
-    return dynamic_cast<FunctionInfo *>(GetContext()->_symbolTable.GetInfo(_symIndex));
+    return dynamic_cast<FunctionInfo *>(GetContext()->_symbolTable.GetInfo(_symIndex, nullptr));
 }

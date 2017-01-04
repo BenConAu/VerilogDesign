@@ -5,7 +5,7 @@ FunctionInfo::FunctionInfo(
     int symIndex,                 // The symbol index for the identifier for the function
     GenericTypeInfo *pGenInfo,    // The type info for the generic of the function
     TypeInfo *pReturnTypeInfo     // The return type
-    ) : SymbolInfo(pContext, symIndex)
+    ) : SymbolInfo(pContext, nullptr, symIndex)
 {
     _pReturnTypeInfo = pReturnTypeInfo;
     _pGenTypeInfo = pGenInfo;

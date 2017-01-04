@@ -5,7 +5,7 @@
 #include "PSL.tab.h"
 #include <sstream>
 
-SymbolTable::SymbolTable(PSLCompilerContext* pContext)
+SymbolTable::SymbolTable(PSLCompilerContext *pContext)
 {
     _pContext = pContext;
 }
@@ -13,61 +13,58 @@ SymbolTable::SymbolTable(PSLCompilerContext* pContext)
 void SymbolTable::AddBuiltin()
 {
     int dseIndex = _pContext->AddSymbol("__datasegmentend");
-    PointerTypeInfo* pDseType = _pContext->_typeCollection.GetPointerType(nullptr);
+    PointerTypeInfo *pDseType = _pContext->_typeCollection.GetPointerType(nullptr);
     AddVariable(dseIndex, nullptr, pDseType);
 }
 
-VariableInfo* SymbolTable::AddVariable(
-    int symIndex, 
-    FunctionDeclaratorNode* pScope, 
-    TypeInfo* pTypeInfo
-    )
+VariableInfo *SymbolTable::AddVariable(
+    int symIndex,
+    FunctionDeclaratorNode *pScope,
+    TypeInfo *pTypeInfo)
 {
-    auto iter = _symbols.find(symIndex);
+    for (auto iter = _symbols.lower_bound(symIndex); iter != _symbols.upper_bound(symIndex); iter++)
+    {
+        if (iter->second->GetScope() == pScope || iter->second->GetScope() == nullptr)
+        {
+            // Caller can decide how to report this error
+            return nullptr;
+        }
+    }
 
-    if (iter == _symbols.end())
-    {
-        VariableInfo* pNewInfo = new VariableInfo(_pContext, symIndex, pScope, pTypeInfo);
-        _symbols[symIndex] = std::unique_ptr<SymbolInfo>(pNewInfo);
-        return pNewInfo;
-    }
-    else
-    {
-        throw "Cannot add variable more than once";
-    }
+    VariableInfo *pNewInfo = new VariableInfo(_pContext, symIndex, pScope, pTypeInfo);
+    _symbols.emplace(std::make_pair(symIndex, std::unique_ptr<SymbolInfo>(pNewInfo)));
+    return pNewInfo;
 }
 
-FunctionInfo* SymbolTable::AddFunction(
+FunctionInfo *SymbolTable::AddFunction(
     int symIndex,
     GenericTypeInfo *pGenType,
-    TypeInfo* pReturnTypeInfo
-    )
+    TypeInfo *pReturnTypeInfo)
 {
-    //printf("Adding info for function %s\n", _pContext->_symbols[symIndex].c_str());
-
-    auto iter = _symbols.find(symIndex);
-
-    if (iter == _symbols.end())
+    for (auto iter = _symbols.lower_bound(symIndex); iter != _symbols.upper_bound(symIndex); iter++)
     {
-        FunctionInfo* pNewInfo = new FunctionInfo(_pContext, symIndex, pGenType, pReturnTypeInfo);
-        _symbols[symIndex] = std::unique_ptr<SymbolInfo>(pNewInfo);
-        return pNewInfo;
+        // Caller can decide how to report this error
+        return nullptr;
     }
-    else
-    {
-        throw "Cannot add variable more than once";
-    }
+
+    FunctionInfo *pNewInfo = new FunctionInfo(_pContext, symIndex, pGenType, pReturnTypeInfo);
+    _symbols.emplace(std::make_pair(symIndex, std::unique_ptr<SymbolInfo>(pNewInfo)));
+    return pNewInfo;
 }
 
-SymbolInfo* SymbolTable::GetInfo(int symIndex)
+// Turns out this is for globals only
+SymbolInfo *SymbolTable::GetInfo(
+    int symIndex, 
+    FunctionDeclaratorNode *pScope)
 {
     //printf("Attempting GetInfo of symbol %s\n", _pContext->_symbols[symIndex].c_str());
 
-    auto iter = _symbols.find(symIndex);
-
-    if (iter != _symbols.end())
+    for (auto iter = _symbols.lower_bound(symIndex); iter != _symbols.upper_bound(symIndex); iter++)
     {
-        return _symbols[symIndex].get();
+        if (iter->second->GetScope() == pScope || iter->second->GetScope() == nullptr)
+        {
+            return iter->second.get();
+        }
     }
 
     return nullptr;

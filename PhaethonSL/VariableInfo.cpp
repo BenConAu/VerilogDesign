@@ -11,7 +11,7 @@ VariableInfo::VariableInfo(
     int symIndex,                   // The symbol index for the identifier for the variable
     FunctionDeclaratorNode *pScope, // The scope that the variable is declared in
     TypeInfo *pInfo                 // The type of the variable
-    ) : SymbolInfo(pContext, symIndex)
+    ) : SymbolInfo(pContext, pScope, symIndex)
 {
     if (pInfo == nullptr)
     {
@@ -19,9 +19,8 @@ VariableInfo::VariableInfo(
     }
 
     _pType = pInfo;
-    _pScope = pScope;
 
-    if (_pScope == nullptr)
+    if (GetScope() == nullptr)
     {
         // Globals are always backed with memory storage
         _locationType = LocationType::Memory;

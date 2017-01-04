@@ -5,7 +5,6 @@
 #include "VariableLocation.h"
 #include "SymbolInfo.h"
 
-class FunctionDeclaratorNode;
 class ASTNode;
 class TypeInfo;
 class ExpressionResult;
@@ -26,7 +25,6 @@ class VariableInfo : public SymbolInfo
     LocationType GetLocationType() const { return _locationType; }
     unsigned int GetMemLocation() const { return _memLocation; }
     ExpressionResult *CalculateResult(FunctionDeclaratorNode *pScope);
-    FunctionDeclaratorNode *GetScope() { return _pScope; }
 
     void ReserveRegister(FunctionDeclaratorNode *pScope, RegIndex index);
     RegIndex EnsureRegister(FunctionDeclaratorNode *pScope);
@@ -45,9 +43,6 @@ class VariableInfo : public SymbolInfo
 
     // C++ type of variable
     TypeInfo *_pType;
-
-    // Scope variable was declared in (null if global)
-    FunctionDeclaratorNode *_pScope;
 
     // Register allocated by scope (globals have multiple register locations mapped)
     std::map<FunctionDeclaratorNode *, RegIndex> _regIndexMap;

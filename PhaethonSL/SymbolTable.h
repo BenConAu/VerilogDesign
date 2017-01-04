@@ -26,9 +26,11 @@ class SymbolTable
         GenericTypeInfo *pGenType,
         TypeInfo *pReturnTypeInfo);
 
-    SymbolInfo *GetInfo(int symIndex);
+    SymbolInfo *GetInfo(
+        int symIndex,
+        FunctionDeclaratorNode *pScope);
 
   private:
     PSLCompilerContext *_pContext;
-    std::map<int, std::unique_ptr<SymbolInfo>> _symbols;
+    std::multimap<int, std::unique_ptr<SymbolInfo>> _symbols;
 };

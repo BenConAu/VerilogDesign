@@ -27,7 +27,8 @@ ExpressionResult *IdentifierNode::CalculateResult()
 
 VariableInfo *IdentifierNode::GetVariableInfo()
 {
-    VariableInfo* pInfo = dynamic_cast<VariableInfo*>(GetContext()->_symbolTable.GetInfo(_symIndex));
+    FunctionDeclaratorNode *pScope = GetTypedParent<FunctionDeclaratorNode>();
+    VariableInfo *pInfo = dynamic_cast<VariableInfo *>(GetContext()->_symbolTable.GetInfo(_symIndex, pScope));
     if (pInfo == nullptr)
     {
         char message[256];
