@@ -40,7 +40,7 @@ ptr<T> MemoryAlloc<T>(word size)
 
     // TODO: Loop through blocks
 
-    if (pCurrent->Available < size)
+    if (pCurrent->Available .< size)
     {
         return nullptr; // Oh well
     }
@@ -51,6 +51,7 @@ ptr<T> MemoryAlloc<T>(word size)
 
     // Calculate where the next one is
     pCurrent->Available = pCurrent->Available - size;
+    pCurrent->AllocLengths[pCurrent->Count] = size;
     pCurrent->Count = pCurrent->Count + 1;
 
     // Return the appropriate pointer
@@ -59,6 +60,21 @@ ptr<T> MemoryAlloc<T>(word size)
 
 void MemoryFree(ptr<void> allocation)
 {
+}
+
+void DumpHeap()
+{
+    // Loop through the allocations to find the end
+    ptr<AllocationBlock> pCurrent = Header.First;
+
+    // TODO: Loop through blocks
+    word i = 0;
+    while (i .< pCurrent->Count)
+    {
+        debugout(pCurrent->AllocLengths[i]);
+
+        i = i + 1;
+    }    
 }
 
 void main()
@@ -71,12 +87,15 @@ void main()
     // Where did this memory end up?
     ptr<void> alloc1 = MemoryAlloc<void>(100);
     debugout(alloc1);
+    DumpHeap();
 
     // Try another allocation
     ptr<void> alloc2 = MemoryAlloc<void>(200);
     debugout(alloc2);
+    DumpHeap();
 
     // This one should fail
     ptr<void> alloc3 = MemoryAlloc<void>(1000);
     debugout(alloc3);
+    DumpHeap();
 }
