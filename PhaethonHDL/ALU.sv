@@ -2,8 +2,6 @@ module ALU(
   clk,         // [Input]  Clock driving the ALU
   reset,       // [Input]  Reset pin
   ramIn,       // [Input]  RAM at requested address
-  readAck,     // [Input]  RAM read acknowledge
-  writeAck,    // [Input]  RAM write acknowledge
   ramAddress,  // [Output] RAM address requested
   ramOut,      // [Output] RAM to write
   readReq,     // [Output] RAM read request
@@ -26,8 +24,6 @@ module ALU(
   input  wire        clk;
   input  wire        reset;
   input  wire [31:0] ramIn;
-  input  wire        readAck;
-  input  wire        writeAck;
   output reg [31:0]  ramAddress;
   output reg [31:0]  ramOut;
   output reg [0:0]   readReq;
@@ -45,7 +41,7 @@ module ALU(
 
   // Local registers
   reg        [31:0] regarray[0:65];
-  reg        [3:0]  mode;
+  reg        [4:0]  mode;
   reg        [31:0] ramValue;
   reg        [31:0] regValue[0:3];
   reg        [31:0] regValue2[0:3];
@@ -92,6 +88,7 @@ module ALU(
       rPos <= 2;
       mode <= 0;
       readReq <= 0;
+      writeReq <= 0;
       fOpEnable <= 7'b0000000;
       condJump <= 1'b0;
     end
@@ -112,29 +109,34 @@ module ALU(
         // Clear out stuff for the pipeline
         fOpEnable <= 7'b0000000;
         condJump <= 1'b0;
+        mode <= 8;
+      end
+
+      // Mode 8 - ramIn is set by RAM module
+      8: begin
+        // Stop request
+        readReq <= 0;
+
         mode <= 1;
+
+        debug[23:0] <= 0;
+        debug[31:24] <= mode;
       end
 
       // Mode 1: Handle ack of instruction pointer read request and
       //         decode the instruction data, including the opCode
       //         of the instruction and the affected registers.
       1: begin
-        // Stop request
-        readReq <= 0;
+        // Since we did read request on mode 0, ram should be ready now
+        //$display("Receiving value %h", ramIn);
 
-        // If ram is ready, read it and get the next instruction
-        if (readAck)
-        begin
-          //$display("Receiving value %h", ramIn);
+        opCode <= ramIn[7:0];
+        regAddress <=  (ramIn[15:8] >= 64)  ? (ramIn[15:8] - 64)  : (ramIn[15:8] + rPos);
+        regAddress2 <= (ramIn[23:16] >= 64) ? (ramIn[23:16] - 64) : (ramIn[23:16] + rPos);
+        regAddress3 <= (ramIn[31:24] >= 64) ? (ramIn[31:24] - 64) : (ramIn[31:24] + rPos);
 
-          opCode <= ramIn[7:0];
-          regAddress <=  (ramIn[15:8] >= 64)  ? (ramIn[15:8] - 64)  : (ramIn[15:8] + rPos);
-          regAddress2 <= (ramIn[23:16] >= 64) ? (ramIn[23:16] - 64) : (ramIn[23:16] + rPos);
-          regAddress3 <= (ramIn[31:24] >= 64) ? (ramIn[31:24] - 64) : (ramIn[31:24] + rPos);
-
-          // Safe to move to next mode now
-          mode <= 2;
-        end
+        // Move to next mode now
+        mode <= 2;
 
         debug[23:0] <= ramIn[23:0];
         debug[31:24] <= mode;
@@ -192,12 +194,12 @@ module ALU(
           ramAddress <= ipointer + 4;
 
           // We need to move into further modes
-          mode <= 3;
+          mode <= 9;
         end
         else if (IsRAMOpcode(opCode) == 1)
         begin
           // We are not reading a constant, but we might still be
-          // doing a RAM operation, ove into the mode where we do that
+          // doing a RAM operation, move into the mode where we do that
           mode <= 4;
         end
         else
@@ -213,6 +215,17 @@ module ALU(
         debug[31:24] <= mode;
       end
 
+      // Mode 9 - ramIn is set by RAM module for second word
+      9: begin
+        // Stop request
+        readReq <= 0;
+
+        mode <= 3;
+
+        debug[23:0] <= 0;
+        debug[31:24] <= mode;
+      end
+
       // Mode 3: Complete read of additional code for opCodes that
       //         store word data. We only end up in this mode if
       //         the appropriate opCode is set, so no need to check
@@ -221,18 +234,15 @@ module ALU(
         // Stop request
         readReq <= 0;
 
-        if (readAck == 1)
-        begin
-          // Store ram values requested
-          opDataWord <= ramIn;
+        // Store ram values requested
+        opDataWord <= ramIn;
 
-          // Move to next mode - only progress to data read / write
-          // for opCodes that actually need it.
-          if (IsRAMOpcode(opCode) == 1)
-            mode <= 4;
-          else
-            mode <= 6;
-        end
+        // Move to next mode - only progress to data read / write
+        // for opCodes that actually need it.
+        if (IsRAMOpcode(opCode) == 1)
+          mode <= 4;
+        else
+          mode <= 6;
 
         debug[23:0] <= ramIn;
         debug[31:24] <= mode;
@@ -342,7 +352,19 @@ module ALU(
         debug[23:0] <= opDataWord;
         debug[31:24] <= mode;
 
+        mode <= 10;
+      end
+
+      // Mode 10 - ramIn is set by RAM module
+      10: begin
+        // Stop request
+        readReq <= 0;
+        writeReq <= 0;
+
         mode <= 5;
+
+        debug[23:0] <= 0;
+        debug[31:24] <= mode;
       end
 
       // Mode 5: Complete data read or write if the instruction
@@ -350,33 +372,23 @@ module ALU(
       5: begin
         if (opCode == `MovRdC || opCode == `MovRdRo || opCode == `MovRdRoR || opCode == `MovRdR || opCode == `PopR || opCode == `Ret)
         begin
-          // Stop request
-          readReq <= 0;
+          //$display("Receiving read address value %h", ramIn);
 
-          if (readAck)
-          begin
-            //$display("Receiving read address value %h", ramIn);
+          // Store ram values requested
+          ramValue <= ramIn;
 
-            // Store ram values requested
-            ramValue <= ramIn;
-
-            // Now we can move on
-            mode <= 6;
-          end
+          // Now we can move on
+          mode <= 6;
         end
         else if (opCode == `MovdCR || opCode == `MovdRoR || opCode == `MovdRoRR || opCode == `PushR || opCode == `CallR)
         begin
-          // Stop request
-          writeReq <= 0;
-
-          if (writeAck == 1)
-          begin
-            // Can move to next mode
-            mode <= 6;
-          end
+          // Can move to next mode
+          mode <= 6;
         end
         else
+        begin
           mode <= 6;
+        end
 
         debug[23:0] <= ramIn[23:0];
         debug[31:24] <= mode;
