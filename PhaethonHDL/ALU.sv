@@ -79,15 +79,15 @@ module ALU(
   //     $time, ramIn[7:0], ramIn[15:8], ramIn[23:16], ramIn[31:24], ramAddress, ramIn, opAddress, ramValue);
 
   `define InitialMode 0
-  `define InstrReadWait 'ha
-  `define InstrReadComplete 1
-  `define RegValueSet 2
-  `define DataWordWait 3
-  `define DataWordComplete 4
-  `define MemRWRequest 5
-  `define MemRWWait 6
-  `define MemRWComplete 7
-  `define ProcessOpCode 8
+  `define InstrReadWait 1
+  `define InstrReadComplete 2
+  `define RegValueSet 3
+  `define DataWordWait 4
+  `define DataWordComplete 5
+  `define MemRWRequest 6
+  `define MemRWWait 7
+  `define MemRWComplete 8
+  `define ProcessOpCode 9
 
   always @(posedge clk or posedge reset)
   begin
