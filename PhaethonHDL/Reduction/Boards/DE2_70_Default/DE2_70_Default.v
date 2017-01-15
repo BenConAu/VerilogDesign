@@ -677,8 +677,6 @@ rams u6(
 //=======================================================
 //  Structural coding
 //=======================================================
-wire [0:31] foobar = ramIn[31:0];
-wire [0:31] foobar2 = ramOut[31:0];
 ALU u7(
   .clk(iCLK_50),         // [Input]  Clock driving the ALU
   .reset(iKEY[0]),       // [Input]  Reset pin

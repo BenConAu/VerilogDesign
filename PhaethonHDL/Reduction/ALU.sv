@@ -20,6 +20,8 @@ module ALU(
   runningTotal // [Output] Running total of instruction RAM
   );
 
+  `include "../../PhaethonISA/Generated/PhaethonOpCode.v"
+
   // Input / output
   input  wire        clk;
   input  wire        reset;
@@ -45,12 +47,15 @@ module ALU(
   reg        [31:0] regarray[0:65];
   reg        [7:0]  mode;
   reg        [31:0] ramValue;
-  reg        [31:0] regValue;
-  reg        [31:0] regValue2;
-  reg        [31:0] regValue3;
+  reg        [31:0] regValue[0:3];
+  reg        [31:0] regValue2[0:3];
+  reg        [31:0] regValue3[0:3];
+  reg        [31:0] opDataWord;
   reg        [7:0]  regAddress;
   reg        [7:0]  regAddress2;
   reg        [7:0]  regAddress3;
+  reg        [6:0]  fOpEnable;
+  reg        [0:0]  condJump;
   reg        [31:0] sentinel;
 
   //initial
@@ -87,8 +92,10 @@ module ALU(
         readReq <= 0;
         sentinel <= 'h12345678;
         runningTotal <= 0;
-    
+        fOpEnable <= 7'b0000000;
+        condJump <= 1'b0;
         debug2 <= 0;
+
         // We will come back here on next clock
       end
     end
@@ -120,7 +127,7 @@ module ALU(
       regAddress2 <= (ramIn[23:16] >= 64) ? (ramIn[23:16] - 64) : (ramIn[23:16] + rPos);
       regAddress3 <= (ramIn[31:24] >= 64) ? (ramIn[31:24] - 64) : (ramIn[31:24] + rPos);
     
-      regValue <= ramIn;
+      regValue[0] <= ramIn;
       runningTotal <= ramIn;
 
       // Safe to move to next mode now
@@ -137,10 +144,42 @@ module ALU(
       debug2 <= 4;
 
       // Read values from registers
-      regValue <= regarray[regAddress[7:0]];
-      regValue2 <= regarray[regAddress2[7:0]];
-      regValue3 <= regarray[regAddress3[7:0]];
+      regValue[0] <= regarray[regAddress[7:0]];
+        if (opCode == `VfaddRRR)
+        begin
+          regValue[1] <= regarray[regAddress[7:0] + 1];
+          regValue[2] <= regarray[regAddress[7:0] + 2];
+          regValue[3] <= regarray[regAddress[7:0] + 3];
+        end
+      regValue2[0] <= regarray[regAddress2[7:0]];
+        if (opCode == `VfaddRRR)
+        begin
+          regValue2[1] <= regarray[regAddress2[7:0] + 1];
+          regValue2[2] <= regarray[regAddress2[7:0] + 2];
+          regValue2[3] <= regarray[regAddress2[7:0] + 3];
+        end
+      regValue3[0] <= regarray[regAddress3[7:0]];
+        if (opCode == `VfaddRRR)
+        begin
+          regValue3[1] <= regarray[regAddress3[7:0] + 1];
+          regValue3[2] <= regarray[regAddress3[7:0] + 2];
+          regValue3[3] <= regarray[regAddress3[7:0] + 3];
+        end
 
+        // Enable operation for module
+        if (opCode == `FaddRRR || opCode == `VfaddRRR) fOpEnable[0:0] <= 1;
+        if (opCode == `FsubRR) fOpEnable[1:1] <= 1;
+        if (opCode == `FconvR) fOpEnable[2:2] <= 1;
+        if (opCode == `FmulRRR) fOpEnable[3:3] <= 1;
+        if (opCode == `FmuladdRRR) fOpEnable[4:4] <= 1;
+        if (opCode == `FminRR) fOpEnable[5:5] <= 1;
+        if (opCode == `FmaxRR) fOpEnable[5:5] <= 1;
+        if (opCode == `FdivRR) fOpEnable[6:6] <= 1;
+        // Determine if a conditional jump needs to happen
+        if (opCode == `JneC && regarray[1][0:0] == 1'b0) condJump <= 1'b1;
+        if (opCode == `JeC && regarray[1][0:0] == 1'b1) condJump <= 1'b1;
+        if (opCode == `JzRC && regarray[regAddress3[7:0]] == 0) condJump <= 1'b1;
+        if (opCode == `JnzRC && regarray[regAddress3[7:0]] != 0) condJump <= 1'b1;
       // Since there is no word data, there is no need
       // to wait for that word data to come back, and there
       // can be no further reads or writes since the word
