@@ -78,6 +78,10 @@ module ALU(
   //   $monitor("%t, ram = %h, %h, %h, %h : %h, %h, %h, %h",
   //     $time, ramIn[7:0], ramIn[15:8], ramIn[23:16], ramIn[31:24], ramAddress, ramIn, opAddress, ramValue);
 
+  `define InitialMode 0
+  `define InstrReadWait 'ha
+  `define InstrReadComplete 1
+
   always @(posedge clk or posedge reset)
   begin
     if (reset)
@@ -86,7 +90,7 @@ module ALU(
       opCode <= 0;
       opDataWord <= 'hffffffff;
       rPos <= 2;
-      mode <= 0;
+      mode <= `InitialMode;
       readReq <= 0;
       writeReq <= 0;
       fOpEnable <= 7'b0000000;
@@ -95,9 +99,9 @@ module ALU(
     else
     begin
       case (mode)
-      // Mode 0: Schedule read of code at instruction pointer and clear
+      // Mode InitialMode: Schedule read of code at instruction pointer and clear
       //         out enable bits for auxillary modules.
-      0: begin
+      `InitialMode: begin
         // Begin RAM read for instruction data
         readReq <= 1;
         ramAddress <= ipointer;
@@ -109,24 +113,24 @@ module ALU(
         // Clear out stuff for the pipeline
         fOpEnable <= 7'b0000000;
         condJump <= 1'b0;
-        mode <= 'ha;
+        mode <= `InstrReadWait;
       end
 
-      // Mode a - ramIn is set by RAM module
-      'ha: begin
+      // Mode InstrReadWait - wait while RAM registers address
+      `InstrReadWait: begin
         // Stop request
         readReq <= 0;
 
-        mode <= 1;
+        mode <= `InstrReadComplete;
 
         debug[23:0] <= 0;
         debug[31:24] <= mode;
       end
 
-      // Mode 1: Handle ack of instruction pointer read request and
+      // Mode InstrReadComplete: Handle completion of instruction pointer read request and
       //         decode the instruction data, including the opCode
       //         of the instruction and the affected registers.
-      1: begin
+      `InstrReadComplete: begin
         // Since we did read request on mode 0, ram should be ready now
         //$display("Receiving value %h", ramIn);
 
@@ -558,7 +562,7 @@ module ALU(
         //$display("Finished instruction %h", opCode);
 
         // Mode change
-        mode <= 0;
+        mode <= `InitialMode;
       end
 
       endcase
