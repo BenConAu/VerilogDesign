@@ -200,7 +200,7 @@ module ALU(
         begin
           // We are not reading a constant, but we might still be
           // doing a RAM operation, move into the mode where we do that
-          mode <= 4;
+          mode <= 5;
         end
         else
         begin
@@ -220,17 +220,17 @@ module ALU(
         // Stop request
         readReq <= 0;
 
-        mode <= 3;
+        mode <= 4;
 
         debug[23:0] <= 0;
         debug[31:24] <= mode;
       end
 
-      // Mode 3: Complete read of additional code for opCodes that
+      // Mode 4: Complete read of additional code for opCodes that
       //         store word data. We only end up in this mode if
       //         the appropriate opCode is set, so no need to check
       //         the opCode.
-      3: begin
+      4: begin
         // Stop request
         readReq <= 0;
 
@@ -240,7 +240,7 @@ module ALU(
         // Move to next mode - only progress to data read / write
         // for opCodes that actually need it.
         if (IsRAMOpcode(opCode) == 1)
-          mode <= 4;
+          mode <= 5;
         else
           mode <= 8;
 
@@ -248,9 +248,9 @@ module ALU(
         debug[31:24] <= mode;
       end
 
-      // Mode 4: Initiate data read or write if the instruction
+      // Mode 5: Initiate data read or write if the instruction
       //         requires it.
-      4: begin
+      5: begin
         if (opCode == `MovRdC)
         begin
           // Read values from address encoded in code
