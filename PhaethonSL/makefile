@@ -91,10 +91,16 @@ PSLcc: lex.yy.c \
 	   ../PhaethonObjWriter/AsmObjWriter.h \
 	   ../PhaethonObjWriter/BinaryObjWriter.cpp \
 	   ../PhaethonObjWriter/BinaryObjWriter.h \
+	   ../PhaethonObjWriter/BinObjectWriter.cpp \
+	   ../PhaethonObjWriter/BinObjectWriter.h \
+	   ../PhaethonObjWriter/BinaryWriterBase.cpp \
+	   ../PhaethonObjWriter/BinaryWriterBase.h \
 	   ../PhaethonObjWriter/ObjWriter.h
 	clang++ -std=c++11 -Wno-deprecated-register -g lex.yy.c \
 	   ../PhaethonObjWriter/AsmObjWriter.cpp \
 	   ../PhaethonObjWriter/BinaryObjWriter.cpp \
+	   ../PhaethonObjWriter/BinObjectWriter.cpp \
+	   ../PhaethonObjWriter/BinaryWriterBase.cpp \
 	   ../PhaethonISA/Generated/PhaethonOpCode.cpp \
 	   PSL.tab.c \
 	   ArrayTypeInfo.cpp \

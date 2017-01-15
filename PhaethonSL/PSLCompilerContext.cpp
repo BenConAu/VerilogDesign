@@ -5,6 +5,7 @@
 #include "lex.h"
 #include "../PhaethonObjWriter/AsmObjWriter.h"
 #include "../PhaethonObjWriter/BinaryObjWriter.h"
+#include "../PhaethonObjWriter/BinObjectWriter.h"
 
 PSLCompilerContext::PSLCompilerContext(
     FILE *pFile,

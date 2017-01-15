@@ -2,11 +2,11 @@
 
 #include "BinaryWriterBase.h"
 
-class BinaryObjWriter : public BinaryWriterBase
+class BinObjWriter : public BinaryWriterBase
 {
 public:
-  BinaryObjWriter(const char *pszFilename);
-  ~BinaryObjWriter();
+  BinObjWriter(const char *pszFilename);
+  ~BinObjWriter();
 
   void WriteWordToFile(unsigned int w) override;
 
