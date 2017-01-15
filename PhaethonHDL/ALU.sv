@@ -81,6 +81,9 @@ module ALU(
   `define InitialMode 0
   `define InstrReadWait 'ha
   `define InstrReadComplete 1
+  `define RegValueSet 2
+  `define DataWordWait 3
+  `define DataWordComplete 4
 
   always @(posedge clk or posedge reset)
   begin
@@ -140,16 +143,16 @@ module ALU(
         regAddress3 <= (ramIn[31:24] >= 64) ? (ramIn[31:24] - 64) : (ramIn[31:24] + rPos);
 
         // Move to next mode now
-        mode <= 2;
+        mode <= `RegValueSet;
 
         debug[23:0] <= ramIn[23:0];
         debug[31:24] <= mode;
       end
 
-      // Mode 2: Schedule read of additional code for opCodes that
+      // Mode RegValueSet: Schedule read of additional code for opCodes that
       //         store word data. Read in register values for
       //         registers referenced by the instruction.
-      2: begin
+      `RegValueSet: begin
         // Read values from registers
         regValue[0] <= regarray[regAddress[7:0]];
         if (opCode == `VfaddRRR)
@@ -198,7 +201,7 @@ module ALU(
           ramAddress <= ipointer + 4;
 
           // We need to move into further modes
-          mode <= 3;
+          mode <= `DataWordWait;
         end
         else if (IsRAMOpcode(opCode) == 1)
         begin
@@ -219,12 +222,12 @@ module ALU(
         debug[31:24] <= mode;
       end
 
-      // Mode 3 - ramIn is set by RAM module for second word
-      3: begin
+      // Mode DataWordWait - ramIn is set by RAM module for second word
+      `DataWordWait: begin
         // Stop request
         readReq <= 0;
 
-        mode <= 4;
+        mode <= `DataWordComplete;
 
         debug[23:0] <= 0;
         debug[31:24] <= mode;
@@ -234,7 +237,7 @@ module ALU(
       //         store word data. We only end up in this mode if
       //         the appropriate opCode is set, so no need to check
       //         the opCode.
-      4: begin
+      `DataWordComplete: begin
         // Stop request
         readReq <= 0;
 
