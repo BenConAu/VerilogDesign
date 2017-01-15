@@ -109,11 +109,11 @@ module ALU(
         // Clear out stuff for the pipeline
         fOpEnable <= 7'b0000000;
         condJump <= 1'b0;
-        mode <= 8;
+        mode <= 'ha;
       end
 
-      // Mode 8 - ramIn is set by RAM module
-      8: begin
+      // Mode a - ramIn is set by RAM module
+      'ha: begin
         // Stop request
         readReq <= 0;
 
@@ -208,7 +208,7 @@ module ALU(
           // to wait for that word data to come back, and there
           // can be no further reads or writes since the word
           // data is where the address would go
-          mode <= 6;
+          mode <= 8;
         end
 
         debug[23:0] <= regAddress;
@@ -242,7 +242,7 @@ module ALU(
         if (IsRAMOpcode(opCode) == 1)
           mode <= 4;
         else
-          mode <= 6;
+          mode <= 8;
 
         debug[23:0] <= ramIn;
         debug[31:24] <= mode;
@@ -352,43 +352,33 @@ module ALU(
         debug[23:0] <= opDataWord;
         debug[31:24] <= mode;
 
-        mode <= 10;
+        mode <= 6;
       end
 
-      // Mode 10 - ramIn is set by RAM module
-      10: begin
+      // Mode 6 - ramIn is set by RAM module
+      6: begin
         // Stop request
         readReq <= 0;
         writeReq <= 0;
 
-        mode <= 5;
+        mode <= 7;
 
         debug[23:0] <= 0;
         debug[31:24] <= mode;
       end
 
-      // Mode 5: Complete data read or write if the instruction
+      // Mode 7: Complete data read or write if the instruction
       //         requires it.
-      5: begin
+      7: begin
         if (opCode == `MovRdC || opCode == `MovRdRo || opCode == `MovRdRoR || opCode == `MovRdR || opCode == `PopR || opCode == `Ret)
         begin
           //$display("Receiving read address value %h", ramIn);
 
           // Store ram values requested
           ramValue <= ramIn;
+        end
 
-          // Now we can move on
-          mode <= 6;
-        end
-        else if (opCode == `MovdCR || opCode == `MovdRoR || opCode == `MovdRoRR || opCode == `PushR || opCode == `CallR)
-        begin
-          // Can move to next mode
-          mode <= 6;
-        end
-        else
-        begin
-          mode <= 6;
-        end
+        mode <= 8;
 
         debug[23:0] <= ramIn[23:0];
         debug[31:24] <= mode;
@@ -398,7 +388,7 @@ module ALU(
       // Mode 6: Finalize the instruction operation, by performing
       //         the writes that are needed and moving the
       //         instruction pointer along.
-      6: begin
+      8: begin
         // Now we can do writes to non-ram things
         case (opCode)
           `MovRC:    regarray[regAddress[7:0]] <= opDataWord;             // mov reg, const
