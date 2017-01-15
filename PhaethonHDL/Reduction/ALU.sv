@@ -62,12 +62,23 @@ module ALU(
   //   $monitor("%t, ram = %h, %h, %h, %h : %h, %h, %h, %h",
   //     $time, ramIn[7:0], ramIn[15:8], ramIn[23:16], ramIn[31:24], ramAddress, ramIn, opAddress, ramValue);
 
+  `define InitialMode 0
+  `define InstrReadWait 1
+  `define InstrReadComplete 2
+  `define RegValueSet 3
+  `define DataWordWait 4
+  `define DataWordComplete 5
+  `define MemRWRequest 6
+  `define MemRWWait 7
+  `define MemRWComplete 8
+  `define ProcessOpCode 9
+  
   always @(posedge clk)
   begin
     case (mode)
-    // Mode 0: Schedule read of code at instruction pointer and clear
+      // Mode InitialMode: Schedule read of code at instruction pointer and clear
     //         out enable bits for auxillary modules.
-    0: begin
+      `InitialMode: begin
       if (sentinel == 'h12345678)
       begin
         // Begin RAM read for instruction data
@@ -79,7 +90,7 @@ module ALU(
 
         debug2 <= 1;
 
-        mode <= 1;
+        mode <= `InstrReadWait;
   
       end
       else
@@ -88,7 +99,7 @@ module ALU(
         ipointer <= 0;
         opCode <= 0;
         rPos <= 2;
-        mode <= 0;
+        mode <= `InitialMode;
         readReq <= 0;
         sentinel <= 'h12345678;
         runningTotal <= 0;
@@ -100,23 +111,21 @@ module ALU(
       end
     end
 
-    // Mode 8 - ramIn is set by RAM module
-    1: begin
-
-      regarray[2][31:0] <= 'h7777f00d;
+    // Mode InstrReadWait - wait while RAM registers address
+    `InstrReadWait: begin
+      mode <= `InstrReadComplete;
 
       debug[23:0] <= 0;
       debug[31:24] <= mode;
-    
+
       debug2 <= 2;
-   
-      mode <= 2;
-    end
+   		
+		end
 	 
-    // Mode 1: Handle ack of instruction pointer read request and
+    // Mode InstrReadComplete: Handle completion of instruction pointer read request and
     //         decode the instruction data, including the opCode
     //         of the instruction and the affected registers.
-    2: begin
+    `InstrReadComplete: begin
       debug2 <= 3;
     
       // Stop request
@@ -130,70 +139,74 @@ module ALU(
       regValue[0] <= ramIn;
       runningTotal <= ramIn;
 
-      // Safe to move to next mode now
-      mode <= 3;
+      // Move to next mode now
+      mode <= `RegValueSet;
 
       debug[23:0] <= ramIn[23:0];
       debug[31:24] <= mode;
     end
 
-    // Mode 2: Schedule read of additional code for opCodes that
+    // Mode RegValueSet: Schedule read of additional code for opCodes that
     //         store word data. Read in register values for
     //         registers referenced by the instruction.
-    3: begin
+    `RegValueSet: begin
       debug2 <= 4;
 
       // Read values from registers
       regValue[0] <= regarray[regAddress[7:0]];
-        if (opCode == `VfaddRRR)
-        begin
-          regValue[1] <= regarray[regAddress[7:0] + 1];
-          regValue[2] <= regarray[regAddress[7:0] + 2];
-          regValue[3] <= regarray[regAddress[7:0] + 3];
-        end
+      if (opCode == `VfaddRRR)
+      begin
+        regValue[1] <= regarray[regAddress[7:0] + 1];
+        regValue[2] <= regarray[regAddress[7:0] + 2];
+        regValue[3] <= regarray[regAddress[7:0] + 3];
+      end
+		
       regValue2[0] <= regarray[regAddress2[7:0]];
-        if (opCode == `VfaddRRR)
-        begin
-          regValue2[1] <= regarray[regAddress2[7:0] + 1];
-          regValue2[2] <= regarray[regAddress2[7:0] + 2];
-          regValue2[3] <= regarray[regAddress2[7:0] + 3];
-        end
+      if (opCode == `VfaddRRR)
+      begin
+        regValue2[1] <= regarray[regAddress2[7:0] + 1];
+        regValue2[2] <= regarray[regAddress2[7:0] + 2];
+        regValue2[3] <= regarray[regAddress2[7:0] + 3];
+      end
+		
       regValue3[0] <= regarray[regAddress3[7:0]];
-        if (opCode == `VfaddRRR)
-        begin
-          regValue3[1] <= regarray[regAddress3[7:0] + 1];
-          regValue3[2] <= regarray[regAddress3[7:0] + 2];
-          regValue3[3] <= regarray[regAddress3[7:0] + 3];
-        end
+      if (opCode == `VfaddRRR)
+      begin
+        regValue3[1] <= regarray[regAddress3[7:0] + 1];
+        regValue3[2] <= regarray[regAddress3[7:0] + 2];
+        regValue3[3] <= regarray[regAddress3[7:0] + 3];
+      end
 
-        // Enable operation for module
-        if (opCode == `FaddRRR || opCode == `VfaddRRR) fOpEnable[0:0] <= 1;
-        if (opCode == `FsubRR) fOpEnable[1:1] <= 1;
-        if (opCode == `FconvR) fOpEnable[2:2] <= 1;
-        if (opCode == `FmulRRR) fOpEnable[3:3] <= 1;
-        if (opCode == `FmuladdRRR) fOpEnable[4:4] <= 1;
-        if (opCode == `FminRR) fOpEnable[5:5] <= 1;
-        if (opCode == `FmaxRR) fOpEnable[5:5] <= 1;
-        if (opCode == `FdivRR) fOpEnable[6:6] <= 1;
-        // Determine if a conditional jump needs to happen
-        if (opCode == `JneC && regarray[1][0:0] == 1'b0) condJump <= 1'b1;
-        if (opCode == `JeC && regarray[1][0:0] == 1'b1) condJump <= 1'b1;
-        if (opCode == `JzRC && regarray[regAddress3[7:0]] == 0) condJump <= 1'b1;
-        if (opCode == `JnzRC && regarray[regAddress3[7:0]] != 0) condJump <= 1'b1;
+      // Enable operation for module
+      if (opCode == `FaddRRR || opCode == `VfaddRRR) fOpEnable[0:0] <= 1;
+      if (opCode == `FsubRR) fOpEnable[1:1] <= 1;
+      if (opCode == `FconvR) fOpEnable[2:2] <= 1;
+      if (opCode == `FmulRRR) fOpEnable[3:3] <= 1;
+      if (opCode == `FmuladdRRR) fOpEnable[4:4] <= 1;
+      if (opCode == `FminRR) fOpEnable[5:5] <= 1;
+      if (opCode == `FmaxRR) fOpEnable[5:5] <= 1;
+      if (opCode == `FdivRR) fOpEnable[6:6] <= 1;
+      
+		// Determine if a conditional jump needs to happen
+      if (opCode == `JneC && regarray[1][0:0] == 1'b0) condJump <= 1'b1;
+      if (opCode == `JeC && regarray[1][0:0] == 1'b1) condJump <= 1'b1;
+      if (opCode == `JzRC && regarray[regAddress3[7:0]] == 0) condJump <= 1'b1;
+      if (opCode == `JnzRC && regarray[regAddress3[7:0]] != 0) condJump <= 1'b1;
+		
       // Since there is no word data, there is no need
       // to wait for that word data to come back, and there
       // can be no further reads or writes since the word
       // data is where the address would go
-      mode <= 4;
+      mode <= `ProcessOpCode;
 
       debug[23:0] <= regAddress;
       debug[31:24] <= mode;
     end
 
-    // Mode 6: Finalize the instruction operation, by performing
+    // Mode ProcessOpCode: Finalize the instruction operation, by performing
     //         the writes that are needed and moving the
     //         instruction pointer along.
-    4: begin
+    `ProcessOpCode: begin
       debug2 <= 5;
 
       debug[23:0] <= regAddress;
@@ -208,8 +221,12 @@ module ALU(
       end
       else
       begin
-        ipointer <= ipointer + 4;
-        mode <= 0;    
+        if (Is8ByteOpcode(opCode) == 1)
+          ipointer <= ipointer + 8;
+        else
+          ipointer <= ipointer + 4;
+
+		  mode <= `InitialMode;    
       end
     
     end
