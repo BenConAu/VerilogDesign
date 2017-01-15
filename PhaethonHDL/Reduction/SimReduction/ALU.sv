@@ -8,6 +8,7 @@ module ALU(
   writeReq,    // [Output] RAM write request
   ipointer,    // [Debug]  Instruction pointer value
   opCode,      // [Debug]  current opCode value
+  mode,        // [Debug]  current FSM mode
   r0,          // [Debug]  current r0 value
   r1,          // [Debug]  current r1 value
   r2,          // [Debug]  current r2 value
@@ -29,6 +30,7 @@ module ALU(
   output reg [0:0]   readReq;
   output reg [0:0]   writeReq;
   output reg [31:0]  ipointer;
+  output reg [7:0]   mode;
   output reg [7:0]   opCode;
   output reg [31:0]  r0;
   output reg [31:0]  r1;
@@ -43,7 +45,6 @@ module ALU(
 
   // Local registers
   reg        [31:0] regarray[0:65];
-  reg        [7:0]  mode;
   reg        [31:0] ramValue;
   reg        [31:0] regValue;
   reg        [31:0] regValue2;
@@ -57,8 +58,14 @@ module ALU(
   //   $monitor("%t, ram = %h, %h, %h, %h : %h, %h, %h, %h",
   //     $time, ramIn[7:0], ramIn[15:8], ramIn[23:16], ramIn[31:24], ramAddress, ramIn, opAddress, ramValue);
 
-  always @(posedge clk)
+  always @(posedge clk or posedge reset)
   begin
+    if (reset == 1)
+    begin
+      mode <= 0;
+    end
+    else
+    begin
     case (mode)
     // Mode 0: Schedule read of code at instruction pointer and clear
     //         out enable bits for auxillary modules.
@@ -79,6 +86,7 @@ module ALU(
       end
       else
       begin
+        //$display("Doing mode 0 with init");
         // This should only run on first power
         ipointer <= 0;
         opCode <= 0;
@@ -95,6 +103,8 @@ module ALU(
 
     // Mode 8 - ramIn is set by RAM module
     1: begin
+      // Stop request
+      readReq <= 0;
 
       regarray[2][31:0] <= 'h7777f00d;
 
@@ -112,8 +122,8 @@ module ALU(
     2: begin
       debug2 <= 3;
     
-      // Stop request
-      //readReq <= 0;
+
+   	//$display("Receiving value %h", ramIn);
 
       opCode <= ramIn[7:0];
       regAddress <=  (ramIn[15:8] >= 64)  ? (ramIn[15:8] - 64)  : (ramIn[15:8] + rPos);
@@ -180,6 +190,7 @@ module ALU(
     end
 
     endcase
+  end
 
     r0 <= regarray[rPos];
     r1 <= regarray[rPos + 1];
