@@ -194,7 +194,7 @@ module ALU(
           ramAddress <= ipointer + 4;
 
           // We need to move into further modes
-          mode <= 9;
+          mode <= 3;
         end
         else if (IsRAMOpcode(opCode) == 1)
         begin
@@ -215,8 +215,8 @@ module ALU(
         debug[31:24] <= mode;
       end
 
-      // Mode 9 - ramIn is set by RAM module for second word
-      9: begin
+      // Mode 3 - ramIn is set by RAM module for second word
+      3: begin
         // Stop request
         readReq <= 0;
 
