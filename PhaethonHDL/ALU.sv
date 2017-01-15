@@ -84,6 +84,10 @@ module ALU(
   `define RegValueSet 2
   `define DataWordWait 3
   `define DataWordComplete 4
+  `define MemRWRequest 5
+  `define MemRWWait 6
+  `define MemRWComplete 7
+  `define ProcessOpCode 8
 
   always @(posedge clk or posedge reset)
   begin
@@ -207,7 +211,7 @@ module ALU(
         begin
           // We are not reading a constant, but we might still be
           // doing a RAM operation, move into the mode where we do that
-          mode <= 5;
+          mode <= `MemRWRequest;
         end
         else
         begin
@@ -215,7 +219,7 @@ module ALU(
           // to wait for that word data to come back, and there
           // can be no further reads or writes since the word
           // data is where the address would go
-          mode <= 8;
+          mode <= `ProcessOpCode;
         end
 
         debug[23:0] <= regAddress;
@@ -233,7 +237,7 @@ module ALU(
         debug[31:24] <= mode;
       end
 
-      // Mode 4: Complete read of additional code for opCodes that
+      // Mode DataWordComplete: Complete read of additional code for opCodes that
       //         store word data. We only end up in this mode if
       //         the appropriate opCode is set, so no need to check
       //         the opCode.
@@ -247,17 +251,17 @@ module ALU(
         // Move to next mode - only progress to data read / write
         // for opCodes that actually need it.
         if (IsRAMOpcode(opCode) == 1)
-          mode <= 5;
+          mode <= `MemRWRequest;
         else
-          mode <= 8;
+          mode <= `ProcessOpCode;
 
         debug[23:0] <= ramIn;
         debug[31:24] <= mode;
       end
 
-      // Mode 5: Initiate data read or write if the instruction
+      // Mode MemRWRequest: Initiate data read or write if the instruction
       //         requires it.
-      5: begin
+      `MemRWRequest: begin
         if (opCode == `MovRdC)
         begin
           // Read values from address encoded in code
@@ -359,24 +363,24 @@ module ALU(
         debug[23:0] <= opDataWord;
         debug[31:24] <= mode;
 
-        mode <= 6;
+        mode <= `MemRWWait;
       end
 
-      // Mode 6 - ramIn is set by RAM module
-      6: begin
+      // Mode `MemRWWait - ramIn is set by RAM module
+      `MemRWWait: begin
         // Stop request
         readReq <= 0;
         writeReq <= 0;
 
-        mode <= 7;
+        mode <= `MemRWComplete;
 
         debug[23:0] <= 0;
         debug[31:24] <= mode;
       end
 
-      // Mode 7: Complete data read or write if the instruction
+      // Mode MemRWComplete: Complete data read or write if the instruction
       //         requires it.
-      7: begin
+      `MemRWComplete: begin
         if (opCode == `MovRdC || opCode == `MovRdRo || opCode == `MovRdRoR || opCode == `MovRdR || opCode == `PopR || opCode == `Ret)
         begin
           //$display("Receiving read address value %h", ramIn);
@@ -385,17 +389,17 @@ module ALU(
           ramValue <= ramIn;
         end
 
-        mode <= 8;
+        mode <= `ProcessOpCode;
 
         debug[23:0] <= ramIn[23:0];
         debug[31:24] <= mode;
 
       end
 
-      // Mode 6: Finalize the instruction operation, by performing
+      // Mode ProcessOpCode: Finalize the instruction operation, by performing
       //         the writes that are needed and moving the
       //         instruction pointer along.
-      8: begin
+      `ProcessOpCode: begin
         // Now we can do writes to non-ram things
         case (opCode)
           `MovRC:    regarray[regAddress[7:0]] <= opDataWord;             // mov reg, const
