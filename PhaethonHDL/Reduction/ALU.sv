@@ -193,16 +193,204 @@ module ALU(
       if (opCode == `JzRC && regarray[regAddress3[7:0]] == 0) condJump <= 1'b1;
       if (opCode == `JnzRC && regarray[regAddress3[7:0]] != 0) condJump <= 1'b1;
 		
-      // Since there is no word data, there is no need
-      // to wait for that word data to come back, and there
-      // can be no further reads or writes since the word
-      // data is where the address would go
-      mode <= `ProcessOpCode;
+      if (Is8ByteOpcode(opCode) == 1)
+      begin
+        // Read values from ram requested by instruction
+        readReq <= 1;
+        ramAddress <= ipointer + 4;
+
+        // We need to move into further modes
+        mode <= `DataWordWait;
+      end
+      else if (IsRAMOpcode(opCode) == 1)
+      begin
+        // We are not reading a constant, but we might still be
+        // doing a RAM operation, move into the mode where we do that
+        mode <= `MemRWRequest;
+      end
+      else
+      begin
+        // Since there is no word data, there is no need
+        // to wait for that word data to come back, and there
+        // can be no further reads or writes since the word
+        // data is where the address would go
+        mode <= `ProcessOpCode;
+		end
 
       debug[23:0] <= regAddress;
       debug[31:24] <= mode;
     end
 
+    // Mode DataWordWait - ramIn is set by RAM module for second word
+    `DataWordWait: begin
+      // Stop request
+      readReq <= 0;
+
+      mode <= `DataWordComplete;
+
+      debug[23:0] <= 0;
+      debug[31:24] <= mode;
+    end
+
+    // Mode DataWordComplete: Complete read of additional code for opCodes that
+    //         store word data. We only end up in this mode if
+    //         the appropriate opCode is set, so no need to check
+    //         the opCode.
+    `DataWordComplete: begin
+      // Stop request
+      readReq <= 0;
+
+      // Store ram values requested
+      opDataWord <= ramIn;
+
+      // Move to next mode - only progress to data read / write
+      // for opCodes that actually need it.
+      if (IsRAMOpcode(opCode) == 1)
+        mode <= `MemRWRequest;
+      else
+        mode <= `ProcessOpCode;
+
+      debug[23:0] <= ramIn;
+      debug[31:24] <= mode;
+    end
+
+    // Mode MemRWRequest: Initiate data read or write if the instruction
+    //         requires it.
+    `MemRWRequest: begin
+      if (opCode == `MovRdC)
+      begin
+        // Read values from address encoded in code
+        readReq <= 1;
+        ramAddress <= opDataWord;
+
+        //$display("Requesting RdC read from %h", opDataWord);
+      end
+
+      if (opCode == `MovRdRo)
+      begin
+        // First register is destination, second register is base address, 
+        // constant stores offset in bytes.
+        readReq <= 1;
+        ramAddress <= opDataWord + regValue2[0];
+
+        //$display("Requesting read from %h", opDataWord + regValue2);
+      end
+
+      if (opCode == `MovRdRoR)
+      begin
+        // First register is destination, second register is base address, 
+        // constant stores size of item, and third register stores index of item.
+        readReq <= 1;
+        ramAddress <= regValue2[0] + opDataWord * regValue3[0];
+
+        //$display("Requesting read from %h", regValue2[0] + opDataWord * regValue3[0]);
+      end
+
+      if (opCode == `MovRdR)
+      begin
+        // Read values from address encoded in code
+        readReq <= 1;
+        ramAddress <= regValue2[0];
+
+        //$display("Requesting read from %h", opDataWord + regValue2);
+      end
+
+      if (opCode == `PopR || opCode == `Ret)
+      begin
+        // Read value from stack
+        readReq <= 1;
+        ramAddress <= regarray[0] - 4;
+
+        //$display("Requesting read from %h - 4", regarray[0]);
+      end
+
+      if (opCode == `MovdCR)
+      begin
+        // Write values to ram requested by instruction
+        writeReq <= 1;
+        ramAddress <= opDataWord;
+        ramOut <= regValue2[0];
+
+        //$display("Reqesting write %h to address value %h", regValue2[0], opDataWord);
+      end
+
+      if (opCode == `MovdRoR)
+      begin
+        // Write values to ram requested by instruction
+        writeReq <= 1;
+        ramAddress <= opDataWord + regValue[0];
+        ramOut <= regValue2[0];
+
+        //$display("Reqesting write %h to address value %h", regValue2[0], opDataWord + regValue[0]);
+      end
+
+      if (opCode == `MovdRoRR)
+      begin
+        // first register is base address, constant stores size of items, 
+        // second register stores index of item, third register is destination, 
+        writeReq <= 1;
+        ramAddress <= regValue[0] + opDataWord * regValue2[0];
+        ramOut <= regValue3[0];
+
+        //$display("Reqesting write %h to address value %h", regValue2[0], regValue[0] + opDataWord * regValue2[0]);
+      end
+
+      if (opCode == `PushR)
+      begin
+        // Write register value to stack
+        writeReq <= 1;
+        ramAddress <= regarray[0];
+        ramOut <= regValue[0];
+
+        //$display("Reqesting push %h", regValue);
+      end
+
+      if (opCode == `CallR)
+      begin
+        // Write ip to stack
+        writeReq <= 1;
+        ramAddress <= regarray[0];
+        ramOut <= ipointer;
+
+        //$display("Reqesting push %h", regValue);
+      end
+
+      debug[23:0] <= opDataWord;
+      debug[31:24] <= mode;
+
+      mode <= `MemRWWait;
+    end
+
+    // Mode `MemRWWait - ramIn is set by RAM module
+    `MemRWWait: begin
+      // Stop request
+      readReq <= 0;
+      writeReq <= 0;
+
+      mode <= `MemRWComplete;
+
+      debug[23:0] <= 0;
+      debug[31:24] <= mode;
+    end
+
+    // Mode MemRWComplete: Complete data read or write if the instruction
+    //         requires it.
+    `MemRWComplete: begin
+      if (opCode == `MovRdC || opCode == `MovRdRo || opCode == `MovRdRoR || opCode == `MovRdR || opCode == `PopR || opCode == `Ret)
+      begin
+        //$display("Receiving read address value %h", ramIn);
+
+        // Store ram values requested
+        ramValue <= ramIn;
+      end
+
+      mode <= `ProcessOpCode;
+
+      debug[23:0] <= ramIn[23:0];
+      debug[31:24] <= mode;
+
+    end
+	 
     // Mode ProcessOpCode: Finalize the instruction operation, by performing
     //         the writes that are needed and moving the
     //         instruction pointer along.
