@@ -1,13 +1,9 @@
 void main()
 {
-    word i = 1;
-    while (true)
+    word i = 0;
+    while (i .< 10)
     {
-        i = i << 1;
-        if (i == 0)
-        {
-            i = 1;
-        }
+        i = i + 1;
         debugout(i);
     }
 }
