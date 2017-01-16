@@ -35,13 +35,13 @@ int main(int argc, char** argv)
 		}
 
 		// Swap from big to little endian
-		unsigned int reordered = 0;
+		/*unsigned int reordered = 0;
 		reordered |= ((dword >> 24) & 0xFF);
 		reordered |= (((dword >> 16) & 0xFF) << 8);
 		reordered |= (((dword >> 8) & 0xFF) << 16);
-		reordered |= ((dword & 0xFF) << 24);
+		reordered |= ((dword & 0xFF) << 24);*/
 
-		::fprintf(pOutFile, "%.8x : %.8x;\n", pos, reordered);
+		::fprintf(pOutFile, "%.8x : %.8x;\n", pos, dword);
 
 		pos++;
 	}
