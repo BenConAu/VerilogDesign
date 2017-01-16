@@ -395,6 +395,130 @@ module ALU(
     //         the writes that are needed and moving the
     //         instruction pointer along.
     `ProcessOpCode: begin
+      // Now we can do writes to non-ram things
+      case (opCode)
+        `MovRC:    regarray[regAddress[7:0]] <= opDataWord;             // mov reg, const
+        `MovRdC:   regarray[regAddress[7:0]] <= ramValue;               // mov reg, [addr]
+        `MovRR:    regarray[regAddress[7:0]] <= regValue2[0];           // mov reg, reg
+        `MovRdRo:  regarray[regAddress[7:0]] <= ramValue;               // mov reg, [reg + const]
+        `MovRdRoR: regarray[regAddress[7:0]] <= ramValue;               // mov reg, [reg + const * reg]
+        `MovRdR:   regarray[regAddress[7:0]] <= ramValue;               // mov reg, [reg]
+        `MovdCR:   begin end // Done above
+        `MovdRoR:  begin end // Done above
+        `MovdRoRR: begin end // Done above
+
+        `PushR: begin
+          regarray[0] <= regarray[0] + 4;                             // push reg
+        end
+
+        `PopR: begin
+          regarray[regAddress[7:0]] <= ramValue;                        // pop reg
+          regarray[0] <= regarray[0] - 4;
+        end
+
+        `CallR: begin
+          // Stack pointer increases like a push
+          regarray[0] <= regarray[0] + 4;                             // call reg
+
+          // Jump to the function
+          ipointer <= regValue[0];
+
+          //$display("Doing a call");
+        end
+
+        `Ret: begin
+          // Stack pointer decreases like a pop
+          regarray[0] <= regarray[0] - 4;                             // ret
+
+          // Return to the saved position, after the call
+          ipointer <= ramValue + 4;
+
+          //$display("Doing a ret");
+        end
+
+        `RCallRC: begin
+          // Store return address
+          regarray[rPos + opDataWord] <= ipointer;
+
+          // Store arg value
+          regarray[rPos + opDataWord + 1] <= opDataWord;
+
+          // Shift register window
+          rPos <= rPos + opDataWord + 2;
+
+          // Jump to the function
+          ipointer <= regValue[0];
+
+          //$display("Doing a register shift call to %h", regValue[0]);
+        end
+
+        `RRet: begin
+          // Get the return address
+          ipointer <= regarray[rPos - 2] + 8;
+
+          // Get the window value
+          rPos <= rPos - (regarray[rPos - 1] + 2);
+
+          //$display("Doing an rret");
+        end
+
+        `CmpRR: begin                                                   // cmp reg, reg
+          regarray[1][0:0] <= (regValue[0] == regValue2[0] ? 1 : 0);
+          regarray[1][1:1] <= (regValue[0] < regValue2[0] ? 1 : 0);
+          regarray[1][2:2] <= (regValue[0] > regValue2[0] ? 1 : 0);
+        end
+
+        `CmpRC: begin
+          regarray[1][0:0] <= (regValue[0] == opDataWord ? 1 : 0);
+          regarray[1][1:1] <= (regValue[0] < opDataWord ? 1 : 0);
+          regarray[1][2:2] <= (regValue[0] > opDataWord ? 1 : 0);
+        end
+
+        `CmpERRR: begin                                                 // cmpe reg, reg, reg
+          regarray[regAddress[7:0]] <= (regValue2[0] == regValue3[0] ? 1 : 0);
+        end
+
+        `CmpNeRRR: begin                                                 // cmpne reg, reg, reg
+          regarray[regAddress[7:0]] <= (regValue2[0] != regValue3[0] ? 1 : 0);
+        end
+
+        `CmpLtRRR: begin                                                 // cmplt reg, reg, reg
+          regarray[regAddress[7:0]] <= (regValue2[0] < regValue3[0] ? 1 : 0);
+        end
+
+        `CmpGtRRR: begin                                                 // cmpgt reg, reg, reg
+          regarray[regAddress[7:0]] <= (regValue2[0] > regValue3[0] ? 1 : 0);
+        end
+
+        `JmpC:  ipointer <= opDataWord;                              // jmp address
+
+        `JneC: begin end // Done above
+        `JeC: begin end   // Done above
+        `JzRC: begin end // Done above
+        `JnzRC: begin end   // Done above
+
+        `AddRRC:     regarray[regAddress[7:0]] <= regValue2[0] + opDataWord;   // add reg, reg, const
+        `AddRRR:     regarray[regAddress[7:0]] <= regValue2[0] + regValue3[0]; // add reg, reg, reg
+        `SubRRC:     regarray[regAddress[7:0]] <= regValue2[0] - opDataWord;   // add reg, reg, const
+        `SubRRR:     regarray[regAddress[7:0]] <= regValue2[0] - regValue3[0]; // add reg, reg, reg
+        `IncR:       regarray[regAddress[7:0]] <= regValue[0] + 1;             // dec reg
+        `DecR:       regarray[regAddress[7:0]] <= regValue[0] - 1;             // dec reg
+        `ShlRRR:     regarray[regAddress[7:0]] <= regValue2[0] << regValue3[0];// shl reg, reg, reg
+        `ShrRRR:     regarray[regAddress[7:0]] <= regValue2[0] >> regValue3[0];// shl reg, reg, reg
+        `NegRR:      regarray[regAddress[7:0]] <= -regValue2[0];               // neg reg, reg
+
+        `MulAddRRC:  regarray[regAddress[7:0]] <= regValue[0] + regValue2[0] * opDataWord;
+
+        `DoutR: begin
+          $display("DebugOut %h", regValue[0]);
+        end
+
+        `Stall: begin 
+        end
+
+        default: $display("Unknown instruction %h", opCode);
+      endcase
+	 
       debug2 <= 5;
 
       debug[23:0] <= regAddress;
