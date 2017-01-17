@@ -17,6 +17,7 @@ module ALU(
   rPos,        // [Debug]  current rPos (register window) value
   debug,       // [Output] Debug port
   debug2,      // [Output] Another debug port
+  debug3,
   runningTotal // [Output] Running total of instruction RAM
   );
 
@@ -40,6 +41,7 @@ module ALU(
   output reg [31:0]  r5;
   output reg [31:0]  debug;
   output reg [17:0]  debug2;
+  output reg [8:0]   debug3;
   output reg [7:0]   rPos;
   output reg [31:0]  runningTotal;
 
@@ -57,6 +59,7 @@ module ALU(
   reg        [6:0]  fOpEnable;
   reg        [0:0]  condJump;
   reg        [31:0] sentinel;
+  reg        [31:0] counter;
 
   //initial
   //   $monitor("%t, ram = %h, %h, %h, %h : %h, %h, %h, %h",
@@ -75,6 +78,13 @@ module ALU(
   
   always @(posedge clk)
   begin
+    if (counter != 50000000)
+    begin	 
+	 counter <= counter + 1;
+	 end
+	 else
+	 begin
+	 counter <= 0;
     case (mode)
       // Mode InitialMode: Schedule read of code at instruction pointer and clear
     //         out enable bits for auxillary modules.
@@ -83,12 +93,12 @@ module ALU(
       begin
         // Begin RAM read for instruction data
         readReq <= 1;
-        ramAddress <= (ipointer / 4);
+        ramAddress <= ipointer;
 
         debug[23:0] <= ipointer;
         debug[31:24] <= mode;
 
-        debug2 <= 1;
+        //debug2 <= 1;
 
         mode <= `InstrReadWait;
   
@@ -118,15 +128,15 @@ module ALU(
       debug[23:0] <= 0;
       debug[31:24] <= mode;
 
-      debug2 <= 2;
-   		
-		end
-	 
+      //debug2 <= 2;
+     
+  end
+  
     // Mode InstrReadComplete: Handle completion of instruction pointer read request and
     //         decode the instruction data, including the opCode
     //         of the instruction and the affected registers.
     `InstrReadComplete: begin
-      debug2 <= 3;
+      //debug2 <= 3;
     
       // Stop request
       //readReq <= 0;
@@ -135,10 +145,9 @@ module ALU(
       regAddress <=  (ramIn[15:8] >= 64)  ? (ramIn[15:8] - 64)  : (ramIn[15:8] + rPos);
       regAddress2 <= (ramIn[23:16] >= 64) ? (ramIn[23:16] - 64) : (ramIn[23:16] + rPos);
       regAddress3 <= (ramIn[31:24] >= 64) ? (ramIn[31:24] - 64) : (ramIn[31:24] + rPos);
+		
+		runningTotal <= ramIn;
     
-      regValue[0] <= ramIn;
-      runningTotal <= ramIn;
-
       // Move to next mode now
       mode <= `RegValueSet;
 
@@ -150,7 +159,7 @@ module ALU(
     //         store word data. Read in register values for
     //         registers referenced by the instruction.
     `RegValueSet: begin
-      debug2 <= 4;
+      //debug2 <= 4;
 
       // Read values from registers
       regValue[0] <= regarray[regAddress[7:0]];
@@ -160,7 +169,7 @@ module ALU(
         regValue[2] <= regarray[regAddress[7:0] + 2];
         regValue[3] <= regarray[regAddress[7:0] + 3];
       end
-		
+  
       regValue2[0] <= regarray[regAddress2[7:0]];
       if (opCode == `VfaddRRR)
       begin
@@ -168,7 +177,7 @@ module ALU(
         regValue2[2] <= regarray[regAddress2[7:0] + 2];
         regValue2[3] <= regarray[regAddress2[7:0] + 3];
       end
-		
+  
       regValue3[0] <= regarray[regAddress3[7:0]];
       if (opCode == `VfaddRRR)
       begin
@@ -187,12 +196,12 @@ module ALU(
       if (opCode == `FmaxRR) fOpEnable[5:5] <= 1;
       if (opCode == `FdivRR) fOpEnable[6:6] <= 1;
       
-		// Determine if a conditional jump needs to happen
+  // Determine if a conditional jump needs to happen
       if (opCode == `JneC && regarray[1][0:0] == 1'b0) condJump <= 1'b1;
       if (opCode == `JeC && regarray[1][0:0] == 1'b1) condJump <= 1'b1;
       if (opCode == `JzRC && regarray[regAddress3[7:0]] == 0) condJump <= 1'b1;
       if (opCode == `JnzRC && regarray[regAddress3[7:0]] != 0) condJump <= 1'b1;
-		
+  
       if (Is8ByteOpcode(opCode) == 1)
       begin
         // Read values from ram requested by instruction
@@ -215,7 +224,7 @@ module ALU(
         // can be no further reads or writes since the word
         // data is where the address would go
         mode <= `ProcessOpCode;
-		end
+  end
 
       debug[23:0] <= regAddress;
       debug[31:24] <= mode;
@@ -390,7 +399,7 @@ module ALU(
       debug[31:24] <= mode;
 
     end
-	 
+  
     // Mode ProcessOpCode: Finalize the instruction operation, by performing
     //         the writes that are needed and moving the
     //         instruction pointer along.
@@ -510,7 +519,11 @@ module ALU(
         `MulAddRRC:  regarray[regAddress[7:0]] <= regValue[0] + regValue2[0] * opDataWord;
 
         `DoutR: begin
+          // In simulation we use $display for this
           $display("DebugOut %h", regValue[0]);
+    
+          // FPGA we hit the 7seg display with the value
+          //runningTotal <= regValue[0];
         end
 
         `Stall: begin 
@@ -518,36 +531,49 @@ module ALU(
 
         default: $display("Unknown instruction %h", opCode);
       endcase
-	 
-      debug2 <= 5;
+  
+      //debug2 <= 5;
 
       debug[23:0] <= regAddress;
       debug[31:24] <= mode;
 
-      regarray[rPos] <= 0;
-        
-      if (opCode == 47 || ipointer == 8)
+      // Move the instruction pointer along
+      if (condJump == 1'b1)
       begin
-        // This will hit the 'default' path
-        mode <= 42;
+        ipointer <= opDataWord;
       end
-      else
+      else if (opCode != `JmpC &&
+          opCode != `CallR &&
+          opCode != `Ret &&
+          opCode != `RCallRC &&
+          opCode != `RRet &&
+          opCode != `Stall
+          )
       begin
+        //$display("Incrementing ip");
         if (Is8ByteOpcode(opCode) == 1)
           ipointer <= ipointer + 8;
         else
           ipointer <= ipointer + 4;
-
-		  mode <= `InitialMode;    
       end
-    
+
+      // Mode change
+		//if (ipointer == 16)
+		//begin
+        //mode <= 42;
+		//end
+		//else
+		//begin
+        mode <= `InitialMode; 
+		//end
     end
 
     default: begin
-      debug2 <= 'hF;
+      //debug2 <= 'hF;
     end
 
     endcase
+	 end
 
     r0 <= regarray[rPos];
     r1 <= regarray[rPos + 1];
@@ -555,6 +581,9 @@ module ALU(
     r3 <= regarray[rPos + 3];
     r4 <= regarray[rPos + 4];
     r5 <= regarray[rPos + 5];
+	 
+	 debug3[8:0] <= mode;
+	 debug2 <= regarray[rPos];
   end
 
 endmodule

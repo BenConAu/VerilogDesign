@@ -667,7 +667,7 @@ wire [7:0] debug;
 
 rams u6(
 	.clock(iCLK_50),
-	.address(ramAddress[31:0]),
+	.address(ramAddress[31:2]), // Effectively divide by 4
 	.data(ramOut),
 	.wren(writeReq),
 	.q(ramIn)
@@ -698,6 +698,7 @@ ALU u7(
   .rPos,        // [Debug]  current rPos (register window) value
   .debug(debug)        // [Output] Debug port
 */
+  .debug3(oLEDG),
   .debug2(oLEDR),
   );
   
