@@ -17,7 +17,7 @@ module ALU(
   rPos,        // [Debug]  current rPos (register window) value
   debug,       // [Output] Debug port
   debug2,      // [Output] Another debug port
-  debug3,      // [Output] And yet another debug port
+  debug3       // [Output] And yet another debug port
   );
 
   `include "../PhaethonISA/Generated/PhaethonOpCode.v"

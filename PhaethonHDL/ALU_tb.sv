@@ -35,6 +35,8 @@ module test;
   wire [31:0] r5;
   wire [7:0] rPos;
   wire [31:0] debug;
+  wire [17:0] debug2;
+  wire [8:0] debug3;
   wire [31:0] ramAddress;
   wire [31:0] ramOut;
   wire [0:0] readReq;
@@ -59,7 +61,9 @@ module test;
     r4,
     r5,
     rPos,
-    debug
+    debug,
+    debug2,
+    debug3
     );
 
   //initial
