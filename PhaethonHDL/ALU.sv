@@ -15,7 +15,9 @@ module ALU(
   r4,          // [Debug]  current r4 value
   r5,          // [Debug]  current r5 value
   rPos,        // [Debug]  current rPos (register window) value
-  debug        // [Output] Debug port
+  debug,       // [Output] Debug port
+  debug2,      // [Output] Another debug port
+  debug3,      // [Output] And yet another debug port
   );
 
   `include "../PhaethonISA/Generated/PhaethonOpCode.v"
@@ -37,11 +39,13 @@ module ALU(
   output reg [31:0]  r4;
   output reg [31:0]  r5;
   output reg [31:0]  debug;
+  output reg [17:0]  debug2;
+  output reg [8:0]   debug3;
   output reg [7:0]   rPos;
 
   // Local registers
   reg        [31:0] regarray[0:65];
-  reg        [4:0]  mode;
+  reg        [7:0]  mode;
   reg        [31:0] ramValue;
   reg        [31:0] regValue[0:3];
   reg        [31:0] regValue2[0:3];
@@ -113,10 +117,6 @@ module ALU(
         readReq <= 1;
         ramAddress <= ipointer;
         opDataWord <= 'h0badf00d;
-
-        debug[23:0] <= ipointer;
-        debug[31:24] <= mode;
-
         // Clear out stuff for the pipeline
         fOpEnable <= 7'b0000000;
         condJump <= 1'b0;
@@ -130,8 +130,6 @@ module ALU(
 
         mode <= `InstrReadComplete;
 
-        debug[23:0] <= 0;
-        debug[31:24] <= mode;
       end
 
       // Mode InstrReadComplete: Handle completion of instruction pointer read request and
@@ -149,8 +147,6 @@ module ALU(
         // Move to next mode now
         mode <= `RegValueSet;
 
-        debug[23:0] <= ramIn[23:0];
-        debug[31:24] <= mode;
       end
 
       // Mode RegValueSet: Schedule read of additional code for opCodes that
@@ -222,8 +218,6 @@ module ALU(
           mode <= `ProcessOpCode;
         end
 
-        debug[23:0] <= regAddress;
-        debug[31:24] <= mode;
       end
 
       // Mode DataWordWait - ramIn is set by RAM module for second word
@@ -233,8 +227,6 @@ module ALU(
 
         mode <= `DataWordComplete;
 
-        debug[23:0] <= 0;
-        debug[31:24] <= mode;
       end
 
       // Mode DataWordComplete: Complete read of additional code for opCodes that
@@ -255,8 +247,6 @@ module ALU(
         else
           mode <= `ProcessOpCode;
 
-        debug[23:0] <= ramIn;
-        debug[31:24] <= mode;
       end
 
       // Mode MemRWRequest: Initiate data read or write if the instruction
@@ -360,8 +350,6 @@ module ALU(
           //$display("Reqesting push %h", regValue);
         end
 
-        debug[23:0] <= opDataWord;
-        debug[31:24] <= mode;
 
         mode <= `MemRWWait;
       end
@@ -374,8 +362,6 @@ module ALU(
 
         mode <= `MemRWComplete;
 
-        debug[23:0] <= 0;
-        debug[31:24] <= mode;
       end
 
       // Mode MemRWComplete: Complete data read or write if the instruction
@@ -391,8 +377,6 @@ module ALU(
 
         mode <= `ProcessOpCode;
 
-        debug[23:0] <= ramIn[23:0];
-        debug[31:24] <= mode;
 
       end
 
@@ -531,7 +515,10 @@ module ALU(
           `MulAddRRC:  regarray[regAddress[7:0]] <= regValue[0] + regValue2[0] * opDataWord;
 
           `DoutR: begin
+          // In simulation we use $display for this
             $display("DebugOut %h", regValue[0]);
+          // FPGA we hit the 7seg display with the value
+          debug <= regValue[0];
           end
 
           `Stall: begin 
@@ -542,8 +529,6 @@ module ALU(
 
         //$display("opDataWord == %h", opDataWord);
 
-        debug[23:0] <= regAddress;
-        debug[31:24] <= mode;
 
         // Move the instruction pointer along
         if (condJump == 1'b1)
@@ -572,6 +557,8 @@ module ALU(
         mode <= `InitialMode;
       end
 
+    default: begin
+    end
       endcase
 
       r0 <= regarray[rPos];
@@ -580,6 +567,9 @@ module ALU(
       r3 <= regarray[rPos + 3];
       r4 <= regarray[rPos + 4];
       r5 <= regarray[rPos + 5];
+    debug3[8:0] <= mode;
+    debug2 <= regarray[rPos];
+    
     end
   end
 
