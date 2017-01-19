@@ -59,6 +59,8 @@ module ALU(
   reg        [31:0] sentinel;
   reg        [31:0] counter;
 
+  wire       [31:0] fMulResult;
+  FloatingMultiply    fMul(regValue2[0], regValue3[0], fMulResult, floatDebug, clk, fOpEnable[3:3]);
   //initial
   //   $monitor("%t, ram = %h, %h, %h, %h : %h, %h, %h, %h",
   //     $time, ramIn[7:0], ramIn[15:8], ramIn[23:16], ramIn[31:24], ramAddress, ramIn, opAddress, ramValue);
@@ -493,6 +495,7 @@ module ALU(
           `JzRC: begin end // Done above
           `JnzRC: begin end   // Done above
   
+          `FmulRRR:    regarray[regAddress[7:0]] <= fMulResult;             // fmul reg, reg, reg
           `AddRRC:     regarray[regAddress[7:0]] <= regValue2[0] + opDataWord;   // add reg, reg, const
           `AddRRR:     regarray[regAddress[7:0]] <= regValue2[0] + regValue3[0]; // add reg, reg, reg
           `SubRRC:     regarray[regAddress[7:0]] <= regValue2[0] - opDataWord;   // add reg, reg, const
