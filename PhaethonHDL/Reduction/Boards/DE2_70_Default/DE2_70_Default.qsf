@@ -602,16 +602,20 @@ set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_INVERSION_MASK=00
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_INVERSION_MASK_LENGTH=33" -section_id auto_signaltap_0
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_NODE_CRC_LOWORD=13309" -section_id auto_signaltap_0
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_NODE_CRC_HIWORD=13283" -section_id auto_signaltap_0
+set_global_assignment -name SYSTEMVERILOG_FILE ../../../FloatingMultiply.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../../../FloatingMultiplyAdd.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../../../FloatingFromInt.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../../../FloatingDivide.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../../../FloatingCompare.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../../../FloatingAdd.sv
 set_global_assignment -name MIF_FILE MultiplyLocal.mif
 set_global_assignment -name MIF_FILE loopy.mif
 set_global_assignment -name SYSTEMVERILOG_FILE ../../ALU.sv
-set_global_assignment -name SYSTEMVERILOG_FILE ../../FloatingHelper.sv
-set_global_assignment -name SYSTEMVERILOG_FILE ../../FloatingMultiply.sv
 set_global_assignment -name VERILOG_FILE DE2_70_Default.v
 set_global_assignment -name VERILOG_FILE VGA_Controller/VGA_OSD_RAM.v
 set_global_assignment -name VERILOG_FILE VGA_Controller/VGA_Controller.v
 set_global_assignment -name VERILOG_FILE VGA_Controller/Img_RAM.v
 set_global_assignment -name QIP_FILE rams.qip
 set_global_assignment -name SIGNALTAP_FILE stp2.stp
-set_global_assignment -name SLD_FILE "C:/Users/Ben/LinuxCode/VerilogDesign/PhaethonHDL/Reduction/Boards/DE2_70_Default/stp2_auto_stripped.stp"
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
+set_global_assignment -name SLD_FILE "C:/Users/Ben/LinuxCode/VerilogDesign/PhaethonHDL/Reduction/Boards/DE2_70_Default/stp2_auto_stripped.stp"
