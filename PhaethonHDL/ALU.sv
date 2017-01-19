@@ -56,6 +56,8 @@ module ALU(
   reg        [7:0]  regAddress3;
   reg        [6:0]  fOpEnable;
   reg        [0:0]  condJump;
+  reg        [31:0] sentinel;
+  reg        [31:0] counter;
 
   // Wire up the results from the floating units
   wire       [31:0] fAddResult[0:3];
@@ -95,6 +97,20 @@ module ALU(
 
   always @(posedge clk or posedge reset)
   begin
+    `ifdef SLOWCLOCK
+  
+    // Use a counter to artificially slow the clock
+    if (counter != 5000000)
+    begin  
+      counter <= counter + 1;
+    end
+    else
+    begin
+      counter <= 0;
+  
+    `endif
+
+    // Regular code starts here
     if (reset)
     begin
       ipointer <= 0;
@@ -560,6 +576,9 @@ module ALU(
     default: begin
     end
       endcase
+      `ifdef SLOWCLOCK
+      end
+      `endif
 
       r0 <= regarray[rPos];
       r1 <= regarray[rPos + 1];

@@ -679,7 +679,7 @@ rams u6(
 //=======================================================
 ALU u7(
   .clk(iCLK_50),         // [Input]  Clock driving the ALU
-  .reset(iKEY[0]),       // [Input]  Reset pin
+  .reset(0),       // [Input]  Reset pin
   .ramIn(ramIn),       // [Input]  RAM at requested address
   .ramAddress(ramAddress),  // [Output] RAM address requested
   .ramOut(ramOut),      // [Output] RAM to write
@@ -688,7 +688,7 @@ ALU u7(
 
   //.ipointer(debughex),    // [Debug]  Instruction pointer value
   //.opCode(debughex),      // [Debug]  current opCode value
-  .runningTotal(debughex),          // [Debug]  current r0 value
+  .debug(debughex),          // [Debug]  current r0 value
   /*
   .r1,          // [Debug]  current r1 value
   .r2,          // [Debug]  current r2 value
