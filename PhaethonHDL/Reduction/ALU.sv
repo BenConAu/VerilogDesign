@@ -59,6 +59,25 @@ module ALU(
   reg        [31:0] sentinel;
   reg        [31:0] counter;
 
+  // Wire up the results from the floating units
+  wire       [31:0] fAddResult[0:3];
+  wire       [31:0] fSubResult;
+  wire       [31:0] fConvResult;
+  wire       [31:0] fMulResult;
+  wire       [31:0] fMulAddResult;
+  wire       [31:0] fDivResult;
+  wire       [31:0] floatDebug;
+  wire       [1:0]  fCompareResult;
+  FloatingAdd         fAdd0(regValue2[0], regValue3[0], 1'b0, fAddResult[0], floatDebug, clk, fOpEnable[0:0]);
+  FloatingAdd         fAdd1(regValue2[1], regValue3[1], 1'b0, fAddResult[1], floatDebug, clk, fOpEnable[0:0]);
+  FloatingAdd         fAdd2(regValue2[2], regValue3[2], 1'b0, fAddResult[2], floatDebug, clk, fOpEnable[0:0]);
+  FloatingAdd         fAdd3(regValue2[3], regValue3[3], 1'b0, fAddResult[3], floatDebug, clk, fOpEnable[0:0]);
+  FloatingAdd         fSub(regValue[0], regValue2[0], 1'b1, fSubResult, floatDebug, clk, fOpEnable[1:1]);
+  FloatingFromInt     fConv(regValue[0], fConvResult, floatDebug, clk, fOpEnable[2:2]);
+  FloatingMultiply    fMul(regValue2[0], regValue3[0], fMulResult, floatDebug, clk, fOpEnable[3:3]);
+  FloatingMultiplyAdd fMulAdd(regValue[0], regValue2[0], regValue3[0], fMulAddResult, floatDebug, clk, fOpEnable[4:4]);
+  FloatingCompare     fComp(regValue[0], regValue2[0], fCompareResult, floatDebug, clk, fOpEnable[5:5]);
+  FloatingDivide      fDiv(regValue[0], regValue2[0], fDivResult, floatDebug, clk, fOpEnable[6:6]);
   //initial
   //   $monitor("%t, ram = %h, %h, %h, %h : %h, %h, %h, %h",
   //     $time, ramIn[7:0], ramIn[15:8], ramIn[23:16], ramIn[31:24], ramAddress, ramIn, opAddress, ramValue);
@@ -493,6 +512,22 @@ module ALU(
           `JzRC: begin end // Done above
           `JnzRC: begin end   // Done above
   
+          `FaddRRR:    regarray[regAddress[7:0]] <= fAddResult[0];          // fadd reg, reg, reg
+          `FsubRR:     regarray[regAddress[7:0]] <= fSubResult;             // fsub reg, reg
+          `FconvR:     regarray[regAddress[7:0]] <= fConvResult;            // fconv reg
+          `FmulRRR:    regarray[regAddress[7:0]] <= fMulResult;             // fmul reg, reg, reg
+          `FdivRR:     regarray[regAddress[7:0]] <= fDivResult;
+          `FmuladdRRR: regarray[regAddress[7:0]] <= fMulAddResult;          // fmul reg, reg
+          `FminRR:     regarray[regAddress[7:0]] <= (fCompareResult == 'b01 ? regValue2[0] : regValue[0]);
+          `FmaxRR:     regarray[regAddress[7:0]] <= (fCompareResult == 'b11 ? regValue2[0] : regValue[0]);
+
+          `VfaddRRR: begin
+            regarray[regAddress[7:0]] <= fAddResult[0];
+            regarray[regAddress[7:0] + 1] <= fAddResult[1];
+            regarray[regAddress[7:0] + 2] <= fAddResult[2];
+            regarray[regAddress[7:0] + 3] <= fAddResult[3];
+          end
+
           `AddRRC:     regarray[regAddress[7:0]] <= regValue2[0] + opDataWord;   // add reg, reg, const
           `AddRRR:     regarray[regAddress[7:0]] <= regValue2[0] + regValue3[0]; // add reg, reg, reg
           `SubRRC:     regarray[regAddress[7:0]] <= regValue2[0] - opDataWord;   // add reg, reg, const

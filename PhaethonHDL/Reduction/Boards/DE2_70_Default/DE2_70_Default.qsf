@@ -568,13 +568,6 @@ set_global_assignment -name CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION "USE AS R
 set_global_assignment -name RESERVE_ASDO_AFTER_CONFIGURATION "AS INPUT TRI-STATED"
 set_global_assignment -name PARTITION_COLOR 2147039 -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
-set_global_assignment -name MIF_FILE loopy.mif
-set_global_assignment -name SYSTEMVERILOG_FILE ../../ALU.sv
-set_global_assignment -name VERILOG_FILE DE2_70_Default.v
-set_global_assignment -name VERILOG_FILE VGA_Controller/VGA_OSD_RAM.v
-set_global_assignment -name VERILOG_FILE VGA_Controller/VGA_Controller.v
-set_global_assignment -name VERILOG_FILE VGA_Controller/Img_RAM.v
-set_global_assignment -name QIP_FILE rams.qip
 set_global_assignment -name ENABLE_SIGNALTAP ON
 set_global_assignment -name USE_SIGNALTAP_FILE stp2.stp
 set_global_assignment -name SLD_NODE_CREATOR_ID 110 -section_id auto_signaltap_0
@@ -595,7 +588,6 @@ set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_TRIGGER_IN_ENABLE
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_ADVANCED_TRIGGER_ENTITY=basic,1," -section_id auto_signaltap_0
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_TRIGGER_LEVEL_PIPELINE=1" -section_id auto_signaltap_0
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_ENABLE_ADVANCED_TRIGGER=0" -section_id auto_signaltap_0
-set_global_assignment -name SIGNALTAP_FILE stp2.stp
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT acq_trigger_in[0] -to "ALU:u7|runningTotal[10]" -section_id auto_signaltap_0
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT acq_trigger_in[1] -to "ALU:u7|runningTotal[11]" -section_id auto_signaltap_0
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT acq_trigger_in[2] -to "ALU:u7|runningTotal[8]" -section_id auto_signaltap_0
@@ -610,5 +602,20 @@ set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_INVERSION_MASK=00
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_INVERSION_MASK_LENGTH=33" -section_id auto_signaltap_0
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_NODE_CRC_LOWORD=13309" -section_id auto_signaltap_0
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_NODE_CRC_HIWORD=13283" -section_id auto_signaltap_0
-set_global_assignment -name SLD_FILE "C:/Users/Ben/LinuxCode/VerilogDesign/PhaethonHDL/Reduction/Boards/DE2_70_Default/stp2_auto_stripped.stp"
+set_global_assignment -name SYSTEMVERILOG_FILE ../../../FloatingMultiply.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../../../FloatingMultiplyAdd.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../../../FloatingFromInt.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../../../FloatingDivide.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../../../FloatingCompare.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../../../FloatingAdd.sv
+set_global_assignment -name MIF_FILE MultiplyLocal.mif
+set_global_assignment -name MIF_FILE loopy.mif
+set_global_assignment -name SYSTEMVERILOG_FILE ../../ALU.sv
+set_global_assignment -name VERILOG_FILE DE2_70_Default.v
+set_global_assignment -name VERILOG_FILE VGA_Controller/VGA_OSD_RAM.v
+set_global_assignment -name VERILOG_FILE VGA_Controller/VGA_Controller.v
+set_global_assignment -name VERILOG_FILE VGA_Controller/Img_RAM.v
+set_global_assignment -name QIP_FILE rams.qip
+set_global_assignment -name SIGNALTAP_FILE stp2.stp
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
+set_global_assignment -name SLD_FILE "C:/Users/Ben/LinuxCode/VerilogDesign/PhaethonHDL/Reduction/Boards/DE2_70_Default/stp2_auto_stripped.stp"
