@@ -3,11 +3,13 @@ module UARTReceive(
   reset,
   rxd,
   dataComplete,
-  data
+  zeroBits,
+  oneBits
   );
 
   output reg dataComplete;
-  output reg[7:0] data;
+  output reg[31:0] zeroBits;
+  output reg[31:0] oneBits;
   input wire clk;
   input wire reset;
   input wire rxd;
@@ -21,12 +23,12 @@ module UARTReceive(
     begin
       state <= 0;
       dataComplete <= 0;
-      data <= 0;
+      //data <= 0;
       counter <= 0;
     end
     else
     begin
-      if (state == 0)
+/*      if (state == 0)
       begin
         if (counter < 217)
         begin
@@ -72,7 +74,25 @@ module UARTReceive(
           state <= state + 1;
         end
       end
-    end
+    end*/
+	 
+	   if (rxd == 1)
+	   begin
+		  if (state == 0)
+		  begin
+  		    state <= 1;
+	       oneBits <= oneBits + 1;
+		  end
+	   end
+		else
+		begin
+		  if (state == 1)
+		  begin
+   	    state <= 0;
+	       zeroBits <= zeroBits + 1;
+		  end
+		end
+	 end
   end
   
 endmodule
