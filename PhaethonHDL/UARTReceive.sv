@@ -7,12 +7,12 @@ module UARTReceive(
   startCount
   );
 
-  output reg dataComplete;
-  output reg[7:0] dataOutput;
-  output reg[31:0] startCount;
-  input wire clk;
-  input wire reset;
-  input wire rxd;
+  input wire clk;              // The CPU clock signal
+  input wire reset;            // Reset wire
+  input wire rxd;              // UART RxD
+  output reg dataComplete;     // Signal that data is complete
+  output reg[7:0] dataOutput;  // Data returned when data is complete
+  output reg[31:0] startCount; // Count of start bits seen
 
   reg [15:0] state;
   reg [15:0] counter;
@@ -26,11 +26,15 @@ module UARTReceive(
       dataComplete <= 0;
       data <= 0;
       counter <= 0;
+      startCount <= 0;
     end
     else
     begin
       if (state == 0)
       begin
+        // Data is no longer complete
+        dataComplete <= 0;
+  
         if (rxd == 1)
         begin
           // Did not maintain start state for long enough    
@@ -63,6 +67,7 @@ module UARTReceive(
             // This was the stop bit, go back to start state
             state <= 0;
             dataOutput <= data;
+            dataComplete <= 1;
           end
           else
           begin
@@ -76,6 +81,7 @@ module UARTReceive(
         end
         else
         begin
+          // Keep counting until in middle of next bit
           counter <= counter + 1;
         end
       end
