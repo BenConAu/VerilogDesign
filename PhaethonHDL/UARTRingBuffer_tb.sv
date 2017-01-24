@@ -10,17 +10,31 @@ module test;
   always #5 clk = !clk;
 
   reg[7:0] data;
+  reg writeEnable;
+  reg readEnable;
 
   initial begin
     # 0 reset = 1;
-    # 0 data = 'h12;
+    # 0 data = 'h1;
+    # 0 writeEnable = 1;
+    # 0 readEnable = 0;
     # 1 reset = 0;
-    # 10 data = 'h23;
-    # 10 data = 'h34;
-    # 10 data = 'h45;
-    # 10 data = 'h56;
-    # 10 data = 'h78;
-    # 20 $finish;
+    # 10 data = 'h2;      // Write first
+    # 10 data = 'h3;      // Write second
+    # 10 data = 'h4;      // Write third
+    # 0 writeEnable = 0;
+    # 0 readEnable = 1;
+    # 10 data = 'h5;      // Read first
+    # 10 data = 'h6;      // Read second
+    # 0 writeEnable = 1;
+    # 0 readEnable = 0;    
+    # 10 data = 'h7;      // Write fourth
+    # 10 data = 'h8;      // Write fifth
+    # 10 data = 'h9;      // Write sixth (should not work)
+    # 10 data = 'ha;      // Read third
+    # 0 writeEnable = 0;
+    # 0 readEnable = 1;
+    # 100 $finish;
   end
 
   wire dataReadAck;
@@ -29,9 +43,9 @@ module test;
   UARTRingBuffer ring(
     clk,
     reset,
-    1'b1,
+    writeEnable,
     data,
-    1'b0,
+    readEnable,
     dataReadAck,      // Flag to indicate read success
     dataRead          // Actual data read
     );
