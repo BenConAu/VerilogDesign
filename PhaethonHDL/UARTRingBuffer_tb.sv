@@ -13,9 +13,13 @@ module test;
 
   initial begin
     # 0 reset = 1;
+    # 0 data = 'h12;
     # 1 reset = 0;
-    # 9 data = 'h12;
     # 10 data = 'h23;
+    # 10 data = 'h34;
+    # 10 data = 'h45;
+    # 10 data = 'h56;
+    # 10 data = 'h78;
     # 20 $finish;
   end
 

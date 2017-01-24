@@ -18,45 +18,49 @@ module UARTRingBuffer(
 
   reg [7:0] firstPos;
   reg [7:0] lastPos;
-  reg [7:0] dataBuffer[0:255];
+  reg hasData;
+  reg [7:0] dataBuffer[0:3];
 
   initial
-     $monitor("At time %t, reset = %h, dataWriteEnable = %h, dataWrite = %h, firstPos = %h, lastPos = %h, dataBuffer[0] = %h",
-              $time, reset, dataWriteEnable, dataWrite, firstPos, lastPos, dataBuffer[0]);
+     $monitor("At time %t, reset = %h, dataWriteEnable = %h, dataWrite = %h, firstPos = %h, lastPos = %h, db[0] = %h, db[1] = %h, db[2] = %h",
+              $time, reset, dataWriteEnable, dataWrite, firstPos, lastPos, dataBuffer[0], dataBuffer[1], dataBuffer[2]);
 
   always @(posedge clk or posedge reset)
   begin
     if (reset == 1)
     begin
-      firstPos <= 0;
-      lastPos <= 0;
+      hasData <= 0;
     end
     else
     begin
       if (dataWriteEnable == 1)
       begin
+        
         // Write is going into buffer
-        if (lastPos > firstPos && lastPos - firstPos + 1 == 255 ||
-            lastPos < firstPos && firstPos - lastPos == 1)
+        if (hasData == 1 && 
+            (lastPos > firstPos && lastPos - firstPos == 3 ||
+            lastPos < firstPos && firstPos - lastPos == 1))
         begin
           // Buffer is full, so the data is dropped
+          $display("Buffer full");
         end
         else
         begin
-          //$display("Buffer not full");
-
-          if (firstPos == lastPos)
+          if (hasData == 0)
           begin
             $display("Writing to first pos");
 
-            dataBuffer[lastPos] <= dataWrite;
+            dataBuffer[0] <= dataWrite;
+            firstPos <= 0;
+            lastPos <= 0;
+            hasData <= 1;
           end
           else
           begin
             dataBuffer[lastPos + 1] <= dataWrite;
+            lastPos <= lastPos + 1;
           end
 
-          lastPos <= lastPos + 1;
         end
 
         // If we have a request to read, fail it
