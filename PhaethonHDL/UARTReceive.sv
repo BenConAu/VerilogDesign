@@ -3,17 +3,21 @@ module UARTReceive(
   reset,
   rxd,
   dataComplete,
-  data
+  dataOutput,
+  endCount
   );
 
-  output reg dataComplete;
-  output reg[7:0] data;
-  input wire clk;
-  input wire reset;
-  input wire rxd;
+  input wire clk;              // The CPU clock signal
+  input wire reset;            // Reset wire
+  input wire rxd;              // UART RxD
+  output reg dataComplete;     // Signal that data is complete
+  output reg[7:0] dataOutput;  // Data returned when data is complete
+  reg[31:0] startCount;        // Count of start bits seen
+  output reg[31:0] endCount;   // Count of start bits seen
 
-  reg [7:0] state;
-  reg [7:0] counter;
+  reg [15:0] state = 0;
+  reg [15:0] counter = 0;
+  reg [7:0] data = 0;
 
   always @(posedge clk or posedge reset)
   begin
@@ -23,53 +27,65 @@ module UARTReceive(
       dataComplete <= 0;
       data <= 0;
       counter <= 0;
+      startCount <= 0;
+      endCount <= 0;
     end
     else
     begin
       if (state == 0)
       begin
-        if (counter < 217)
+        // Data is no longer complete
+        dataComplete <= 0;
+  
+        if (rxd == 1)
         begin
-          if (rxd == 1)
+          // Did not maintain start state for long enough    
+          counter <= 0;
+        end
+        else
+        begin
+          if (counter == 217)
           begin
-            // Did not maintain start state for long enough
+            // We have decided this is a start bit
+            startCount <= startCount + 1;
             counter <= 0;
+            data <= 0;
+    
+            // Start grabbing data bits
+            state <= 1;
           end
           else
           begin
-            // Keep counting
             counter <= counter + 1;
           end
         end
-        else
-        begin
-          // Look for first bit
-          state <= 1;
-          counter <= 0;
-        end
-      end
-      else if (state == 9)
-      begin
-        if (rxd == 1)
-        begin
-          // Valid stop bit
-          dataComplete <= 1;
-        end
-
-        state <= 0;
       end
       else
       begin
-        // Look for next bit
-        if (counter < 434)
+        if (counter == 434)
         begin
-          counter <= counter + 1;
+          if (state == 9)
+          begin
+            // This was the stop bit, go back to start state
+            state <= 0;
+            dataOutput <= data;
+            dataComplete <= 1;
+            endCount <= endCount + 1;
+          end
+          else
+          begin
+            // Add the bit to our data register and look for the next one
+            state <= state + 1;
+            data[state - 1] <= rxd;   
+          end
+    
+          // No matter what the counter resets
+          counter <= 0;
         end
         else
         begin
-          counter <= 0;
-          data[state - 1] <= rxd;
-          state <= state + 1;
+          // Keep counting until in middle of next bit
+          counter <= counter + 1;
         end
       end
     end

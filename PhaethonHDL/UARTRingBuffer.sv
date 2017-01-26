@@ -5,7 +5,9 @@ module UARTRingBuffer(
   dataWrite,        // Data to write
   dataReadEnable,   // Flag to indicate request to read
   dataReadAck,      // Flag to indicate read success
-  dataRead          // Actual data read
+  dataRead,         // Actual data read
+  debug,            // Debug port
+  debug2            // Another debug port
   );
 
   input wire clk;
@@ -15,10 +17,12 @@ module UARTRingBuffer(
   input wire dataReadEnable;
   output reg dataReadAck;
   output reg[7:0] dataRead;
+  output reg[31:0] debug;
+  output reg[31:0] debug2;
 
   reg [1:0] firstPos;
   reg [1:0] lastPos;
-  reg hasData;
+  reg hasData = 0;
   reg [7:0] dataBuffer[0:3];
 
   initial
@@ -34,6 +38,12 @@ module UARTRingBuffer(
     end
     else
     begin
+      // Debug
+      debug[31:24] <= dataBuffer[3];
+      debug[23:16] <= dataBuffer[2];
+      debug[15:8] <= dataBuffer[1];
+      debug[7:0] <= dataBuffer[0];
+  
       if (dataWriteEnable == 1)
       begin
         
@@ -44,6 +54,8 @@ module UARTRingBuffer(
         begin
           // Buffer is full, so the data is dropped
           $display("Buffer full, cannot write");
+    
+          debug2 <= 'hF;
         end
         else
         begin
@@ -53,11 +65,13 @@ module UARTRingBuffer(
             firstPos <= 0;
             lastPos <= 0;
             hasData <= 1;
+            debug2 <= 'h123;
           end
           else
           begin
             dataBuffer[(lastPos + 1) & 2'b11] <= dataWrite;
             lastPos <= lastPos + 1;
+            debug2 <= lastPos + 1;
           end
         end
 
@@ -66,6 +80,8 @@ module UARTRingBuffer(
       end
       else if (dataReadEnable == 1)
       begin
+        debug2 <= 'hFF;
+
         if (hasData == 0)
         begin
           $display("Buffer empty, cannot read");
