@@ -1,0 +1,12 @@
+void main()
+{
+    word i = 0;
+    while (i .< 1)
+    {
+        word input = readport(1);
+        if (input >. 255)
+        {
+            debugout(i);
+        }
+    }
+}
