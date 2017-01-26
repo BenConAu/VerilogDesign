@@ -16,6 +16,10 @@ PhaethonAsm: 			\
 	../PhaethonObjWriter/ObjWriter.h         	\
 	../PhaethonObjWriter/BinaryObjWriter.h      \
 	../PhaethonObjWriter/BinaryObjWriter.cpp   	\
+	../PhaethonObjWriter/BinObjectWriter.cpp    \
+	../PhaethonObjWriter/BinObjectWriter.h      \
+	../PhaethonObjWriter/BinaryWriterBase.cpp   \
+	../PhaethonObjWriter/BinaryWriterBase.h     \
 	../PhaethonISA/Generated/PhaethonOpCode.h 	\
 	../PhaethonISA/Generated/PhaethonOpCode.cpp \
 	../PhaethonISA/OperandType.h 				\
@@ -29,6 +33,8 @@ PhaethonAsm: 			\
 	DataSegmentDef.cpp  \
 	InstructionNode.cpp \
 	../PhaethonObjWriter/BinaryObjWriter.cpp   	\
+	../PhaethonObjWriter/BinObjectWriter.cpp    \
+	../PhaethonObjWriter/BinaryWriterBase.cpp   \
 	../PhaethonISA/OperandType.cpp 				\
 	../PhaethonISA/Generated/PhaethonOpCode.cpp \
 	-o PhaethonAsm
