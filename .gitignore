@@ -1,0 +1,9 @@
+*.rpt
+*.tdf
+*.cdb
+*.hdb
+*.ddb
+*.rdb
+*.summary
+PhaethonHDL/Reduction/Boards/DE2_70_Default/db/
+PhaethonHDL/Reduction/Boards/DE2_70_Default/incremental_db/
