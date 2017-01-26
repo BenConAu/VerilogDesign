@@ -6,6 +6,9 @@ module ALU(
   ramOut,      // [Output] RAM to write
   readReq,     // [Output] RAM read request
   writeReq,    // [Output] RAM write request
+  uartReadReq, // [Output] uart read requested
+  uartReadAck, // [Input]  Flag to indicate read success
+  uartData,    // [Input] Actual data read 
   ipointer,    // [Debug]  Instruction pointer value
   opCode,      // [Debug]  current opCode value
   r0,          // [Debug]  current r0 value
@@ -30,6 +33,9 @@ module ALU(
   output reg [31:0]  ramOut;
   output reg [0:0]   readReq;
   output reg [0:0]   writeReq;
+  output reg [0:0]   uartReadReq;
+  input  wire [0:0]  uartReadAck;
+  input  wire [7:0]  uartData;
   output reg [31:0]  ipointer;
   output reg [7:0]   opCode;
   output reg [31:0]  r0;
@@ -366,6 +372,10 @@ module ALU(
           //$display("Reqesting push %h", regValue);
         end
 
+        if (opCode == `ReadPortRR)
+        begin
+          uartReadReq <= 1;
+        end
 
         mode <= `MemRWWait;
       end
@@ -390,9 +400,21 @@ module ALU(
           // Store ram values requested
           ramValue <= ramIn;
         end
+        else if (opCode == `ReadPortRR)
+        begin
+          if (uartReadAck == 1'b1)
+          begin
+            ramValue[7:0] <= uartReadReq;
+            ramValue[31:8] <= 1;
+          end
+          else
+          begin
+            // Sorry, no value for you
+            ramValue <= 0;
+          end
+        end
 
         mode <= `ProcessOpCode;
-
 
       end
 
@@ -411,6 +433,8 @@ module ALU(
           `MovdCR:   begin end // Done above
           `MovdRoR:  begin end // Done above
           `MovdRoRR: begin end // Done above
+
+          `ReadPortRR: regarray[regAddress[7:0]] <= ramValue;             // ReadPort reg, reg
 
           `PushR: begin
             regarray[0] <= regarray[0] + 4;                             // push reg

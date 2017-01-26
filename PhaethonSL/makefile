@@ -50,6 +50,8 @@ PSLcc: lex.yy.c \
 	   PSLCompilerContext.cpp \
 	   PSLCompilerContext.h \
 	   PSLCompiler.cpp \
+	   ReadPortNode.cpp \
+	   ReadPortNode.h \
 	   RegisterCollection.cpp \
 	   RegisterCollection.h \
 	   RegisterWrapper.cpp \
@@ -127,6 +129,7 @@ PSLcc: lex.yy.c \
 	   PointerTypeInfo.cpp \
 	   PSLCompiler.cpp \
 	   PSLCompilerContext.cpp \
+	   ReadPortNode.cpp \
 	   RegisterCollection.cpp \
 	   RegisterWrapper.cpp \
 	   ReturnNode.cpp \

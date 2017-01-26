@@ -23,3 +23,4 @@
 #include "KnownConstantNode.h"
 #include "IndexSelectionNode.h"
 #include "UnaryOperatorNode.h"
+#include "ReadPortNode.h"

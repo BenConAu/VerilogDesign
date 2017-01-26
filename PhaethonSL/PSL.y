@@ -70,6 +70,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token SIZEOF_TOKEN
 %token OFFSETPTR_TOKEN
 %token CASTPTR_TOKEN
+%token READPORT_TOKEN
 %token DATASEGEND_TOKEN
 %token <symIndex> IDENTIFIER
 %type <pNode> variable_identifier
@@ -107,6 +108,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> return_statement
 %type <pNode> jump_statement
 %type <pNode> cast_expression
+%type <pNode> readport_expression
 %type <pNode> selection_statement
 %type <pNode> selection_rest_statement
 %type <pNode> equality_expression
@@ -222,6 +224,7 @@ primary_expression:
     | sizeof_expression                                             { $$ = $1; }
     | offset_expression                                             { $$ = $1; }
     | cast_expression                                               { $$ = $1; }
+    | readport_expression                                           { $$ = $1; }
     ;
 
 sizeof_expression:
@@ -236,6 +239,11 @@ offset_expression:
 cast_expression:
       CASTPTR_TOKEN LT fully_specified_type GT LEFT_PAREN expression RIGHT_PAREN
                                                                     { $$ = new CastNode(pContext, @$, $3, $6); }
+    ;
+
+readport_expression:
+      READPORT_TOKEN LEFT_PAREN expression RIGHT_PAREN
+                                                                    { $$ = new ReadPortNode(pContext, @$, $3); }
     ;
 
 declaration:
