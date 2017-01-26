@@ -4,7 +4,7 @@ module UARTReceive(
   rxd,
   dataComplete,
   dataOutput,
-  startCount
+  endCount
   );
 
   input wire clk;              // The CPU clock signal
@@ -12,11 +12,12 @@ module UARTReceive(
   input wire rxd;              // UART RxD
   output reg dataComplete;     // Signal that data is complete
   output reg[7:0] dataOutput;  // Data returned when data is complete
-  output reg[31:0] startCount; // Count of start bits seen
+  reg[31:0] startCount;        // Count of start bits seen
+  output reg[31:0] endCount;   // Count of start bits seen
 
-  reg [15:0] state;
-  reg [15:0] counter;
-  reg [7:0] data;
+  reg [15:0] state = 0;
+  reg [15:0] counter = 0;
+  reg [7:0] data = 0;
 
   always @(posedge clk or posedge reset)
   begin
@@ -27,6 +28,7 @@ module UARTReceive(
       data <= 0;
       counter <= 0;
       startCount <= 0;
+      endCount <= 0;
     end
     else
     begin
@@ -68,6 +70,7 @@ module UARTReceive(
             state <= 0;
             dataOutput <= data;
             dataComplete <= 1;
+            endCount <= endCount + 1;
           end
           else
           begin
