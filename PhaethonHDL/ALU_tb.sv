@@ -41,6 +41,10 @@ module test;
   wire [31:0] ramOut;
   wire [0:0] readReq;
   wire [0:0] writeReq;
+  wire [0:0] uartReadReq;
+
+  reg  [7:0] uartData = 'hab;
+  reg  [0:0] uartReadAck;
 
 //  parameter RAMSIZE = 64;
 
@@ -52,6 +56,9 @@ module test;
     ramOut,
     readReq,
     writeReq,
+    uartReadReq, // [Output] uart read requested
+    uartReadAck, // [Input]  Flag to indicate read success
+    uartData,    // [Input] Actual data read 
     iPointer,
     opCode,
     r0,
@@ -67,9 +74,10 @@ module test;
     );
 
   //initial
-     //$monitor("At time %t, ip = %h, opCode = %h, readReq = %h, ramValue = %h, r[0:1:2:3:4:5] = %h:%h:%h:%h:%h:%h, rPos = %h, debug = %h",
-              //$time, iPointer[15:0], opCode, readReq, ramValue, r0, r1, r2, r3, r4, r5, rPos, debug);
+     //$monitor("At time %t, ip = %h, opCode = %h, readReq = %h, ramValue = %h, uartRR = %h, uartRA = %h, uartD = %h, r[0:1:2:3:4:5] = %h:%h:%h:%h:%h:%h, rPos = %h, debug = %h",
+        //$time, iPointer[15:0], opCode, readReq, ramValue, uartReadReq, uartReadAck, uartData, r0, r1, r2, r3, r4, r5, rPos, debug);
 
+  // Fake RAM
   always @(posedge clk)
   begin
     if (readReq == 1)
@@ -90,5 +98,14 @@ module test;
       fileRam[ramAddress + 3] <= ramOut[31:24];
     end
   end
+
+  // Fake UART
+  always @(posedge clk)
+  begin
+    if (uartReadReq == 1)
+    begin
+      uartReadAck <= 1;
+    end
+  end  
 
 endmodule // test

@@ -24,6 +24,8 @@ void ReadPortNode::VerifyNodeImpl()
     {
         GetContext()->ReportError(_location, "readport requires word for input");
     }
+
+    SetType(pPortType);    
 }
 
 ExpressionResult* ReadPortNode::CalculateResult()

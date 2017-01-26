@@ -83,7 +83,8 @@ function [0:0] IsRAMOpcode;
       opCodeParam == `PushR ||
       opCodeParam == `PopR ||
       opCodeParam == `CallR ||
-      opCodeParam == `Ret)
+      opCodeParam == `Ret ||
+      opCodeParam == `ReadPortRR)
     IsRAMOpcode = 1;
   else
     IsRAMOpcode = 0;

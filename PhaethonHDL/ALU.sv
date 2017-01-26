@@ -404,7 +404,7 @@ module ALU(
         begin
           if (uartReadAck == 1'b1)
           begin
-            ramValue[7:0] <= uartReadReq;
+            ramValue[7:0] <= uartData;
             ramValue[31:8] <= 1;
           end
           else

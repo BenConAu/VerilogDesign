@@ -44,5 +44,5 @@ Fmin     Register              Register              None      NoFlags
 Fmax     Register              Register              None      NoFlags
 Vfadd    Register              Register              Register  NoFlags
 Dout     Register              None                  None      NoFlags
-ReadPort Register              Register              None      NoFlags
+ReadPort Register              Register              None      RAM
 Stall    None                  None                  None      NoFlags

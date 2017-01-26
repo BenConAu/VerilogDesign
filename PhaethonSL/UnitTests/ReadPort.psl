@@ -1,0 +1,5 @@
+void main()
+{
+    word res = readport(1);
+    debugout(res);
+}

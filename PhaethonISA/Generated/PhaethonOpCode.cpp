@@ -131,7 +131,8 @@ bool IsRAMOpcode(OpCodes::Enum opCodeParam)
         opCodeParam == OpCodes::PushR ||
         opCodeParam == OpCodes::PopR ||
         opCodeParam == OpCodes::CallR ||
-        opCodeParam == OpCodes::Ret)
+        opCodeParam == OpCodes::Ret ||
+        opCodeParam == OpCodes::ReadPortRR)
         return true;
     else
         return false;
