@@ -7,3 +7,10 @@
 *.summary
 PhaethonHDL/Reduction/Boards/DE2_70_Default/db/
 PhaethonHDL/Reduction/Boards/DE2_70_Default/incremental_db/
+ALU_tb
+UART_tb
+PSLcc
+Bin2MifConvert
+PhaethonAsm
+PhaethonSL
+
