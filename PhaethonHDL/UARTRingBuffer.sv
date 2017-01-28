@@ -80,10 +80,9 @@ module UARTRingBuffer(
       end
       else if (dataReadEnable == 1)
       begin
-        debug2 <= 'hFF;
-
         if (hasData == 0)
         begin
+          debug2 <= 'h12;
           $display("Buffer empty, cannot read");
 
           // No data in buffer
@@ -91,6 +90,8 @@ module UARTRingBuffer(
         end
         else
         begin
+		    debug2 <= 'h48;
+		  
           // Acknowledge read and return data, advance position
           dataReadAck <= 1;
           dataRead <= dataBuffer[firstPos];

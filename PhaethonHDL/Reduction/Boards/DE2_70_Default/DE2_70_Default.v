@@ -686,21 +686,61 @@ ALU u7(
 //  .readReq,     // [Output] RAM read request
   .writeReq(writeReq),    // [Output] RAM write request
 
+  .uartReadReq(dataReadReq), // [Output] uart read requested
+  .uartReadAck(dataReadAck), // [Input]  Flag to indicate read success
+  .uartData(dataRead),    // [Input] Actual data read 
+  
   //.ipointer(debughex),    // [Debug]  Instruction pointer value
   //.opCode(debughex),      // [Debug]  current opCode value
   .debug(debughex),          // [Debug]  current r0 value
-  /*
-  .r1,          // [Debug]  current r1 value
-  .r2,          // [Debug]  current r2 value
-  .r3,          // [Debug]  current r3 value
-  .r4,          // [Debug]  current r4 value
-  .r5,          // [Debug]  current r5 value
-  .rPos,        // [Debug]  current rPos (register window) value
-  .debug(debug)        // [Output] Debug port
-*/
+  
+ // .r1,          // [Debug]  current r1 value
+ // .r2,          // [Debug]  current r2 value
+ // .r3,          // [Debug]  current r3 value
+ // .r4,          // [Debug]  current r4 value
+ // .r5,          // [Debug]  current r5 value
+ // .rPos,        // [Debug]  current rPos (register window) value
+//  .debug(debug)        // [Output] Debug port
+
   .debug3(oLEDG),
   .debug2(oLEDR),
   );
+  
+
+wire dataComplete;
+wire[7:0] uartData;
+  
+assign oUART_CTS = 1;
+assign oUART_TXD = 1;
+
+wire startBits;
+
+UARTReceive uart1(
+  iCLK_50,          // Global clock
+  0,                // Reset
+  iUART_RXD,        // UART rxd
+  dataComplete,     // Complete byte signal
+  uartData,         // Completed byte
+  startBits         // Count of start bits
+  );
+  
+ wire dataReadReq;
+ wire dataReadAck;
+ wire[7:0] dataRead;
+ wire uartDebug1;
+ wire uartDebug2;
+  
+UARTRingBuffer uartBuffer(
+  iCLK_50,          // Global clock
+  0,                // Reset
+  dataComplete,     // Flag to indicate request to write
+  uartData,         // Data to write
+  dataReadReq,      // Flag to indicate request to read
+  dataReadAck,      // Flag to indicate read success
+  dataRead,         // Actual data read 
+  uartDebug1,            // Wire debug to 7seg
+  uartDebug2        // Debug2
+  ); 
   
 endmodule
 

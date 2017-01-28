@@ -6,6 +6,9 @@ module ALU(
   ramOut,      // [Output] RAM to write
   readReq,     // [Output] RAM read request
   writeReq,    // [Output] RAM write request
+  uartReadReq, // [Output] uart read requested
+  uartReadAck, // [Input]  Flag to indicate read success
+  uartData,    // [Input] Actual data read 
   ipointer,    // [Debug]  Instruction pointer value
   opCode,      // [Debug]  current opCode value
   r0,          // [Debug]  current r0 value
@@ -22,30 +25,45 @@ module ALU(
 
   `include "../../PhaethonISA/Generated/PhaethonOpCode.v"
 
+  // Make modes easier to read and to insert new ones
+  `define InitialMode 0
+  `define InstrReadWait 1
+  `define InstrReadComplete 2
+  `define RegValueSet 3
+  `define DataWordWait 4
+  `define DataWordComplete 5
+  `define MemRWRequest 6
+  `define MemRWWait 7
+  `define MemRWComplete 8
+  `define ProcessOpCode 9  
+  
   // Input / output
   input  wire        clk;
   input  wire        reset;
   input  wire [31:0] ramIn;
   output reg [31:0]  ramAddress;
   output reg [31:0]  ramOut;
-  output reg [0:0]   readReq;
+  output reg [0:0]   readReq = 0;
   output reg [0:0]   writeReq;
-  output reg [31:0]  ipointer;
-  output reg [7:0]   opCode;
+  output reg [0:0]   uartReadReq = 0;
+  input  wire [0:0]  uartReadAck;
+  input  wire [7:0]  uartData;
+  output reg [31:0]  ipointer = 0;
+  output reg [7:0]   opCode = 0;
   output reg [31:0]  r0;
   output reg [31:0]  r1;
   output reg [31:0]  r2;
   output reg [31:0]  r3;
   output reg [31:0]  r4;
   output reg [31:0]  r5;
-  output reg [31:0]  debug;
-  output reg [17:0]  debug2;
-  output reg [8:0]   debug3;
-  output reg [7:0]   rPos;
+  output reg [31:0]  debug = 0;
+  output reg [31:0]  debug2 = 0;
+  output reg [8:0]   debug3 = 0;
+  output reg [7:0]   rPos = 2;
 
   // Local registers
   reg        [31:0] regarray[0:65];
-  reg        [7:0]  mode;
+  reg        [7:0]  mode = `InitialMode;
   reg        [31:0] ramValue;
   reg        [31:0] regValue[0:3];
   reg        [31:0] regValue2[0:3];
@@ -54,8 +72,8 @@ module ALU(
   reg        [7:0]  regAddress;
   reg        [7:0]  regAddress2;
   reg        [7:0]  regAddress3;
-  reg        [6:0]  fOpEnable;
-  reg        [0:0]  condJump;
+  reg        [6:0]  fOpEnable = 7'b0000000;
+  reg        [0:0]  condJump = 1'b0;
   reg        [31:0] sentinel;
   reg        [31:0] counter;
 
@@ -68,6 +86,7 @@ module ALU(
   wire       [31:0] fDivResult;
   wire       [31:0] floatDebug;
   wire       [1:0]  fCompareResult;
+  
   FloatingAdd         fAdd0(regValue2[0], regValue3[0], 1'b0, fAddResult[0], floatDebug, clk, fOpEnable[0:0]);
   FloatingAdd         fAdd1(regValue2[1], regValue3[1], 1'b0, fAddResult[1], floatDebug, clk, fOpEnable[0:0]);
   FloatingAdd         fAdd2(regValue2[2], regValue3[2], 1'b0, fAddResult[2], floatDebug, clk, fOpEnable[0:0]);
@@ -78,20 +97,12 @@ module ALU(
   FloatingMultiplyAdd fMulAdd(regValue[0], regValue2[0], regValue3[0], fMulAddResult, floatDebug, clk, fOpEnable[4:4]);
   FloatingCompare     fComp(regValue[0], regValue2[0], fCompareResult, floatDebug, clk, fOpEnable[5:5]);
   FloatingDivide      fDiv(regValue[0], regValue2[0], fDivResult, floatDebug, clk, fOpEnable[6:6]);
+  
   //initial
   //   $monitor("%t, ram = %h, %h, %h, %h : %h, %h, %h, %h",
   //     $time, ramIn[7:0], ramIn[15:8], ramIn[23:16], ramIn[31:24], ramAddress, ramIn, opAddress, ramValue);
 
-  `define InitialMode 0
-  `define InstrReadWait 1
-  `define InstrReadComplete 2
-  `define RegValueSet 3
-  `define DataWordWait 4
-  `define DataWordComplete 5
-  `define MemRWRequest 6
-  `define MemRWWait 7
-  `define MemRWComplete 8
-  `define ProcessOpCode 9
+  `define SLOWCLOCK 1
   
   always @(posedge clk)
   begin
@@ -112,12 +123,14 @@ module ALU(
     if (reset == 'b1)
       begin
         ipointer <= 0;
+        debug3 <= 1;
         opCode <= 0;
         opDataWord <= 'hffffffff;
         rPos <= 2;
         mode <= `InitialMode;
         readReq <= 0;
         writeReq <= 0;
+        uartReadReq <= 0;
         fOpEnable <= 7'b0000000;
         condJump <= 1'b0;
       end
@@ -128,33 +141,14 @@ module ALU(
       case (mode)
         // Mode InitialMode: Schedule read of code at instruction pointer and clear
         // out enable bits for auxillary modules.
-        `InitialMode: begin
-        if (sentinel == 'h12345678)
-        begin
+      `InitialMode: begin
           // Begin RAM read for instruction data
           readReq <= 1;
           ramAddress <= ipointer;
           opDataWord <= 'h0badf00d;
-    
-          mode <= `InstrReadWait;
-      
-        end
-        else
-        begin
-          // This should only run on first power
-          ipointer <= 0;
-          opCode <= 0;
-          rPos <= 2;
-          mode <= `InitialMode;
-          readReq <= 0;
-          sentinel <= 'h12345678;
-          debug <= 0;
           fOpEnable <= 7'b0000000;
           condJump <= 1'b0;
-          debug2 <= 0;
-    
-          // We will come back here on next clock
-        end
+          mode <= `InstrReadWait;
       end
     
       // Mode InstrReadWait - wait while RAM registers address
@@ -220,7 +214,7 @@ module ALU(
         if (opCode == `FmaxRR) fOpEnable[5:5] <= 1;
         if (opCode == `FdivRR) fOpEnable[6:6] <= 1;
         
-    // Determine if a conditional jump needs to happen
+        // Determine if a conditional jump needs to happen
         if (opCode == `JneC && regarray[1][0:0] == 1'b0) condJump <= 1'b1;
         if (opCode == `JeC && regarray[1][0:0] == 1'b1) condJump <= 1'b1;
         if (opCode == `JzRC && regarray[regAddress3[7:0]] == 0) condJump <= 1'b1;
@@ -379,6 +373,10 @@ module ALU(
           //$display("Reqesting push %h", regValue);
         end
   
+        if (opCode == `ReadPortRR)
+        begin
+          uartReadReq <= 1;
+        end
         mode <= `MemRWWait;
       end
   
@@ -387,6 +385,7 @@ module ALU(
         // Stop request
         readReq <= 0;
         writeReq <= 0;
+        uartReadReq <= 0;
   
         mode <= `MemRWComplete;
       end
@@ -400,6 +399,19 @@ module ALU(
   
           // Store ram values requested
           ramValue <= ramIn;
+        end
+        else if (opCode == `ReadPortRR)
+        begin
+          if (uartReadAck == 1'b1)
+          begin
+            ramValue[7:0] <= uartData;
+            ramValue[31:8] <= 1;
+          end
+          else
+          begin
+            // Sorry, no value for you
+            ramValue <= 0;
+          end
         end
   
         mode <= `ProcessOpCode;
@@ -422,8 +434,9 @@ module ALU(
           `MovdRoR:  begin end // Done above
           `MovdRoRR: begin end // Done above
   
+          `ReadPortRR: regarray[regAddress[7:0]] <= ramValue;             // ReadPort reg, reg
           `PushR: begin
-            regarray[0] <= regarray[0] + 4;                             // push reg
+            regarray[0] <= regarray[0] + 4;                               // push reg
           end
   
           `PopR: begin
@@ -433,20 +446,22 @@ module ALU(
   
           `CallR: begin
             // Stack pointer increases like a push
-            regarray[0] <= regarray[0] + 4;                             // call reg
+            regarray[0] <= regarray[0] + 4;                               // call reg
   
             // Jump to the function
             ipointer <= regValue[0];
+            debug3 <= 3;
   
             //$display("Doing a call");
           end
   
           `Ret: begin
             // Stack pointer decreases like a pop
-            regarray[0] <= regarray[0] - 4;                             // ret
+            regarray[0] <= regarray[0] - 4;                               // ret
   
             // Return to the saved position, after the call
             ipointer <= ramValue + 4;
+            debug3 <= 4;
   
             //$display("Doing a ret");
           end
@@ -463,6 +478,7 @@ module ALU(
   
             // Jump to the function
             ipointer <= regValue[0];
+            debug3 <= 5;
   
             //$display("Doing a register shift call to %h", regValue[0]);
           end
@@ -470,6 +486,7 @@ module ALU(
           `RRet: begin
             // Get the return address
             ipointer <= regarray[rPos - 2] + 8;
+            debug3 <= 6;
   
             // Get the window value
             rPos <= rPos - (regarray[rPos - 1] + 2);
@@ -505,7 +522,10 @@ module ALU(
             regarray[regAddress[7:0]] <= (regValue2[0] > regValue3[0] ? 1 : 0);
           end
   
-          `JmpC:  ipointer <= opDataWord;                              // jmp address
+          `JmpC: begin  
+            ipointer <= opDataWord;                              // jmp address
+            debug3 <= 7;
+          end
   
           `JneC: begin end // Done above
           `JeC: begin end   // Done above
@@ -559,6 +579,7 @@ module ALU(
         if (condJump == 1'b1)
         begin
           ipointer <= opDataWord;
+          debug3 <= 8;
         end
         else if (opCode != `JmpC &&
             opCode != `CallR &&
@@ -570,13 +591,19 @@ module ALU(
         begin
           //$display("Incrementing ip");
           if (Is8ByteOpcode(opCode) == 1)
+          begin
             ipointer <= ipointer + 8;
+            debug3 <= 9;
+          end
           else
+          begin
             ipointer <= ipointer + 4;
+            debug3 <= 10;
+          end
         end
   
         //$display("Finished instruction %h", opCode);
-  		
+    
         // Mode change
         mode <= `InitialMode; 
       end
@@ -597,10 +624,13 @@ module ALU(
     r4 <= regarray[rPos + 4];
     r5 <= regarray[rPos + 5];
   
-    debug3[8:0] <= mode;
-    debug2 <= regarray[rPos];
-	 
-	 end
+    //debug3[8:0] <= mode;
+    //debug2[7:0] <= mode;
+    //debug2[15:8] <= opCode;
+    debug2[11:0] <= ipointer;
+    debug2[31:12] <= opCode;
+  
+  end
   end
 
 endmodule
