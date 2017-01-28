@@ -25,33 +25,45 @@ module ALU(
 
   `include "../PhaethonISA/Generated/PhaethonOpCode.v"
 
+  // Make modes easier to read and to insert new ones
+  `define InitialMode 0
+  `define InstrReadWait 1
+  `define InstrReadComplete 2
+  `define RegValueSet 3
+  `define DataWordWait 4
+  `define DataWordComplete 5
+  `define MemRWRequest 6
+  `define MemRWWait 7
+  `define MemRWComplete 8
+  `define ProcessOpCode 9  
+
   // Input / output
   input  wire        clk;
   input  wire        reset;
   input  wire [31:0] ramIn;
   output reg [31:0]  ramAddress;
   output reg [31:0]  ramOut;
-  output reg [0:0]   readReq;
+  output reg [0:0]   readReq = 0;
   output reg [0:0]   writeReq;
-  output reg [0:0]   uartReadReq;
+  output reg [0:0]   uartReadReq = 0;
   input  wire [0:0]  uartReadAck;
   input  wire [7:0]  uartData;
-  output reg [31:0]  ipointer;
-  output reg [7:0]   opCode;
+  output reg [31:0]  ipointer = 0;
+  output reg [7:0]   opCode = 0;
   output reg [31:0]  r0;
   output reg [31:0]  r1;
   output reg [31:0]  r2;
   output reg [31:0]  r3;
   output reg [31:0]  r4;
   output reg [31:0]  r5;
-  output reg [31:0]  debug;
-  output reg [17:0]  debug2;
-  output reg [8:0]   debug3;
-  output reg [7:0]   rPos;
+  output reg [31:0]  debug = 0;
+  output reg [31:0]  debug2 = 0;
+  output reg [8:0]   debug3 = 0;
+  output reg [7:0]   rPos = 2;
 
   // Local registers
   reg        [31:0] regarray[0:65];
-  reg        [7:0]  mode;
+  reg        [7:0]  mode = `InitialMode;
   reg        [31:0] ramValue;
   reg        [31:0] regValue[0:3];
   reg        [31:0] regValue2[0:3];
@@ -60,8 +72,8 @@ module ALU(
   reg        [7:0]  regAddress;
   reg        [7:0]  regAddress2;
   reg        [7:0]  regAddress3;
-  reg        [6:0]  fOpEnable;
-  reg        [0:0]  condJump;
+  reg        [6:0]  fOpEnable = 7'b0000000;
+  reg        [0:0]  condJump = 1'b0;
   reg        [31:0] sentinel;
   reg        [31:0] counter;
 
@@ -90,17 +102,6 @@ module ALU(
   //   $monitor("%t, ram = %h, %h, %h, %h : %h, %h, %h, %h",
   //     $time, ramIn[7:0], ramIn[15:8], ramIn[23:16], ramIn[31:24], ramAddress, ramIn, opAddress, ramValue);
 
-  `define InitialMode 0
-  `define InstrReadWait 1
-  `define InstrReadComplete 2
-  `define RegValueSet 3
-  `define DataWordWait 4
-  `define DataWordComplete 5
-  `define MemRWRequest 6
-  `define MemRWWait 7
-  `define MemRWComplete 8
-  `define ProcessOpCode 9
-
   always @(posedge clk or posedge reset)
   begin
     `ifdef SLOWCLOCK
@@ -117,7 +118,7 @@ module ALU(
     `endif
 
     // Regular code starts here
-    if (reset)
+    if (reset == 'b1)
     begin
       ipointer <= 0;
       opCode <= 0;
@@ -126,6 +127,7 @@ module ALU(
       mode <= `InitialMode;
       readReq <= 0;
       writeReq <= 0;
+        uartReadReq <= 0;
       fOpEnable <= 7'b0000000;
       condJump <= 1'b0;
     end
@@ -385,6 +387,7 @@ module ALU(
         // Stop request
         readReq <= 0;
         writeReq <= 0;
+        uartReadReq <= 0;
 
         mode <= `MemRWComplete;
 
@@ -586,9 +589,13 @@ module ALU(
           //$display("Incrementing ip");
 
           if (Is8ByteOpcode(opCode) == 1)
+          begin
             ipointer <= ipointer + 8;
+          end
           else
+          begin
             ipointer <= ipointer + 4;
+          end
         end
 
         //$display("Finished instruction %h", opCode);
