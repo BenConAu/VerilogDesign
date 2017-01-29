@@ -55,7 +55,7 @@ module UARTRingBuffer(
           // Buffer is full, so the data is dropped
           $display("Buffer full, cannot write");
     
-          debug2 <= 'hF;
+          debug2 <= 1;
         end
         else
         begin
@@ -65,13 +65,13 @@ module UARTRingBuffer(
             firstPos <= 0;
             lastPos <= 0;
             hasData <= 1;
-            debug2 <= 'h123;
+            debug2 <= 2;
           end
           else
           begin
             dataBuffer[(lastPos + 1) & 2'b11] <= dataWrite;
             lastPos <= lastPos + 1;
-            debug2 <= lastPos + 1;
+            debug2 <= 3;
           end
         end
 
@@ -82,7 +82,7 @@ module UARTRingBuffer(
       begin
         if (hasData == 0)
         begin
-          debug2 <= 'h12;
+          debug2 <= 4;
           $display("Buffer empty, cannot read");
 
           // No data in buffer
@@ -90,7 +90,7 @@ module UARTRingBuffer(
         end
         else
         begin
-		    debug2 <= 'h48;
+		      debug2 <= 5;
 		  
           // Acknowledge read and return data, advance position
           dataReadAck <= 1;

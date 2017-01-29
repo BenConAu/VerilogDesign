@@ -121,6 +121,7 @@ module ALU(
     if (reset == 'b1)
     begin
       ipointer <= 0;
+        debug3 <= 1;
       opCode <= 0;
       opDataWord <= 'hffffffff;
       rPos <= 2;
@@ -133,6 +134,7 @@ module ALU(
     end
     else
     begin
+      // Regular code starts here
       case (mode)
       // Mode InitialMode: Schedule read of code at instruction pointer and clear
       //         out enable bits for auxillary modules.
@@ -454,6 +456,7 @@ module ALU(
 
             // Jump to the function
             ipointer <= regValue[0];
+            debug3 <= 3;
 
             //$display("Doing a call");
           end
@@ -464,6 +467,7 @@ module ALU(
 
             // Return to the saved position, after the call
             ipointer <= ramValue + 4;
+            debug3 <= 4;
 
             //$display("Doing a ret");
           end
@@ -480,6 +484,7 @@ module ALU(
 
             // Jump to the function
             ipointer <= regValue[0];
+            debug3 <= 5;
 
             //$display("Doing a register shift call to %h", regValue[0]);
           end
@@ -487,6 +492,7 @@ module ALU(
           `RRet: begin
             // Get the return address
             ipointer <= regarray[rPos - 2] + 8;
+            debug3 <= 6;
 
             // Get the window value
             rPos <= rPos - (regarray[rPos - 1] + 2);
@@ -522,7 +528,10 @@ module ALU(
             regarray[regAddress[7:0]] <= (regValue2[0] > regValue3[0] ? 1 : 0);
           end
 
-          `JmpC:  ipointer <= opDataWord;                              // jmp address
+          `JmpC: begin  
+            ipointer <= opDataWord;                              // jmp address
+            debug3 <= 7;
+          end
 
           `JneC: begin end // Done above
           `JeC: begin end   // Done above
@@ -558,10 +567,11 @@ module ALU(
           `MulAddRRC:  regarray[regAddress[7:0]] <= regValue[0] + regValue2[0] * opDataWord;
 
           `DoutR: begin
-          // In simulation we use $display for this
+            // In simulation we use $display for this
             $display("DebugOut %h", regValue[0]);
-          // FPGA we hit the 7seg display with the value
-          debug <= regValue[0];
+      
+            // FPGA we hit the 7seg display with the value
+            debug <= regValue[0];
           end
 
           `Stall: begin 
@@ -577,6 +587,7 @@ module ALU(
         if (condJump == 1'b1)
         begin
           ipointer <= opDataWord;
+          debug3 <= 8;
         end
         else if (opCode != `JmpC &&
             opCode != `CallR &&
@@ -591,10 +602,12 @@ module ALU(
           if (Is8ByteOpcode(opCode) == 1)
           begin
             ipointer <= ipointer + 8;
+            debug3 <= 9;
           end
           else
           begin
             ipointer <= ipointer + 4;
+            debug3 <= 10;
           end
         end
 
@@ -617,8 +630,11 @@ module ALU(
       r3 <= regarray[rPos + 3];
       r4 <= regarray[rPos + 4];
       r5 <= regarray[rPos + 5];
-    debug3[8:0] <= mode;
-    debug2 <= regarray[rPos];
+    //debug3[8:0] <= mode;
+    //debug2[7:0] <= mode;
+    //debug2[15:8] <= opCode;
+    debug2[11:0] <= ipointer;
+    debug2[31:12] <= opCode;
     
     end
   end

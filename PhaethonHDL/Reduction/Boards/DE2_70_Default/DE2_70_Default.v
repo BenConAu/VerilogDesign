@@ -657,8 +657,25 @@ LCD_TEST 			u5	(	//	Host Side
 							.LCD_EN(LCD_EN_1),
 							.LCD_RS(LCD_RS_1)	);
 
-							
+// The slow clock is run off the real one
+reg[31:0] clockCounter = 0;
+reg slowClock = 0;
+      
+always @(posedge iCLK_50)
+begin
+    if (clockCounter != 5000000)
+    begin  
+      clockCounter <= clockCounter + 1;
+      slowClock <= 0;
+    end
+    else
+    begin
+      clockCounter <= 0;
+      slowClock <= 1;
+    end
+end
 
+              
 wire [31:0] ramAddress;
 wire [31:0] ramIn;
 wire [31:0] ramOut;
@@ -702,7 +719,7 @@ ALU u7(
  // .rPos,        // [Debug]  current rPos (register window) value
 //  .debug(debug)        // [Output] Debug port
 
-  .debug3(oLEDG),
+  //.debug3(oLEDG),
   .debug2(oLEDR),
   );
   
@@ -738,8 +755,8 @@ UARTRingBuffer uartBuffer(
   dataReadReq,      // Flag to indicate request to read
   dataReadAck,      // Flag to indicate read success
   dataRead,         // Actual data read 
-  uartDebug1,            // Wire debug to 7seg
-  uartDebug2        // Debug2
+  uartDebug1,       // Wire debug to 7seg
+  oLEDG             // Debug2
   ); 
   
 endmodule

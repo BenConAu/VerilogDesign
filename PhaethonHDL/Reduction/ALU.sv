@@ -102,7 +102,7 @@ module ALU(
   //   $monitor("%t, ram = %h, %h, %h, %h : %h, %h, %h, %h",
   //     $time, ramIn[7:0], ramIn[15:8], ramIn[23:16], ramIn[31:24], ramAddress, ramIn, opAddress, ramValue);
 
-  `define SLOWCLOCK 1
+  //`define SLOWCLOCK 1
   
   always @(posedge clk)
   begin
@@ -146,6 +146,7 @@ module ALU(
           readReq <= 1;
           ramAddress <= ipointer;
           opDataWord <= 'h0badf00d;
+          // Clear out stuff for the pipeline
           fOpEnable <= 7'b0000000;
           condJump <= 1'b0;
           mode <= `InstrReadWait;
@@ -161,8 +162,8 @@ module ALU(
       //         decode the instruction data, including the opCode
       //         of the instruction and the affected registers.
       `InstrReadComplete: begin
-      
-        // Stop request
+        // Since we did read request on mode 0, ram should be ready now
+        //$display("Receiving value %h", ramIn);
         //readReq <= 0;
   
         opCode <= ramIn[7:0];
@@ -404,13 +405,16 @@ module ALU(
         begin
           if (uartReadAck == 1'b1)
           begin
+            debug2[7:0] <= uartData;
             ramValue[7:0] <= uartData;
             ramValue[31:8] <= 1;
+//            debug2 <= debug2 | 'hF;
           end
           else
           begin
             // Sorry, no value for you
             ramValue <= 0;
+            //debug2 <= debug2 | 'hF0;
           end
         end
   
@@ -422,6 +426,7 @@ module ALU(
       //         the writes that are needed and moving the
       //         instruction pointer along.
       `ProcessOpCode: begin
+
         // Now we can do writes to non-ram things
         case (opCode)
           `MovRC:    regarray[regAddress[7:0]] <= opDataWord;             // mov reg, const
@@ -627,8 +632,8 @@ module ALU(
     //debug3[8:0] <= mode;
     //debug2[7:0] <= mode;
     //debug2[15:8] <= opCode;
-    debug2[11:0] <= ipointer;
-    debug2[31:12] <= opCode;
+    //debug2[11:0] <= ipointer;
+    //debug2[31:12] <= opCode;
   
   end
   end
