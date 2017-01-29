@@ -14,6 +14,7 @@ using namespace std;
 %%
 [ \t\n]           ;
 "Register"        { return REGISTER_TOKEN; }
+"ByteConstant"    { return BYTECONSTANT_TOKEN; }
 "Constant"        { return CONSTANT_TOKEN; }
 "Deref"           { return DEREF_TOKEN; }
 "Offset"          { return OFFSET_TOKEN; }

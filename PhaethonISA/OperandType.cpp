@@ -2,6 +2,7 @@
 
 const char* OperandTypeHelper::ppszTypeText[] = {
     "None",
+    "ByteConstant",
     "Constant",
     "Register",
     "DerefConstant",
@@ -11,6 +12,7 @@ const char* OperandTypeHelper::ppszTypeText[] = {
 
 const char* OperandTypeHelper::ppszShortTypeText[] = {
     "",
+    "B",
     "C",
     "R",
     "dC",

@@ -52,6 +52,7 @@ OpCodeData OpCodeData::s_data[] = {
     { Instructions::Mov       , OpCodes::MovdCR         , { OperandType::DerefConstant         , OperandType::Register              , OperandType::None         }, 0, "MovdCR" },
     { Instructions::Mov       , OpCodes::MovdRoR        , { OperandType::DerefRegisterOffset   , OperandType::Register              , OperandType::None         }, 0, "MovdRoR" },
     { Instructions::Mov       , OpCodes::MovdRoRR       , { OperandType::DerefRegisterOffset   , OperandType::Register              , OperandType::Register     }, 0, "MovdRoRR" },
+    { Instructions::Mov       , OpCodes::MovRRB         , { OperandType::Register              , OperandType::Register              , OperandType::ByteConstant }, -1, "MovRRB" },
     { Instructions::Push      , OpCodes::PushR          , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "PushR" },
     { Instructions::Pop       , OpCodes::PopR           , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "PopR" },
     { Instructions::Cmp       , OpCodes::CmpRR          , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "CmpRR" },

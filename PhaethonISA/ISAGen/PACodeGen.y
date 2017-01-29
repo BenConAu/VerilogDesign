@@ -25,6 +25,7 @@ void yyerror(const char *s);
 
 %token <symIndex> SYMBOL_TOKEN
 %token <opType> REGISTER_TOKEN
+%token <opType> BYTECONSTANT_TOKEN
 %token <opType> CONSTANT_TOKEN
 %token <opType> NONE_TOKEN
 %token OFFSET_TOKEN
@@ -61,6 +62,7 @@ argument:
 
 operandType:
       REGISTER_TOKEN                                                { $$ = OperandType::Register; }
+    | BYTECONSTANT_TOKEN                                            { $$ = OperandType::ByteConstant; }
     | CONSTANT_TOKEN                                                { $$ = OperandType::Constant; }
     | NONE_TOKEN                                                    { $$ = OperandType::None; }
     ;

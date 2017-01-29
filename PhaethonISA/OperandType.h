@@ -8,7 +8,8 @@
 enum class OperandType : int
 {
     None = 0,       		// Used for error conditions and the such or unintialized types
-    Constant,       		// The operand is a constant
+	ByteConstant,           // The operand is a byte constant
+    Constant,       		// The operand is a word wonstant
     Register,       		// The operand is a register
     DerefConstant,  		// The operand is a memory location at the given constant location
 	DerefRegister,  		// The operand is a memory location at the given register location
