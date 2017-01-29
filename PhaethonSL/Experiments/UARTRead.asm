@@ -11,7 +11,7 @@ mov r4, 255
 cmpgt r3, r1, r4
 cmp r3, 0
 je @false_1
-dout r0
+dout r1
 false_1:
 jmp @loopBegin_1
 loopEnd_1:
