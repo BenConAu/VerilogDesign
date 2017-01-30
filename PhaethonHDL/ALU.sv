@@ -434,7 +434,7 @@ module ALU(
           `MovRdC:   regarray[regAddress[7:0]] <= ramValue;               // mov reg, [addr]
           `MovRR:    regarray[regAddress[7:0]] <= regValue2[0];           // mov reg, reg
 
-          `MovRRR: begin
+          `PackRRR: begin
             case (regValue3[0][1:0])
               0: regarray[regAddress[7:0]][7:0] <= regValue2[0][7:0];
               1: regarray[regAddress[7:0]][15:8] <= regValue2[0][7:0];

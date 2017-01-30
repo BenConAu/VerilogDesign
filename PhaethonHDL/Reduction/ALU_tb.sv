@@ -70,8 +70,8 @@ module test;
     );
 
   //initial
-    // $monitor("At time %t, ip = %h, opCode = %h, reset = %h, r[0:1:2:3:4:5] = %h:%h:%h:%h:%h:%h, rPos = %h, debug = %h",
-      //        $time, iPointer[15:0], opCode, reset, r0, r1, r2, r3, r4, r5, rPos, debug);
+    // $monitor("At time %t, ip = %h, opCode = %h, readReq = %h, r[0:1:2:3:4:5] = %h:%h:%h:%h:%h:%h, rPos = %h, debug = %h",
+      //        $time, iPointer[15:0], opCode, readReq, r0, r1, r2, r3, r4, r5, rPos, debug);
 
   always @(posedge clk)
   begin

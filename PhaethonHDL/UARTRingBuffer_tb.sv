@@ -39,6 +39,8 @@ module test;
 
   wire dataReadAck;
   wire[7:0] dataRead;
+  wire[31:0] debug;
+  wire[31:0] debug2;
   
   UARTRingBuffer ring(
     clk,
@@ -47,7 +49,9 @@ module test;
     data,
     readEnable,
     dataReadAck,      // Flag to indicate read success
-    dataRead          // Actual data read
+    dataRead,         // Actual data read
+    debug,
+    debug2
     );
 
 endmodule // test
