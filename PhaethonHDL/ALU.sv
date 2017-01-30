@@ -8,7 +8,7 @@ module ALU(
   writeReq,    // [Output] RAM write request
   uartReadReq, // [Output] uart read requested
   uartReadAck, // [Input]  Flag to indicate read success
-  uartData,    // [Input] Actual data read 
+  uartData,    // [Input]  Actual data read 
   ipointer,    // [Debug]  Instruction pointer value
   opCode,      // [Debug]  current opCode value
   r0,          // [Debug]  current r0 value
@@ -62,7 +62,7 @@ module ALU(
   output reg [7:0]   rPos = 2;
 
   // Local registers
-  reg        [31:0] regarray[0:65];
+  reg        [31:0] regarray[0:66];
   reg        [7:0]  mode = `InitialMode;
   reg        [31:0] ramValue;
   reg        [31:0] regValue[0:3];
@@ -76,6 +76,7 @@ module ALU(
   reg        [0:0]  condJump = 1'b0;
   reg        [31:0] sentinel;
   reg        [31:0] counter;
+  reg               initComplete = 1'b0;
 
   // Wire up the results from the floating units
   wire       [31:0] fAddResult[0:3];
@@ -124,7 +125,7 @@ module ALU(
       debug3 <= 1;
       opCode <= 0;
       opDataWord <= 'hffffffff;
-      rPos <= 2;
+      rPos <= 3;
       mode <= `InitialMode;
       readReq <= 0;
       writeReq <= 0;
@@ -139,9 +140,19 @@ module ALU(
       // Mode InitialMode: Schedule read of code at instruction pointer and clear
       //         out enable bits for auxillary modules.
       `InitialMode: begin
+        if (initComplete == 1'b0)
+        begin
+          // Some stuff is hard to do with initializers, so we do it here
+          regarray[0] = 0;
+          regarray[1] = 0;
+          regarray[2] = 0; // Code segment
+
+          initComplete <= 1'b1;
+        end
+
         // Begin RAM read for instruction data
         readReq <= 1;
-        ramAddress <= ipointer;
+        ramAddress <= ipointer + regarray[2];
         opDataWord <= 'h0badf00d;
 
         // Clear out stuff for the pipeline
@@ -225,7 +236,7 @@ module ALU(
         begin
           // Read values from ram requested by instruction
           readReq <= 1;
-          ramAddress <= ipointer + 4;
+          ramAddress <= ipointer + regarray[2] + 4;
 
           // We need to move into further modes
           mode <= `DataWordWait;
