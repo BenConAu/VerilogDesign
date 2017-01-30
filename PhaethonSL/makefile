@@ -45,6 +45,8 @@ PSLcc: lex.yy.c \
 	   Operand.h \
 	   OperatorNode.cpp \
 	   OperatorNode.h \
+	   PackByteNode.cpp \
+	   PackByteNode.h \
 	   PointerTypeInfo.cpp \
 	   PointerTypeInfo.h \
 	   PSLCompilerContext.cpp \
@@ -126,6 +128,7 @@ PSLcc: lex.yy.c \
 	   OffsetNode.cpp \
 	   OperatorNode.cpp \
 	   Operand.cpp \
+	   PackByteNode.cpp \
 	   PointerTypeInfo.cpp \
 	   PSLCompiler.cpp \
 	   PSLCompilerContext.cpp \

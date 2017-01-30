@@ -7,7 +7,7 @@ Mov      Register              Deref:Constant        None      NoFlags
 Mov      Deref:Constant        Register              None      NoFlags
 Mov      Deref:Register:Offset Register              None      NoFlags
 Mov      Deref:Register:Offset Register              Register  NoFlags
-Mov      Register              Register              ByteConstant NoFlags
+Mov      Register              Register              Register  NoFlags
 Push     Register              None                  None      RAM
 Pop      Register              None                  None      RAM
 Cmp      Register              Register              None      NoFlags

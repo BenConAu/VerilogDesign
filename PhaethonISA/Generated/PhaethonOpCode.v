@@ -7,7 +7,7 @@
 `define MovdCR 7
 `define MovdRoR 8
 `define MovdRoRR 9
-`define MovRRB 10
+`define MovRRR 10
 `define PushR 11
 `define PopR 12
 `define CmpRR 13

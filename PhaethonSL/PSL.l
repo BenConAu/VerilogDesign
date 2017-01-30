@@ -43,6 +43,7 @@
 "=="                 { return EQUAL_OP; }
 "!="                 { return NOTEQUAL_OP; }
 "ptr"                { return PTR_TOKEN; }
+"byte"               { return BYTE_TOKEN; }
 "word"               { return WORD_TOKEN; }
 "bool"               { return BOOL_TOKEN; }
 "float"              { return FLOAT_TOKEN; }
@@ -54,6 +55,7 @@
 "offsetptr"          { return OFFSETPTR_TOKEN; }
 "castptr"            { return CASTPTR_TOKEN; }
 "readport"           { return READPORT_TOKEN; }
+"packbyte"           { return PACKBYTE_TOKEN; }
 "__datasegmentend"   { return DATASEGEND_TOKEN; }
 "return"             { return RETURN_TOKEN; }
 "if"                 { return IF_TOKEN; }

@@ -121,14 +121,14 @@ module ALU(
     if (reset == 'b1)
     begin
       ipointer <= 0;
-        debug3 <= 1;
+      debug3 <= 1;
       opCode <= 0;
       opDataWord <= 'hffffffff;
       rPos <= 2;
       mode <= `InitialMode;
       readReq <= 0;
       writeReq <= 0;
-        uartReadReq <= 0;
+      uartReadReq <= 0;
       fOpEnable <= 7'b0000000;
       condJump <= 1'b0;
     end
@@ -143,6 +143,7 @@ module ALU(
         readReq <= 1;
         ramAddress <= ipointer;
         opDataWord <= 'h0badf00d;
+
         // Clear out stuff for the pipeline
         fOpEnable <= 7'b0000000;
         condJump <= 1'b0;
@@ -432,6 +433,19 @@ module ALU(
           `MovRC:    regarray[regAddress[7:0]] <= opDataWord;             // mov reg, const
           `MovRdC:   regarray[regAddress[7:0]] <= ramValue;               // mov reg, [addr]
           `MovRR:    regarray[regAddress[7:0]] <= regValue2[0];           // mov reg, reg
+
+          `MovRRR: begin
+            case (regValue3[0][1:0])
+              0: regarray[regAddress[7:0]][7:0] <= regValue2[0][7:0];
+              1: regarray[regAddress[7:0]][15:8] <= regValue2[0][7:0];
+              2: regarray[regAddress[7:0]][23:16] <= regValue2[0][7:0];
+              3: regarray[regAddress[7:0]][31:24] <= regValue2[0][7:0];
+              default: begin
+                $display("Out of range byte position");
+              end
+            endcase
+          end
+
           `MovRdRo:  regarray[regAddress[7:0]] <= ramValue;               // mov reg, [reg + const]
           `MovRdRoR: regarray[regAddress[7:0]] <= ramValue;               // mov reg, [reg + const * reg]
           `MovRdR:   regarray[regAddress[7:0]] <= ramValue;               // mov reg, [reg]

@@ -27,6 +27,9 @@ std::string BasicTypeInfo::GetTypeName()
 {
     switch (_typeToken)
     {
+    case BYTE_TOKEN:
+        return "Byte";
+        
     case WORD_TOKEN:
         return "Word";
 

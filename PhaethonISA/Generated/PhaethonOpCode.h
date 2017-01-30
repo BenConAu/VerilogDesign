@@ -58,7 +58,7 @@ namespace OpCodes
         MovdCR = 7,
         MovdRoR = 8,
         MovdRoRR = 9,
-        MovRRB = 10,
+        MovRRR = 10,
         PushR = 11,
         PopR = 12,
         CmpRR = 13,

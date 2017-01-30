@@ -52,6 +52,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token EQUAL_OP
 %token NOTEQUAL_OP
 %token PTR_TOKEN
+%token BYTE_TOKEN
 %token WORD_TOKEN
 %token BOOL_TOKEN
 %token FLOAT_TOKEN
@@ -71,6 +72,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token OFFSETPTR_TOKEN
 %token CASTPTR_TOKEN
 %token READPORT_TOKEN
+%token PACKBYTE_TOKEN
 %token DATASEGEND_TOKEN
 %token <symIndex> IDENTIFIER
 %type <pNode> variable_identifier
@@ -100,6 +102,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> parameter_declaration
 %type <pNode> function_header_with_parameters
 %type <pNode> debugout_statement
+%type <pNode> packbyte_statement
 %type <pNode> sizeof_expression
 %type <pNode> offset_expression
 %type <pNode> function_call_header
@@ -140,6 +143,7 @@ statement:
     | declaration_statement                                         { $$ = $1; }
     | jump_statement                                                { $$ = $1; }
     | debugout_statement                                            { $$ = $1; }
+    | packbyte_statement                                            { $$ = $1; }
     ;
 
 expression_statement:
@@ -279,6 +283,7 @@ parameter_declaration:
 
 fully_specified_type:
       WORD_TOKEN                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Basic, WORD_TOKEN); }
+    | BYTE_TOKEN                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Basic, BYTE_TOKEN); }
     | FLOAT_TOKEN                                                   { $$ = new TypeNode(pContext, @$, TypeClass::Basic, FLOAT_TOKEN); }
 	| VOID_TOKEN                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Basic, VOID_TOKEN); }
 	| BOOL_TOKEN                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Basic, BOOL_TOKEN); }
@@ -352,6 +357,11 @@ return_statement:
 debugout_statement:
       DEBUGOUT_TOKEN LEFT_PAREN postfix_expression RIGHT_PAREN SEMICOLON      
                                                                     { $$ = new DebugOutNode(pContext, $3); }
+    ;
+
+packbyte_statement:
+      PACKBYTE_TOKEN LEFT_PAREN expression COMMA expression COMMA expression RIGHT_PAREN SEMICOLON
+                                                                    { $$ = new PackByteNode(pContext, @$, $3, $5, $7); }
     ;
 
 %%
