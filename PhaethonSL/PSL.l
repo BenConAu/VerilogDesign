@@ -55,6 +55,7 @@
 "offsetptr"          { return OFFSETPTR_TOKEN; }
 "castptr"            { return CASTPTR_TOKEN; }
 "readport"           { return READPORT_TOKEN; }
+"writeport"          { return WRITEPORT_TOKEN; }
 "packbyte"           { return PACKBYTE_TOKEN; }
 "__datasegmentend"   { return DATASEGEND_TOKEN; }
 "return"             { return RETURN_TOKEN; }

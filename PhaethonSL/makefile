@@ -89,6 +89,8 @@ PSLcc: lex.yy.c \
 	   VariableInfo.h \
 	   WhileStatementNode.cpp \
 	   WhileStatementNode.h \
+	   WritePortNode.cpp \
+	   WritePortNode.h \
   	   ../PhaethonISA/Generated/PhaethonOpCode.cpp \
   	   ../PhaethonISA/Generated/PhaethonOpCode.h \
 	   ../PhaethonObjWriter/AsmObjWriter.cpp \
@@ -148,6 +150,7 @@ PSLcc: lex.yy.c \
 	   UnaryOperatorNode.cpp \
 	   VariableDeclarationNode.cpp \
 	   VariableInfo.cpp \
+	   WritePortNode.cpp \
 	   WhileStatementNode.cpp -o PSLcc
 
 lex.yy.c: PSL.l

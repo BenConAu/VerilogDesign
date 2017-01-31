@@ -1,26 +1,29 @@
 module ALU(
-  clk,         // [Input]  Clock driving the ALU
-  reset,       // [Input]  Reset pin
-  ramIn,       // [Input]  RAM at requested address
-  ramAddress,  // [Output] RAM address requested
-  ramOut,      // [Output] RAM to write
-  readReq,     // [Output] RAM read request
-  writeReq,    // [Output] RAM write request
-  uartReadReq, // [Output] uart read requested
-  uartReadAck, // [Input]  Flag to indicate read success
-  uartData,    // [Input]  Actual data read 
-  ipointer,    // [Debug]  Instruction pointer value
-  opCode,      // [Debug]  current opCode value
-  r0,          // [Debug]  current r0 value
-  r1,          // [Debug]  current r1 value
-  r2,          // [Debug]  current r2 value
-  r3,          // [Debug]  current r3 value
-  r4,          // [Debug]  current r4 value
-  r5,          // [Debug]  current r5 value
-  rPos,        // [Debug]  current rPos (register window) value
-  debug,       // [Output] Debug port
-  debug2,      // [Output] Another debug port
-  debug3       // [Output] And yet another debug port
+  clk,            // [Input]  Clock driving the ALU
+  reset,          // [Input]  Reset pin
+  ramIn,          // [Input]  RAM at requested address
+  ramAddress,     // [Output] RAM address requested
+  ramOut,         // [Output] RAM to write
+  readReq,        // [Output] RAM read request
+  writeReq,       // [Output] RAM write request
+  uartReadReq,    // [Output] uart read requested
+  uartReadAck,    // [Input]  Flag to indicate read success
+  uartReadData,   // [Input]  Actual data read 
+  uartWriteReq,   // [Output] uart write requested
+  uartWriteData,  // [Output] uart data to write
+  uartWriteReady, // [Input]  uart ready to send
+  ipointer,       // [Debug]  Instruction pointer value
+  opCode,         // [Debug]  current opCode value
+  r0,             // [Debug]  current r0 value
+  r1,             // [Debug]  current r1 value
+  r2,             // [Debug]  current r2 value
+  r3,             // [Debug]  current r3 value
+  r4,             // [Debug]  current r4 value
+  r5,             // [Debug]  current r5 value
+  rPos,           // [Debug]  current rPos (register window) value
+  debug,          // [Output] Debug port
+  debug2,         // [Output] Another debug port
+  debug3          // [Output] And yet another debug port
   );
 
   `include "../PhaethonISA/Generated/PhaethonOpCode.v"
@@ -47,7 +50,10 @@ module ALU(
   output reg [0:0]   writeReq;
   output reg [0:0]   uartReadReq = 0;
   input  wire [0:0]  uartReadAck;
-  input  wire [7:0]  uartData;
+  input  wire [7:0]  uartReadData;
+  output reg         uartWriteReq;
+  output reg [7:0]   uartWriteData;
+  input wire         uartWriteReady;
   output reg [31:0]  ipointer = 0;
   output reg [7:0]   opCode = 0;
   output reg [31:0]  r0;
@@ -390,7 +396,28 @@ module ALU(
 
         if (opCode == `ReadPortRR)
         begin
-          uartReadReq <= 1;
+          case (regValue2[0])
+
+          1: begin
+            // Port 1 is read from UART
+            uartReadReq <= 1;
+          end
+
+          2: begin
+            // Port 2 is UART write ready status
+          end
+
+          default: begin
+            $display("Unknown port %h being read", regValue[0]);
+          end
+
+          endcase
+        end
+
+        if (opCode == `WritePortRR)
+        begin
+          uartWriteReq <= 1;
+          uartWriteData <= regValue2[0][7:0];
         end
 
         mode <= `MemRWWait;
@@ -399,9 +426,10 @@ module ALU(
       // Mode `MemRWWait - ramIn is set by RAM module
       `MemRWWait: begin
         // Stop request
-        readReq <= 0;
-        writeReq <= 0;
-        uartReadReq <= 0;
+        readReq <= 1'b0;
+        writeReq <= 1'b0;
+        uartReadReq <= 1'b0;
+        uartWriteReq <= 1'b0;
 
         mode <= `MemRWComplete;
 
@@ -419,16 +447,36 @@ module ALU(
         end
         else if (opCode == `ReadPortRR)
         begin
-          if (uartReadAck == 1'b1)
-          begin
-            ramValue[7:0] <= uartData;
-            ramValue[31:8] <= 1;
+          case (regValue2[0])
+
+          1: begin
+            // Read from UART is now complete, return
+            if (uartReadAck == 1'b1)
+            begin
+              ramValue[7:0] <= uartReadData;
+              ramValue[31:8] <= 1;
+            end
+            else
+            begin
+              // Sorry, no value for you
+              ramValue <= 0;
+            end
           end
-          else
-          begin
-            // Sorry, no value for you
-            ramValue <= 0;
+
+          2: begin
+            // Port 2 is UART write ready status
+            begin
+              ramValue[0:0] <= uartWriteReady;
+              ramValue[31:1] <= 0;
+            end
           end
+
+          default: begin
+            $display("Unknown port %h being read", regValue[0]);
+          end
+
+          endcase
+
         end
 
         mode <= `ProcessOpCode;
@@ -465,6 +513,7 @@ module ALU(
           `MovdRoRR: begin end // Done above
 
           `ReadPortRR: regarray[regAddress[7:0]] <= ramValue;             // ReadPort reg, reg
+          `WritePortRR: begin end // Done above
 
           `PushR: begin
             regarray[0] <= regarray[0] + 4;                             // push reg
@@ -642,8 +691,9 @@ module ALU(
         mode <= `InitialMode;
       end
 
-    default: begin
-    end
+      default: begin
+      end
+
       endcase
       `ifdef SLOWCLOCK
       end

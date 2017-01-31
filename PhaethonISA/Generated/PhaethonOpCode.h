@@ -42,7 +42,8 @@ namespace Instructions
         Vfadd = 35,
         Dout = 36,
         ReadPort = 37,
-        Stall = 38,
+        WritePort = 38,
+        Stall = 39,
     };
 }
 namespace OpCodes
@@ -98,7 +99,8 @@ namespace OpCodes
         VfaddRRR = 46,
         DoutR = 47,
         ReadPortRR = 48,
-        Stall = 49,
+        WritePortRR = 49,
+        Stall = 50,
     };
 }
 bool Is8ByteOpcode(OpCodes::Enum opCodeParam);

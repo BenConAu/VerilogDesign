@@ -89,9 +89,10 @@ extern int yydebug;
     OFFSETPTR_TOKEN = 299,
     CASTPTR_TOKEN = 300,
     READPORT_TOKEN = 301,
-    PACKBYTE_TOKEN = 302,
-    DATASEGEND_TOKEN = 303,
-    IDENTIFIER = 304
+    WRITEPORT_TOKEN = 302,
+    PACKBYTE_TOKEN = 303,
+    DATASEGEND_TOKEN = 304,
+    IDENTIFIER = 305
   };
 #endif
 
@@ -107,7 +108,7 @@ union YYSTYPE
 	int symIndex;
     ASTNode* pNode;
 
-#line 111 "PSL.tab.h" /* yacc.c:1915  */
+#line 112 "PSL.tab.h" /* yacc.c:1915  */
 };
 
 typedef union YYSTYPE YYSTYPE;

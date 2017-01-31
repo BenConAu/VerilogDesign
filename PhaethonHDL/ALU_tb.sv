@@ -46,6 +46,10 @@ module test;
   reg  [7:0] uartData = 'hab;
   reg  [0:0] uartReadAck;
 
+  wire uartWriteReq;
+  wire [7:0] uartWriteData;
+  reg uartWriteReady = 1'b1;
+
 //  parameter RAMSIZE = 64;
 
   ALU alu(
@@ -56,9 +60,12 @@ module test;
     ramOut,
     readReq,
     writeReq,
-    uartReadReq, // [Output] uart read requested
-    uartReadAck, // [Input]  Flag to indicate read success
-    uartData,    // [Input] Actual data read 
+    uartReadReq,    // [Output] uart read requested
+    uartReadAck,    // [Input]  Flag to indicate read success
+    uartData,       // [Input] Actual data read 
+    uartWriteReq,   // [Output] uart write requested
+    uartWriteData,  // [Output] uart data to write
+    uartWriteReady, // [Input]  uart ready to send
     iPointer,
     opCode,
     r0,
@@ -99,12 +106,21 @@ module test;
     end
   end
 
-  // Fake UART
+  // Fake UART receiver
   always @(posedge clk)
   begin
     if (uartReadReq == 1)
     begin
       uartReadAck <= 1;
+    end
+  end  
+
+  // Fake UART sender
+  always @(posedge clk)
+  begin
+    if (uartWriteReq == 1)
+    begin
+      $display("UART send with data %h", uartWriteData <= 1);
     end
   end  
 

@@ -24,4 +24,5 @@
 #include "IndexSelectionNode.h"
 #include "UnaryOperatorNode.h"
 #include "ReadPortNode.h"
+#include "WritePortNode.h"
 #include "PackByteNode.h"

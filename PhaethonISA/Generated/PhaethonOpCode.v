@@ -46,7 +46,8 @@
 `define VfaddRRR 46
 `define DoutR 47
 `define ReadPortRR 48
-`define Stall 49
+`define WritePortRR 49
+`define Stall 50
 
 function [0:0] Is8ByteOpcode;
   input [7:0] opCodeParam;
@@ -85,7 +86,8 @@ function [0:0] IsRAMOpcode;
       opCodeParam == `PopR ||
       opCodeParam == `CallR ||
       opCodeParam == `Ret ||
-      opCodeParam == `ReadPortRR)
+      opCodeParam == `ReadPortRR ||
+      opCodeParam == `WritePortRR)
     IsRAMOpcode = 1;
   else
     IsRAMOpcode = 0;

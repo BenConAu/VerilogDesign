@@ -72,6 +72,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token OFFSETPTR_TOKEN
 %token CASTPTR_TOKEN
 %token READPORT_TOKEN
+%token WRITEPORT_TOKEN
 %token PACKBYTE_TOKEN
 %token DATASEGEND_TOKEN
 %token <symIndex> IDENTIFIER
@@ -112,6 +113,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> jump_statement
 %type <pNode> cast_expression
 %type <pNode> readport_expression
+%type <pNode> writeport_statement
 %type <pNode> selection_statement
 %type <pNode> selection_rest_statement
 %type <pNode> equality_expression
@@ -144,6 +146,7 @@ statement:
     | jump_statement                                                { $$ = $1; }
     | debugout_statement                                            { $$ = $1; }
     | packbyte_statement                                            { $$ = $1; }
+    | writeport_statement                                           { $$ = $1; }
     ;
 
 expression_statement:
@@ -362,6 +365,11 @@ debugout_statement:
 packbyte_statement:
       PACKBYTE_TOKEN LEFT_PAREN expression COMMA expression COMMA expression RIGHT_PAREN SEMICOLON
                                                                     { $$ = new PackByteNode(pContext, @$, $3, $5, $7); }
+    ;
+
+writeport_statement:
+      WRITEPORT_TOKEN LEFT_PAREN expression COMMA expression RIGHT_PAREN SEMICOLON
+                                                                    { $$ = new WritePortNode(pContext, @$, $3, $5); }
     ;
 
 %%

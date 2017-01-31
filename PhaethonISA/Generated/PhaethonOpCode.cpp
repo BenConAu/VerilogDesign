@@ -38,6 +38,7 @@ InstructionData InstructionData::s_data[] = {
     { Instructions::Vfadd     , "vfadd" },
     { Instructions::Dout      , "dout" },
     { Instructions::ReadPort  , "readport" },
+    { Instructions::WritePort , "writeport" },
     { Instructions::Stall     , "stall" },
 };
 
@@ -92,6 +93,7 @@ OpCodeData OpCodeData::s_data[] = {
     { Instructions::Vfadd     , OpCodes::VfaddRRR       , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "VfaddRRR" },
     { Instructions::Dout      , OpCodes::DoutR          , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "DoutR" },
     { Instructions::ReadPort  , OpCodes::ReadPortRR     , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "ReadPortRR" },
+    { Instructions::WritePort , OpCodes::WritePortRR    , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "WritePortRR" },
     { Instructions::Stall     , OpCodes::Stall          , { OperandType::None                  , OperandType::None                  , OperandType::None         }, -1, "Stall" },
 };
 
@@ -134,7 +136,8 @@ bool IsRAMOpcode(OpCodes::Enum opCodeParam)
         opCodeParam == OpCodes::PopR ||
         opCodeParam == OpCodes::CallR ||
         opCodeParam == OpCodes::Ret ||
-        opCodeParam == OpCodes::ReadPortRR)
+        opCodeParam == OpCodes::ReadPortRR ||
+        opCodeParam == OpCodes::WritePortRR)
         return true;
     else
         return false;

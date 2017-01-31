@@ -1,0 +1,12 @@
+void main()
+{
+    word i = 0;
+    while (i .< 10)
+    {
+        if (readport(2) == 1)
+        {
+            writeport(3, 123);
+            i = i + 1;
+        }
+    }
+}

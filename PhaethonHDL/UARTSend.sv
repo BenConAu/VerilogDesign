@@ -4,7 +4,7 @@ module UARTSend(
   sendReq,
   dataInput,
   txd,
-  sendComplete
+  ready
   );
 
   input wire clk;              // The CPU clock signal
@@ -12,7 +12,7 @@ module UARTSend(
   input wire sendReq;          // Send request
   input wire[7:0] dataInput;   // Data to send
   output reg txd = 1;          // UART TxD
-  output reg sendComplete = 0; // Data returned when data is complete
+  output reg ready = 1;        // Signaled when ready to send
 
   reg [15:0] state = 0;
   reg [15:0] counter = 0;
@@ -26,7 +26,7 @@ module UARTSend(
       state <= 0;
       counter <= 0;
       data <= 0;
-      sendComplete <= 0;
+      ready <= 1;
     end
     else
     begin
@@ -38,6 +38,9 @@ module UARTSend(
           // Go into send state
           state <= 1;
 
+          // Indicate that we are not ready to send anymore
+          ready <= 0;
+
           // Save the data away
           data <= dataInput;
 
@@ -46,6 +49,11 @@ module UARTSend(
         
           // We will start with the txd low
           txd <= 0;
+        end
+        else
+        begin
+          // Indicate we are ready to send
+          ready <= 1;
         end
       end
       else
@@ -73,7 +81,7 @@ module UARTSend(
           if (state == 10)
           begin
             state <= 0;
-            sendComplete <= 1'b1;
+            ready <= 1'b1;
           end
           else
           begin
