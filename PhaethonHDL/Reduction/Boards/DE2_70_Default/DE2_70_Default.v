@@ -705,7 +705,7 @@ ALU u7(
 
   .uartReadReq(dataReadReq), // [Output] uart read requested
   .uartReadAck(dataReadAck), // [Input]  Flag to indicate read success
-  .uartData(dataRead),    // [Input] Actual data read 
+  .uartReadData(dataRead),    // [Input] Actual data read 
   
   //.ipointer(debughex),    // [Debug]  Instruction pointer value
   //.opCode(debughex),      // [Debug]  current opCode value
