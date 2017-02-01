@@ -8,7 +8,10 @@ module ALU(
   writeReq,    // [Output] RAM write request
   uartReadReq, // [Output] uart read requested
   uartReadAck, // [Input]  Flag to indicate read success
-  uartData,    // [Input] Actual data read 
+  uartReadData,   // [Input]  Actual data read 
+  uartWriteReq,   // [Output] uart write requested
+  uartWriteData,  // [Output] uart data to write
+  uartWriteReady, // [Input]  uart ready to send
   ipointer,    // [Debug]  Instruction pointer value
   opCode,      // [Debug]  current opCode value
   r0,          // [Debug]  current r0 value
@@ -47,7 +50,10 @@ module ALU(
   output reg [0:0]   writeReq;
   output reg [0:0]   uartReadReq = 0;
   input  wire [0:0]  uartReadAck;
-  input  wire [7:0]  uartData;
+  input  wire [7:0]  uartReadData;
+  output reg         uartWriteReq;
+  output reg [7:0]   uartWriteData;
+  input wire         uartWriteReady;
   output reg [31:0]  ipointer = 0;
   output reg [7:0]   opCode = 0;
   output reg [31:0]  r0;
@@ -62,7 +68,7 @@ module ALU(
   output reg [7:0]   rPos = 2;
 
   // Local registers
-  reg        [31:0] regarray[0:65];
+  reg        [31:0] regarray[0:66];
   reg        [7:0]  mode = `InitialMode;
   reg        [31:0] ramValue;
   reg        [31:0] regValue[0:3];
@@ -76,6 +82,7 @@ module ALU(
   reg        [0:0]  condJump = 1'b0;
   reg        [31:0] sentinel;
   reg        [31:0] counter;
+  reg               initComplete = 1'b0;
 
   // Wire up the results from the floating units
   wire       [31:0] fAddResult[0:3];
@@ -104,7 +111,7 @@ module ALU(
 
   //`define SLOWCLOCK 1
   
-  always @(posedge clk)
+  always @(posedge clk or posedge reset)
   begin
     `ifdef SLOWCLOCK
   
@@ -126,7 +133,7 @@ module ALU(
         debug3 <= 1;
         opCode <= 0;
         opDataWord <= 'hffffffff;
-        rPos <= 2;
+      rPos <= 3;
         mode <= `InitialMode;
         readReq <= 0;
         writeReq <= 0;
@@ -139,21 +146,35 @@ module ALU(
   
       // Regular code starts here
       case (mode)
-        // Mode InitialMode: Schedule read of code at instruction pointer and clear
-        // out enable bits for auxillary modules.
+      // Mode InitialMode: Schedule read of code at instruction pointer and clear
+      // out enable bits for auxillary modules.
       `InitialMode: begin
-          // Begin RAM read for instruction data
-          readReq <= 1;
-          ramAddress <= ipointer;
-          opDataWord <= 'h0badf00d;
-          // Clear out stuff for the pipeline
-          fOpEnable <= 7'b0000000;
-          condJump <= 1'b0;
-          mode <= `InstrReadWait;
+        if (initComplete == 1'b0)
+        begin
+          // Some stuff is hard to do with initializers, so we do it here
+          regarray[0] <= 0;
+          regarray[1] <= 0;
+          regarray[2] <= 0; // Code segment
+
+          initComplete <= 1'b1;
+        end
+
+        // Begin RAM read for instruction data
+        readReq <= 1;
+        ramAddress <= ipointer + regarray[2];
+        opDataWord <= 'h0badf00d;
+
+        // Clear out stuff for the pipeline
+        fOpEnable <= 7'b0000000;
+        condJump <= 1'b0;
+        mode <= `InstrReadWait;
       end
     
       // Mode InstrReadWait - wait while RAM registers address
       `InstrReadWait: begin
+        // Stop request
+        readReq <= 0;
+
         mode <= `InstrReadComplete;
     
       end
@@ -164,7 +185,6 @@ module ALU(
       `InstrReadComplete: begin
         // Since we did read request on mode 0, ram should be ready now
         //$display("Receiving value %h", ramIn);
-        //readReq <= 0;
   
         opCode <= ramIn[7:0];
         regAddress <=  (ramIn[15:8] >= 64)  ? (ramIn[15:8] - 64)  : (ramIn[15:8] + rPos);
@@ -225,7 +245,7 @@ module ALU(
         begin
           // Read values from ram requested by instruction
           readReq <= 1;
-          ramAddress <= ipointer + 4;
+          ramAddress <= ipointer + regarray[2] + 4;
   
           // We need to move into further modes
           mode <= `DataWordWait;
@@ -376,17 +396,40 @@ module ALU(
   
         if (opCode == `ReadPortRR)
         begin
+          case (regValue2[0])
+
+          1: begin
+            // Port 1 is read from UART
           uartReadReq <= 1;
+          end
+
+          2: begin
+            // Port 2 is UART write ready status
+          end
+
+          default: begin
+            $display("Unknown port %h being read", regValue[0]);
+          end
+
+          endcase
         end
+
+        if (opCode == `WritePortRR)
+        begin
+          uartWriteReq <= 1;
+          uartWriteData <= regValue2[0][7:0];
+        end
+
         mode <= `MemRWWait;
       end
   
       // Mode `MemRWWait - ramIn is set by RAM module
       `MemRWWait: begin
         // Stop request
-        readReq <= 0;
-        writeReq <= 0;
-        uartReadReq <= 0;
+        readReq <= 1'b0;
+        writeReq <= 1'b0;
+        uartReadReq <= 1'b0;
+        uartWriteReq <= 1'b0;
   
         mode <= `MemRWComplete;
       end
@@ -403,19 +446,39 @@ module ALU(
         end
         else if (opCode == `ReadPortRR)
         begin
-          if (uartReadAck == 1'b1)
-          begin
-            debug2[7:0] <= uartData;
-            ramValue[7:0] <= uartData;
-            ramValue[31:8] <= 1;
-//            debug2 <= debug2 | 'hF;
+          case (regValue2[0])
+
+          1: begin
+            // Read from UART is now complete, return
+            if (uartReadAck == 1'b1)
+            begin
+              debug2[7:0] <= uartReadData;
+              ramValue[7:0] <= uartReadData;
+              ramValue[31:8] <= 1;
+              //debug2 <= debug2 | 'hF;
+            end
+            else
+            begin
+              // Sorry, no value for you
+              ramValue <= 0;
+              //debug2 <= debug2 | 'hF0;
+            end
+	  end
+
+          2: begin
+            // Port 2 is UART write ready status
+            begin
+              ramValue[0:0] <= uartWriteReady;
+              ramValue[31:1] <= 0;
+	end
           end
-          else
-          begin
-            // Sorry, no value for you
-            ramValue <= 0;
-            //debug2 <= debug2 | 'hF0;
+
+          default: begin
+            $display("Unknown port %h being read", regValue[0]);
           end
+
+          endcase
+
         end
   
         mode <= `ProcessOpCode;
@@ -432,6 +495,19 @@ module ALU(
           `MovRC:    regarray[regAddress[7:0]] <= opDataWord;             // mov reg, const
           `MovRdC:   regarray[regAddress[7:0]] <= ramValue;               // mov reg, [addr]
           `MovRR:    regarray[regAddress[7:0]] <= regValue2[0];           // mov reg, reg
+
+          `PackRRR: begin
+            case (regValue3[0][1:0])
+              0: regarray[regAddress[7:0]][7:0] <= regValue2[0][7:0];
+              1: regarray[regAddress[7:0]][15:8] <= regValue2[0][7:0];
+              2: regarray[regAddress[7:0]][23:16] <= regValue2[0][7:0];
+              3: regarray[regAddress[7:0]][31:24] <= regValue2[0][7:0];
+              default: begin
+                $display("Out of range byte position");
+              end
+            endcase
+          end
+
           `MovRdRo:  regarray[regAddress[7:0]] <= ramValue;               // mov reg, [reg + const]
           `MovRdRoR: regarray[regAddress[7:0]] <= ramValue;               // mov reg, [reg + const * reg]
           `MovRdR:   regarray[regAddress[7:0]] <= ramValue;               // mov reg, [reg]
@@ -440,6 +516,8 @@ module ALU(
           `MovdRoRR: begin end // Done above
   
           `ReadPortRR: regarray[regAddress[7:0]] <= ramValue;             // ReadPort reg, reg
+          `WritePortRR: begin end // Done above
+
           `PushR: begin
             regarray[0] <= regarray[0] + 4;                               // push reg
           end
