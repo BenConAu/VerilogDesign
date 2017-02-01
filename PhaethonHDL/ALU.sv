@@ -149,9 +149,9 @@ module ALU(
         if (initComplete == 1'b0)
         begin
           // Some stuff is hard to do with initializers, so we do it here
-          regarray[0] = 0;
-          regarray[1] = 0;
-          regarray[2] = 0; // Code segment
+          regarray[0] <= 0;
+          regarray[1] <= 0;
+          regarray[2] <= 0; // Code segment
 
           initComplete <= 1'b1;
         end
