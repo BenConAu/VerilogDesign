@@ -3,6 +3,7 @@
 #include "TypeInfo.h"
 #include "StructMember.h"
 #include <vector>
+#include <memory>
 
 class PSLCompilerContext;
 

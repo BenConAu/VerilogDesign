@@ -2,6 +2,7 @@
 #include "PSLCompilerContext.h"
 #include "PSL.tab.h"
 #include "BasicTypeInfo.h"
+#include <string.h>
 
 ConstantNode::ConstantNode(PSLCompilerContext *pContext, ConstantType t, int v) : ExpressionNode(pContext)
 {

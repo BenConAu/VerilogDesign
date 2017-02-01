@@ -13,7 +13,7 @@
 #include "FunctionParameterNode.h"
 #include "DebugOutNode.h"
 #include "SizeOfNode.h"
-#include "AddressofNode.h"
+#include "AddressOfNode.h"
 #include "OffsetNode.h"
 #include "FunctionCallNode.h"
 #include "ReturnNode.h"

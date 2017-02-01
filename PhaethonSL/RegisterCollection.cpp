@@ -1,4 +1,5 @@
 #include "RegisterCollection.h"
+#include <algorithm>
 
 RegisterCollection::RegisterCollection(int regCount)
 {
