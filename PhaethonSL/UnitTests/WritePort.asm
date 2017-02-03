@@ -13,6 +13,7 @@ je @false_1
 mov r3, 3
 mov r1, 123
 writeport r3, r1
+dout r0
 mov r3, 1
 add r1, r0, r3
 mov r0, r1

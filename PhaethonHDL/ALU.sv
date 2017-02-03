@@ -106,8 +106,8 @@ module ALU(
   FloatingDivide      fDiv(regValue[0], regValue2[0], fDivResult, floatDebug, clk, fOpEnable[6:6]);
 
   //initial
-  //   $monitor("%t, ram = %h, %h, %h, %h : %h, %h, %h, %h",
-  //     $time, ramIn[7:0], ramIn[15:8], ramIn[23:16], ramIn[31:24], ramAddress, ramIn, opAddress, ramValue);
+     //$monitor("%t, ram = %h, %h, %h, %h : %h, %h, %h, %h",
+       //$time, ramIn[7:0], ramIn[15:8], ramIn[23:16], ramIn[31:24], ramAddress, ramIn, opAddress, ramValue);
 
   always @(posedge clk or posedge reset)
   begin
@@ -153,18 +153,23 @@ module ALU(
           regarray[1] <= 0;
           regarray[2] <= 0; // Code segment
 
+          // Mark initialization as complete
           initComplete <= 1'b1;
+
+          // Mode won't change, so next clock we will be back but skip init
         end
+        else
+        begin
+          // Begin RAM read for instruction data
+          readReq <= 1;
+          ramAddress <= ipointer + regarray[2];
+          opDataWord <= 'h0badf00d;
 
-        // Begin RAM read for instruction data
-        readReq <= 1;
-        ramAddress <= ipointer + regarray[2];
-        opDataWord <= 'h0badf00d;
-
-        // Clear out stuff for the pipeline
-        fOpEnable <= 7'b0000000;
-        condJump <= 1'b0;
-        mode <= `InstrReadWait;
+          // Clear out stuff for the pipeline
+          fOpEnable <= 7'b0000000;
+          condJump <= 1'b0;
+          mode <= `InstrReadWait;
+        end
       end
 
       // Mode InstrReadWait - wait while RAM registers address
