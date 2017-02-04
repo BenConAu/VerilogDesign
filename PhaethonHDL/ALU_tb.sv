@@ -44,7 +44,7 @@ module test;
   wire [0:0] uartReadReq;
 
   reg  [7:0] uartData = 'hab;
-  reg  [0:0] uartReadAck;
+  reg  [0:0] uartReadAck = 1'b0;
 
   wire uartWriteReq;
   wire [7:0] uartWriteData;
@@ -109,7 +109,7 @@ module test;
   // Fake UART receiver
   always @(posedge clk)
   begin
-    if (uartReadReq == 1)
+    if (uartReadReq == 1'b1)
     begin
       uartReadAck <= 1;
     end
@@ -120,7 +120,7 @@ module test;
   begin
     if (uartWriteReq == 1)
     begin
-      $display("UART send with data %h", uartWriteData <= 1);
+      $display("UART send with data %h", uartWriteData);
     end
   end  
 
