@@ -554,7 +554,7 @@ SEG7_LUT_8 			u0	(	.oSEG0(oHEX0_D),
 //	Reset Delay Timer
 Reset_Delay			r0	(	.iCLK(iCLK_50),.oRESET(DLY_RST)	);
 
-VGA_Audio_PLL 		p1	(	.areset(~DLY_RST),.inclk0(iTD1_CLK27),.c0(VGA_CTRL_CLK),.c1(AUD_CTRL_CLK),.c2(VGA_CLK)	);
+/*VGA_Audio_PLL 		p1	(	.areset(~DLY_RST),.inclk0(iTD1_CLK27),.c0(VGA_CTRL_CLK),.c1(AUD_CTRL_CLK),.c2(VGA_CLK)	);
 
 //	VGA Controller
 VGA_Controller		u1	(	//	Host Side
@@ -655,7 +655,7 @@ LCD_TEST 			u5	(	//	Host Side
 							.LCD_DATA(LCD_D_1),
 							.LCD_RW(LCD_RW_1),
 							.LCD_EN(LCD_EN_1),
-							.LCD_RS(LCD_RS_1)	);
+							.LCD_RS(LCD_RS_1)	);*/
 
 // The slow clock is run off the real one
 reg[31:0] clockCounter = 0;
@@ -706,7 +706,10 @@ ALU u7(
   .uartReadReq(dataReadReq), // [Output] uart read requested
   .uartReadAck(dataReadAck), // [Input]  Flag to indicate read success
   .uartReadData(dataRead),    // [Input] Actual data read 
-  
+  .uartWriteReq(dataWriteReq),   // [Output] uart write requested
+  .uartWriteData(dataWrite),  // [Output] uart data to write
+  .uartWriteReady(ready), // [Input]  uart ready to send
+
   //.ipointer(debughex),    // [Debug]  Instruction pointer value
   //.opCode(debughex),      // [Debug]  current opCode value
   .debug(debughex),          // [Debug]  current r0 value
@@ -728,7 +731,6 @@ wire dataComplete;
 wire[7:0] uartData;
   
 assign oUART_CTS = 1;
-assign oUART_TXD = 1;
 
 wire startBits;
 
@@ -759,5 +761,20 @@ UARTRingBuffer uartBuffer(
   oLEDG             // Debug2
   ); 
   
+ wire dataWriteReq;
+ wire[7:0] dataWrite;
+ wire ready;
+ wire uartSendDebug;
+  
+ UARTSend uartSend(
+  iCLK_50, 
+  0,
+  dataWriteReq,
+  dataWrite,
+  oUART_TXD,
+  ready,
+  uartSendDebug
+  );
+ 
 endmodule
 

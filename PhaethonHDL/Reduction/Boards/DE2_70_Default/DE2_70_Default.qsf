@@ -596,7 +596,7 @@ set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_INVERSION_MASK_LE
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_SEGMENT_SIZE=131072" -section_id auto_signaltap_0
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_NODE_CRC_HIWORD=44730" -section_id auto_signaltap_0
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_SAMPLE_DEPTH=131072" -section_id auto_signaltap_0
-set_global_assignment -name MIF_FILE UARTRead.mif
+set_global_assignment -name SYSTEMVERILOG_FILE ../../../UARTSend.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ../../../UARTRingBuffer.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ../../../UARTReceive.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ../../../FloatingMultiply.sv
@@ -605,7 +605,9 @@ set_global_assignment -name SYSTEMVERILOG_FILE ../../../FloatingFromInt.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ../../../FloatingDivide.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ../../../FloatingCompare.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ../../../FloatingAdd.sv
+set_global_assignment -name MIF_FILE WritePort.mif
 set_global_assignment -name MIF_FILE MultiplyLocal.mif
+set_global_assignment -name MIF_FILE UARTRead.mif
 set_global_assignment -name MIF_FILE loopy.mif
 set_global_assignment -name SYSTEMVERILOG_FILE ../../ALU.sv
 set_global_assignment -name VERILOG_FILE DE2_70_Default.v
