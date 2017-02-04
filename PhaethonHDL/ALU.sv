@@ -46,30 +46,34 @@ module ALU(
   input  wire [31:0] ramIn;
   output reg [31:0]  ramAddress;
   output reg [31:0]  ramOut;
-  output reg [0:0]   readReq = 0;
+  output reg [0:0]   readReq;
   output reg [0:0]   writeReq;
-  output reg [0:0]   uartReadReq = 0;
+  output reg [0:0]   uartReadReq;
   input  wire [0:0]  uartReadAck;
   input  wire [7:0]  uartReadData;
   output reg         uartWriteReq;
   output reg [7:0]   uartWriteData;
   input wire         uartWriteReady;
-  output reg [31:0]  ipointer = 0;
-  output reg [7:0]   opCode = 0;
+  output reg [31:0]  ipointer;
+  output reg [7:0]   opCode;
   output reg [31:0]  r0;
   output reg [31:0]  r1;
   output reg [31:0]  r2;
   output reg [31:0]  r3;
   output reg [31:0]  r4;
   output reg [31:0]  r5;
-  output reg [31:0]  debug = 0;
-  output reg [31:0]  debug2 = 0;
-  output reg [8:0]   debug3 = 0;
-  output reg [7:0]   rPos = 2;
+  output reg [31:0]  debug;
+  output reg [31:0]  debug2;
+  output reg [8:0]   debug3;
+  output reg [7:0]   rPos;
 
-  // Local registers
-  reg        [31:0] regarray[0:66];
+  // Local registers that need initialization
   reg        [7:0]  mode = `InitialMode;
+  reg        [31:0] counter = 0;
+  reg               initComplete = 1'b0;
+  
+  // Other local registers that are initialized elsewhere
+  reg        [31:0] regarray[0:66];
   reg        [31:0] ramValue;
   reg        [31:0] regValue[0:3];
   reg        [31:0] regValue2[0:3];
@@ -78,11 +82,9 @@ module ALU(
   reg        [7:0]  regAddress;
   reg        [7:0]  regAddress2;
   reg        [7:0]  regAddress3;
-  reg        [6:0]  fOpEnable = 7'b0000000;
-  reg        [0:0]  condJump = 1'b0;
+  reg        [6:0]  fOpEnable;
+  reg        [0:0]  condJump;
   reg        [31:0] sentinel;
-  reg        [31:0] counter;
-  reg               initComplete = 1'b0;
 
   // Wire up the results from the floating units
   wire       [31:0] fAddResult[0:3];
@@ -109,6 +111,8 @@ module ALU(
      //$monitor("%t, ram = %h, %h, %h, %h : %h, %h, %h, %h",
        //$time, ramIn[7:0], ramIn[15:8], ramIn[23:16], ramIn[31:24], ramAddress, ramIn, opAddress, ramValue);
 
+  //`define SLOWCLOCK 1
+  
   always @(posedge clk or posedge reset)
   begin
     `ifdef SLOWCLOCK
@@ -127,17 +131,8 @@ module ALU(
     // Regular code starts here
     if (reset == 'b1)
     begin
-      ipointer <= 0;
-      debug3 <= 1;
-      opCode <= 0;
-      opDataWord <= 'hffffffff;
-      rPos <= 3;
       mode <= `InitialMode;
-      readReq <= 0;
-      writeReq <= 0;
-      uartReadReq <= 0;
-      fOpEnable <= 7'b0000000;
-      condJump <= 1'b0;
+      initComplete <= 1'b0;
     end
     else
     begin
@@ -148,6 +143,23 @@ module ALU(
       `InitialMode: begin
         if (initComplete == 1'b0)
         begin
+          // We initialize most stuff here because it can be done once
+          // here and work both with the reset input and with an initializer
+          // for the registers.
+          debug <= 0;
+          debug2 <= 0;
+          debug3 <= 1;
+          
+          writeReq <= 0;
+          uartReadReq <= 0;
+          readReq <= 0;
+          opDataWord <= 'hffffffff;
+          opCode <= 0;
+          fOpEnable <= 7'b0000000;
+          ipointer <= 0;
+          condJump <= 1'b0;
+          rPos <= 3;
+
           // Some stuff is hard to do with initializers, so we do it here
           regarray[0] <= 0;
           regarray[1] <= 0;
