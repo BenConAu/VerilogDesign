@@ -1,0 +1,32 @@
+At time                    0, reset = 1, dWE = 1, dataWrite = 01, dRE = 0, dRAck = x, dataRead = xx, firstPos = x, lastPos = x, hasData = 0, db[0] = xx:xx:xx:xx:xx:xx:xx:xx
+At time                    1, reset = 0, dWE = 1, dataWrite = 01, dRE = 0, dRAck = x, dataRead = xx, firstPos = x, lastPos = x, hasData = 0, db[0] = xx:xx:xx:xx:xx:xx:xx:xx
+At time                    5, reset = 0, dWE = 1, dataWrite = 01, dRE = 0, dRAck = 0, dataRead = xx, firstPos = 0, lastPos = 0, hasData = 1, db[0] = 01:xx:xx:xx:xx:xx:xx:xx
+At time                   11, reset = 0, dWE = 1, dataWrite = 02, dRE = 0, dRAck = 0, dataRead = xx, firstPos = 0, lastPos = 0, hasData = 1, db[0] = 01:xx:xx:xx:xx:xx:xx:xx
+At time                   15, reset = 0, dWE = 1, dataWrite = 02, dRE = 0, dRAck = 0, dataRead = xx, firstPos = 0, lastPos = 1, hasData = 1, db[0] = 01:02:xx:xx:xx:xx:xx:xx
+At time                   21, reset = 0, dWE = 1, dataWrite = 03, dRE = 0, dRAck = 0, dataRead = xx, firstPos = 0, lastPos = 1, hasData = 1, db[0] = 01:02:xx:xx:xx:xx:xx:xx
+At time                   25, reset = 0, dWE = 1, dataWrite = 03, dRE = 0, dRAck = 0, dataRead = xx, firstPos = 0, lastPos = 2, hasData = 1, db[0] = 01:02:03:xx:xx:xx:xx:xx
+At time                   31, reset = 0, dWE = 0, dataWrite = 04, dRE = 1, dRAck = 0, dataRead = xx, firstPos = 0, lastPos = 2, hasData = 1, db[0] = 01:02:03:xx:xx:xx:xx:xx
+At time                   35, reset = 0, dWE = 0, dataWrite = 04, dRE = 1, dRAck = 1, dataRead = 01, firstPos = 1, lastPos = 2, hasData = 1, db[0] = ff:02:03:xx:xx:xx:xx:xx
+At time                   41, reset = 0, dWE = 0, dataWrite = 05, dRE = 1, dRAck = 1, dataRead = 01, firstPos = 1, lastPos = 2, hasData = 1, db[0] = ff:02:03:xx:xx:xx:xx:xx
+At time                   45, reset = 0, dWE = 0, dataWrite = 05, dRE = 1, dRAck = 1, dataRead = 02, firstPos = 2, lastPos = 2, hasData = 1, db[0] = ff:ff:03:xx:xx:xx:xx:xx
+At time                   51, reset = 0, dWE = 1, dataWrite = 06, dRE = 0, dRAck = 1, dataRead = 02, firstPos = 2, lastPos = 2, hasData = 1, db[0] = ff:ff:03:xx:xx:xx:xx:xx
+At time                   55, reset = 0, dWE = 1, dataWrite = 06, dRE = 0, dRAck = 0, dataRead = 02, firstPos = 2, lastPos = 3, hasData = 1, db[0] = ff:ff:03:06:xx:xx:xx:xx
+At time                   61, reset = 0, dWE = 1, dataWrite = 07, dRE = 0, dRAck = 0, dataRead = 02, firstPos = 2, lastPos = 3, hasData = 1, db[0] = ff:ff:03:06:xx:xx:xx:xx
+At time                   65, reset = 0, dWE = 1, dataWrite = 07, dRE = 0, dRAck = 0, dataRead = 02, firstPos = 2, lastPos = 4, hasData = 1, db[0] = ff:ff:03:06:07:xx:xx:xx
+At time                   71, reset = 0, dWE = 1, dataWrite = 08, dRE = 0, dRAck = 0, dataRead = 02, firstPos = 2, lastPos = 4, hasData = 1, db[0] = ff:ff:03:06:07:xx:xx:xx
+At time                   75, reset = 0, dWE = 1, dataWrite = 08, dRE = 0, dRAck = 0, dataRead = 02, firstPos = 2, lastPos = 5, hasData = 1, db[0] = ff:ff:03:06:07:08:xx:xx
+At time                   81, reset = 0, dWE = 1, dataWrite = 09, dRE = 0, dRAck = 0, dataRead = 02, firstPos = 2, lastPos = 5, hasData = 1, db[0] = ff:ff:03:06:07:08:xx:xx
+At time                   85, reset = 0, dWE = 1, dataWrite = 09, dRE = 0, dRAck = 0, dataRead = 02, firstPos = 2, lastPos = 6, hasData = 1, db[0] = ff:ff:03:06:07:08:09:xx
+At time                   91, reset = 0, dWE = 0, dataWrite = 0a, dRE = 1, dRAck = 0, dataRead = 02, firstPos = 2, lastPos = 6, hasData = 1, db[0] = ff:ff:03:06:07:08:09:xx
+At time                   95, reset = 0, dWE = 0, dataWrite = 0a, dRE = 1, dRAck = 1, dataRead = 03, firstPos = 3, lastPos = 6, hasData = 1, db[0] = ff:ff:ff:06:07:08:09:xx
+At time                  105, reset = 0, dWE = 0, dataWrite = 0a, dRE = 1, dRAck = 1, dataRead = 06, firstPos = 4, lastPos = 6, hasData = 1, db[0] = ff:ff:ff:ff:07:08:09:xx
+At time                  115, reset = 0, dWE = 0, dataWrite = 0a, dRE = 1, dRAck = 1, dataRead = 07, firstPos = 5, lastPos = 6, hasData = 1, db[0] = ff:ff:ff:ff:ff:08:09:xx
+At time                  125, reset = 0, dWE = 0, dataWrite = 0a, dRE = 1, dRAck = 1, dataRead = 08, firstPos = 6, lastPos = 6, hasData = 1, db[0] = ff:ff:ff:ff:ff:ff:09:xx
+Setting to empty
+At time                  135, reset = 0, dWE = 0, dataWrite = 0a, dRE = 1, dRAck = 1, dataRead = 09, firstPos = 7, lastPos = 6, hasData = 0, db[0] = ff:ff:ff:ff:ff:ff:ff:xx
+Buffer empty, cannot read
+At time                  145, reset = 0, dWE = 0, dataWrite = 0a, dRE = 1, dRAck = 0, dataRead = 09, firstPos = 7, lastPos = 6, hasData = 0, db[0] = ff:ff:ff:ff:ff:ff:ff:xx
+Buffer empty, cannot read
+Buffer empty, cannot read
+Buffer empty, cannot read
+Buffer empty, cannot read

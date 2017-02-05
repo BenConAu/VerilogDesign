@@ -42,7 +42,7 @@ module test;
   wire[31:0] debug;
   wire[31:0] debug2;
   
-  UARTRingBuffer ring(
+  UARTRingBuffer #(`BITLENGTH) ring(
     clk,
     reset,
     writeEnable,
