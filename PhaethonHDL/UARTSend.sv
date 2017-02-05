@@ -12,7 +12,7 @@ module UARTSend(
   input wire reset;            // Reset wire
   input wire sendReq;          // Send request
   input wire[7:0] dataInput;   // Data to send
-  output reg txd = 1;          // UART TxD 
+  output reg txd = 1;          // UART TxD
   output reg ready = 1;        // Signaled when ready to send
   output reg[31:0] debug = 0;  // Debug output
 
