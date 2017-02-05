@@ -8,7 +8,7 @@ module UARTReceive(
   );
 
   input wire clk;              // The CPU clock signal
-  input wire reset;            // Reset wire
+  input wire reset;            // Reset wire 
   input wire rxd;              // UART RxD
   output reg dataComplete;     // Signal that data is complete
   output reg[7:0] dataOutput;  // Data returned when data is complete
