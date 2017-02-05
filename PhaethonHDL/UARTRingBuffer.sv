@@ -10,6 +10,9 @@ module UARTRingBuffer(
   debug2            // Another debug port
   );
 
+  parameter LengthBits = 3;
+  parameter BufferLength = 1 << LengthBits;
+
   input wire clk;
   input wire reset;
   input wire dataWriteEnable;
@@ -20,15 +23,15 @@ module UARTRingBuffer(
   output reg[31:0] debug;
   output reg[31:0] debug2;
 
-  reg [1:0] firstPos;
-  reg [1:0] lastPos;
+  reg [(LengthBits - 1):0] firstPos;
+  reg [(LengthBits - 1):0] lastPos;
   reg hasData = 0;
-  reg [7:0] dataBuffer[0:3];
+  reg [7:0] dataBuffer[0:(BufferLength - 1)];
 
   initial
-     $monitor("At time %t, reset = %h, dWE = %h, dataWrite = %h, dRE = %h, dRAck = %h, dataRead = %h, firstPos = %h, lastPos = %h, hasData = %h, db[0] = %h:%h:%h:%h",
+     $monitor("At time %t, reset = %h, dWE = %h, dataWrite = %h, dRE = %h, dRAck = %h, dataRead = %h, firstPos = %h, lastPos = %h, hasData = %h, db[0] = %h:%h:%h:%h:%h:%h:%h:%h",
               $time, reset, dataWriteEnable, dataWrite, dataReadEnable, dataReadAck, dataRead, firstPos, lastPos, hasData,
-              dataBuffer[0], dataBuffer[1], dataBuffer[2], dataBuffer[3]);
+              dataBuffer[0], dataBuffer[1], dataBuffer[2], dataBuffer[3], dataBuffer[4], dataBuffer[5], dataBuffer[6], dataBuffer[7]);
 
   always @(posedge clk or posedge reset)
   begin
@@ -49,7 +52,7 @@ module UARTRingBuffer(
         
         // Write is going into buffer
         if (hasData == 1 && 
-            (lastPos > firstPos && lastPos - firstPos == 3 ||
+            (lastPos > firstPos && lastPos - firstPos == BufferLength - 1 ||
             lastPos < firstPos && firstPos - lastPos == 1))
         begin
           // Buffer is full, so the data is dropped
@@ -69,7 +72,7 @@ module UARTRingBuffer(
           end
           else
           begin
-            dataBuffer[(lastPos + 1) & 2'b11] <= dataWrite;
+            dataBuffer[(lastPos + 1) & (BufferLength - 1)] <= dataWrite;
             lastPos <= lastPos + 1;
             debug2 <= 3;
           end
