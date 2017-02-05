@@ -1,4 +1,4 @@
-module UARTRingBuffer(
+module RingBuffer(
   clk,              // Global clock
   reset,            // Reset
   dataWriteEnable,  // Flag to indicate request to write
@@ -10,23 +10,27 @@ module UARTRingBuffer(
   debug2            // Another debug port
   );
 
+  // Parameters for length of buffer
   parameter LengthBits = 3;
   parameter BufferLength = 1 << LengthBits;
+
+  // Parameters for width of buffer
+  parameter WordSize = 8;
 
   input wire clk;
   input wire reset;
   input wire dataWriteEnable;
-  input wire[7:0] dataWrite;
+  input wire[(WordSize - 1):0] dataWrite;
   input wire dataReadEnable;
   output reg dataReadAck;
-  output reg[7:0] dataRead;
+  output reg[(WordSize - 1):0] dataRead;
   output reg[31:0] debug;
   output reg[31:0] debug2;
 
   reg [(LengthBits - 1):0] firstPos;
   reg [(LengthBits - 1):0] lastPos;
   reg hasData = 0;
-  reg [7:0] dataBuffer[0:(BufferLength - 1)];
+  reg [(WordSize - 1):0] dataBuffer[0:(BufferLength - 1)];
 
   initial
      $monitor("At time %t, reset = %h, dWE = %h, dataWrite = %h, dRE = %h, dRAck = %h, dataRead = %h, firstPos = %h, lastPos = %h, hasData = %h, db[0] = %h:%h:%h:%h:%h:%h:%h:%h",
