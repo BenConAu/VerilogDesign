@@ -6,7 +6,7 @@ module UARTRingBuffer(
   dataReadEnable,   // Flag to indicate request to read
   dataReadAck,      // Flag to indicate read success
   dataRead,         // Actual data read
-  debug,            // Debug port
+  debug,            // Debug port 
   debug2            // Another debug port
   );
 
