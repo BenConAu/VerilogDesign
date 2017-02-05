@@ -1,22 +1,22 @@
 default: RingBuffer_tb_4 RingBuffer_tb_4.result RingBuffer_tb_8 RingBuffer_tb_8.result ALU_tb
 
 RingBuffer_tb_4: \
-    UARTRingBuffer.sv \
-	UARTRingBuffer_tb.sv
+    RingBuffer.sv \
+	RingBuffer_tb.sv
 	iverilog -DBITLENGTH=2 -o RingBuffer_tb_4 \
-    UARTRingBuffer.sv \
-    UARTRingBuffer_tb.sv
+    RingBuffer.sv \
+    RingBuffer_tb.sv
 
 RingBuffer_tb_4.result: \
     RingBuffer_tb_4
 	vvp RingBuffer_tb_4 > RingBuffer_tb_4.result
 
 RingBuffer_tb_8: \
-    UARTRingBuffer.sv \
-	UARTRingBuffer_tb.sv
+    RingBuffer.sv \
+	RingBuffer_tb.sv
 	iverilog -DBITLENGTH=3 -o RingBuffer_tb_8 \
-    UARTRingBuffer.sv \
-    UARTRingBuffer_tb.sv
+    RingBuffer.sv \
+    RingBuffer_tb.sv
 
 RingBuffer_tb_8.result: \
     RingBuffer_tb_8
