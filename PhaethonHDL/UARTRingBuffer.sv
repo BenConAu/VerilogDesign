@@ -1,6 +1,6 @@
 module UARTRingBuffer(
   clk,              // Global clock
-  reset,            // Reset
+  reset,            // Reset for module
   dataWriteEnable,  // Flag to indicate request to write
   dataWrite,        // Data to write
   dataReadEnable,   // Flag to indicate request to read
