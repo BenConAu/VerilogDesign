@@ -56,7 +56,7 @@ task CLZ;
     if (inter[31:24] == 'h00)
     begin
       res = res + 8;
-      inter[31:24] = inter[25:16];
+      inter[31:24] = inter[23:16];
     end
     if (inter[31:28] == 'h0)
     begin
