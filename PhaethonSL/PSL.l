@@ -68,6 +68,7 @@
 "execr"              { return EXECR_TOKEN; }
 "exit"               { return EXIT_TOKEN; }
 [0-9]+               { yylval->intVal = atoi(yytext); return INTCONSTANT; }
+"0x"[0-9A-Fa-f]+     { yylval->intVal = strtol(yytext, nullptr, 16); return INTCONSTANT; }
 "f"[0-9]+"\."[0-9]*  { yylval->floatVal = (float)atof(yytext + 1); return FLOATCONSTANT; }
 [A-Za-z_][A-Za-z0-9_]* { yylval->symIndex = yyextra->AddSymbol(yytext); return IDENTIFIER; }
 .                    ;

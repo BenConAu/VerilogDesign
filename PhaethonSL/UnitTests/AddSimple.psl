@@ -1,0 +1,8 @@
+void main()
+{
+    word a = 0xabc;
+    word b = 0x123;
+    word c = a + b;
+
+    __emit(doutr, c);
+}
