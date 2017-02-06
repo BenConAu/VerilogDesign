@@ -20,7 +20,7 @@ module FloatingAdd(a, b, negate, out, debug, clk, enable);
   reg [31:0] normMant;
   reg [31:0] clz;
 
-  always @(posedge clk or posedge enable)
+  always @(posedge clk)
   begin
     if (enable == 1)
     begin
@@ -64,7 +64,10 @@ module FloatingAdd(a, b, negate, out, debug, clk, enable);
       out[22:0] = normMant[22:0];
     end
     else
-      out = 'habc;
+    begin
+      out <= 'habc;
+      debug <= 0;
+    end
   end
   
 endmodule // floating
