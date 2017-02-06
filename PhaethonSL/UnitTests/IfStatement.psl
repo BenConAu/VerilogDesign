@@ -3,26 +3,26 @@ void main()
     bool t = true;
     if (t)
     {
-        debugout(1);
+        __emit(doutr, 1);
     }
 
     bool t2 = true;
     if (t2)
     {
-        debugout(2);
+        __emit(doutr, 2);
     }
     else
     {
-        debugout(3);
+        __emit(doutr, 3);
     }
 
     bool t3 = false;
     if (t3)
     {
-        debugout(2);
+        __emit(doutr, 2);
     }
     else
     {
-        debugout(3);
+        __emit(doutr, 3);
     }
 }

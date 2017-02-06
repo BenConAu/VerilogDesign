@@ -9,7 +9,7 @@ void main()
 {
     ptr<void> testPtr;
     testPtr = &fooVar;
-    debugout(testPtr);
+    __emit(doutr, testPtr);
     testPtr = offsetptr<void>(testPtr, 100);
-    debugout(testPtr);
+    __emit(doutr, testPtr);
 }

@@ -1,13 +1,13 @@
 void main()
 {
     word dest = 1234;
-    debugout(dest);
+    __emit(doutr, dest);
     packbyte(dest, 127, 0);
-    debugout(dest);
+    __emit(doutr, dest);
     packbyte(dest, 63, 1);
-    debugout(dest);
+    __emit(doutr, dest);
     packbyte(dest, 31, 2);
-    debugout(dest);
+    __emit(doutr, dest);
     packbyte(dest, 15, 3);
-    debugout(dest);
+    __emit(doutr, dest);
 }

@@ -20,6 +20,6 @@ void main()
     word d;
     c = fooVar.a;
     d = fooVar.b;
-    debugout(c);
-    debugout(d);
+    __emit(doutr, c);
+    __emit(doutr, d);
 }

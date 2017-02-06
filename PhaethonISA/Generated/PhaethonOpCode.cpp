@@ -40,6 +40,8 @@ InstructionData InstructionData::s_data[] = {
     { Instructions::ReadPort  , "readport" },
     { Instructions::WritePort , "writeport" },
     { Instructions::Stall     , "stall" },
+    { Instructions::Exec      , "exec" },
+    { Instructions::Exit      , "exit" },
 };
 
 int InstructionData::s_dataCount = sizeof(InstructionData::s_data) / sizeof(InstructionData::s_data[0]);
@@ -95,6 +97,8 @@ OpCodeData OpCodeData::s_data[] = {
     { Instructions::ReadPort  , OpCodes::ReadPortRR     , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "ReadPortRR" },
     { Instructions::WritePort , OpCodes::WritePortRR    , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "WritePortRR" },
     { Instructions::Stall     , OpCodes::Stall          , { OperandType::None                  , OperandType::None                  , OperandType::None         }, -1, "Stall" },
+    { Instructions::Exec      , OpCodes::ExecR          , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "ExecR" },
+    { Instructions::Exit      , OpCodes::Exit           , { OperandType::None                  , OperandType::None                  , OperandType::None         }, -1, "Exit" },
 };
 
 int OpCodeData::s_dataCount = sizeof(OpCodeData::s_data) / sizeof(OpCodeData::s_data[0]);

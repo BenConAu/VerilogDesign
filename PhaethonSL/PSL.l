@@ -50,7 +50,6 @@
 "void"               { return VOID_TOKEN; }
 "struct"             { return STRUCT_TOKEN; }
 "nullptr"            { return NULLPTR_TOKEN; }
-"debugout"           { return DEBUGOUT_TOKEN; }
 "sizeof"             { return SIZEOF_TOKEN; }
 "offsetptr"          { return OFFSETPTR_TOKEN; }
 "castptr"            { return CASTPTR_TOKEN; }
@@ -64,6 +63,10 @@
 "else"               { return ELSE_TOKEN; }
 "true"               { yylval->intVal = 1; return BOOLCONSTANT; }
 "false"              { yylval->intVal = 0; return BOOLCONSTANT; }
+"__emit"             { return EMIT_TOKEN; }
+"doutr"              { return DOUTR_TOKEN; }
+"execr"              { return EXECR_TOKEN; }
+"exit"               { return EXIT_TOKEN; }
 [0-9]+               { yylval->intVal = atoi(yytext); return INTCONSTANT; }
 "f"[0-9]+"\."[0-9]*  { yylval->floatVal = (float)atof(yytext + 1); return FLOATCONSTANT; }
 [A-Za-z_][A-Za-z0-9_]* { yylval->symIndex = yyextra->AddSymbol(yytext); return IDENTIFIER; }

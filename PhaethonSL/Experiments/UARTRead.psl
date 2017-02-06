@@ -6,7 +6,7 @@ void main()
         word input = readport(1);
         if (input >. 255)
         {
-            debugout(input);
+            __emit(doutr, input);
         }
     }
 }

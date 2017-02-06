@@ -15,7 +15,8 @@ PSLcc: lex.yy.c \
 	   CastNode.h \
 	   ConstantNode.cpp \
 	   ConstantNode.h \
-	   DebugOutNode.h \
+	   EmitNode.cpp \
+	   EmitNode.h \
 	   ExpressionNode.cpp \
 	   ExpressionNode.h \
 	   ExpressionResult.cpp \
@@ -116,6 +117,7 @@ PSLcc: lex.yy.c \
 	   BasicTypeInfo.cpp \
 	   CastNode.cpp \
 	   ConstantNode.cpp \
+	   EmitNode.cpp \
 	   ExpressionNode.cpp \
 	   ExpressionResult.cpp \
 	   FieldSelectionNode.cpp \

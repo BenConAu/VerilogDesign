@@ -6,7 +6,7 @@ void main()
         if (readport(2) == 1)
         {
             writeport(3, 123);
-            debugout(i);
+            __emit(doutr, i);
             i = i + 1;
         }
     }

@@ -4,6 +4,6 @@ void main()
     word b = 64;
     word c = a << 3;
     word d = b >> 2;
-    debugout(c);
-    debugout(d);
+    __emit(doutr, c);
+    __emit(doutr, d);
 }

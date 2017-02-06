@@ -44,6 +44,8 @@ namespace Instructions
         ReadPort = 37,
         WritePort = 38,
         Stall = 39,
+        Exec = 40,
+        Exit = 41,
     };
 }
 namespace OpCodes
@@ -101,6 +103,8 @@ namespace OpCodes
         ReadPortRR = 48,
         WritePortRR = 49,
         Stall = 50,
+        ExecR = 51,
+        Exit = 52,
     };
 }
 bool Is8ByteOpcode(OpCodes::Enum opCodeParam);

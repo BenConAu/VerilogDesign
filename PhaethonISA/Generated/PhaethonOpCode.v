@@ -48,6 +48,8 @@
 `define ReadPortRR 48
 `define WritePortRR 49
 `define Stall 50
+`define ExecR 51
+`define Exit 52
 
 function [0:0] Is8ByteOpcode;
   input [7:0] opCodeParam;

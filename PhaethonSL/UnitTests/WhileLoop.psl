@@ -3,16 +3,16 @@ void main()
     word i = 10;
     while (i != 0)
     {
-        debugout(i);
+        __emit(doutr, i);
         i = i - 1;
     }
 
     i = 10;
     while (i >. 0)
     {
-        debugout(i);
+        __emit(doutr, i);
         i = i - 1;
     }
     
-    debugout(i);
+    __emit(doutr, i);
 }

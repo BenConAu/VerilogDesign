@@ -11,7 +11,7 @@
 #include "StructDeclarationNode.h"
 #include "FieldSelectionNode.h"
 #include "FunctionParameterNode.h"
-#include "DebugOutNode.h"
+#include "EmitNode.h"
 #include "SizeOfNode.h"
 #include "AddressOfNode.h"
 #include "OffsetNode.h"

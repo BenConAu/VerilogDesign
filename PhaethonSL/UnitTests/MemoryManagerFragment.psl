@@ -26,7 +26,7 @@ void main()
 {
     MemoryInit();
 
-    debugout(header.first);
-    debugout(header.first->next);
-    debugout(header.first->length);
+    __emit(doutr, header.first);
+    __emit(doutr, header.first->next);
+    __emit(doutr, header.first->length);
 }

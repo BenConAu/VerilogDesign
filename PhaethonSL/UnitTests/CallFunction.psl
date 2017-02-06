@@ -7,7 +7,7 @@ foo fooVar;
 
 word Func(word p)
 {
-    debugout(p);
+    __emit(doutr, p);
     return 1338;
 }
 
@@ -16,5 +16,5 @@ void main()
     fooVar.a = 1337;
     word t;
     t = Func(fooVar.a);
-    debugout(t);
+    __emit(doutr, t);
 }
