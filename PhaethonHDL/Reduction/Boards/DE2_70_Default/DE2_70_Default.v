@@ -749,7 +749,7 @@ UARTReceive uart1(
  wire uartDebug1;
  wire uartDebug2;
   
-UARTRingBuffer uartBuffer(
+RingBuffer uartBuffer(
   iCLK_50,          // Global clock
   0,                // Reset
   dataComplete,     // Flag to indicate request to write
