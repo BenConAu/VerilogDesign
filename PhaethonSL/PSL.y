@@ -24,6 +24,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
     float floatVal;
 	int symIndex;
     ASTNode* pNode;
+    int token;
 }
 
 %locations
@@ -67,7 +68,10 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token ELSE_TOKEN
 %token WHILE_TOKEN
 %token NULLPTR_TOKEN
-%token DEBUGOUT_TOKEN
+%token DOUTR_TOKEN
+%token EXECR_TOKEN
+%token EXIT_TOKEN
+%token EMIT_TOKEN
 %token SIZEOF_TOKEN
 %token OFFSETPTR_TOKEN
 %token CASTPTR_TOKEN
@@ -102,7 +106,9 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> external_declaration
 %type <pNode> parameter_declaration
 %type <pNode> function_header_with_parameters
-%type <pNode> debugout_statement
+%type <pNode> emit_statement
+%type <token> opcode0_token
+%type <token> opcode1_token
 %type <pNode> packbyte_statement
 %type <pNode> sizeof_expression
 %type <pNode> offset_expression
@@ -144,7 +150,7 @@ statement:
     | selection_statement                                           { $$ = $1; }
     | declaration_statement                                         { $$ = $1; }
     | jump_statement                                                { $$ = $1; }
-    | debugout_statement                                            { $$ = $1; }
+    | emit_statement                                                { $$ = $1; }
     | packbyte_statement                                            { $$ = $1; }
     | writeport_statement                                           { $$ = $1; }
     ;
@@ -357,9 +363,20 @@ return_statement:
       RETURN_TOKEN assignment_expression SEMICOLON                  { $$ = new ReturnNode(pContext, $2); }
     ;
 
-debugout_statement:
-      DEBUGOUT_TOKEN LEFT_PAREN postfix_expression RIGHT_PAREN SEMICOLON      
-                                                                    { $$ = new DebugOutNode(pContext, $3); }
+emit_statement:
+      EMIT_TOKEN LEFT_PAREN opcode0_token RIGHT_PAREN SEMICOLON      
+                                                                    { $$ = new EmitNode(pContext, $3, nullptr); }
+    | EMIT_TOKEN LEFT_PAREN opcode1_token COMMA postfix_expression RIGHT_PAREN SEMICOLON      
+                                                                    { $$ = new EmitNode(pContext, $3, $5); }
+    ;
+
+opcode0_token:
+      EXIT_TOKEN                                                    { $$ = EXIT_TOKEN; }
+    ;
+
+opcode1_token:
+      DOUTR_TOKEN                                                   { $$ = DOUTR_TOKEN; }
+    | EXECR_TOKEN                                                   { $$ = EXECR_TOKEN; }
     ;
 
 packbyte_statement:

@@ -20,5 +20,5 @@ void main()
     ptr<TestStruct> newPtr;
     newPtr = Func<TestStruct>(testPtr);
 
-    debugout(newPtr->Member);
+    __emit(doutr, newPtr->Member);
 }

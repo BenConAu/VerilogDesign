@@ -71,7 +71,7 @@ void DumpHeap()
     word i = 0;
     while (i .< pCurrent->Count)
     {
-        debugout(pCurrent->AllocLengths[i]);
+        __emit(doutr, pCurrent->AllocLengths[i]);
 
         i = i + 1;
     }    
@@ -82,20 +82,20 @@ void main()
     MemoryInit();
 
     // Where does the data segment end?
-    debugout(__datasegmentend);
+    __emit(doutr, __datasegmentend);
 
     // Where did this memory end up?
     ptr<void> alloc1 = MemoryAlloc<void>(100);
-    debugout(alloc1);
+    __emit(doutr, alloc1);
     DumpHeap();
 
     // Try another allocation
     ptr<void> alloc2 = MemoryAlloc<void>(200);
-    debugout(alloc2);
+    __emit(doutr, alloc2);
     DumpHeap();
 
     // This one should fail
     ptr<void> alloc3 = MemoryAlloc<void>(1000);
-    debugout(alloc3);
+    __emit(doutr, alloc3);
     DumpHeap();
 }

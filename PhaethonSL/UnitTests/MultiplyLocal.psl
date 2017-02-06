@@ -17,5 +17,5 @@ void main()
     fooVar.b = fooVar.a * d;
     fooVar.c = d * fooVar.b;
     d = fooVar.c;
-    debugout(d);
+    __emit(doutr, d);
 }

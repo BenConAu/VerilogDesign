@@ -48,3 +48,5 @@ Dout        Register              None                  None      NoFlags
 ReadPort    Register              Register              None      RAM
 WritePort   Register              Register              None      RAM
 Stall       None                  None                  None      NoFlags
+Exec        Register              None                  None      NoFlags
+Exit        None                  None                  None      NoFlags

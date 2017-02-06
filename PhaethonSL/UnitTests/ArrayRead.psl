@@ -16,14 +16,14 @@ foo2 foo2Var;
 void main()
 {
     fooVar.b[0] = 37;
-    debugout(fooVar.b[0]);
+    __emit(doutr, fooVar.b[0]);
 
     foo2Var.a = 1;
     foo2Var.b[0] = 2;
     foo2Var.b[4] = 3;
     foo2Var.c = 4;
-    debugout(foo2Var.a);
-    debugout(foo2Var.b[0]);
-    debugout(foo2Var.b[4]);
-    debugout(foo2Var.c);
+    __emit(doutr, foo2Var.a);
+    __emit(doutr, foo2Var.b[0]);
+    __emit(doutr, foo2Var.b[4]);
+    __emit(doutr, foo2Var.c);
 }

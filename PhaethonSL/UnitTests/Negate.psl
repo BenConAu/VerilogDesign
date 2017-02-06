@@ -3,7 +3,7 @@ void main()
     word a = 1;
     word b = -a;
     word c = -1;
-    debugout(a);
-    debugout(b);
-    debugout(c);
+    __emit(doutr, a);
+    __emit(doutr, b);
+    __emit(doutr, c);
 }

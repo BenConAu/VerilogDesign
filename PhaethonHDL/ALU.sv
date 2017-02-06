@@ -663,6 +663,22 @@ module ALU(
 
           `MulAddRRC:  regarray[regAddress[7:0]] <= regValue[0] + regValue2[0] * opDataWord;
 
+          `ExecR: begin
+            // This basically sets the code segment register
+            regarray[`CodeSegmentReg] <= regValue[0];
+
+            // Also set where to go when it returns (the next instruction)
+            regarray[`CodeReturnReg] <= ipointer + 4;
+          end
+
+          `Exit: begin
+            // Return control by clearing code segment
+            regarray[`CodeSegmentReg] <= 0;
+
+            // Set IP back to where we need it to be
+            ipointer <= regarray[`CodeReturnReg];
+          end
+
           `DoutR: begin
             // In simulation we use $display for this
             $display("DebugOut %h", regValue[0]);
@@ -691,7 +707,9 @@ module ALU(
             opCode != `Ret &&
             opCode != `RCallRC &&
             opCode != `RRet &&
-            opCode != `Stall
+            opCode != `Stall &&
+            opCode != `ExecR &&
+            opCode != `Exit
             )
         begin
           //$display("Incrementing ip");
