@@ -32,6 +32,24 @@ void main()
                 
                 // Next word
                 currentWord = currentWord + 1;
+
+                // Program needs header and length
+                if (currentWord >. 2)
+                {
+                    // Correct header
+                    if (0x1337beef == pData[0])
+                    {
+                        // Did we get all of the words in the program?
+                        if (currentWord + 2 == pData[1])
+                        {
+                            // Execute!
+                            __emit(execr, pData);
+
+                            // If we are coming back, reset word count
+                            currentWord = 0;                       
+                        }
+                    }
+                }
             }
         }
     }
