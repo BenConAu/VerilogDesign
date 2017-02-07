@@ -164,7 +164,7 @@ module ALU(
           fOpEnable <= 7'b0000000;
           ipointer <= 0;
           condJump <= 1'b0;
-          rPos <= 3;
+          rPos <= `FixedRegCount;
 
           // Some stuff is hard to do with initializers, so we do it here
           regarray[`StackPointerReg] <= 0;
@@ -669,6 +669,9 @@ module ALU(
 
             // Also set where to go when it returns (the next instruction)
             regarray[`CodeReturnReg] <= ipointer + 4;
+
+            // IP is reset to zero
+            ipointer <= 0;
           end
 
           `Exit: begin
