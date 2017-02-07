@@ -72,8 +72,14 @@ module ALU(
   reg        [31:0] counter = 0;
   reg               initComplete = 1'b0;
   
+  `define StackPointerReg 0
+  `define FlagsReg 1
+  `define CodeSegmentReg 2
+  `define CodeReturnReg 3
+  `define FixedRegCount 4
+
   // Other local registers that are initialized elsewhere
-  reg        [31:0] regarray[0:66];
+  reg        [31:0] regarray[0:(63 + `FixedRegCount)];
   reg        [31:0] ramValue;
   reg        [31:0] regValue[0:3];
   reg        [31:0] regValue2[0:3];
@@ -159,12 +165,12 @@ module ALU(
           fOpEnable <= 7'b0000000;
           ipointer <= 0;
           condJump <= 1'b0;
-          rPos <= 3;
+          rPos <= `FixedRegCount;
 
           // Some stuff is hard to do with initializers, so we do it here
-          regarray[0] <= 0;
-          regarray[1] <= 0;
-          regarray[2] <= 0; // Code segment
+          regarray[`StackPointerReg] <= 0;
+          regarray[`FlagsReg] <= 0;
+          regarray[`CodeSegmentReg] <= 0; // Code segment
 
           // Mark initialization as complete
           initComplete <= 1'b1;
@@ -175,7 +181,7 @@ module ALU(
         begin
           // Begin RAM read for instruction data
           readReq <= 1;
-          ramAddress <= ipointer + regarray[2];
+          ramAddress <= ipointer + regarray[`CodeSegmentReg];
           opDataWord <= 'h0badf00d;
 
           // Clear out stuff for the pipeline
@@ -251,8 +257,8 @@ module ALU(
         if (opCode == `FdivRR) fOpEnable[6:6] <= 1;
         
         // Determine if a conditional jump needs to happen
-        if (opCode == `JneC && regarray[1][0:0] == 1'b0) condJump <= 1'b1;
-        if (opCode == `JeC && regarray[1][0:0] == 1'b1) condJump <= 1'b1;
+        if (opCode == `JneC && regarray[`FlagsReg][0:0] == 1'b0) condJump <= 1'b1;
+        if (opCode == `JeC && regarray[`FlagsReg][0:0] == 1'b1) condJump <= 1'b1;
         if (opCode == `JzRC && regarray[regAddress3[7:0]] == 0) condJump <= 1'b1;
         if (opCode == `JnzRC && regarray[regAddress3[7:0]] != 0) condJump <= 1'b1;
     
@@ -260,7 +266,7 @@ module ALU(
         begin
           // Read values from ram requested by instruction
           readReq <= 1;
-          ramAddress <= ipointer + regarray[2] + 4;
+          ramAddress <= ipointer + regarray[`CodeSegmentReg] + 4;
   
           // We need to move into further modes
           mode <= `DataWordWait;
@@ -353,9 +359,9 @@ module ALU(
         begin
           // Read value from stack
           readReq <= 1;
-          ramAddress <= regarray[0] - 4;
+          ramAddress <= regarray[`StackPointerReg] - 4;
   
-          //$display("Requesting read from %h - 4", regarray[0]);
+          //$display("Requesting read from %h - 4", regarray[`StackPointerReg]);
         end
   
         if (opCode == `MovdCR)
@@ -393,7 +399,7 @@ module ALU(
         begin
           // Write register value to stack
           writeReq <= 1;
-          ramAddress <= regarray[0];
+          ramAddress <= regarray[`StackPointerReg];
           ramOut <= regValue[0];
   
           //$display("Reqesting push %h", regValue);
@@ -403,7 +409,7 @@ module ALU(
         begin
           // Write ip to stack
           writeReq <= 1;
-          ramAddress <= regarray[0];
+          ramAddress <= regarray[`StackPointerReg];
           ramOut <= ipointer;
   
           //$display("Reqesting push %h", regValue);
@@ -535,17 +541,17 @@ module ALU(
           `WritePortRR: begin end // Done above
 
           `PushR: begin
-            regarray[0] <= regarray[0] + 4;                               // push reg
+            regarray[`StackPointerReg] <= regarray[`StackPointerReg] + 4;                             // push reg
           end
   
           `PopR: begin
             regarray[regAddress[7:0]] <= ramValue;                        // pop reg
-            regarray[0] <= regarray[0] - 4;
+            regarray[`StackPointerReg] <= regarray[`StackPointerReg] - 4;
           end
   
           `CallR: begin
             // Stack pointer increases like a push
-            regarray[0] <= regarray[0] + 4;                               // call reg
+            regarray[`StackPointerReg] <= regarray[`StackPointerReg] + 4;                             // call reg
   
             // Jump to the function
             ipointer <= regValue[0];
@@ -556,7 +562,7 @@ module ALU(
   
           `Ret: begin
             // Stack pointer decreases like a pop
-            regarray[0] <= regarray[0] - 4;                               // ret
+            regarray[`StackPointerReg] <= regarray[`StackPointerReg] - 4;                             // ret
   
             // Return to the saved position, after the call
             ipointer <= ramValue + 4;
@@ -594,15 +600,15 @@ module ALU(
           end
   
           `CmpRR: begin                                                   // cmp reg, reg
-            regarray[1][0:0] <= (regValue[0] == regValue2[0] ? 1 : 0);
-            regarray[1][1:1] <= (regValue[0] < regValue2[0] ? 1 : 0);
-            regarray[1][2:2] <= (regValue[0] > regValue2[0] ? 1 : 0);
+            regarray[`FlagsReg][0:0] <= (regValue[0] == regValue2[0] ? 1 : 0);
+            regarray[`FlagsReg][1:1] <= (regValue[0] < regValue2[0] ? 1 : 0);
+            regarray[`FlagsReg][2:2] <= (regValue[0] > regValue2[0] ? 1 : 0);
           end
   
           `CmpRC: begin
-            regarray[1][0:0] <= (regValue[0] == opDataWord ? 1 : 0);
-            regarray[1][1:1] <= (regValue[0] < opDataWord ? 1 : 0);
-            regarray[1][2:2] <= (regValue[0] > opDataWord ? 1 : 0);
+            regarray[`FlagsReg][0:0] <= (regValue[0] == opDataWord ? 1 : 0);
+            regarray[`FlagsReg][1:1] <= (regValue[0] < opDataWord ? 1 : 0);
+            regarray[`FlagsReg][2:2] <= (regValue[0] > opDataWord ? 1 : 0);
           end
   
           `CmpERRR: begin                                                 // cmpe reg, reg, reg
@@ -659,6 +665,25 @@ module ALU(
   
           `MulAddRRC:  regarray[regAddress[7:0]] <= regValue[0] + regValue2[0] * opDataWord;
   
+          `ExecR: begin
+            // This basically sets the code segment register
+            regarray[`CodeSegmentReg] <= regValue[0];
+
+            // Also set where to go when it returns (the next instruction)
+            regarray[`CodeReturnReg] <= ipointer + 4;
+
+            // IP is reset to zero
+            ipointer <= 0;
+          end
+
+          `Exit: begin
+            // Return control by clearing code segment
+            regarray[`CodeSegmentReg] <= 0;
+
+            // Set IP back to where we need it to be
+            ipointer <= regarray[`CodeReturnReg];
+          end
+
           `DoutR: begin
             // In simulation we use $display for this
             $display("DebugOut %h", regValue[0]);
@@ -685,7 +710,9 @@ module ALU(
             opCode != `Ret &&
             opCode != `RCallRC &&
             opCode != `RRet &&
-            opCode != `Stall
+            opCode != `Stall &&
+            opCode != `ExecR &&
+            opCode != `Exit
             )
         begin
           //$display("Incrementing ip");

@@ -1,4 +1,5 @@
 Info (10281): Verilog HDL Declaration information at FloatingHelper.sv(44): object "CLZ" differs only in case from object "clz" in the same scope
 Info (10281): Verilog HDL Declaration information at FloatingHelper.sv(44): object "CLZ" differs only in case from object "clz" in the same scope
 Info (10281): Verilog HDL Declaration information at FloatingHelper.sv(44): object "CLZ" differs only in case from object "clz" in the same scope
+Warning (10268): Verilog HDL information at FloatingAdd.sv(23): always construct contains both blocking and non-blocking assignments
 Info (10281): Verilog HDL Declaration information at FloatingHelper.sv(44): object "CLZ" differs only in case from object "clz" in the same scope
