@@ -1,0 +1,24 @@
+void main()
+{
+    // For now this is a dummy for doing a loop
+    word i = 0;
+
+    // Position in byte we receive
+    word bytePos = 0;
+
+    // Position in word array
+    word wordPos = 0;
+
+    // The word we are currently packing
+    word currentWord = 0;
+
+    // The collection of words
+    ptr<word> pData = castptr<word>(__datasegmentend);
+
+    pData[0] = 0xefbc0002;
+    pData[1] = 0x00000abc;
+    pData[2] = 0xefef002f;
+    pData[3] = 0xefefef34;
+
+    __emit(execr, pData);
+}
