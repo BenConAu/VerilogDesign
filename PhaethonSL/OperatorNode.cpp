@@ -39,7 +39,7 @@ void OperatorNode::VerifyNodeImpl()
             }
             else
             {
-                throw "Unknown type for result of binary operation";
+                GetContext()->ReportError(_location, "Unknown type for result of binary operation");
             }
 
             break;
@@ -80,7 +80,7 @@ ExpressionResult *OperatorNode::CalculateResult()
     }
     else
     {
-        throw "Invalid arguments to binary operator";
+        GetContext()->ReportError(_location, "Invalid arguments to binary operator");
     }
 
     // Figure out opCode
@@ -96,7 +96,7 @@ ExpressionResult *OperatorNode::CalculateResult()
 
     if (opCode == OpCodes::Unknown)
     {
-        throw "Unknown opcode for binary operation";
+        GetContext()->ReportError(_location, "Unknown opcode for binary operation");
     }
 
     // Get register for our result

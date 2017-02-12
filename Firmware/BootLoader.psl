@@ -22,31 +22,40 @@ void main()
         if (input >. 255)
         {
             // Pack into the word
-            packbyte(currentWord, input, wordPos);
+            packbyte(currentWord, input, bytePos);
 
-            wordPos = wordPos + 1;
-            if (wordPos == 4)
+            bytePos = bytePos + 1;
+            if (bytePos == 4)
             {
+                // Print that business
+                __emit(doutr, currentWord);
+
+                // Store that business
+                pData[wordPos] = currentWord;
+
                 // Back to the start of the word
-                wordPos = 0;
+                bytePos = 0;
                 
                 // Next word
-                currentWord = currentWord + 1;
+                wordPos = wordPos + 1;
 
                 // Program needs header and length
-                if (currentWord >. 2)
+                if (wordPos >. 2)
                 {
                     // Correct header
                     if (0x1337beef == pData[0])
                     {
                         // Did we get all of the words in the program?
-                        if (currentWord + 2 == pData[1])
+                        if (wordPos - 2 == pData[1])
                         {
-                            // Execute!
-                            __emit(execr, pData);
+                            // One last statement before execute
+                            __emit(doutr, 0x0f00d1e0);
+
+                            // Execute - we need to skip the 8 byte header
+                            __emit(execr, offsetptr<word>(pData, 8));
 
                             // If we are coming back, reset word count
-                            currentWord = 0;                       
+                            wordPos = 0;                       
                         }
                     }
                 }

@@ -7,7 +7,7 @@ OffsetNode::OffsetNode(
     const YYLTYPE &location,
     ASTNode *pType,
     ASTNode *pIdent,
-    ASTNode *pExpr) : OperatorNode(pContext, pIdent, pExpr, Operator::Add)
+    ASTNode *pExpr) : OperatorNode(pContext, location, pIdent, pExpr, Operator::Add)
 {
     AddNode(pType);
 

@@ -20,7 +20,7 @@ bool TypeInfo::IsNonFloat(TypeInfo* pInfo)
     BasicTypeInfo* pBasicInfo = dynamic_cast<BasicTypeInfo*>(pInfo);
     if (pBasicInfo != nullptr)
     {
-        return (pBasicInfo->GetTypeToken() == WORD_TOKEN);
+        return (pBasicInfo->GetTypeToken() == WORD_TOKEN || pBasicInfo->GetTypeToken() == BOOL_TOKEN);
     }
     else
     {
