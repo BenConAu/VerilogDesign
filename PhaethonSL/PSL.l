@@ -61,12 +61,17 @@
 "if"                 { return IF_TOKEN; }
 "while"              { return WHILE_TOKEN; }
 "else"               { return ELSE_TOKEN; }
+"__saveregisters"    { return SAVEREG_TOKEN; }
 "true"               { yylval->intVal = 1; return BOOLCONSTANT; }
 "false"              { yylval->intVal = 0; return BOOLCONSTANT; }
 "__emit"             { return EMIT_TOKEN; }
+"__rsp"              { yylval->regIndex = 64; return REG_INDEX; }
+"__r"[0-9]           { yylval->regIndex = atoi(yytext + 3); return REG_INDEX; }
 "doutr"              { return DOUTR_TOKEN; }
 "execr"              { return EXECR_TOKEN; }
 "exit"               { return EXIT_TOKEN; }
+"movrc"              { return MOVRC_TOKEN; }
+"movrr"              { return MOVRR_TOKEN; }
 [0-9]+               { yylval->intVal = atoi(yytext); return INTCONSTANT; }
 "0x"[0-9A-Fa-f]+     { yylval->intVal = strtol(yytext, nullptr, 16); return INTCONSTANT; }
 "f"[0-9]+"\."[0-9]*  { yylval->floatVal = (float)atof(yytext + 1); return FLOATCONSTANT; }

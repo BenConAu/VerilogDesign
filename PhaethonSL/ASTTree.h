@@ -26,3 +26,5 @@
 #include "ReadPortNode.h"
 #include "WritePortNode.h"
 #include "PackByteNode.h"
+#include "SaveRegistersNode.h"
+#include "RegisterNode.h"

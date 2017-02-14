@@ -16,6 +16,12 @@ OpCodes::Enum OpCodeFromToken(int token)
     case EXIT_TOKEN:
         return OpCodes::Exit;
 
+    case MOVRC_TOKEN:
+        return OpCodes::MovRC;
+
+    case MOVRR_TOKEN:
+        return OpCodes::MovRR;
+
     default:
         throw "Unknown opcode";
     }
@@ -23,12 +29,16 @@ OpCodes::Enum OpCodeFromToken(int token)
 
 EmitNode::EmitNode(
     PSLCompilerContext *pContext,
+    const YYLTYPE &location,
     int opCodeToken,
-    ASTNode *pExpr) : ASTNode(pContext)
+    ASTNode *pExpr1,
+    ASTNode *pExpr2) : ASTNode(pContext)
 {
-    AddNode(pExpr);
+    AddNode(pExpr1);
+    AddNode(pExpr2);
 
     _opCodeToken = opCodeToken;
+    _location = location;
 }
 
 void EmitNode::VerifyNodeImpl()
@@ -42,17 +52,51 @@ void EmitNode::PostProcessNodeImpl()
 
     if (GetChild(0) != nullptr)
     {
-        // The input to the debug is an expression
-        ExpressionNode *pChild = dynamic_cast<ExpressionNode *>(GetChild(0));
+        ExpressionNode *pChild1 = dynamic_cast<ExpressionNode *>(GetChild(0));
+        std::unique_ptr<ExpressionResult> childResult1(pChild1->TakeResult());
 
-        std::unique_ptr<ExpressionResult> childResult(pChild->TakeResult());
+        // Wrap in a register (all supported instructions take registers)
+        RegisterWrapper wrapper1(GetContext(), pFunc->GetRegCollection(), childResult1.get());
 
-        // Wrap in a register
-        RegisterWrapper wrapper(GetContext(), pFunc->GetRegCollection(), childResult.get());
+        if (GetChild(1) != nullptr)
+        {
+            ExpressionNode *pChild2 = dynamic_cast<ExpressionNode *>(GetChild(1));
+            std::unique_ptr<ExpressionResult> childResult2(pChild2->TakeResult());
 
-        GetContext()->OutputInstruction(
-            OpCodeFromToken(_opCodeToken),
-            wrapper.GetWrapped());
+            OpCodes::Enum opCode = OpCodeFromToken(_opCodeToken);
+
+            switch (opCode)
+            {
+            case OpCodes::MovRC:
+                if (childResult2->GetResultType() != ExpressionResultType::Constant)
+                {
+                    GetContext()->ReportError(_location, "2nd arg for movrc has to be a constant");
+                }
+                break;
+
+            case OpCodes::MovRR:
+                if (childResult2->GetResultType() != ExpressionResultType::Register)
+                {
+                    GetContext()->ReportError(_location, "2nd arg for movrr has to be a constant");
+                }
+                break;
+
+            default:
+                GetContext()->ReportError(_location, "Unknown opcode for __emit");
+                break;
+            }
+
+            GetContext()->OutputInstruction(
+                opCode,
+                wrapper1.GetWrapped(),
+                *(childResult2.get()));
+        }
+        else
+        {
+            GetContext()->OutputInstruction(
+                OpCodeFromToken(_opCodeToken),
+                wrapper1.GetWrapped());
+        }
     }
     else
     {

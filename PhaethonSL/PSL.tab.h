@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.0.2.  */
+/* A Bison parser, made by GNU Bison 3.0.4.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -48,72 +48,80 @@ extern int yydebug;
     INTCONSTANT = 258,
     FLOATCONSTANT = 259,
     BOOLCONSTANT = 260,
-    AT = 261,
-    SEMICOLON = 262,
-    EQUAL = 263,
-    STAR = 264,
-    PLUS = 265,
-    MINUS = 266,
-    LEFT_PAREN = 267,
-    RIGHT_PAREN = 268,
-    LT = 269,
-    GT = 270,
-    LT_OP = 271,
-    GT_OP = 272,
-    SHIFTLEFT = 273,
-    SHIFTRIGHT = 274,
-    ARROW = 275,
-    DOT = 276,
-    COMMA = 277,
-    AMPERSAND = 278,
-    EQUAL_OP = 279,
-    NOTEQUAL_OP = 280,
-    PTR_TOKEN = 281,
-    BYTE_TOKEN = 282,
-    WORD_TOKEN = 283,
-    BOOL_TOKEN = 284,
-    FLOAT_TOKEN = 285,
-    VOID_TOKEN = 286,
-    STRUCT_TOKEN = 287,
-    RETURN_TOKEN = 288,
-    LEFT_BRACE = 289,
-    RIGHT_BRACE = 290,
-    LEFT_BRACKET = 291,
-    RIGHT_BRACKET = 292,
-    IF_TOKEN = 293,
-    ELSE_TOKEN = 294,
-    WHILE_TOKEN = 295,
-    NULLPTR_TOKEN = 296,
-    DOUTR_TOKEN = 297,
-    EXECR_TOKEN = 298,
-    EXIT_TOKEN = 299,
-    EMIT_TOKEN = 300,
-    SIZEOF_TOKEN = 301,
-    OFFSETPTR_TOKEN = 302,
-    CASTPTR_TOKEN = 303,
-    READPORT_TOKEN = 304,
-    WRITEPORT_TOKEN = 305,
-    PACKBYTE_TOKEN = 306,
-    DATASEGEND_TOKEN = 307,
-    IDENTIFIER = 308
+    REG_INDEX = 261,
+    AT = 262,
+    SEMICOLON = 263,
+    EQUAL = 264,
+    STAR = 265,
+    PLUS = 266,
+    MINUS = 267,
+    LEFT_PAREN = 268,
+    RIGHT_PAREN = 269,
+    LT = 270,
+    GT = 271,
+    LT_OP = 272,
+    GT_OP = 273,
+    SHIFTLEFT = 274,
+    SHIFTRIGHT = 275,
+    ARROW = 276,
+    DOT = 277,
+    COMMA = 278,
+    AMPERSAND = 279,
+    EQUAL_OP = 280,
+    NOTEQUAL_OP = 281,
+    PTR_TOKEN = 282,
+    BYTE_TOKEN = 283,
+    WORD_TOKEN = 284,
+    BOOL_TOKEN = 285,
+    FLOAT_TOKEN = 286,
+    VOID_TOKEN = 287,
+    STRUCT_TOKEN = 288,
+    RETURN_TOKEN = 289,
+    LEFT_BRACE = 290,
+    RIGHT_BRACE = 291,
+    LEFT_BRACKET = 292,
+    RIGHT_BRACKET = 293,
+    IF_TOKEN = 294,
+    ELSE_TOKEN = 295,
+    WHILE_TOKEN = 296,
+    NULLPTR_TOKEN = 297,
+    DOUTR_TOKEN = 298,
+    EXECR_TOKEN = 299,
+    EXIT_TOKEN = 300,
+    MOVRC_TOKEN = 301,
+    MOVRR_TOKEN = 302,
+    EMIT_TOKEN = 303,
+    SIZEOF_TOKEN = 304,
+    OFFSETPTR_TOKEN = 305,
+    CASTPTR_TOKEN = 306,
+    READPORT_TOKEN = 307,
+    WRITEPORT_TOKEN = 308,
+    PACKBYTE_TOKEN = 309,
+    DATASEGEND_TOKEN = 310,
+    SAVEREG_TOKEN = 311,
+    RSP_TOKEN = 312,
+    IDENTIFIER = 313
   };
 #endif
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef union YYSTYPE YYSTYPE;
+
 union YYSTYPE
 {
-#line 22 "PSL.y" /* yacc.c:1909  */
+#line 22 "PSL.y" /* yacc.c:1915  */
 
 	int intVal;
     float floatVal;
 	int symIndex;
     ASTNode* pNode;
     int token;
+    RegIndex regIndex;
 
-#line 116 "PSL.tab.h" /* yacc.c:1909  */
+#line 122 "PSL.tab.h" /* yacc.c:1915  */
 };
+
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif

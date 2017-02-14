@@ -1,0 +1,14 @@
+void main()
+{
+    word a = 0xabc;
+    word b = 0x123;
+
+    __saveregisters
+    {
+        __emit(movrc, __r0, 1);
+        __emit(movrc, __r1, 2);
+    }
+
+    __emit(doutr, a);
+    __emit(doutr, b);
+}

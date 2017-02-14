@@ -25,6 +25,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 	int symIndex;
     ASTNode* pNode;
     int token;
+    RegIndex regIndex;
 }
 
 %locations
@@ -32,6 +33,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token <intVal> INTCONSTANT
 %token <floatVal> FLOATCONSTANT
 %token <intVal> BOOLCONSTANT
+%token <regIndex> REG_INDEX
 %token AT
 %token SEMICOLON
 %token EQUAL
@@ -71,6 +73,8 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token DOUTR_TOKEN
 %token EXECR_TOKEN
 %token EXIT_TOKEN
+%token MOVRC_TOKEN
+%token MOVRR_TOKEN
 %token EMIT_TOKEN
 %token SIZEOF_TOKEN
 %token OFFSETPTR_TOKEN
@@ -79,6 +83,8 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token WRITEPORT_TOKEN
 %token PACKBYTE_TOKEN
 %token DATASEGEND_TOKEN
+%token SAVEREG_TOKEN
+%token RSP_TOKEN
 %token <symIndex> IDENTIFIER
 %type <pNode> variable_identifier
 %type <pNode> primary_expression
@@ -109,6 +115,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> emit_statement
 %type <token> opcode0_token
 %type <token> opcode1_token
+%type <token> opcode2_token
 %type <pNode> packbyte_statement
 %type <pNode> sizeof_expression
 %type <pNode> offset_expression
@@ -126,6 +133,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> shift_expression
 %type <pNode> relational_expression
 %type <pNode> unary_expression
+%type <pNode> savereg_statement
 
 %%
 
@@ -153,6 +161,7 @@ statement:
     | emit_statement                                                { $$ = $1; }
     | packbyte_statement                                            { $$ = $1; }
     | writeport_statement                                           { $$ = $1; }
+    | savereg_statement                                             { $$ = $1; }
     ;
 
 expression_statement:
@@ -169,6 +178,10 @@ selection_statement:
 selection_rest_statement:
       compound_statement ELSE_TOKEN compound_statement              { $$ = new IfStatementNode(pContext, $1, $3); }
     | compound_statement                                            { $$ = new IfStatementNode(pContext, $1, nullptr); }
+    ;
+
+savereg_statement:
+      SAVEREG_TOKEN compound_statement                              { $$ = new SaveRegistersNode(pContext, @$, $2); }
     ;
 
 expression:
@@ -238,6 +251,7 @@ primary_expression:
     | offset_expression                                             { $$ = $1; }
     | cast_expression                                               { $$ = $1; }
     | readport_expression                                           { $$ = $1; }
+    | REG_INDEX                                                     { $$ = new RegisterNode(pContext, @$, $1); }
     ;
 
 sizeof_expression:
@@ -365,9 +379,11 @@ return_statement:
 
 emit_statement:
       EMIT_TOKEN LEFT_PAREN opcode0_token RIGHT_PAREN SEMICOLON      
-                                                                    { $$ = new EmitNode(pContext, $3, nullptr); }
+                                                                    { $$ = new EmitNode(pContext, @$, $3, nullptr, nullptr); }
     | EMIT_TOKEN LEFT_PAREN opcode1_token COMMA expression RIGHT_PAREN SEMICOLON      
-                                                                    { $$ = new EmitNode(pContext, $3, $5); }
+                                                                    { $$ = new EmitNode(pContext, @$, $3, $5, nullptr); }
+    | EMIT_TOKEN LEFT_PAREN opcode2_token COMMA expression COMMA expression RIGHT_PAREN SEMICOLON      
+                                                                    { $$ = new EmitNode(pContext, @$, $3, $5, $7); }
     ;
 
 opcode0_token:
@@ -377,6 +393,11 @@ opcode0_token:
 opcode1_token:
       DOUTR_TOKEN                                                   { $$ = DOUTR_TOKEN; }
     | EXECR_TOKEN                                                   { $$ = EXECR_TOKEN; }
+    ;
+
+opcode2_token:
+      MOVRC_TOKEN                                                   { $$ = MOVRC_TOKEN; }
+    | MOVRR_TOKEN                                                   { $$ = MOVRR_TOKEN; }
     ;
 
 packbyte_statement:

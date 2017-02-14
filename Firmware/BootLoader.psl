@@ -1,5 +1,15 @@
+struct GlobalData
+{
+    word stack[128];
+};
+
+GlobalData globalData;
+
 void main()
 {
+    // Set up the stack
+    __emit(movrr, __rsp, globalData.stack);
+
     // For now this is a dummy for doing a loop
     word i = 0;
 
@@ -48,11 +58,14 @@ void main()
                         // Did we get all of the words in the program?
                         if (wordPos - 2 == pData[1])
                         {
-                            // One last statement before execute
-                            __emit(doutr, 0x0f00d1e0);
+                            __saveregisters
+                            {
+                                // One last statement before execute
+                                __emit(doutr, 0x0f00d1e0);
 
-                            // Execute - we need to skip the 8 byte header
-                            __emit(execr, offsetptr<word>(pData, 8));
+                                // Execute - we need to skip the 8 byte header
+                                __emit(execr, offsetptr<word>(pData, 8));
+                            }
 
                             // If we are coming back, reset word count
                             wordPos = 0;                       

@@ -57,10 +57,14 @@ PSLcc: lex.yy.c \
 	   ReadPortNode.h \
 	   RegisterCollection.cpp \
 	   RegisterCollection.h \
+	   RegisterNode.cpp \
+	   RegisterNode.h \
 	   RegisterWrapper.cpp \
 	   RegisterWrapper.h \
 	   ReturnNode.cpp \
 	   ReturnNode.h \
+	   SaveRegistersNode.cpp \
+	   SaveRegistersNode.h \
 	   SizeOfNode.h \
 	   StatementListNode.h \
 	   StructMember.h \
@@ -138,8 +142,10 @@ PSLcc: lex.yy.c \
 	   PSLCompilerContext.cpp \
 	   ReadPortNode.cpp \
 	   RegisterCollection.cpp \
+	   RegisterNode.cpp \
 	   RegisterWrapper.cpp \
 	   ReturnNode.cpp \
+	   SaveRegistersNode.cpp \
 	   SmartRegister.cpp \
 	   StructDeclarationNode.cpp \
 	   StructSpecifierNode.cpp \
