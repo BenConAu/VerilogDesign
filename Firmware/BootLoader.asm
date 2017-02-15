@@ -16,16 +16,14 @@ readport r9, r8
 mov r6, r9
 mov r9, 255
 cmpgt r8, r6, r9
-cmp r8, 0
-je @false_5
+jz r8, @false_5
 pack r4, r6, r2
 mov r9, 1
 add r10, r2, r9
 mov r2, r10
 mov r10, 4
 cmpe r9, r2, r10
-cmp r9, 0
-je @false_4
+jz r9, @false_4
 dout r4
 mov r10, r5
 mov [r10:sizeof(Word)], r3, r4
@@ -35,23 +33,20 @@ add r11, r3, r10
 mov r3, r11
 mov r11, 2
 cmpgt r10, r3, r11
-cmp r10, 0
-je @false_3
+jz r10, @false_3
 mov r11, r5
 mov r12, 0
 mov r13, 322420463
 mov r14, [r11:sizeof(Word)], r12
 cmpe r15, r13, r14
-cmp r15, 0
-je @false_2
-mov r12, 2
-sub r11, r3, r12
-mov r12, r5
+jz r15, @false_2
+mov r11, 2
+sub r12, r3, r11
+mov r11, r5
 mov r13, 1
-mov r14, [r12:sizeof(Word)], r13
-cmpe r16, r11, r14
-cmp r16, 0
-je @false_1
+mov r14, [r11:sizeof(Word)], r13
+cmpe r16, r12, r14
+jz r16, @false_1
 push r0
 push r1
 push r2
@@ -65,11 +60,11 @@ push r9
 push r10
 push r15
 push r16
-mov r11, 251711968
-dout r11
-mov r11, 8
-add r13, r5, r11
-exec r13
+mov r12, 251711968
+dout r12
+mov r12, 8
+add r11, r5, r12
+exec r11
 pop r16
 pop r15
 pop r10

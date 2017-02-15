@@ -8,8 +8,7 @@ mov r1, 2
 readport r3, r1
 mov r1, 1
 cmpe r4, r3, r1
-cmp r4, 0
-je @false_1
+jz r4, @false_1
 mov r3, 3
 mov r1, 123
 writeport r3, r1

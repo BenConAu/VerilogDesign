@@ -53,11 +53,6 @@ void IfStatementNode::ProcessNode()
         pScope->GetRegCollection(),
         testResult.get());
 
-    GetContext()->OutputInstruction(
-        OpCodes::CmpRC,
-        wrapper.GetWrapped(),
-        Operand(0));
-
     char falseLabel[256];
     sprintf(falseLabel, "false_%d", _instance);
 
@@ -65,7 +60,8 @@ void IfStatementNode::ProcessNode()
     sprintf(trueLabel, "true_%d", _instance);
 
     GetContext()->OutputInstruction(
-        OpCodes::JeC,
+        OpCodes::JzRC,
+        wrapper.GetWrapped(),
         Operand(falseLabel));
 
     // Now the statement list
