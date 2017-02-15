@@ -2,6 +2,7 @@
 
 #include <deque>
 #include <vector>
+#include <cstdlib>
 #include "VariableLocation.h"
 
 class RegisterCollection
