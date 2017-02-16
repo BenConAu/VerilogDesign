@@ -3,19 +3,10 @@ struct foo
     word b[10];
 };
 
-struct foo2
-{
-    word a;
-};
-
 foo fooVar;
-foo2 foo2Var;
 
 void main()
 {
     fooVar.b[0] = 37;
     __emit(doutr, fooVar.b[0]);
-
-    foo2Var.a = 1;
-    __emit(doutr, foo2Var.a);
 }
