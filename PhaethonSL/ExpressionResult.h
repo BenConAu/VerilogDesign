@@ -34,7 +34,10 @@ struct ExpressionResult
 
     ~ExpressionResult()
     {
-        _tempRegisters.clear();
+        for (size_t i = _tempRegisters.size(); i > 0 ; i--)
+        {
+            _tempRegisters[i - 1].reset(nullptr);
+        }
         //printf("ExpressionResult destructor\n");
     }
 
