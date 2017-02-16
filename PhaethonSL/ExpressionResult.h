@@ -34,6 +34,7 @@ struct ExpressionResult
 
     ~ExpressionResult()
     {
+        _tempRegisters.clear();
         //printf("ExpressionResult destructor\n");
     }
 
