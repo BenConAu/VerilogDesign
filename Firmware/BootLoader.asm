@@ -40,12 +40,12 @@ mov r13, 322420463
 mov r14, [r11:sizeof(Word)], r12
 cmpe r15, r13, r14
 jz r15, @false_2
-mov r11, 2
-sub r12, r3, r11
-mov r11, r5
+mov r12, 2
+sub r11, r3, r12
+mov r12, r5
 mov r13, 1
-mov r14, [r11:sizeof(Word)], r13
-cmpe r16, r12, r14
+mov r14, [r12:sizeof(Word)], r13
+cmpe r16, r11, r14
 jz r16, @false_1
 push r0
 push r1
@@ -60,11 +60,11 @@ push r9
 push r10
 push r15
 push r16
-mov r12, 251711968
-dout r12
-mov r12, 8
-add r11, r5, r12
-exec r11
+mov r11, 251711968
+dout r11
+mov r11, 8
+add r13, r5, r11
+exec r13
 pop r16
 pop r15
 pop r10

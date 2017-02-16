@@ -259,8 +259,8 @@ module ALU(
         // Determine if a conditional jump needs to happen
         if (opCode == `JneC && regarray[`FlagsReg][0:0] == 1'b0) condJump <= 1'b1;
         if (opCode == `JeC && regarray[`FlagsReg][0:0] == 1'b1) condJump <= 1'b1;
-        if (opCode == `JzRC && regarray[regAddress3[7:0]] == 0) condJump <= 1'b1;
-        if (opCode == `JnzRC && regarray[regAddress3[7:0]] != 0) condJump <= 1'b1;
+        if (opCode == `JzRC && regarray[regAddress[7:0]] == 0) condJump <= 1'b1;
+        if (opCode == `JnzRC && regarray[regAddress[7:0]] != 0) condJump <= 1'b1;
     
         if (Is8ByteOpcode(opCode) == 1)
         begin
@@ -475,6 +475,7 @@ module ALU(
             // Read from UART is now complete, return
             if (uartReadAck == 1'b1)
             begin
+              debug2 <= debug2 | 'h1;
               ramValue[7:0] <= uartReadData;
               ramValue[31:8] <= 1;
             end
@@ -750,7 +751,7 @@ module ALU(
     r4 <= regarray[rPos + 4];
     r5 <= regarray[rPos + 5];
   
-    debug2 <= opCode;
+    //debug2 <= opCode;
     //debug3[8:0] <= mode;
     //debug2[7:0] <= mode;
     //debug2[15:8] <= opCode;

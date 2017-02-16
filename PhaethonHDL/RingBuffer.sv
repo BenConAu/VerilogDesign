@@ -25,7 +25,7 @@ module RingBuffer(
   output reg dataReadAck;
   output reg[(WordSize - 1):0] dataRead;
   output reg[31:0] debug;
-  output reg[31:0] debug2;
+  output reg[31:0] debug2 = 0;
 
   reg [(LengthBits - 1):0] firstPos;
   reg [(LengthBits - 1):0] lastPos;
@@ -72,13 +72,13 @@ module RingBuffer(
             firstPos <= 0;
             lastPos <= 0;
             hasData <= 1;
-            debug2 <= 2;
+            debug2 <= debug2 | 2;
           end
           else
           begin
             dataBuffer[(lastPos + 1) & (BufferLength - 1)] <= dataWrite;
             lastPos <= lastPos + 1;
-            debug2 <= 3;
+            debug2 <= debug2 | 4;
           end
         end
 
@@ -89,7 +89,7 @@ module RingBuffer(
       begin
         if (hasData == 0)
         begin
-          debug2 <= 4;
+          debug2 <= debug2 | 8;
           $display("Buffer empty, cannot read");
 
           // No data in buffer
@@ -97,7 +97,7 @@ module RingBuffer(
         end
         else
         begin
-		      debug2 <= 5;
+		      debug2 <= debug2 | 16;
 		  
           // Acknowledge read and return data, advance position
           dataReadAck <= 1;
