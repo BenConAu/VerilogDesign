@@ -258,8 +258,8 @@ module ALU(
         // Determine if a conditional jump needs to happen
         if (opCode == `JneC && regarray[`FlagsReg][0:0] == 1'b0) condJump <= 1'b1;
         if (opCode == `JeC && regarray[`FlagsReg][0:0] == 1'b1) condJump <= 1'b1;
-        if (opCode == `JzRC && regarray[regAddress3[7:0]] == 0) condJump <= 1'b1;
-        if (opCode == `JnzRC && regarray[regAddress3[7:0]] != 0) condJump <= 1'b1;
+        if (opCode == `JzRC && regarray[regAddress[7:0]] == 0) condJump <= 1'b1;
+        if (opCode == `JnzRC && regarray[regAddress[7:0]] != 0) condJump <= 1'b1;
 
         if (Is8ByteOpcode(opCode) == 1)
         begin

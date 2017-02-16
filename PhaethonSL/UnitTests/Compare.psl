@@ -1,0 +1,43 @@
+void main()
+{
+    word a = 1;
+    word b = 2;
+    word c = 3;
+    word d = 4;
+
+    if (a .< b)
+    {
+        __emit(doutr, 0x1);
+    }
+    else
+    {
+        __emit(doutr, 0x2);
+    }
+
+    if (a >. b)
+    {
+        __emit(doutr, 0x3);
+    }
+    else
+    {
+        __emit(doutr, 0x4);
+    }
+
+    if (c .< d)
+    {
+        __emit(doutr, 0x5);
+    }
+    else
+    {
+        __emit(doutr, 0x6);
+    }
+
+    if (c >. d)
+    {
+        __emit(doutr, 0x7);
+    }
+    else
+    {
+        __emit(doutr, 0x8);
+    }
+}
