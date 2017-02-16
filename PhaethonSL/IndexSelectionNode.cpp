@@ -79,6 +79,7 @@ ExpressionResult *IndexSelectionNode::CalculateResult()
     ExpressionResult *pResult = new ExpressionResult(pScope->GetRegCollection());
 
     // Allocate a register for the first operand
+    printf("Allocating a register for IndexSelectionNode\n");
     RegIndex resultIndex = pScope->GetRegCollection()->AllocateRegister();
 
     // Fill the register with the address
@@ -97,6 +98,7 @@ ExpressionResult *IndexSelectionNode::CalculateResult()
     if (indexResult->GetResultType() != ExpressionResultType::Register)
     {
         // If we don't have a register for the second operand then allocate it
+        printf("Allocating a second register for IndexSelectionNode\n");
         RegIndex sizeReg = pScope->GetRegCollection()->AllocateRegister();
         Operand sizeOperand(sizeReg);
 

@@ -12,7 +12,7 @@ RegisterCollection::RegisterCollection(int regCount)
 RegIndex RegisterCollection::AllocateRegister()
 {
     RegIndex ret = _availableReg.front();
-    //printf("Allocated %d\n", (int)ret);
+    printf("Allocated %d\n", (int)ret);
     _availableReg.pop_front();
     _usedReg.push_back(ret);
     return ret;
@@ -35,6 +35,7 @@ RegIndex RegisterCollection::FirstUnused()
 
 void RegisterCollection::DeallocateRegister(RegIndex reg)
 {
+    printf("Deallocated %d\n", (int)reg);
     _availableReg.push_front(reg);
 
     for (size_t i = 0; i < _usedReg.size(); i++)
