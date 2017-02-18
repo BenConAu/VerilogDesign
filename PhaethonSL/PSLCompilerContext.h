@@ -31,7 +31,7 @@ class PSLCompilerContext
     void AddGlobal(ASTNode *pNode);
 
     void OutputInstruction(
-        OpCodes::Enum opCode,
+        OpCode opCode,
         const ExpressionResult &a1 = ExpressionResult(),
         const ExpressionResult &a2 = ExpressionResult(),
         const ExpressionResult &a3 = ExpressionResult());

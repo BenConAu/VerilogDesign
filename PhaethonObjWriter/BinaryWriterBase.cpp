@@ -17,17 +17,19 @@ void BinaryWriterBase::OutputWord(unsigned int w)
 }
 
 void BinaryWriterBase::OutputInstruction(
-    OpCodes::Enum opCode,
+    OpCode opCode,
     ObjArgument *args)
 {
-    OutputBytes(opCode, args[0]._value, args[1]._value, args[2]._value);
+    OutputBytes(static_cast<unsigned char>(opCode), args[0]._value, args[1]._value, args[2]._value);
 
-    int wordArg = OpCodeData::s_data[opCode - 1].wordArg;
+    int opCodeIndex = static_cast<int>(opCode) - 1;
+
+    int wordArg = OpCodeData::s_data[opCodeIndex].wordArg;
     if (wordArg != -1)
     {
         // See if we have a label, because if so, we need to store the index
         // to the label info so we can replace it later.
-        if (OpCodeData::s_data[opCode - 1].argTypes[wordArg] == OperandType::Constant && args[wordArg]._label.length() != 0)
+        if (OpCodeData::s_data[opCodeIndex].argTypes[wordArg] == OperandType::Constant && args[wordArg]._label.length() != 0)
         {
             args[wordArg]._value = EnsureLabelInfo(args[wordArg]._label);
 

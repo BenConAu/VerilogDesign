@@ -4,15 +4,13 @@
 #include "ASTNode.h"
 #include "PSL.tab.h"
 
-OpCodes::Enum OpCodeFromToken(int token);
-
 class EmitNode : public ASTNode
 {
   public:
     EmitNode(
         PSLCompilerContext *pContext,
         const YYLTYPE &location,
-        int opCodeToken,
+        OpCode opCode,
         ASTNode *pExpr1,
         ASTNode *pExpr2);
 
@@ -23,6 +21,6 @@ class EmitNode : public ASTNode
     const char *GetDebugName() override { return "EmitNode"; }
 
   private:
-    int _opCodeToken;
+    OpCode _opCode;
     YYLTYPE _location;
 };

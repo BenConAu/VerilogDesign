@@ -1,0 +1,13 @@
+void main()
+{
+    __emit(doutr, 0xa);
+    __emit(doutr, 0xbc);
+
+    word a;
+    word b;
+    __emit(dinr, a);
+    __emit(dinr, b);
+
+    __emit(doutr, a);
+    __emit(doutr, b);    
+}

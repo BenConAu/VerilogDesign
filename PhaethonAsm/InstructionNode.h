@@ -20,6 +20,6 @@ public:
     static int s_codeSize;
 
 private:
-    OpCodes::Enum _opCode;
+    OpCode _opCode;
     Argument _args[3];
 };

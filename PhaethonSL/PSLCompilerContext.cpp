@@ -152,7 +152,7 @@ void PSLCompilerContext::SetEntryPoint(FunctionDeclaratorNode *pEntryPoint)
 }
 
 void PSLCompilerContext::OutputInstruction(
-    OpCodes::Enum opCode,
+    OpCode opCode,
     const ExpressionResult &a1,
     const ExpressionResult &a2,
     const ExpressionResult &a3)
@@ -194,30 +194,30 @@ void PSLCompilerContext::OutputMovInstruction(
     const ExpressionResult &a1,
     const ExpressionResult &a2)
 {
-    OpCodes::Enum opCode = OpCodes::Unknown;
+    OpCode opCode = OpCode::Unknown;
 
     if (a1.GetResultType() == ExpressionResultType::Register)
     {
         switch (a2.GetResultType())
         {
         case ExpressionResultType::Register:
-            opCode = OpCodes::MovRR;
+            opCode = OpCode::MovRR;
             break;
 
         case ExpressionResultType::Constant:
-            opCode = OpCodes::MovRC;
+            opCode = OpCode::MovRC;
             break;
 
         case ExpressionResultType::DerefConstant:
-            opCode = OpCodes::MovRdC;
+            opCode = OpCode::MovRdC;
             break;
 
         case ExpressionResultType::DerefRegisterOffset:
-            opCode = OpCodes::MovRdRo;
+            opCode = OpCode::MovRdRo;
             break;
 
         case ExpressionResultType::DerefRegisterIndex:
-            opCode = OpCodes::MovRdRoR;
+            opCode = OpCode::MovRdRoR;
             break;
 
         default:
@@ -228,7 +228,7 @@ void PSLCompilerContext::OutputMovInstruction(
     {
         if (a2.GetResultType() == ExpressionResultType::Register)
         {
-            opCode = OpCodes::MovdRoR;
+            opCode = OpCode::MovdRoR;
         }
         else
         {
@@ -239,7 +239,7 @@ void PSLCompilerContext::OutputMovInstruction(
     {
         if (a2.GetResultType() == ExpressionResultType::Register)
         {
-            opCode = OpCodes::MovdRoRR;
+            opCode = OpCode::MovdRoRR;
         }
         else
         {

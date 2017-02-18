@@ -184,6 +184,10 @@ module ALU(
           fOpEnable <= 7'b0000000;
           ipointer <= 0;
           condJump <= 1'b0;
+          dbgBufferWriteReq <= 1'b0;
+          dbgBufferReadReq <= 1'b0;
+
+          // First real register position
           rPos <= `FixedRegCount;
 
           // Some stuff is hard to do with initializers, so we do it here
@@ -469,7 +473,7 @@ module ALU(
           dbgBufferWriteData <= regValue[0];
         end
 
-        if (opCode == `DoutR)
+        if (opCode == `DinR)
         begin
           dbgBufferReadReq <= 1;
         end
@@ -535,7 +539,7 @@ module ALU(
         end
         else if (opCode == `DinR)
         begin
-          ramValue <= dbgBufferWriteData;
+          ramValue <= dbgBufferReadData;
         end
 
         mode <= `ProcessOpCode;

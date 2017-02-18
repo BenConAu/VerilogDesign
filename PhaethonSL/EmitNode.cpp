@@ -3,41 +3,17 @@
 #include "RegisterWrapper.h"
 #include "FunctionDeclaratorNode.h"
 
-OpCodes::Enum OpCodeFromToken(int token)
-{
-    switch (token)
-    {
-    case DOUTR_TOKEN:
-        return OpCodes::DoutR;
-
-    case EXECR_TOKEN:
-        return OpCodes::ExecR;
-
-    case EXIT_TOKEN:
-        return OpCodes::Exit;
-
-    case MOVRC_TOKEN:
-        return OpCodes::MovRC;
-
-    case MOVRR_TOKEN:
-        return OpCodes::MovRR;
-
-    default:
-        throw "Unknown opcode";
-    }
-}
-
 EmitNode::EmitNode(
     PSLCompilerContext *pContext,
     const YYLTYPE &location,
-    int opCodeToken,
+    OpCode opCode,
     ASTNode *pExpr1,
     ASTNode *pExpr2) : ASTNode(pContext)
 {
     AddNode(pExpr1);
     AddNode(pExpr2);
 
-    _opCodeToken = opCodeToken;
+    _opCode = opCode;
     _location = location;
 }
 
@@ -63,18 +39,16 @@ void EmitNode::PostProcessNodeImpl()
             ExpressionNode *pChild2 = dynamic_cast<ExpressionNode *>(GetChild(1));
             std::unique_ptr<ExpressionResult> childResult2(pChild2->TakeResult());
 
-            OpCodes::Enum opCode = OpCodeFromToken(_opCodeToken);
-
-            switch (opCode)
+            switch (_opCode)
             {
-            case OpCodes::MovRC:
+            case OpCode::MovRC:
                 if (childResult2->GetResultType() != ExpressionResultType::Constant)
                 {
                     GetContext()->ReportError(_location, "2nd arg for movrc has to be a constant");
                 }
                 break;
 
-            case OpCodes::MovRR:
+            case OpCode::MovRR:
                 if (childResult2->GetResultType() != ExpressionResultType::Register)
                 {
                     GetContext()->ReportError(_location, "2nd arg for movrr has to be a constant");
@@ -87,20 +61,20 @@ void EmitNode::PostProcessNodeImpl()
             }
 
             GetContext()->OutputInstruction(
-                opCode,
+                _opCode,
                 wrapper1.GetWrapped(),
                 *(childResult2.get()));
         }
         else
         {
             GetContext()->OutputInstruction(
-                OpCodeFromToken(_opCodeToken),
+                _opCode,
                 wrapper1.GetWrapped());
         }
     }
     else
     {
         GetContext()->OutputInstruction(
-            OpCodeFromToken(_opCodeToken));
+            _opCode);
     }
 }

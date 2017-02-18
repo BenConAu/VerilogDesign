@@ -20,11 +20,11 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %parse-param {PSLCompilerContext* pContext}
 
 %union {
-	int intVal;
+    int intVal;
     float floatVal;
-	int symIndex;
+    int symIndex;
     ASTNode* pNode;
-    int token;
+    OpCode opCode;
     RegIndex regIndex;
 }
 
@@ -71,6 +71,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token WHILE_TOKEN
 %token NULLPTR_TOKEN
 %token DOUTR_TOKEN
+%token DINR_TOKEN
 %token EXECR_TOKEN
 %token EXIT_TOKEN
 %token MOVRC_TOKEN
@@ -113,9 +114,9 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> parameter_declaration
 %type <pNode> function_header_with_parameters
 %type <pNode> emit_statement
-%type <token> opcode0_token
-%type <token> opcode1_token
-%type <token> opcode2_token
+%type <opCode> opcode0_token
+%type <opCode> opcode1_token
+%type <opCode> opcode2_token
 %type <pNode> packbyte_statement
 %type <pNode> sizeof_expression
 %type <pNode> offset_expression
@@ -387,17 +388,18 @@ emit_statement:
     ;
 
 opcode0_token:
-      EXIT_TOKEN                                                    { $$ = EXIT_TOKEN; }
+      EXIT_TOKEN                                                    { $$ = OpCode::Exit; }
     ;
 
 opcode1_token:
-      DOUTR_TOKEN                                                   { $$ = DOUTR_TOKEN; }
-    | EXECR_TOKEN                                                   { $$ = EXECR_TOKEN; }
+      DOUTR_TOKEN                                                   { $$ = OpCode::DoutR; }
+    | DINR_TOKEN                                                    { $$ = OpCode::DinR; }
+    | EXECR_TOKEN                                                   { $$ = OpCode::ExecR; }
     ;
 
 opcode2_token:
-      MOVRC_TOKEN                                                   { $$ = MOVRC_TOKEN; }
-    | MOVRR_TOKEN                                                   { $$ = MOVRR_TOKEN; }
+      MOVRC_TOKEN                                                   { $$ = OpCode::MovRC; }
+    | MOVRR_TOKEN                                                   { $$ = OpCode::MovRR; }
     ;
 
 packbyte_statement:

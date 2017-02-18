@@ -35,7 +35,7 @@ void SaveRegistersNode::ProcessNode()
         Operand regOp(pScope->GetRegCollection()->GetUsedReg(i));
 
         GetContext()->OutputInstruction(
-            OpCodes::PushR,
+            OpCode::PushR,
             regOp);
     }
 
@@ -47,7 +47,7 @@ void SaveRegistersNode::ProcessNode()
         Operand regOp(pScope->GetRegCollection()->GetUsedReg(i));
 
         GetContext()->OutputInstruction(
-            OpCodes::PopR,
+            OpCode::PopR,
             regOp);
     }
 }

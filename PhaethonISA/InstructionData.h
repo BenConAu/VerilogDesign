@@ -9,7 +9,7 @@ struct OpCodeData
 	Instructions::Enum instr;
 
 	// The enum of the opcode
-	OpCodes::Enum opCode;
+	OpCode opCode;
 
 	// The types of the operands that the opcode takes
 	OperandType argTypes[3];

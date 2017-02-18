@@ -58,7 +58,7 @@ std::string AsmObjWriter::GetOpString(const ObjArgument &objArg) const
 }
 
 void AsmObjWriter::OutputInstruction(
-    OpCodes::Enum opCode,
+    OpCode opCode,
     ObjArgument *args)
 {
     for (int i = 0; i < OpCodeData::s_dataCount; i++)

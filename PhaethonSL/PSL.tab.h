@@ -86,21 +86,22 @@ extern int yydebug;
     WHILE_TOKEN = 296,
     NULLPTR_TOKEN = 297,
     DOUTR_TOKEN = 298,
-    EXECR_TOKEN = 299,
-    EXIT_TOKEN = 300,
-    MOVRC_TOKEN = 301,
-    MOVRR_TOKEN = 302,
-    EMIT_TOKEN = 303,
-    SIZEOF_TOKEN = 304,
-    OFFSETPTR_TOKEN = 305,
-    CASTPTR_TOKEN = 306,
-    READPORT_TOKEN = 307,
-    WRITEPORT_TOKEN = 308,
-    PACKBYTE_TOKEN = 309,
-    DATASEGEND_TOKEN = 310,
-    SAVEREG_TOKEN = 311,
-    RSP_TOKEN = 312,
-    IDENTIFIER = 313
+    DINR_TOKEN = 299,
+    EXECR_TOKEN = 300,
+    EXIT_TOKEN = 301,
+    MOVRC_TOKEN = 302,
+    MOVRR_TOKEN = 303,
+    EMIT_TOKEN = 304,
+    SIZEOF_TOKEN = 305,
+    OFFSETPTR_TOKEN = 306,
+    CASTPTR_TOKEN = 307,
+    READPORT_TOKEN = 308,
+    WRITEPORT_TOKEN = 309,
+    PACKBYTE_TOKEN = 310,
+    DATASEGEND_TOKEN = 311,
+    SAVEREG_TOKEN = 312,
+    RSP_TOKEN = 313,
+    IDENTIFIER = 314
   };
 #endif
 
@@ -111,14 +112,14 @@ union YYSTYPE
 {
 #line 22 "PSL.y" /* yacc.c:1915  */
 
-	int intVal;
+    int intVal;
     float floatVal;
-	int symIndex;
+    int symIndex;
     ASTNode* pNode;
-    int token;
+    OpCode opCode;
     RegIndex regIndex;
 
-#line 122 "PSL.tab.h" /* yacc.c:1915  */
+#line 123 "PSL.tab.h" /* yacc.c:1915  */
 };
 
 typedef union YYSTYPE YYSTYPE;

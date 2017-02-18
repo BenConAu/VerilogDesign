@@ -54,7 +54,7 @@ void WritePortNode::PostProcessNodeImpl()
     RegisterWrapper dataWrap(GetContext(), pFunc->GetRegCollection(), dataResult.get());
 
     GetContext()->OutputInstruction(
-        OpCodes::WritePortRR,
+        OpCode::WritePortRR,
         portWrap.GetWrapped(),
         dataWrap.GetWrapped());
 }

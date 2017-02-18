@@ -76,6 +76,6 @@ void FunctionDeclaratorNode::PostProcessNodeImpl()
 {
     if (IsEntryPoint())
     {
-        GetContext()->OutputInstruction(OpCodes::Stall);
+        GetContext()->OutputInstruction(OpCode::Stall);
     }
 }

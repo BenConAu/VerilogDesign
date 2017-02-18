@@ -171,7 +171,7 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
 
         // Spit out the code to add to said register
         pScope->GetContext()->OutputInstruction(
-            OpCodes::AddRRC,
+            OpCode::AddRRC,
             result,
             Operand(baseRegister),
             Operand((int)_pStructTypeInfo->GetOffset(pMember->GetSymbolIndex())));

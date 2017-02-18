@@ -46,7 +46,7 @@ void PackByteNode::PostProcessNodeImpl()
         RegIndex destIndex = pVarInfo->EnsureRegister(pFunc);
 
         GetContext()->OutputInstruction(
-            OpCodes::PackRRR,
+            OpCode::PackRRR,
             Operand(destIndex),
             srcWrap.GetWrapped(),
             indexWrap.GetWrapped());

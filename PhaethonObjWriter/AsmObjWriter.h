@@ -18,7 +18,7 @@ class AsmObjWriter : public ObjWriter
     std::string GetOpString(const ObjArgument &obj) const;
 
     void OutputInstruction(
-        OpCodes::Enum opCode,
+        OpCode opCode,
         ObjArgument *args) override;
 
     void OutputLabel(

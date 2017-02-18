@@ -13,7 +13,7 @@ class ObjWriter
     }
 
     virtual void OutputInstruction(
-        OpCodes::Enum opCode,
+        OpCode opCode,
         ObjArgument *args) = 0;
 
     virtual void OutputLabel(

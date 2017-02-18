@@ -43,7 +43,7 @@ ExpressionResult* ReadPortNode::CalculateResult()
     Operand resultOperand(resultIndex);
 
     GetContext()->OutputInstruction(
-        OpCodes::ReadPortRR,
+        OpCode::ReadPortRR,
         resultOperand,
         portWrap.GetWrapped());
 

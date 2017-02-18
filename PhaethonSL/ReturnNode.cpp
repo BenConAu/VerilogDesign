@@ -26,5 +26,5 @@ void ReturnNode::PostProcessNodeImpl()
         }
     }
 
-    GetContext()->OutputInstruction(OpCodes::RRet);
+    GetContext()->OutputInstruction(OpCode::RRet);
 }

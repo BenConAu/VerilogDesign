@@ -19,7 +19,7 @@ class BinaryWriterBase : public ObjWriter
 {
 public:
   void OutputInstruction(
-      OpCodes::Enum opCode,
+      OpCode opCode,
       ObjArgument *args) override;
 
   void OutputLabel(

@@ -3,15 +3,15 @@
 #include "PSL.tab.h"
 
 OperatorInfo OperatorNode::_opTable[] = {
-    {Operator::Multiply,    OpCodes::Unknown,   OpCodes::FmulRRR, ResultTypeMethod::Both},
-    {Operator::Add,         OpCodes::AddRRR,    OpCodes::FaddRRR, ResultTypeMethod::Both},
-    {Operator::Subtract,    OpCodes::SubRRR,    OpCodes::Unknown, ResultTypeMethod::Both},
-    {Operator::ShiftLeft,   OpCodes::ShlRRR,    OpCodes::Unknown, ResultTypeMethod::Both},
-    {Operator::ShiftRight,  OpCodes::ShrRRR,    OpCodes::Unknown, ResultTypeMethod::Both},
-    {Operator::Equal,       OpCodes::CmpERRR,   OpCodes::Unknown, ResultTypeMethod::Bool},
-    {Operator::NotEqual,    OpCodes::CmpNeRRR,  OpCodes::Unknown, ResultTypeMethod::Bool},
-    {Operator::LessThan,    OpCodes::CmpLtRRR,  OpCodes::Unknown, ResultTypeMethod::Bool},
-    {Operator::GreaterThan, OpCodes::CmpGtRRR,  OpCodes::Unknown, ResultTypeMethod::Bool},
+    {Operator::Multiply,    OpCode::Unknown,   OpCode::FmulRRR, ResultTypeMethod::Both},
+    {Operator::Add,         OpCode::AddRRR,    OpCode::FaddRRR, ResultTypeMethod::Both},
+    {Operator::Subtract,    OpCode::SubRRR,    OpCode::Unknown, ResultTypeMethod::Both},
+    {Operator::ShiftLeft,   OpCode::ShlRRR,    OpCode::Unknown, ResultTypeMethod::Both},
+    {Operator::ShiftRight,  OpCode::ShrRRR,    OpCode::Unknown, ResultTypeMethod::Both},
+    {Operator::Equal,       OpCode::CmpERRR,   OpCode::Unknown, ResultTypeMethod::Bool},
+    {Operator::NotEqual,    OpCode::CmpNeRRR,  OpCode::Unknown, ResultTypeMethod::Bool},
+    {Operator::LessThan,    OpCode::CmpLtRRR,  OpCode::Unknown, ResultTypeMethod::Bool},
+    {Operator::GreaterThan, OpCode::CmpGtRRR,  OpCode::Unknown, ResultTypeMethod::Bool},
 };
 
 void OperatorNode::VerifyNodeImpl()
@@ -84,7 +84,7 @@ ExpressionResult *OperatorNode::CalculateResult()
     }
 
     // Figure out opCode
-    OpCodes::Enum opCode = OpCodes::Unknown;
+    OpCode opCode = OpCode::Unknown;
     if (bothType == FLOAT_TOKEN)
     {
         opCode = _opInfo._opCodeFloat;
@@ -94,7 +94,7 @@ ExpressionResult *OperatorNode::CalculateResult()
         opCode = _opInfo._opCodeWord;
     }
 
-    if (opCode == OpCodes::Unknown)
+    if (opCode == OpCode::Unknown)
     {
         GetContext()->ReportError(_location, "Unknown opcode for binary operation");
     }

@@ -118,7 +118,7 @@ int main(int argc, const char * argv[])
 
         // Read the opCode
         byteWord ramCode = ram.ReadWord(ip);
-        OpCodes::Enum opCode = static_cast<OpCodes::Enum>(ramCode.byte[0]);
+        OpCode opCode = static_cast<OpCode>(ramCode.byte[0]);
         WORD regAddr1 = (ramCode.byte[1] >= 64) ? (ramCode.byte[1] - 64) : (ramCode.byte[1] + rPos);
         WORD regAddr2 = (ramCode.byte[2] >= 64) ? (ramCode.byte[2] - 64) : (ramCode.byte[2] + rPos);
         WORD regAddr3 = (ramCode.byte[3] >= 64) ? (ramCode.byte[3] - 64) : (ramCode.byte[3] + rPos);
@@ -137,112 +137,112 @@ int main(int argc, const char * argv[])
 
         switch(opCode)
         {
-            case OpCodes::MovRR:
+            case MovRR:
                 reg[regAddr1] = regValue2;
                 break;
 
-            case OpCodes::MovRC:
+            case MovRC:
                 reg[regAddr1].word = opWord;
                 break;
 
-            case OpCodes::MovRdR:
+            case MovRdR:
                 reg[regAddr1] = ram.ReadWord(regValue2.word);
                 break;
 
-            case OpCodes::MovRdC:
+            case MovRdC:
                 reg[regAddr1] = ram.ReadWord(opWord);
                 break;
 
-            case OpCodes::MovRdRo:
+            case MovRdRo:
                 reg[regAddr1] = ram.ReadWord(regValue2.word + opWord);
                 break;
 
-            case OpCodes::MovdCR:
+            case MovdCR:
                 ram.WriteWord(opWord, regValue2);
                 break;
 
-            case OpCodes::MovdRoR:
+            case MovdRoR:
                 ram.WriteWord(regValue1.word + opWord, regValue2);
                 break;
 
-            case OpCodes::AddRC:
+            case AddRC:
                 reg[regAddr1].word += opWord;
                 break;
 
-            case OpCodes::AddRR:
+            case AddRR:
                 reg[regAddr1].word += regValue2.word;
                 break;
 
-            case OpCodes::DecR:
+            case DecR:
                 reg[regAddr1].word--;
                 break;
 
-            case OpCodes::IncR:
+            case IncR:
                 reg[regAddr1].word++;
                 break;
 
-            case OpCodes::FdivRR:
+            case FdivRR:
                 reg[regAddr1].fl = regValue1.fl / regValue2.fl;
                 break;
 
-            case OpCodes::FminRR:
+            case FminRR:
                 reg[regAddr1].fl = fmin(regValue1.fl, regValue2.fl);
                 break;
 
-            case OpCodes::FmaxRR:
+            case FmaxRR:
                 reg[regAddr1].fl = fmax(regValue1.fl, regValue2.fl);
                 break;
 
-            case OpCodes::MulAddRRC:
+            case MulAddRRC:
                 reg[regAddr1].word = regValue1.word + regValue2.word * opWord;
                 break;
 
-            case OpCodes::PushR:
+            case PushR:
                 ram.WriteWord(reg[0].word, regValue1);
                 reg[0].word += 4;
                 break;
 
-            case OpCodes::PopR:
+            case PopR:
                 reg[0].word -= 4;
                 reg[regAddr1] = ram.ReadWord(reg[0].word);
                 break;
 
-            case OpCodes::CallR:
+            case CallR:
                 ram.WriteWord(reg[0].word, ip);
                 reg[0].word += 4;
                 ip = regValue1.word;
                 break;
 
-            case OpCodes::Ret:
+            case Ret:
                 reg[0].word -= 4;
                 ip = ram.ReadWord(reg[0].word).word + 4;
                 break;
 
-            case OpCodes::RCallRC:
+            case RCallRC:
                 reg[rPos + opWord] = ip;
                 reg[rPos + opWord + 1] = opWord;
                 rPos += (opWord + 2);
                 ip = regValue1.word;
                 break;
 
-            case OpCodes::RRet:
+            case RRet:
                 ip = reg[rPos - 2].word + 8;
                 rPos -= (reg[rPos - 1].word + 2);
                 break;
 
-            case OpCodes::JmpC:
+            case JmpC:
                 ip = opWord;
                 break;
 
-            case OpCodes::JneC:
+            case JneC:
                 condJump = (reg[1].word & 1) == 0;
                 break;
 
-            case OpCodes::JeC:
+            case JeC:
                 condJump = (reg[1].word & 1) != 0;
                 break;
 
-            case OpCodes::CmpRC:
+            case CmpRC:
                 if (regValue1.word == opWord)
                 {
                     reg[1].word |= 1;
@@ -271,7 +271,7 @@ int main(int argc, const char * argv[])
                 }
                 break;
 
-            case OpCodes::DoutR:
+            case DoutR:
                 printf("DebugOut %x\n", regValue1.word);
                 break;
 
@@ -286,11 +286,11 @@ int main(int argc, const char * argv[])
         }
         else
         {
-            if (opCode != OpCodes::CallR &&
-                opCode != OpCodes::JmpC &&
-                opCode != OpCodes::Ret &&
-                opCode != OpCodes::RRet &&
-                opCode != OpCodes::RCallRC
+            if (opCode != CallR &&
+                opCode != JmpC &&
+                opCode != Ret &&
+                opCode != RRet &&
+                opCode != RCallRC
                 )
             {
                 if (Is8ByteOpcode(opCode))

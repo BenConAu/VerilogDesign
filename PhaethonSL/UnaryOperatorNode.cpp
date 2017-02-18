@@ -3,7 +3,7 @@
 #include "PSL.tab.h"
 
 OperatorInfo UnaryOperatorNode::_opTable[] = {
-    { Operator::Negate,  OpCodes::NegRR,    OpCodes::Unknown, ResultTypeMethod::Both },
+    { Operator::Negate,  OpCode::NegRR,    OpCode::Unknown, ResultTypeMethod::Both },
 };
 
 void UnaryOperatorNode::VerifyNodeImpl()
@@ -72,7 +72,7 @@ ExpressionResult *UnaryOperatorNode::CalculateResult()
     }
 
     // Figure out opCode
-    OpCodes::Enum opCode = OpCodes::Unknown;
+    OpCode opCode = OpCode::Unknown;
     if (bothType == FLOAT_TOKEN)
     {
         opCode = _opInfo._opCodeFloat;
@@ -82,7 +82,7 @@ ExpressionResult *UnaryOperatorNode::CalculateResult()
         opCode = _opInfo._opCodeWord;
     }
 
-    if (opCode == OpCodes::Unknown)
+    if (opCode == OpCode::Unknown)
     {
         throw "Unknown opcode for binary operation";
     }

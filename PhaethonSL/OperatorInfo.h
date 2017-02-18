@@ -23,7 +23,7 @@ enum class ResultTypeMethod
 struct OperatorInfo
 {
     Operator _operator;
-    OpCodes::Enum _opCodeWord;
-    OpCodes::Enum _opCodeFloat;
+    OpCode _opCodeWord;
+    OpCode _opCodeFloat;
     ResultTypeMethod _resultType;
 };

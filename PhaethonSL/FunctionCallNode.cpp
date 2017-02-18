@@ -99,7 +99,7 @@ ExpressionResult *FunctionCallNode::CalculateResult()
 
     // Now output call
     GetContext()->OutputInstruction(
-        OpCodes::RCallRC,
+        OpCode::RCallRC,
         addrOperand,
         Operand((int)firstAvail));
 

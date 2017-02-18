@@ -100,17 +100,17 @@ void OutputInstructions()
     ::fprintf(fhfile, "    };\n}\n");
 
     // The opCode enum
-    ::fprintf(fhfile, "namespace OpCodes\n{\n    enum Enum\n    {\n        Unknown = 0,\n");
+    ::fprintf(fhfile, "enum class OpCode\n{\n    Unknown = 0,\n");
     for (size_t i = 0; i < g_instructionData.size(); i++)
     {
         InstructionData& data = g_instructionData[i];
 
-        ::fprintf(fhfile, "        %s = %d,\n", data.opCode.c_str(), (int)i + 1);
+        ::fprintf(fhfile, "    %s = %d,\n", data.opCode.c_str(), (int)i + 1);
     }
-    ::fprintf(fhfile, "    };\n}\n");
+    ::fprintf(fhfile, "};\n");
 
-    ::fprintf(fhfile, "bool Is8ByteOpcode(OpCodes::Enum opCodeParam);\n");
-    ::fprintf(fhfile, "bool IsRAMOpcode(OpCodes::Enum opCodeParam);\n");
+    ::fprintf(fhfile, "bool Is8ByteOpcode(OpCode opCodeParam);\n");
+    ::fprintf(fhfile, "bool IsRAMOpcode(OpCode opCodeParam);\n");
 
     ::fclose(fhfile);
 
@@ -139,7 +139,7 @@ void OutputInstructions()
     for (size_t i = 0; i < g_instructionData.size(); i++)
     {
         InstructionData& data = g_instructionData[i];
-        ::fprintf(fcppfile, "    { Instructions::%s, OpCodes::%s, { OperandType::%s, OperandType::%s, OperandType::%s }, %d, \"%s\" },\n",
+        ::fprintf(fcppfile, "    { Instructions::%s, OpCode::%s, { OperandType::%s, OperandType::%s, OperandType::%s }, %d, \"%s\" },\n",
             Pad(g_symbols[data.symIndex], 10).c_str(),
             Pad(data.opCode, 15).c_str(),
             Pad(OperandTypeHelper::GetTypeText(data.args[0]._type), 22).c_str(),
@@ -154,7 +154,7 @@ void OutputInstructions()
     ::fprintf(fcppfile, "int OpCodeData::s_dataCount = sizeof(OpCodeData::s_data) / sizeof(OpCodeData::s_data[0]);\n\n");
 
     // Cpp function to tell opCodes that have constant data
-    ::fprintf(fcppfile, "bool Is8ByteOpcode(OpCodes::Enum opCodeParam)\n{\n    if (");
+    ::fprintf(fcppfile, "bool Is8ByteOpcode(OpCode opCodeParam)\n{\n    if (");
     bool fFirst = true;
     for (size_t i = 0; i < g_instructionData.size(); i++)
     {
@@ -167,7 +167,7 @@ void OutputInstructions()
                 fprintf(fcppfile, " ||\n        ");
             }
 
-            ::fprintf(fcppfile, "opCodeParam == OpCodes::%s", data.opCode.c_str());
+            ::fprintf(fcppfile, "opCodeParam == OpCode::%s", data.opCode.c_str());
 
             fFirst = false;
         }
@@ -175,7 +175,7 @@ void OutputInstructions()
     ::fprintf(fcppfile, ")\n        return true;\n    else\n        return false;\n}\n\n");
 
     // Cpp function to tell opCodes that read or write RAM
-    ::fprintf(fcppfile, "bool IsRAMOpcode(OpCodes::Enum opCodeParam)\n{\n    if (");
+    ::fprintf(fcppfile, "bool IsRAMOpcode(OpCode opCodeParam)\n{\n    if (");
     fFirst = true;
     for (size_t i = 0; i < g_instructionData.size(); i++)
     {
@@ -188,7 +188,7 @@ void OutputInstructions()
                 fprintf(fcppfile, " ||\n        ");
             }
 
-            ::fprintf(fcppfile, "opCodeParam == OpCodes::%s", data.opCode.c_str());
+            ::fprintf(fcppfile, "opCodeParam == OpCode::%s", data.opCode.c_str());
 
             fFirst = false;
         }

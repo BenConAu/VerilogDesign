@@ -198,7 +198,7 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
 
             // Spit out the code to add to said register
             pScope->GetContext()->OutputInstruction(
-                OpCodes::AddRRC,
+                OpCode::AddRRC,
                 result,
                 Operand(baseRegister),
                 Operand((int)_pStructTypeInfo->GetOffset(pMember->GetSymbolIndex())));
@@ -239,7 +239,7 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
     Operand resultOperand(resultIndex);
 
     GetContext()->OutputInstruction(
-        OpCodes::ReadPortRR,
+        OpCode::ReadPortRR,
         resultOperand,
         portWrap.GetWrapped());
 

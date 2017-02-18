@@ -62,19 +62,19 @@ void WhileStatementNode::ProcessNode()
         testResult.get());
 
     GetContext()->OutputInstruction(
-        OpCodes::CmpRC,
+        OpCode::CmpRC,
         wrapper.GetWrapped(),
         Operand(0));
 
     GetContext()->OutputInstruction(
-        OpCodes::JeC,
+        OpCode::JeC,
         Operand(endLabel));
 
     // Now the statement list
     pLoop->ProcessNode();
 
     GetContext()->OutputInstruction(
-        OpCodes::JmpC,
+        OpCode::JmpC,
         Operand(beginLabel));
 
     // Now put the label we jump to for test false

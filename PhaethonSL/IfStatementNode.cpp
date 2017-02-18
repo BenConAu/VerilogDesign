@@ -60,7 +60,7 @@ void IfStatementNode::ProcessNode()
     sprintf(trueLabel, "true_%d", _instance);
 
     GetContext()->OutputInstruction(
-        OpCodes::JzRC,
+        OpCode::JzRC,
         wrapper.GetWrapped(),
         Operand(falseLabel));
 
@@ -71,7 +71,7 @@ void IfStatementNode::ProcessNode()
     {
         // Jump to the end of the else clause
         GetContext()->OutputInstruction(
-            OpCodes::JmpC,
+            OpCode::JmpC,
             Operand(trueLabel));
     }
 

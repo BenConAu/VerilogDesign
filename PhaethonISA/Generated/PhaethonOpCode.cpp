@@ -48,104 +48,104 @@ InstructionData InstructionData::s_data[] = {
 int InstructionData::s_dataCount = sizeof(InstructionData::s_data) / sizeof(InstructionData::s_data[0]);
 
 OpCodeData OpCodeData::s_data[] = {
-    { Instructions::Mov       , OpCodes::MovRR          , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "MovRR" },
-    { Instructions::Mov       , OpCodes::MovRC          , { OperandType::Register              , OperandType::Constant              , OperandType::None         }, 1, "MovRC" },
-    { Instructions::Mov       , OpCodes::MovRdR         , { OperandType::Register              , OperandType::DerefRegister         , OperandType::None         }, -1, "MovRdR" },
-    { Instructions::Mov       , OpCodes::MovRdRo        , { OperandType::Register              , OperandType::DerefRegisterOffset   , OperandType::None         }, 1, "MovRdRo" },
-    { Instructions::Mov       , OpCodes::MovRdRoR       , { OperandType::Register              , OperandType::DerefRegisterOffset   , OperandType::Register     }, 1, "MovRdRoR" },
-    { Instructions::Mov       , OpCodes::MovRdC         , { OperandType::Register              , OperandType::DerefConstant         , OperandType::None         }, 1, "MovRdC" },
-    { Instructions::Mov       , OpCodes::MovdCR         , { OperandType::DerefConstant         , OperandType::Register              , OperandType::None         }, 0, "MovdCR" },
-    { Instructions::Mov       , OpCodes::MovdRoR        , { OperandType::DerefRegisterOffset   , OperandType::Register              , OperandType::None         }, 0, "MovdRoR" },
-    { Instructions::Mov       , OpCodes::MovdRoRR       , { OperandType::DerefRegisterOffset   , OperandType::Register              , OperandType::Register     }, 0, "MovdRoRR" },
-    { Instructions::Pack      , OpCodes::PackRRR        , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "PackRRR" },
-    { Instructions::Push      , OpCodes::PushR          , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "PushR" },
-    { Instructions::Pop       , OpCodes::PopR           , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "PopR" },
-    { Instructions::Cmp       , OpCodes::CmpRR          , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "CmpRR" },
-    { Instructions::Cmp       , OpCodes::CmpRC          , { OperandType::Register              , OperandType::Constant              , OperandType::None         }, 1, "CmpRC" },
-    { Instructions::CmpE      , OpCodes::CmpERRR        , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "CmpERRR" },
-    { Instructions::CmpNe     , OpCodes::CmpNeRRR       , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "CmpNeRRR" },
-    { Instructions::CmpLt     , OpCodes::CmpLtRRR       , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "CmpLtRRR" },
-    { Instructions::CmpGt     , OpCodes::CmpGtRRR       , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "CmpGtRRR" },
-    { Instructions::Jmp       , OpCodes::JmpC           , { OperandType::Constant              , OperandType::None                  , OperandType::None         }, 0, "JmpC" },
-    { Instructions::Jne       , OpCodes::JneC           , { OperandType::Constant              , OperandType::None                  , OperandType::None         }, 0, "JneC" },
-    { Instructions::Je        , OpCodes::JeC            , { OperandType::Constant              , OperandType::None                  , OperandType::None         }, 0, "JeC" },
-    { Instructions::Jz        , OpCodes::JzRC           , { OperandType::Register              , OperandType::Constant              , OperandType::None         }, 1, "JzRC" },
-    { Instructions::Jnz       , OpCodes::JnzRC          , { OperandType::Register              , OperandType::Constant              , OperandType::None         }, 1, "JnzRC" },
-    { Instructions::Call      , OpCodes::CallR          , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "CallR" },
-    { Instructions::Ret       , OpCodes::Ret            , { OperandType::None                  , OperandType::None                  , OperandType::None         }, -1, "Ret" },
-    { Instructions::RCall     , OpCodes::RCallRC        , { OperandType::Register              , OperandType::Constant              , OperandType::None         }, 1, "RCallRC" },
-    { Instructions::RRet      , OpCodes::RRet           , { OperandType::None                  , OperandType::None                  , OperandType::None         }, -1, "RRet" },
-    { Instructions::Add       , OpCodes::AddRRC         , { OperandType::Register              , OperandType::Register              , OperandType::Constant     }, 2, "AddRRC" },
-    { Instructions::Add       , OpCodes::AddRRR         , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "AddRRR" },
-    { Instructions::Sub       , OpCodes::SubRRC         , { OperandType::Register              , OperandType::Register              , OperandType::Constant     }, 2, "SubRRC" },
-    { Instructions::Sub       , OpCodes::SubRRR         , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "SubRRR" },
-    { Instructions::MulAdd    , OpCodes::MulAddRRC      , { OperandType::Register              , OperandType::Register              , OperandType::Constant     }, 2, "MulAddRRC" },
-    { Instructions::Inc       , OpCodes::IncR           , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "IncR" },
-    { Instructions::Dec       , OpCodes::DecR           , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "DecR" },
-    { Instructions::Shl       , OpCodes::ShlRRR         , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "ShlRRR" },
-    { Instructions::Shr       , OpCodes::ShrRRR         , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "ShrRRR" },
-    { Instructions::Neg       , OpCodes::NegRR          , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "NegRR" },
-    { Instructions::Fadd      , OpCodes::FaddRRR        , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "FaddRRR" },
-    { Instructions::Fsub      , OpCodes::FsubRR         , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "FsubRR" },
-    { Instructions::Fconv     , OpCodes::FconvR         , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "FconvR" },
-    { Instructions::Fmul      , OpCodes::FmulRRR        , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "FmulRRR" },
-    { Instructions::Fdiv      , OpCodes::FdivRR         , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "FdivRR" },
-    { Instructions::Fmuladd   , OpCodes::FmuladdRRR     , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "FmuladdRRR" },
-    { Instructions::Fmin      , OpCodes::FminRR         , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "FminRR" },
-    { Instructions::Fmax      , OpCodes::FmaxRR         , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "FmaxRR" },
-    { Instructions::Vfadd     , OpCodes::VfaddRRR       , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "VfaddRRR" },
-    { Instructions::Dout      , OpCodes::DoutR          , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "DoutR" },
-    { Instructions::Din       , OpCodes::DinR           , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "DinR" },
-    { Instructions::ReadPort  , OpCodes::ReadPortRR     , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "ReadPortRR" },
-    { Instructions::WritePort , OpCodes::WritePortRR    , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "WritePortRR" },
-    { Instructions::Stall     , OpCodes::Stall          , { OperandType::None                  , OperandType::None                  , OperandType::None         }, -1, "Stall" },
-    { Instructions::Exec      , OpCodes::ExecR          , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "ExecR" },
-    { Instructions::Exit      , OpCodes::Exit           , { OperandType::None                  , OperandType::None                  , OperandType::None         }, -1, "Exit" },
+    { Instructions::Mov       , OpCode::MovRR          , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "MovRR" },
+    { Instructions::Mov       , OpCode::MovRC          , { OperandType::Register              , OperandType::Constant              , OperandType::None         }, 1, "MovRC" },
+    { Instructions::Mov       , OpCode::MovRdR         , { OperandType::Register              , OperandType::DerefRegister         , OperandType::None         }, -1, "MovRdR" },
+    { Instructions::Mov       , OpCode::MovRdRo        , { OperandType::Register              , OperandType::DerefRegisterOffset   , OperandType::None         }, 1, "MovRdRo" },
+    { Instructions::Mov       , OpCode::MovRdRoR       , { OperandType::Register              , OperandType::DerefRegisterOffset   , OperandType::Register     }, 1, "MovRdRoR" },
+    { Instructions::Mov       , OpCode::MovRdC         , { OperandType::Register              , OperandType::DerefConstant         , OperandType::None         }, 1, "MovRdC" },
+    { Instructions::Mov       , OpCode::MovdCR         , { OperandType::DerefConstant         , OperandType::Register              , OperandType::None         }, 0, "MovdCR" },
+    { Instructions::Mov       , OpCode::MovdRoR        , { OperandType::DerefRegisterOffset   , OperandType::Register              , OperandType::None         }, 0, "MovdRoR" },
+    { Instructions::Mov       , OpCode::MovdRoRR       , { OperandType::DerefRegisterOffset   , OperandType::Register              , OperandType::Register     }, 0, "MovdRoRR" },
+    { Instructions::Pack      , OpCode::PackRRR        , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "PackRRR" },
+    { Instructions::Push      , OpCode::PushR          , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "PushR" },
+    { Instructions::Pop       , OpCode::PopR           , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "PopR" },
+    { Instructions::Cmp       , OpCode::CmpRR          , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "CmpRR" },
+    { Instructions::Cmp       , OpCode::CmpRC          , { OperandType::Register              , OperandType::Constant              , OperandType::None         }, 1, "CmpRC" },
+    { Instructions::CmpE      , OpCode::CmpERRR        , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "CmpERRR" },
+    { Instructions::CmpNe     , OpCode::CmpNeRRR       , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "CmpNeRRR" },
+    { Instructions::CmpLt     , OpCode::CmpLtRRR       , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "CmpLtRRR" },
+    { Instructions::CmpGt     , OpCode::CmpGtRRR       , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "CmpGtRRR" },
+    { Instructions::Jmp       , OpCode::JmpC           , { OperandType::Constant              , OperandType::None                  , OperandType::None         }, 0, "JmpC" },
+    { Instructions::Jne       , OpCode::JneC           , { OperandType::Constant              , OperandType::None                  , OperandType::None         }, 0, "JneC" },
+    { Instructions::Je        , OpCode::JeC            , { OperandType::Constant              , OperandType::None                  , OperandType::None         }, 0, "JeC" },
+    { Instructions::Jz        , OpCode::JzRC           , { OperandType::Register              , OperandType::Constant              , OperandType::None         }, 1, "JzRC" },
+    { Instructions::Jnz       , OpCode::JnzRC          , { OperandType::Register              , OperandType::Constant              , OperandType::None         }, 1, "JnzRC" },
+    { Instructions::Call      , OpCode::CallR          , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "CallR" },
+    { Instructions::Ret       , OpCode::Ret            , { OperandType::None                  , OperandType::None                  , OperandType::None         }, -1, "Ret" },
+    { Instructions::RCall     , OpCode::RCallRC        , { OperandType::Register              , OperandType::Constant              , OperandType::None         }, 1, "RCallRC" },
+    { Instructions::RRet      , OpCode::RRet           , { OperandType::None                  , OperandType::None                  , OperandType::None         }, -1, "RRet" },
+    { Instructions::Add       , OpCode::AddRRC         , { OperandType::Register              , OperandType::Register              , OperandType::Constant     }, 2, "AddRRC" },
+    { Instructions::Add       , OpCode::AddRRR         , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "AddRRR" },
+    { Instructions::Sub       , OpCode::SubRRC         , { OperandType::Register              , OperandType::Register              , OperandType::Constant     }, 2, "SubRRC" },
+    { Instructions::Sub       , OpCode::SubRRR         , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "SubRRR" },
+    { Instructions::MulAdd    , OpCode::MulAddRRC      , { OperandType::Register              , OperandType::Register              , OperandType::Constant     }, 2, "MulAddRRC" },
+    { Instructions::Inc       , OpCode::IncR           , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "IncR" },
+    { Instructions::Dec       , OpCode::DecR           , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "DecR" },
+    { Instructions::Shl       , OpCode::ShlRRR         , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "ShlRRR" },
+    { Instructions::Shr       , OpCode::ShrRRR         , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "ShrRRR" },
+    { Instructions::Neg       , OpCode::NegRR          , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "NegRR" },
+    { Instructions::Fadd      , OpCode::FaddRRR        , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "FaddRRR" },
+    { Instructions::Fsub      , OpCode::FsubRR         , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "FsubRR" },
+    { Instructions::Fconv     , OpCode::FconvR         , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "FconvR" },
+    { Instructions::Fmul      , OpCode::FmulRRR        , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "FmulRRR" },
+    { Instructions::Fdiv      , OpCode::FdivRR         , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "FdivRR" },
+    { Instructions::Fmuladd   , OpCode::FmuladdRRR     , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "FmuladdRRR" },
+    { Instructions::Fmin      , OpCode::FminRR         , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "FminRR" },
+    { Instructions::Fmax      , OpCode::FmaxRR         , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "FmaxRR" },
+    { Instructions::Vfadd     , OpCode::VfaddRRR       , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "VfaddRRR" },
+    { Instructions::Dout      , OpCode::DoutR          , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "DoutR" },
+    { Instructions::Din       , OpCode::DinR           , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "DinR" },
+    { Instructions::ReadPort  , OpCode::ReadPortRR     , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "ReadPortRR" },
+    { Instructions::WritePort , OpCode::WritePortRR    , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "WritePortRR" },
+    { Instructions::Stall     , OpCode::Stall          , { OperandType::None                  , OperandType::None                  , OperandType::None         }, -1, "Stall" },
+    { Instructions::Exec      , OpCode::ExecR          , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "ExecR" },
+    { Instructions::Exit      , OpCode::Exit           , { OperandType::None                  , OperandType::None                  , OperandType::None         }, -1, "Exit" },
 };
 
 int OpCodeData::s_dataCount = sizeof(OpCodeData::s_data) / sizeof(OpCodeData::s_data[0]);
 
-bool Is8ByteOpcode(OpCodes::Enum opCodeParam)
+bool Is8ByteOpcode(OpCode opCodeParam)
 {
-    if (opCodeParam == OpCodes::MovRC ||
-        opCodeParam == OpCodes::MovRdRo ||
-        opCodeParam == OpCodes::MovRdRoR ||
-        opCodeParam == OpCodes::MovRdC ||
-        opCodeParam == OpCodes::MovdCR ||
-        opCodeParam == OpCodes::MovdRoR ||
-        opCodeParam == OpCodes::MovdRoRR ||
-        opCodeParam == OpCodes::CmpRC ||
-        opCodeParam == OpCodes::JmpC ||
-        opCodeParam == OpCodes::JneC ||
-        opCodeParam == OpCodes::JeC ||
-        opCodeParam == OpCodes::JzRC ||
-        opCodeParam == OpCodes::JnzRC ||
-        opCodeParam == OpCodes::RCallRC ||
-        opCodeParam == OpCodes::AddRRC ||
-        opCodeParam == OpCodes::SubRRC ||
-        opCodeParam == OpCodes::MulAddRRC)
+    if (opCodeParam == OpCode::MovRC ||
+        opCodeParam == OpCode::MovRdRo ||
+        opCodeParam == OpCode::MovRdRoR ||
+        opCodeParam == OpCode::MovRdC ||
+        opCodeParam == OpCode::MovdCR ||
+        opCodeParam == OpCode::MovdRoR ||
+        opCodeParam == OpCode::MovdRoRR ||
+        opCodeParam == OpCode::CmpRC ||
+        opCodeParam == OpCode::JmpC ||
+        opCodeParam == OpCode::JneC ||
+        opCodeParam == OpCode::JeC ||
+        opCodeParam == OpCode::JzRC ||
+        opCodeParam == OpCode::JnzRC ||
+        opCodeParam == OpCode::RCallRC ||
+        opCodeParam == OpCode::AddRRC ||
+        opCodeParam == OpCode::SubRRC ||
+        opCodeParam == OpCode::MulAddRRC)
         return true;
     else
         return false;
 }
 
-bool IsRAMOpcode(OpCodes::Enum opCodeParam)
+bool IsRAMOpcode(OpCode opCodeParam)
 {
-    if (opCodeParam == OpCodes::MovRdR ||
-        opCodeParam == OpCodes::MovRdRo ||
-        opCodeParam == OpCodes::MovRdRoR ||
-        opCodeParam == OpCodes::MovRdC ||
-        opCodeParam == OpCodes::MovdCR ||
-        opCodeParam == OpCodes::MovdRoR ||
-        opCodeParam == OpCodes::MovdRoRR ||
-        opCodeParam == OpCodes::PushR ||
-        opCodeParam == OpCodes::PopR ||
-        opCodeParam == OpCodes::CallR ||
-        opCodeParam == OpCodes::Ret ||
-        opCodeParam == OpCodes::DoutR ||
-        opCodeParam == OpCodes::DinR ||
-        opCodeParam == OpCodes::ReadPortRR ||
-        opCodeParam == OpCodes::WritePortRR)
+    if (opCodeParam == OpCode::MovRdR ||
+        opCodeParam == OpCode::MovRdRo ||
+        opCodeParam == OpCode::MovRdRoR ||
+        opCodeParam == OpCode::MovRdC ||
+        opCodeParam == OpCode::MovdCR ||
+        opCodeParam == OpCode::MovdRoR ||
+        opCodeParam == OpCode::MovdRoRR ||
+        opCodeParam == OpCode::PushR ||
+        opCodeParam == OpCode::PopR ||
+        opCodeParam == OpCode::CallR ||
+        opCodeParam == OpCode::Ret ||
+        opCodeParam == OpCode::DoutR ||
+        opCodeParam == OpCode::DinR ||
+        opCodeParam == OpCode::ReadPortRR ||
+        opCodeParam == OpCode::WritePortRR)
         return true;
     else
         return false;
