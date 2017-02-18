@@ -41,11 +41,12 @@ namespace Instructions
         Fmax = 34,
         Vfadd = 35,
         Dout = 36,
-        ReadPort = 37,
-        WritePort = 38,
-        Stall = 39,
-        Exec = 40,
-        Exit = 41,
+        Din = 37,
+        ReadPort = 38,
+        WritePort = 39,
+        Stall = 40,
+        Exec = 41,
+        Exit = 42,
     };
 }
 namespace OpCodes
@@ -100,11 +101,12 @@ namespace OpCodes
         FmaxRR = 45,
         VfaddRRR = 46,
         DoutR = 47,
-        ReadPortRR = 48,
-        WritePortRR = 49,
-        Stall = 50,
-        ExecR = 51,
-        Exit = 52,
+        DinR = 48,
+        ReadPortRR = 49,
+        WritePortRR = 50,
+        Stall = 51,
+        ExecR = 52,
+        Exit = 53,
     };
 }
 bool Is8ByteOpcode(OpCodes::Enum opCodeParam);

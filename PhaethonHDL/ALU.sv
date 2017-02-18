@@ -113,6 +113,26 @@ module ALU(
   FloatingCompare     fComp(regValue[0], regValue2[0], fCompareResult, floatDebug, clk, fOpEnable[5:5]);
   FloatingDivide      fDiv(regValue[0], regValue2[0], fDivResult, floatDebug, clk, fOpEnable[6:6]);
 
+  wire       [31:0] dbgBufDbg1;
+  wire       [31:0] dbgBufDbg2;
+  reg        [0:0]  dbgBufferWriteReq;
+  reg        [31:0] dbgBufferWriteData;
+  wire       [31:0] dbgBufferReadData;
+  wire       [0:0]  dbgBufferReadComplete;
+  reg        [0:0]  dbgBufferReadReq;
+
+  RingBuffer #(32, 5) debugBuffer(
+    clk,                    // Global clock
+    reset,                  // Reset
+    dbgBufferWriteReq,      // Flag to indicate request to write
+    dbgBufferWriteData,     // Data to write
+    dbgBufferReadReq,       // Flag to indicate request to read
+    dbgBufferReadComplete,  // Flag to indicate read success
+    dbgBufferReadData,      // Actual data read 
+    dbgBufDbg1,             // Debug1
+    dbgBufDbg2              // Debug2
+  );
+
   //initial
      //$monitor("%t, ram = %h, %h, %h, %h : %h, %h, %h, %h",
        //$time, ramIn[7:0], ramIn[15:8], ramIn[23:16], ramIn[31:24], ramAddress, ramIn, opAddress, ramValue);
@@ -443,6 +463,17 @@ module ALU(
           uartWriteData <= regValue2[0][7:0];
         end
 
+        if (opCode == `DoutR)
+        begin
+          dbgBufferWriteReq <= 1;
+          dbgBufferWriteData <= regValue[0];
+        end
+
+        if (opCode == `DoutR)
+        begin
+          dbgBufferReadReq <= 1;
+        end
+
         mode <= `MemRWWait;
       end
 
@@ -453,6 +484,8 @@ module ALU(
         writeReq <= 1'b0;
         uartReadReq <= 1'b0;
         uartWriteReq <= 1'b0;
+        dbgBufferWriteReq <= 1'b0;
+        dbgBufferReadReq <= 1'b0;
 
         mode <= `MemRWComplete;
 
@@ -499,11 +532,13 @@ module ALU(
           end
 
           endcase
-
+        end
+        else if (opCode == `DinR)
+        begin
+          ramValue <= dbgBufferWriteData;
         end
 
         mode <= `ProcessOpCode;
-
       end
 
       // Mode ProcessOpCode: Finalize the instruction operation, by performing
@@ -688,6 +723,10 @@ module ALU(
       
             // FPGA we hit the 7seg display with the value
             debug <= regValue[0];
+          end
+
+          `DinR: begin
+            regarray[regAddress[7:0]] <= ramValue;
           end
 
           `Stall: begin 

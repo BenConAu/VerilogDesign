@@ -42,7 +42,7 @@ module test;
   wire[31:0] debug;
   wire[31:0] debug2;
   
-  RingBuffer #(`BITLENGTH) ring(
+  RingBuffer #(8, `BITLENGTH) ring(
     clk,
     reset,
     writeEnable,

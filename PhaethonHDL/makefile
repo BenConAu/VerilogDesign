@@ -3,7 +3,7 @@ default: RingBuffer_tb_4 RingBuffer_tb_4.result RingBuffer_tb_8 RingBuffer_tb_8.
 RingBuffer_tb_4: \
     RingBuffer.sv \
 	RingBuffer_tb.sv
-	iverilog -DBITLENGTH=2 -o RingBuffer_tb_4 \
+	iverilog -DUNITTEST -DBITLENGTH=2 -o RingBuffer_tb_4 \
     RingBuffer.sv \
     RingBuffer_tb.sv
 
@@ -14,7 +14,7 @@ RingBuffer_tb_4.result: \
 RingBuffer_tb_8: \
     RingBuffer.sv \
 	RingBuffer_tb.sv
-	iverilog -DBITLENGTH=3 -o RingBuffer_tb_8 \
+	iverilog -DUNITTEST -DBITLENGTH=3 -o RingBuffer_tb_8 \
     RingBuffer.sv \
     RingBuffer_tb.sv
 
@@ -26,6 +26,7 @@ ALU_tb: \
 	../PhaethonISA/Generated/PhaethonOpCode.v \
 	ALU_tb.sv \
 	ALU.sv \
+	RingBuffer.sv \
 	FloatingAdd.sv \
 	FloatingFromInt.sv \
 	FloatingMultiply.sv \
@@ -35,6 +36,7 @@ ALU_tb: \
 	iverilog -o ALU_tb \
 	ALU_tb.sv \
 	ALU.sv \
+	RingBuffer.sv \
 	FloatingAdd.sv \
 	FloatingFromInt.sv \
 	FloatingMultiply.sv \

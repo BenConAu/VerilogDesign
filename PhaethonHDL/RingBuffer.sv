@@ -10,12 +10,12 @@ module RingBuffer(
   debug2            // Another debug port
   );
 
+  // Parameters for width of buffer
+  parameter WordSize = 8;
+
   // Parameters for length of buffer
   parameter LengthBits = 3;
   parameter BufferLength = 1 << LengthBits;
-
-  // Parameters for width of buffer
-  parameter WordSize = 8;
 
   input wire clk;
   input wire reset;
@@ -32,10 +32,12 @@ module RingBuffer(
   reg hasData = 0;
   reg [(WordSize - 1):0] dataBuffer[0:(BufferLength - 1)];
 
+`ifdef UNITTEST
   initial
-     $monitor("At time %t, reset = %h, dWE = %h, dataWrite = %h, dRE = %h, dRAck = %h, dataRead = %h, firstPos = %h, lastPos = %h, hasData = %h, db[0] = %h:%h:%h:%h:%h:%h:%h:%h",
+    $monitor("At time %t, reset = %h, dWE = %h, dataWrite = %h, dRE = %h, dRAck = %h, dataRead = %h, firstPos = %h, lastPos = %h, hasData = %h, db[0] = %h:%h:%h:%h:%h:%h:%h:%h",
               $time, reset, dataWriteEnable, dataWrite, dataReadEnable, dataReadAck, dataRead, firstPos, lastPos, hasData,
               dataBuffer[0], dataBuffer[1], dataBuffer[2], dataBuffer[3], dataBuffer[4], dataBuffer[5], dataBuffer[6], dataBuffer[7]);
+`endif
 
   always @(posedge clk or posedge reset)
   begin

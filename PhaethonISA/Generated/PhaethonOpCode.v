@@ -45,11 +45,12 @@
 `define FmaxRR 45
 `define VfaddRRR 46
 `define DoutR 47
-`define ReadPortRR 48
-`define WritePortRR 49
-`define Stall 50
-`define ExecR 51
-`define Exit 52
+`define DinR 48
+`define ReadPortRR 49
+`define WritePortRR 50
+`define Stall 51
+`define ExecR 52
+`define Exit 53
 
 function [0:0] Is8ByteOpcode;
   input [7:0] opCodeParam;
@@ -88,6 +89,8 @@ function [0:0] IsRAMOpcode;
       opCodeParam == `PopR ||
       opCodeParam == `CallR ||
       opCodeParam == `Ret ||
+      opCodeParam == `DoutR ||
+      opCodeParam == `DinR ||
       opCodeParam == `ReadPortRR ||
       opCodeParam == `WritePortRR)
     IsRAMOpcode = 1;
