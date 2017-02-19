@@ -6,6 +6,7 @@ module RingBuffer(
   dataReadEnable,   // Flag to indicate request to read
   dataReadAck,      // Flag to indicate read success
   dataRead,         // Actual data read
+  bufferLength,     // Length of buffer before requested operation
   debug,            // Debug port
   debug2            // Another debug port
   );
@@ -24,6 +25,7 @@ module RingBuffer(
   input wire dataReadEnable;
   output reg dataReadAck;
   output reg[(WordSize - 1):0] dataRead;
+  output reg[31:0] bufferLength;
   output reg[31:0] debug;
   output reg[31:0] debug2 = 0;
 
@@ -52,6 +54,23 @@ module RingBuffer(
       debug[23:16] <= dataBuffer[2];
       debug[15:8] <= dataBuffer[1];
       debug[7:0] <= dataBuffer[0];
+
+      // Length
+      if (hasData == 1)
+      begin
+        if (lastPos > firstPos)
+        begin
+          bufferLength <= lastPos - firstPos + 1;
+        end
+        else
+        begin
+          bufferLength <= BufferLength + lastPos - firstPos + 1;
+        end
+      end
+      else
+      begin
+        bufferLength <= 0; 
+      end
   
       if (dataWriteEnable == 1)
       begin

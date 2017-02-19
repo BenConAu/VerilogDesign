@@ -72,6 +72,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token NULLPTR_TOKEN
 %token DOUTR_TOKEN
 %token DINR_TOKEN
+%token DLENR_TOKEN
 %token EXECR_TOKEN
 %token EXIT_TOKEN
 %token MOVRC_TOKEN
@@ -394,6 +395,7 @@ opcode0_token:
 opcode1_token:
       DOUTR_TOKEN                                                   { $$ = OpCode::DoutR; }
     | DINR_TOKEN                                                    { $$ = OpCode::DinR; }
+    | DLENR_TOKEN                                                   { $$ = OpCode::DlenR; }
     | EXECR_TOKEN                                                   { $$ = OpCode::ExecR; }
     ;
 

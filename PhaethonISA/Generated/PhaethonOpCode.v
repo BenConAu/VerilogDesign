@@ -46,11 +46,12 @@
 `define VfaddRRR 46
 `define DoutR 47
 `define DinR 48
-`define ReadPortRR 49
-`define WritePortRR 50
-`define Stall 51
-`define ExecR 52
-`define Exit 53
+`define DlenR 49
+`define ReadPortRR 50
+`define WritePortRR 51
+`define Stall 52
+`define ExecR 53
+`define Exit 54
 
 function [0:0] Is8ByteOpcode;
   input [7:0] opCodeParam;

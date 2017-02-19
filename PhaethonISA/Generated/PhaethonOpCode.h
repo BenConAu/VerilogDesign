@@ -42,11 +42,12 @@ namespace Instructions
         Vfadd = 35,
         Dout = 36,
         Din = 37,
-        ReadPort = 38,
-        WritePort = 39,
-        Stall = 40,
-        Exec = 41,
-        Exit = 42,
+        Dlen = 38,
+        ReadPort = 39,
+        WritePort = 40,
+        Stall = 41,
+        Exec = 42,
+        Exit = 43,
     };
 }
 enum class OpCode
@@ -100,11 +101,12 @@ enum class OpCode
     VfaddRRR = 46,
     DoutR = 47,
     DinR = 48,
-    ReadPortRR = 49,
-    WritePortRR = 50,
-    Stall = 51,
-    ExecR = 52,
-    Exit = 53,
+    DlenR = 49,
+    ReadPortRR = 50,
+    WritePortRR = 51,
+    Stall = 52,
+    ExecR = 53,
+    Exit = 54,
 };
 bool Is8ByteOpcode(OpCode opCodeParam);
 bool IsRAMOpcode(OpCode opCodeParam);

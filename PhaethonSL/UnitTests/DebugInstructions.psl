@@ -3,11 +3,18 @@ void main()
     __emit(doutr, 0xa);
     __emit(doutr, 0xbc);
 
+    word l1;
+    __emit(dlenr, l1);
+    __emit(doutr, l1);
+
     word a;
     word b;
+    word c;
     __emit(dinr, a);
     __emit(dinr, b);
+    __emit(dinr, c);
 
     __emit(doutr, a);
     __emit(doutr, b);    
+    __emit(doutr, c);    
 }

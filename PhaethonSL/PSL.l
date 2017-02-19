@@ -69,6 +69,7 @@
 "__r"[0-9]           { yylval->regIndex = atoi(yytext + 3); return REG_INDEX; }
 "doutr"              { return DOUTR_TOKEN; }
 "dinr"               { return DINR_TOKEN; }
+"dlenr"              { return DLENR_TOKEN; }
 "execr"              { return EXECR_TOKEN; }
 "exit"               { return EXIT_TOKEN; }
 "movrc"              { return MOVRC_TOKEN; }
