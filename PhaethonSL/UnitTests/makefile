@@ -1,7 +1,7 @@
-all: *.asm *.result
+all: *.pao *.result
 
-%.asm : %.psl ../PSLcc
-	../PSLcc $< $@ $*.pao
+%.pao : %.psl ../PSLcc
+	../PSLcc $<
 
 %.result: %.pao
 	vvp ../../PhaethonHDL/ALU_tb +ROMFILE=$< > $@

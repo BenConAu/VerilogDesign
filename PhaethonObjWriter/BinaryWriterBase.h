@@ -30,6 +30,8 @@ public:
   void OutputWord(unsigned int w);
 
 protected:
+  virtual void WriteHeader(unsigned int length) {}
+  virtual void WriteFooter() {}
   virtual void WriteWordToFile(unsigned int w) = 0;
 
 protected:

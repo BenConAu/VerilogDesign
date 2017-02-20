@@ -104,6 +104,8 @@ PSLcc: lex.yy.c \
 	   ../PhaethonObjWriter/BinaryObjWriter.h \
 	   ../PhaethonObjWriter/BinObjectWriter.cpp \
 	   ../PhaethonObjWriter/BinObjectWriter.h \
+	   ../PhaethonObjWriter/MifObjWriter.cpp \
+	   ../PhaethonObjWriter/MifObjWriter.h \
 	   ../PhaethonObjWriter/BinaryWriterBase.cpp \
 	   ../PhaethonObjWriter/BinaryWriterBase.h \
 	   ../PhaethonObjWriter/ObjWriter.h
@@ -112,6 +114,7 @@ PSLcc: lex.yy.c \
 	   ../PhaethonObjWriter/BinaryObjWriter.cpp \
 	   ../PhaethonObjWriter/BinObjectWriter.cpp \
 	   ../PhaethonObjWriter/BinaryWriterBase.cpp \
+	   ../PhaethonObjWriter/MifObjWriter.cpp \
 	   ../PhaethonISA/Generated/PhaethonOpCode.cpp \
 	   PSL.tab.c \
 	   ArrayTypeInfo.cpp \

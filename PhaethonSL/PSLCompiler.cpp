@@ -22,39 +22,7 @@ int main(int argc, char **argv)
     try
     {
 		//yydebug = 1;
-		// open a file handle to a particular file:
-		FILE *myfile = ::fopen(argv[1], "r");
-
-		// make sure it is valid:
-		if (!myfile)
-		{
-	    	std::cout << argv[1] << std::endl;
-	    	return -1;
-		}
-
-		const char *pszAsmName = nullptr;
-		const char *pszObjName = nullptr;
-		const char *pszBinName = nullptr;
-
-		for (int i = 2; i < argc; i++)
-		{
-	    	if (ends_with(argv[i], ".asm"))
-		    {
-				pszAsmName = argv[i];
-		    }
-
-		    if (ends_with(argv[i], ".pao"))
-		    {
-				pszObjName = argv[i];
-		    }
-
-		    if (ends_with(argv[i], ".bin"))
-		    {
-				pszBinName = argv[i];
-		    }
-		}
-
-	    PSLCompilerContext context(myfile, pszAsmName, pszObjName, pszBinName);
+	    PSLCompilerContext context(argv[1]);
 
 		context.Parse();
     }

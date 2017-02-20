@@ -15,10 +15,7 @@ class PSLCompilerContext
 {
   public:
     PSLCompilerContext(
-        FILE *pFile,
-        const char *pszAsmName,
-        const char *pszObjName,
-        const char *pszBinName);
+        const char *pszInput);
 
     ~PSLCompilerContext();
     void UserAction(void *pLocation, const char *pszText);

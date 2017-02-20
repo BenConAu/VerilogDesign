@@ -6,38 +6,27 @@
 #include "../PhaethonObjWriter/AsmObjWriter.h"
 #include "../PhaethonObjWriter/BinaryObjWriter.h"
 #include "../PhaethonObjWriter/BinObjectWriter.h"
+#include "../PhaethonObjWriter/MifObjWriter.h"
 
 PSLCompilerContext::PSLCompilerContext(
-    FILE *pFile,
-    const char *pszAsmName,
-    const char *pszObjName,
-    const char *pszBinName) : _symbolTable(this)
+    const char *pszInputFile
+    ) : _symbolTable(this)
 {
+	FILE *pFile = ::fopen(pszInputFile, "r");
+
     _pEntryPoint = nullptr;
     _numStructs = 0;
     _numGlobals = 0;
 
     _symbolTable.AddBuiltin();
 
-    if (pszAsmName != nullptr)
-    {
-        _writers.push_back(std::unique_ptr<ObjWriter>(new AsmObjWriter(pszAsmName)));
-    }
+    std::string base = pszInputFile;
+    base = base.substr(0, base.length() - 3);
 
-    if (pszObjName != nullptr)
-    {
-        _writers.push_back(std::unique_ptr<ObjWriter>(new BinaryObjWriter(pszObjName)));
-    }
-
-    if (pszBinName != nullptr)
-    {
-        _writers.push_back(std::unique_ptr<ObjWriter>(new BinObjWriter(pszBinName)));
-    }
-
-    if (_writers.size() == 0)
-    {
-        throw "No object writers specified";
-    }
+    _writers.push_back(std::unique_ptr<ObjWriter>(new AsmObjWriter((base + "asm").c_str())));
+    _writers.push_back(std::unique_ptr<ObjWriter>(new BinaryObjWriter((base + "pao").c_str())));
+    _writers.push_back(std::unique_ptr<ObjWriter>(new BinObjWriter((base + "bin").c_str())));
+    _writers.push_back(std::unique_ptr<ObjWriter>(new MifObjWriter((base + "mif").c_str())));
 
     yylex_init(&pScanner);
     yyset_extra(this, pScanner);

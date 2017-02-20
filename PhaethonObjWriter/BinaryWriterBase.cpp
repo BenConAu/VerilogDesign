@@ -110,8 +110,12 @@ void BinaryWriterBase::FinishCode()
         _wordCache[labelLoc] = _labels[index]._location;
     }
 
+    WriteHeader(_wordCache.size());
+
     for (size_t i = 0; i < _wordCache.size(); i++)
     {
         WriteWordToFile(_wordCache[i]);
-    }    
+    }
+
+    WriteFooter();
 }
