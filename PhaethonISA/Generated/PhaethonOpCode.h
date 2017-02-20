@@ -45,9 +45,8 @@ namespace Instructions
         Dlen = 38,
         ReadPort = 39,
         WritePort = 40,
-        Stall = 41,
-        Exec = 42,
-        Exit = 43,
+        Exec = 41,
+        Exit = 42,
     };
 }
 enum class OpCode
@@ -104,9 +103,8 @@ enum class OpCode
     DlenR = 49,
     ReadPortRR = 50,
     WritePortRR = 51,
-    Stall = 52,
-    ExecR = 53,
-    Exit = 54,
+    ExecR = 52,
+    Exit = 53,
 };
 bool Is8ByteOpcode(OpCode opCodeParam);
 bool IsRAMOpcode(OpCode opCodeParam);

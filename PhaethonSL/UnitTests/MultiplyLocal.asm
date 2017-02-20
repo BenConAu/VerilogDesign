@@ -11,4 +11,4 @@ fmul r3, r1, r4
 mov r2->foo::c, r3
 mov r1, r2->foo::c
 dout r1
-stall
+exit

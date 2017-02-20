@@ -17,7 +17,7 @@ mov r7, 4025417775
 mov [r5:sizeof(Word)], r6, r7
 mov r5, r4
 mov r6, 3
-mov r7, 4025478966
+mov r7, 4025478965
 mov [r5:sizeof(Word)], r6, r7
 mov r5, 1
 dout r5
@@ -34,4 +34,4 @@ pop r1
 pop r0
 mov r5, 2
 dout r5
-stall
+exit

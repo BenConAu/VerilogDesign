@@ -41,7 +41,6 @@ InstructionData InstructionData::s_data[] = {
     { Instructions::Dlen      , "dlen" },
     { Instructions::ReadPort  , "readport" },
     { Instructions::WritePort , "writeport" },
-    { Instructions::Stall     , "stall" },
     { Instructions::Exec      , "exec" },
     { Instructions::Exit      , "exit" },
 };
@@ -100,7 +99,6 @@ OpCodeData OpCodeData::s_data[] = {
     { Instructions::Dlen      , OpCode::DlenR          , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "DlenR" },
     { Instructions::ReadPort  , OpCode::ReadPortRR     , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "ReadPortRR" },
     { Instructions::WritePort , OpCode::WritePortRR    , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "WritePortRR" },
-    { Instructions::Stall     , OpCode::Stall          , { OperandType::None                  , OperandType::None                  , OperandType::None         }, -1, "Stall" },
     { Instructions::Exec      , OpCode::ExecR          , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "ExecR" },
     { Instructions::Exit      , OpCode::Exit           , { OperandType::None                  , OperandType::None                  , OperandType::None         }, -1, "Exit" },
 };

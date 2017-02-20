@@ -10,4 +10,4 @@ din r3
 dout r1
 dout r2
 dout r3
-stall
+exit

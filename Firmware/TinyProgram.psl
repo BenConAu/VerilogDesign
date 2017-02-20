@@ -1,5 +1,4 @@
 void main()
 {
     __emit(doutr, 0xabc);
-    __emit(exit);
 }

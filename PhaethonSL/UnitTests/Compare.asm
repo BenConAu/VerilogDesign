@@ -38,4 +38,4 @@ false_4:
 mov r5, 8
 dout r5
 true_4:
-stall
+exit

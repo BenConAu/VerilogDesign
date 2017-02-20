@@ -32,8 +32,8 @@ bc 0a 00 00
 01 05 04 ef
 02 06 03 ef
 03 00 00 00
-02 07 36 ef
-36 ef ef ef
+02 07 35 ef
+35 ef ef ef
 09 05 06 07
 04 00 00 00
 02 05 01 ef
@@ -44,7 +44,7 @@ bc 0a 00 00
 0b 02 ef ef
 0b 03 ef ef
 0b 04 ef ef
-35 04 ef ef
+34 04 ef ef
 0c 04 ef ef
 0c 03 ef ef
 0c 02 ef ef
@@ -53,5 +53,5 @@ bc 0a 00 00
 02 05 02 ef
 02 00 00 00
 2f 05 ef ef
-34 ef ef ef
+35 ef ef ef
 @7ff

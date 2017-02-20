@@ -19,4 +19,4 @@ mov r0, r1
 false_1:
 jmp @loopBegin_1
 loopEnd_1:
-stall
+exit

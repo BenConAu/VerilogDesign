@@ -23,4 +23,4 @@ mov r0, r1
 jmp @loopBegin_2
 loopEnd_2:
 dout r0
-stall
+exit

@@ -8,4 +8,4 @@ shr r5, r1, r3
 mov r4, r5
 dout r2
 dout r4
-stall
+exit

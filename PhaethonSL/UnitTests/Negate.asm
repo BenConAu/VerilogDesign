@@ -7,4 +7,4 @@ mov r2, r4
 dout r0
 dout r1
 dout r2
-stall
+exit

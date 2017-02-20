@@ -17,4 +17,4 @@ mov r2, r0->foo::next
 mov r1, r2->foo::next
 mov r2, 0
 mov r1->foo::next, r2
-stall
+exit

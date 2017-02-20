@@ -8,6 +8,6 @@ rcall r3, 4
 mov r2, r6
 mov r6, r2->TestStruct::Member
 dout r6
-stall
+exit
 Func:
 rret

@@ -18,7 +18,7 @@ void main()
     pData[0] = 0xefbc0002;
     pData[1] = 0x00000abc;
     pData[2] = 0xefef002f;
-    pData[3] = 0xefefef36;
+    pData[3] = 0xefefef35;
     
     __emit(doutr, 1);
 

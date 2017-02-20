@@ -9,7 +9,7 @@ dout r3
 mov r2, r1->AllocationHeader::first
 mov r3, r2->Allocation::length
 dout r3
-stall
+exit
 MemoryInit:
 mov r0, &header
 mov r1, &__datasegmentend

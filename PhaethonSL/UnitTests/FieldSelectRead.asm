@@ -7,7 +7,7 @@ mov r1, r0->foo::a
 mov r2, r0->foo::b
 dout r1
 dout r2
-stall
+exit
 TestFunction:
 mov r1, &fooVar
 mov r0, r1->foo::a

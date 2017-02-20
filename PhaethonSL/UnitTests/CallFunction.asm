@@ -6,7 +6,7 @@ mov r5, r0->foo::a
 rcall r2, 3
 mov r1, r5
 dout r1
-stall
+exit
 Func:
 dout r0
 mov r0, 1338

@@ -16,4 +16,4 @@ mov r1, 15
 mov r2, 3
 pack r0, r1, r2
 dout r0
-stall
+exit

@@ -21,4 +21,4 @@ false_3:
 mov r3, 3
 dout r3
 true_3:
-stall
+exit

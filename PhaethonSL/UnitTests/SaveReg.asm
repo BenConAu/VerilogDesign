@@ -8,4 +8,4 @@ pop r1
 pop r0
 dout r0
 dout r1
-stall
+exit

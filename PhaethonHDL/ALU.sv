@@ -90,6 +90,7 @@ module ALU(
   reg        [7:0]  regAddress3;
   reg        [6:0]  fOpEnable;
   reg        [0:0]  condJump;
+  reg        [0:0]  inExec;
   reg        [31:0] sentinel;
 
   // Wire up the results from the floating units
@@ -188,6 +189,7 @@ module ALU(
           condJump <= 1'b0;
           dbgBufferWriteReq <= 1'b0;
           dbgBufferReadReq <= 1'b0;
+          inExec <= 1'b0;
 
           // First real register position
           rPos <= `FixedRegCount;
@@ -705,22 +707,36 @@ module ALU(
           `MulAddRRC:  regarray[regAddress[7:0]] <= regValue[0] + regValue2[0] * opDataWord;
 
           `ExecR: begin
-            // This basically sets the code segment register
-            regarray[`CodeSegmentReg] <= regValue[0];
+            if (inExec == 1'b0)
+            begin
+              // This basically sets the code segment register
+              regarray[`CodeSegmentReg] <= regValue[0];
 
-            // Also set where to go when it returns (the next instruction)
-            regarray[`CodeReturnReg] <= ipointer + 4;
+              // Also set where to go when it returns (the next instruction)
+              regarray[`CodeReturnReg] <= ipointer + 4;
 
-            // IP is reset to zero
-            ipointer <= 0;
+              // IP is reset to zero
+              ipointer <= 0;
+
+              // We are in an exec now
+              inExec <= 1'b1;
+            end
           end
 
           `Exit: begin
-            // Return control by clearing code segment
-            regarray[`CodeSegmentReg] <= 0;
+            // If we are not in an exec this will stall because the IP
+            // will not change at all.
+            if (inExec == 1'b1)
+            begin
+              // Return control by clearing code segment
+              regarray[`CodeSegmentReg] <= 0;
 
-            // Set IP back to where we need it to be
-            ipointer <= regarray[`CodeReturnReg];
+              // Set IP back to where we need it to be
+              ipointer <= regarray[`CodeReturnReg];
+
+              // We are out of an exec now
+              inExec <= 1'b0;
+            end
           end
 
           `DoutR: begin
@@ -737,9 +753,6 @@ module ALU(
 
           `DlenR: begin
             regarray[regAddress[7:0]] <= dbgBufferLength;
-          end
-
-          `Stall: begin 
           end
 
           default: $display("Unknown instruction %h", opCode);
@@ -759,7 +772,6 @@ module ALU(
             opCode != `Ret &&
             opCode != `RCallRC &&
             opCode != `RRet &&
-            opCode != `Stall &&
             opCode != `ExecR &&
             opCode != `Exit
             )

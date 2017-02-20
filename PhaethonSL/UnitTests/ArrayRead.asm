@@ -38,4 +38,4 @@ mov r1, [r2:sizeof(Word)], r4
 dout r1
 mov r2, r3->foo2::c
 dout r2
-stall
+exit
