@@ -1,3 +1,4 @@
+Info (10281): Verilog HDL Declaration information at RingBuffer.sv(19): object "BufferLength" differs only in case from object "bufferLength" in the same scope
 Info (10281): Verilog HDL Declaration information at FloatingHelper.sv(44): object "CLZ" differs only in case from object "clz" in the same scope
 Info (10281): Verilog HDL Declaration information at FloatingHelper.sv(44): object "CLZ" differs only in case from object "clz" in the same scope
 Info (10281): Verilog HDL Declaration information at FloatingHelper.sv(44): object "CLZ" differs only in case from object "clz" in the same scope
