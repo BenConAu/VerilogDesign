@@ -58,7 +58,7 @@ module RingBuffer(
       // Length
       if (hasData == 1)
       begin
-        if (lastPos > firstPos)
+        if (lastPos >= firstPos)
         begin
           bufferLength <= lastPos - firstPos + 1;
         end
