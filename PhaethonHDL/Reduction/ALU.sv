@@ -120,6 +120,7 @@ module ALU(
   wire       [31:0] dbgBufferReadData;
   wire       [0:0]  dbgBufferReadComplete;
   reg        [0:0]  dbgBufferReadReq;
+  wire       [31:0] dbgBufferLength;
 
   RingBuffer #(32, 5) debugBuffer(
     clk,                    // Global clock
@@ -129,6 +130,7 @@ module ALU(
     dbgBufferReadReq,       // Flag to indicate request to read
     dbgBufferReadComplete,  // Flag to indicate read success
     dbgBufferReadData,      // Actual data read 
+    dbgBufferLength,        // Buffer length
     dbgBufDbg1,             // Debug1
     dbgBufDbg2              // Debug2
   );
@@ -462,6 +464,8 @@ module ALU(
         begin
           uartWriteReq <= 1;
           uartWriteData <= regValue2[0][7:0];
+          
+          debug2 <= debug2 + 1;
         end
 
         if (opCode == `DoutR)
@@ -510,7 +514,7 @@ module ALU(
             // Read from UART is now complete, return
             if (uartReadAck == 1'b1)
             begin
-              debug2 <= debug2 | 'h1;
+              //debug2 <= debug2 | 'h1;
               ramValue[7:0] <= uartReadData;
               ramValue[31:8] <= 1;
             end
@@ -734,6 +738,11 @@ module ALU(
           `DinR: begin
             regarray[regAddress[7:0]] <= ramValue;
           end
+
+          `DlenR: begin
+            regarray[regAddress[7:0]] <= dbgBufferLength;
+          end
+
           `Stall: begin 
           end
   
