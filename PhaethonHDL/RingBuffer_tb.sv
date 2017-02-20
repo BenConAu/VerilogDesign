@@ -39,6 +39,7 @@ module test;
 
   wire dataReadAck;
   wire[7:0] dataRead;
+  wire[31:0] bufferLength;
   wire[31:0] debug;
   wire[31:0] debug2;
   
@@ -50,6 +51,7 @@ module test;
     readEnable,
     dataReadAck,      // Flag to indicate read success
     dataRead,         // Actual data read
+    bufferLength,
     debug,
     debug2
     );

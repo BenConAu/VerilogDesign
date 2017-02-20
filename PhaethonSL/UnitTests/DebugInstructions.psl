@@ -1,12 +1,17 @@
 void main()
 {
+    // Debut out a word
     __emit(doutr, 0xa);
-    __emit(doutr, 0xbc);
 
+    // Make sure only one is in there
     word l1;
     __emit(dlenr, l1);
     __emit(doutr, l1);
 
+    // Spit out something else
+    __emit(doutr, 0xbc);
+
+    // There should be three things in there now
     word a;
     word b;
     word c;
@@ -14,6 +19,7 @@ void main()
     __emit(dinr, b);
     __emit(dinr, c);
 
+    // Spit them out
     __emit(doutr, a);
     __emit(doutr, b);    
     __emit(doutr, c);    
