@@ -4,15 +4,14 @@ mov r64, r1
 mov r1, 0
 mov r2, 0
 mov r3, &__datasegmentend
-loopBegin_2:
+loopBegin_5:
 mov r4, 1
 cmplt r5, r1, r4
 cmp r5, 0
-je @loopEnd_2
+je @loopEnd_5
 mov r6, @ReadWord
 rcall r6, 7
 mov r4, r9
-dout r4
 mov r9, r3
 mov [r9:sizeof(Word)], r2, r4
 mov r9, 1
@@ -57,13 +56,59 @@ pop r3
 pop r2
 pop r1
 pop r0
+mov r7, 0
+dlen r7
+mov r8, @WriteWord
+mov r12, r7
+rcall r8, 10
+mov r10, 0
+loopBegin_4:
+cmplt r11, r10, r7
+cmp r11, 0
+je @loopEnd_4
+din r14
+mov r15, @WriteWord
+mov r18, r14
+rcall r15, 16
+mov r16, 1
+add r17, r10, r16
+mov r10, r17
+jmp @loopBegin_4
+loopEnd_4:
 mov r2, 0
 false_2:
 false_3:
 false_4:
+jmp @loopBegin_5
+loopEnd_5:
+stall
+WriteWord:
+mov r1, 0
+loopBegin_3:
+mov r2, 4
+cmplt r3, r1, r2
+cmp r3, 0
+je @loopEnd_3
+loopBegin_2:
+mov r2, 2
+readport r4, r2
+mov r2, 1
+cmpne r5, r4, r2
+cmp r5, 0
+je @loopEnd_2
 jmp @loopBegin_2
 loopEnd_2:
-stall
+mov r5, 3
+writeport r5, r0
+mov r5, 8
+shr r4, r0, r5
+mov r0, r4
+mov r4, 1
+add r5, r1, r4
+mov r1, r5
+jmp @loopBegin_3
+loopEnd_3:
+rret
 ReadWord:
 mov r0, 0
 mov r1, 0

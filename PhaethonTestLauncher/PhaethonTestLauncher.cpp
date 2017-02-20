@@ -60,6 +60,14 @@ public:
 		return dwValue;
 	}
 
+	BYTE ReadByte()
+	{
+		BYTE val;
+		DWORD read = 0;
+		::ReadFile(_hFile, &val, sizeof(val), &read, nullptr);
+		return val;
+	}
+
 	DWORD GetSize()
 	{
 		return ::GetFileSize(_hFile, nullptr);
@@ -92,7 +100,12 @@ int main()
 	}
 
 	// Receive dem results
-//	DWORD debugCount = ::ReadDword(hFile);
+	DWORD debugCount = comPort.ReadDword();
+	for (DWORD i = 0; i < debugCount; i++)
+	{
+		DWORD dbgWord = comPort.ReadDword();
+		printf("%x\n", dbgWord);
+	}
 
     return 0;
 }

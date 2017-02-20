@@ -29,22 +29,24 @@ word ReadWord()
     return currentWord;
 }
 
-//void WriteWord(word sendWord)
-//{
-    // Spit something out to trace that we are here
-    //__emit(doutr, 0x0f00d1e1);
-
+void WriteWord(word sendWord)
+{
     // Position in byte we receive
-    //word bytePos = 0;
+    word bytePos = 0;
 
-    //while (bytePos .< 4)
-    //{
-        //writeport(3, sendWord);
+    while (bytePos .< 4)
+    {
+        // Wait for the UART to be ready to write
+        while (readport(2) != 1) {}
 
-        //sendWord = sendWord >> 8;
-        //bytePos = bytePos + 1;
-    //}
-//}
+        // Write our byte
+        writeport(3, sendWord);
+
+        // Shift the word
+        sendWord = sendWord >> 8;
+        bytePos = bytePos + 1;
+    }
+}
 
 void main()
 {
@@ -66,7 +68,7 @@ void main()
         word currentWord = ReadWord();
 
         // Print that business
-        __emit(doutr, currentWord);
+        //__emit(doutr, currentWord);
 
         // Store that business
         pData[wordPos] = currentWord;
@@ -89,15 +91,25 @@ void main()
                         __emit(execr, offsetptr<word>(pData, 8));
                     }
 
-                    // One last statement before execute
-                    //__emit(doutr, 0x0f00d1e0);
-
                     // Figure out how many debug values to send
-                    //word debugLength = 0;
-                    //__emit(dlenr, debugLength);
+                    word debugLength = 0;
+                    __emit(dlenr, debugLength);
 
                     // First send the word count
-                    //WriteWord(debugLength);
+                    WriteWord(debugLength);
+
+                    word dbgCount = 0;
+                    while (dbgCount .< debugLength)
+                    {
+                        // Pull the debug word out of the buffer
+                        word dbgWord;
+                        __emit(dinr, dbgWord);
+
+                        // Send it down
+                        WriteWord(dbgWord);
+
+                        dbgCount = dbgCount + 1;
+                    }
 
                     // Since we are coming back, reset word count
                     wordPos = 0;
