@@ -18,7 +18,14 @@ void main()
     pData[0] = 0xefbc0002;
     pData[1] = 0x00000abc;
     pData[2] = 0xefef002f;
-    pData[3] = 0xefefef34;
+    pData[3] = 0xefefef36;
+    
+    __emit(doutr, 1);
 
-    __emit(execr, pData);
+    __saveregisters
+    {
+        __emit(execr, pData);
+    }
+
+    __emit(doutr, 2);
 }
