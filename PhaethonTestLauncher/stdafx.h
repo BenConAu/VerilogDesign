@@ -10,6 +10,8 @@
 #include <stdio.h>
 #include <tchar.h>
 #include <windows.h>
+#include <PathCch.h>
+#include <strsafe.h>
 
 
 // TODO: reference additional headers your program requires here

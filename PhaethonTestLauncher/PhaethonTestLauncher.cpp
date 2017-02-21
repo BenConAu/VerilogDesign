@@ -1,89 +1,22 @@
 #include "stdafx.h"
+#include "File.h"
 
-class CFile
-{
-public:
-	CFile(const wchar_t* pszName)
-	{
-		_hFile = ::CreateFile(
-			pszName,
-			GENERIC_READ | GENERIC_WRITE,
-			0,
-			0,
-			OPEN_EXISTING,
-			0,
-			nullptr);
-
-		if (_hFile == INVALID_HANDLE_VALUE)
-		{
-			throw _hFile;
-		}
-	}
-
-	~CFile()
-	{
-		::CloseHandle(_hFile);
-	}
-
-	void SetDCB()
-	{
-		DCB dcb;
-		::ZeroMemory(&dcb, sizeof(dcb));
-
-		if (!::GetCommState(_hFile, &dcb))
-		{
-			throw "GetCommState failed";
-		}
-
-		dcb.DCBlength = sizeof(dcb);
-		dcb.BaudRate = CBR_115200;
-		dcb.ByteSize = 8;
-		dcb.fBinary = TRUE;
-
-		if (!::SetCommState(_hFile, &dcb))
-		{
-			throw "SetCommState failed";
-		}
-	}
-
-	void WriteDword(DWORD dwValue)
-	{
-		DWORD written = 0;
-		::WriteFile(_hFile, &dwValue, sizeof(dwValue), &written, nullptr);
-	}
-
-	DWORD ReadDword()
-	{
-		DWORD dwValue;
-		DWORD read = 0;
-		::ReadFile(_hFile, &dwValue, sizeof(dwValue), &read, nullptr);
-		return dwValue;
-	}
-
-	BYTE ReadByte()
-	{
-		BYTE val;
-		DWORD read = 0;
-		::ReadFile(_hFile, &val, sizeof(val), &read, nullptr);
-		return val;
-	}
-
-	DWORD GetSize()
-	{
-		return ::GetFileSize(_hFile, nullptr);
-	}
-
-private:
-	HANDLE _hFile;
-};
-
-int main()
+int wmain(int argc, wchar_t** argv)
 {
 	// Open the file we want to send
-	CFile progBin(L"..\\Firmware\\TinyProgram.bin");
+	CFile progBin(argv[1], OpenMode::OpenExisting);
+
+	// Copy the filename
+	wchar_t pszResult[MAX_PATH];
+	::StringCchCopy(pszResult, sizeof(pszResult), argv[1]);
+	::PathCchRemoveExtension(pszResult, sizeof(pszResult));
+	::PathCchAddExtension(pszResult, sizeof(pszResult), L"result");
+
+	// Open result file
+	CFile resultFile(pszResult, OpenMode::CreateAlways);
 
 	// Open the COM port to send it on
-	CFile comPort(L"COM3");
+	CFile comPort(L"COM3", OpenMode::OpenExisting);
 	comPort.SetDCB();
 
 	// Send dat program, start with our fancy header
@@ -93,7 +26,8 @@ int main()
 	DWORD progSize = progBin.GetSize() / 4;
 	comPort.WriteDword(progSize);
 
-	// Write all of the words
+	// Write all of the words - program will start running once
+	// all of the words are sent down.
 	for (DWORD i = 0; i < progSize; i++)
 	{
 		comPort.WriteDword(progBin.ReadDword());
@@ -104,7 +38,7 @@ int main()
 	for (DWORD i = 0; i < debugCount; i++)
 	{
 		DWORD dbgWord = comPort.ReadDword();
-		printf("%x\n", dbgWord);
+		resultFile.WriteFormat("DebugOut %.8x\n", dbgWord);
 	}
 
     return 0;

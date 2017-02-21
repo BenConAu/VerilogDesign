@@ -81,7 +81,7 @@ false_3:
 false_4:
 jmp @loopBegin_5
 loopEnd_5:
-stall
+exit
 WriteWord:
 mov r1, 0
 loopBegin_3:
