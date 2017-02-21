@@ -1,23 +1,22 @@
 #include "stdafx.h"
 #include "File.h"
 
-int wmain(int argc, wchar_t** argv)
+void ExecuteTest(
+	wchar_t* pBinFile,
+	const CFile& comPort
+	)
 {
 	// Open the file we want to send
-	CFile progBin(argv[1], OpenMode::OpenExisting);
+	CFile progBin(pBinFile, OpenMode::OpenExisting);
 
 	// Copy the filename
 	wchar_t pszResult[MAX_PATH];
-	::StringCchCopy(pszResult, sizeof(pszResult), argv[1]);
+	::StringCchCopy(pszResult, sizeof(pszResult), pBinFile);
 	::PathCchRemoveExtension(pszResult, sizeof(pszResult));
 	::PathCchAddExtension(pszResult, sizeof(pszResult), L"result");
 
 	// Open result file
 	CFile resultFile(pszResult, OpenMode::CreateAlways);
-
-	// Open the COM port to send it on
-	CFile comPort(L"COM3", OpenMode::OpenExisting);
-	comPort.SetDCB();
 
 	// Send dat program, start with our fancy header
 	comPort.WriteDword(0x1337beef);
@@ -40,6 +39,15 @@ int wmain(int argc, wchar_t** argv)
 		DWORD dbgWord = comPort.ReadDword();
 		resultFile.WriteFormat("DebugOut %.8x\n", dbgWord);
 	}
+}
+
+int wmain(int argc, wchar_t** argv)
+{
+	// Open the COM port to send it on
+	CFile comPort(L"COM3", OpenMode::OpenExisting);
+	comPort.SetDCB();
+
+	ExecuteTest(argv[1], comPort);
 
     return 0;
 }

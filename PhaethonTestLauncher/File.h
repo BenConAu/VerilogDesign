@@ -50,13 +50,13 @@ public:
 		}
 	}
 
-	void WriteDword(DWORD dwValue)
+	void WriteDword(DWORD dwValue) const
 	{
 		DWORD written = 0;
 		::WriteFile(_hFile, &dwValue, sizeof(dwValue), &written, nullptr);
 	}
 
-	DWORD ReadDword()
+	DWORD ReadDword() const
 	{
 		DWORD dwValue;
 		DWORD read = 0;
@@ -64,7 +64,7 @@ public:
 		return dwValue;
 	}
 
-	BYTE ReadByte()
+	BYTE ReadByte() const
 	{
 		BYTE val;
 		DWORD read = 0;
@@ -72,7 +72,7 @@ public:
 		return val;
 	}
 
-	DWORD GetSize()
+	DWORD GetSize() const
 	{
 		return ::GetFileSize(_hFile, nullptr);
 	}
