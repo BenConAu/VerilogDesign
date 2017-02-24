@@ -37,6 +37,7 @@ protected:
 protected:
   size_t EnsureLabelInfo(const std::string &label);
   void OutputBytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned char b4);
+  size_t GetCurrentCacheSize() { return _wordCache.size(); }
 
 private:
   std::vector<unsigned int> _wordCache; // Cache of words to be output to object file

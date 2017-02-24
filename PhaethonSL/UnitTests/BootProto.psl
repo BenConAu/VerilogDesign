@@ -14,11 +14,16 @@ void main()
 
     // The collection of words
     ptr<word> pData = castptr<word>(__datasegmentend);
-
-    pData[0] = 0xefbc0002;
-    pData[1] = 0x00000abc;
-    pData[2] = 0xefef002f;
-    pData[3] = 0xefefef35;
+    pData[0] = 0xef040002;
+    pData[1] = 0x0000002c;
+    pData[2] = 0xefbc0102;
+    pData[3] = 0x00000abc;
+    pData[4] = 0xef010008;
+    pData[5] = 0x00000000;
+    pData[6] = 0xef000104;
+    pData[7] = 0x00000000;
+    pData[8] = 0xefef012f;
+    pData[9] = 0xefefef35;
     
     __emit(doutr, 1);
 

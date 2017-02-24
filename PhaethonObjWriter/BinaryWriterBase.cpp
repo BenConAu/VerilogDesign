@@ -20,6 +20,7 @@ void BinaryWriterBase::OutputInstruction(
     OpCode opCode,
     ObjArgument *args)
 {
+    //printf("Output opCode %x, cache size = %d\n", static_cast<int>(opCode), (int)GetCurrentCacheSize());
     OutputBytes(static_cast<unsigned char>(opCode), args[0]._value, args[1]._value, args[2]._value);
 
     int opCodeIndex = static_cast<int>(opCode) - 1;
@@ -86,14 +87,21 @@ void BinaryWriterBase::OutputLabel(const char *pszLabel)
 
 void BinaryWriterBase::FinishCode()
 {
+    //for (size_t i = 0; i < _wordCache.size(); i++)
+    //{
+        //printf("%x\n", _wordCache[i]);
+    //}    
+
     // All of the following words are going to be memory so we know
     // where memory starts now.
     unsigned int memStart = _wordCache.size() * 4;
+    //printf("Memory starts at %x\n", memStart);
 
     // All of the memory locations can be updated now
     for (size_t i = 0; i < _memLocations.size(); i++)
     {
         _wordCache[_memLocations[i]] += memStart;
+        //printf("Moved memory location to %x\n", _wordCache[_memLocations[i]]);
     }
 
     for (size_t i = 0; i < _labelLocations.size(); i++)
@@ -109,6 +117,11 @@ void BinaryWriterBase::FinishCode()
         // Change it to the real location
         _wordCache[labelLoc] = _labels[index]._location;
     }
+
+    //for (size_t i = 0; i < _wordCache.size(); i++)
+    //{
+        //printf("%x\n", _wordCache[i]);
+    //}
 
     WriteHeader(_wordCache.size());
 
