@@ -1,4 +1,12 @@
+struct foo
+{
+    word a;
+};
+
+foo global;
+
 void main()
 {
-    __emit(doutr, 0xabc);
+    global.a = 0xabc;
+    __emit(doutr, global.a);
 }

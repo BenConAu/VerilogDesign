@@ -1,0 +1,12 @@
+struct foo
+{
+    word b[10];
+};
+
+foo fooVar;
+
+void main()
+{
+    fooVar.b[0] = 37;
+    __emit(doutr, fooVar.b[0]);
+}
