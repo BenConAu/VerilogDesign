@@ -20,7 +20,7 @@ module FloatingMultiply(a, b, out, debug, clk, enable);
   reg [63:0] totalMant;
   reg [31:0] clz;
 
-  always @(posedge clk or posedge enable)
+  always @(posedge clk)
   begin
     if (enable == 1)
     begin
@@ -50,7 +50,8 @@ module FloatingMultiply(a, b, out, debug, clk, enable);
     end
     else
     begin
-      out = 'hdef;
+      out <= 'hdef;
+      debug <= 0;
     end
   end
   
