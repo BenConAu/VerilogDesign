@@ -55,7 +55,8 @@ extern int yydebug;
     ADDRESSOF_TOKEN = 265,
     COLON_TOKEN = 266,
     RAM_TOKEN = 267,
-    NOFLAGS_TOKEN = 268
+    IO_TOKEN = 268,
+    NOFLAGS_TOKEN = 269
   };
 #endif
 
@@ -71,7 +72,7 @@ union YYSTYPE
     OperandType opType;
     ISAOperand argType;
 
-#line 75 "PACodeGen.tab.h" /* yacc.c:1915  */
+#line 76 "PACodeGen.tab.h" /* yacc.c:1915  */
 };
 
 typedef union YYSTYPE YYSTYPE;

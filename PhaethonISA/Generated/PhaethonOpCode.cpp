@@ -141,11 +141,7 @@ bool IsRAMOpcode(OpCode opCodeParam)
         opCodeParam == OpCode::PushR ||
         opCodeParam == OpCode::PopR ||
         opCodeParam == OpCode::CallR ||
-        opCodeParam == OpCode::Ret ||
-        opCodeParam == OpCode::DoutR ||
-        opCodeParam == OpCode::DinR ||
-        opCodeParam == OpCode::ReadPortRR ||
-        opCodeParam == OpCode::WritePortRR)
+        opCodeParam == OpCode::Ret)
         return true;
     else
         return false;

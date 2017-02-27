@@ -44,10 +44,10 @@ Fmuladd     Register              Register              Register  NoFlags
 Fmin        Register              Register              None      NoFlags
 Fmax        Register              Register              None      NoFlags
 Vfadd       Register              Register              Register  NoFlags
-Dout        Register              None                  None      RAM
-Din         Register              None                  None      RAM
+Dout        Register              None                  None      IO
+Din         Register              None                  None      IO
 Dlen        Register              None                  None      NoFlags
-ReadPort    Register              Register              None      RAM
-WritePort   Register              Register              None      RAM
+ReadPort    Register              Register              None      IO
+WritePort   Register              Register              None      IO
 Exec        Register              None                  None      NoFlags
 Exit        None                  None                  None      NoFlags

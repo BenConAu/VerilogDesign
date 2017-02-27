@@ -33,6 +33,7 @@ void yyerror(const char *s);
 %token ADDRESSOF_TOKEN
 %token COLON_TOKEN
 %token <flags> RAM_TOKEN
+%token <flags> IO_TOKEN
 %token <flags> NOFLAGS_TOKEN
 %type <argType> argument
 %type <opType> operandType
@@ -52,6 +53,7 @@ instruction:
 flag:
       NOFLAGS_TOKEN                                                 { $$ = 0; }
     | RAM_TOKEN                                                     { $$ = 1; }
+    | IO_TOKEN                                                      { $$ = 2; }
     ;
 
 argument:

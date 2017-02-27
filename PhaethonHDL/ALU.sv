@@ -2,10 +2,12 @@ module ALU(
   clk,            // [Input]  Clock driving the ALU
   reset,          // [Input]  Reset pin
   ramIn,          // [Input]  RAM at requested address
+  ramReady,       // [Input]  RAM ready signal
   ramAddress,     // [Output] RAM address requested
   ramOut,         // [Output] RAM to write
   readReq,        // [Output] RAM read request
   writeReq,       // [Output] RAM write request
+  addrVirtual,    // [Output] Virtual flag for RAM
   uartReadReq,    // [Output] uart read requested
   uartReadAck,    // [Input]  Flag to indicate read success
   uartReadData,   // [Input]  Actual data read 
@@ -30,13 +32,13 @@ module ALU(
 
   // Make modes easier to read and to insert new ones
   `define InitialMode 0
-  `define InstrReadWait 1
-  `define InstrReadComplete 2
-  `define RegValueSet 3
-  `define DataWordWait 4
-  `define DataWordComplete 5
-  `define MemRWRequest 6
-  `define MemRWWait 7
+  `define InstrReadComplete 1
+  `define RegValueSet 2
+  `define DataWordComplete 3
+  `define RWRequest 4
+  `define MemRWComplete 5
+  `define IORWWait 6
+  `define IORWComplete 7
   `define MemRWComplete 8
   `define ProcessOpCode 9  
 
@@ -44,10 +46,12 @@ module ALU(
   input  wire        clk;
   input  wire        reset;
   input  wire [31:0] ramIn;
+  input  wire [0:0]  ramReady;
   output reg [31:0]  ramAddress;
   output reg [31:0]  ramOut;
   output reg [0:0]   readReq;
   output reg [0:0]   writeReq;
+  output reg [0:0]   addrVirtual;
   output reg [0:0]   uartReadReq;
   input  wire [0:0]  uartReadAck;
   input  wire [7:0]  uartReadData;
@@ -190,6 +194,7 @@ module ALU(
           dbgBufferWriteReq <= 1'b0;
           dbgBufferReadReq <= 1'b0;
           inExec <= 1'b0;
+          addrVirtual <= 1'b0;
 
           // First real register position
           rPos <= `FixedRegCount;
@@ -214,34 +219,30 @@ module ALU(
           // Clear out stuff for the pipeline
           fOpEnable <= 7'b0000000;
           condJump <= 1'b0;
-          mode <= `InstrReadWait;
+          mode <= `InstrReadComplete;
         end
-      end
-
-      // Mode InstrReadWait - wait while RAM registers address
-      `InstrReadWait: begin
-        // Stop request
-        readReq <= 0;
-
-        mode <= `InstrReadComplete;
-
       end
 
       // Mode InstrReadComplete: Handle completion of instruction pointer read request and
       //         decode the instruction data, including the opCode
       //         of the instruction and the affected registers.
       `InstrReadComplete: begin
-        // Since we did read request on mode 0, ram should be ready now
-        //$display("Receiving value %h", ramIn);
+        // Stop request
+        readReq <= 0;
 
-        opCode <= ramIn[7:0];
-        regAddress <=  (ramIn[15:8] >= 64)  ? (ramIn[15:8] - 64)  : (ramIn[15:8] + rPos);
-        regAddress2 <= (ramIn[23:16] >= 64) ? (ramIn[23:16] - 64) : (ramIn[23:16] + rPos);
-        regAddress3 <= (ramIn[31:24] >= 64) ? (ramIn[31:24] - 64) : (ramIn[31:24] + rPos);
+        if (ramReady == 1)
+        begin
+          // If ramReady is high then we have received something
+          //$display("Receiving value %h from MemoryController", ramIn);
 
-        // Move to next mode now
-        mode <= `RegValueSet;
+          opCode <= ramIn[7:0];
+          regAddress <=  (ramIn[15:8] >= 64)  ? (ramIn[15:8] - 64)  : (ramIn[15:8] + rPos);
+          regAddress2 <= (ramIn[23:16] >= 64) ? (ramIn[23:16] - 64) : (ramIn[23:16] + rPos);
+          regAddress3 <= (ramIn[31:24] >= 64) ? (ramIn[31:24] - 64) : (ramIn[31:24] + rPos);
 
+          // Move to next mode now
+          mode <= `RegValueSet;
+        end
       end
 
       // Mode RegValueSet: Schedule read of additional code for opCodes that
@@ -296,13 +297,13 @@ module ALU(
           ramAddress <= ipointer + regarray[`CodeSegmentReg] + 4;
 
           // We need to move into further modes
-          mode <= `DataWordWait;
+          mode <= `DataWordComplete;
         end
-        else if (IsRAMOpcode(opCode) == 1)
+        else if (IsRAMOpcode(opCode) == 1|| IsIOOpcode(opCode) == 1)
         begin
           // We are not reading a constant, but we might still be
           // doing a RAM operation, move into the mode where we do that
-          mode <= `MemRWRequest;
+          mode <= `RWRequest;
         end
         else
         begin
@@ -315,201 +316,219 @@ module ALU(
 
       end
 
-      // Mode DataWordWait - ramIn is set by RAM module for second word
-      `DataWordWait: begin
-        // Stop request
-        readReq <= 0;
-
-        mode <= `DataWordComplete;
-
-      end
-
       // Mode DataWordComplete: Complete read of additional code for opCodes that
       //         store word data. We only end up in this mode if
       //         the appropriate opCode is set, so no need to check
       //         the opCode.
       `DataWordComplete: begin
-        // Stop request
         readReq <= 0;
 
-        // Store ram values requested
-        opDataWord <= ramIn;
+        if (ramReady == 1)
+        begin
+          //$display("DataWordComplete with word %h", ramIn);
 
-        // Move to next mode - only progress to data read / write
-        // for opCodes that actually need it.
+          // Store ram values requested
+          opDataWord <= ramIn;
+
+          // Move to next mode - only progress to data read / write
+          // for opCodes that actually need it.
+          if (IsRAMOpcode(opCode) == 1 || IsIOOpcode(opCode) == 1)
+          begin
+            //$display("DataWordComplete getting another RW");
+            mode <= `RWRequest;
+          end
+          else
+          begin
+            //$display("DataWordComplete processing an OpCode");
+            mode <= `ProcessOpCode;
+          end
+        end
+      end
+
+      `RWRequest: begin
         if (IsRAMOpcode(opCode) == 1)
-          mode <= `MemRWRequest;
-        else
-          mode <= `ProcessOpCode;
-
-      end
-
-      // Mode MemRWRequest: Initiate data read or write if the instruction
-      //         requires it.
-      `MemRWRequest: begin
-        if (opCode == `MovRdC)
         begin
-          // Read values from address encoded in code
-          readReq <= 1;
-          ramAddress <= opDataWord + regarray[`CodeSegmentReg];
+          //$display("RWRequest for RAM opcode");
 
-          //$display("Requesting RdC read from %h", opDataWord);
-        end
+          case (opCode)
+            `MovRdC: begin
+              // Read values from address encoded in code
+              readReq <= 1;
+              ramAddress <= opDataWord + regarray[`CodeSegmentReg];
 
-        if (opCode == `MovRdRo)
-        begin
-          // First register is destination, second register is base address, 
-          // constant stores offset in bytes.
-          readReq <= 1;
-          ramAddress <= opDataWord + regValue2[0] + regarray[`CodeSegmentReg];
+              //$display("Requesting RdC read from %h", opDataWord);
+            end
 
-          //$display("Requesting read from %h", opDataWord + regValue2);
-        end
+            `MovRdRo: begin
+              // First register is destination, second register is base address, 
+              // constant stores offset in bytes.
+              readReq <= 1;
+              ramAddress <= opDataWord + regValue2[0] + regarray[`CodeSegmentReg];
 
-        if (opCode == `MovRdRoR)
-        begin
-          // First register is destination, second register is base address, 
-          // constant stores size of item, and third register stores index of item.
-          readReq <= 1;
-          ramAddress <= regValue2[0] + opDataWord * regValue3[0] + regarray[`CodeSegmentReg];
+              //$display("Requesting read from %h", opDataWord + regValue2);
+            end
 
-          //$display("Requesting read from %h", regValue2[0] + opDataWord * regValue3[0]);
-        end
+            `MovRdRoR: begin
+              // First register is destination, second register is base address, 
+              // constant stores size of item, and third register stores index of item.
+              readReq <= 1;
+              ramAddress <= regValue2[0] + opDataWord * regValue3[0] + regarray[`CodeSegmentReg];
 
-        if (opCode == `MovRdR)
-        begin
-          // Read values from address encoded in code
-          readReq <= 1;
-          ramAddress <= regValue2[0] + regarray[`CodeSegmentReg];
+              //$display("Requesting read from %h", regValue2[0] + opDataWord * regValue3[0]);
+            end
 
-          //$display("Requesting read from %h", opDataWord + regValue2);
-        end
+            `MovRdR: begin
+              // Read values from address encoded in code
+              readReq <= 1;
+              ramAddress <= regValue2[0] + regarray[`CodeSegmentReg];
 
-        if (opCode == `PopR || opCode == `Ret)
-        begin
-          // Read value from stack
-          readReq <= 1;
-          ramAddress <= regarray[`StackPointerReg] - 4;
+              //$display("Requesting read from %h", opDataWord + regValue2);
+            end
 
-          //$display("Requesting read from %h - 4", regarray[`StackPointerReg]);
-        end
+            `PopR: begin
+              // Read value from stack
+              readReq <= 1;
+              ramAddress <= regarray[`StackPointerReg] - 4;
 
-        if (opCode == `MovdCR)
-        begin
-          // Write values to ram requested by instruction
-          writeReq <= 1;
-          ramAddress <= opDataWord + regarray[`CodeSegmentReg];
-          ramOut <= regValue2[0];
+              //$display("Requesting read from %h - 4", regarray[`StackPointerReg]);
+            end
 
-          //$display("Reqesting write %h to address value %h", regValue2[0], opDataWord);
-        end
+            `Ret: begin
+              // Read value from stack
+              readReq <= 1;
+              ramAddress <= regarray[`StackPointerReg] - 4;
+            
+              //$display("Requesting read from %h - 4", regarray[`StackPointerReg]);
+            end
+          
+            `MovdCR: begin
+              // Write values to ram requested by instruction
+              writeReq <= 1;
+              ramAddress <= opDataWord + regarray[`CodeSegmentReg];
+              ramOut <= regValue2[0];
+            
+              //$display("Reqesting write %h to address value %h", regValue2[0], opDataWord);
+            end
 
-        if (opCode == `MovdRoR)
-        begin
-          // Write values to ram requested by instruction
-          writeReq <= 1;
-          ramAddress <= opDataWord + regValue[0] + regarray[`CodeSegmentReg];
-          ramOut <= regValue2[0];
+            `MovdRoR: begin
+              // Write values to ram requested by instruction
+              writeReq <= 1;
+              ramAddress <= opDataWord + regValue[0] + regarray[`CodeSegmentReg];
+              ramOut <= regValue2[0];
+            
+              //$display("Reqesting write %h to address value %h", regValue2[0], opDataWord + regValue[0]);
+            end
+          
+            `MovdRoRR: begin
+              // first register is base address, constant stores size of items, 
+              // second register stores index of item, third register is destination, 
+              writeReq <= 1;
+              ramAddress <= regValue[0] + opDataWord * regValue2[0] + regarray[`CodeSegmentReg];
+              ramOut <= regValue3[0];
+            
+              //$display("Reqesting write %h to address value %h", regValue2[0], regValue[0] + opDataWord * regValue2[0]);
+            end
 
-          //$display("Reqesting write %h to address value %h", regValue2[0], opDataWord + regValue[0]);
-        end
-
-        if (opCode == `MovdRoRR)
-        begin
-          // first register is base address, constant stores size of items, 
-          // second register stores index of item, third register is destination, 
-          writeReq <= 1;
-          ramAddress <= regValue[0] + opDataWord * regValue2[0] + regarray[`CodeSegmentReg];
-          ramOut <= regValue3[0];
-
-          //$display("Reqesting write %h to address value %h", regValue2[0], regValue[0] + opDataWord * regValue2[0]);
-        end
-
-        if (opCode == `PushR)
-        begin
-          // Write register value to stack
-          writeReq <= 1;
-          ramAddress <= regarray[`StackPointerReg];
-          ramOut <= regValue[0];
-
-          //$display("Reqesting push %h", regValue);
-        end
-
-        if (opCode == `CallR)
-        begin
-          // Write ip to stack
-          writeReq <= 1;
-          ramAddress <= regarray[`StackPointerReg];
-          ramOut <= ipointer;
-
-          //$display("Reqesting push %h", regValue);
-        end
-
-        if (opCode == `ReadPortRR)
-        begin
-          case (regValue2[0])
-
-          1: begin
-            // Port 1 is read from UART
-            uartReadReq <= 1;
-          end
-
-          2: begin
-            // Port 2 is UART write ready status
-          end
-
-          default: begin
-            $display("Unknown port %h being read", regValue[0]);
-          end
-
+            `PushR: begin
+              // Write register value to stack
+              writeReq <= 1;
+              ramAddress <= regarray[`StackPointerReg];
+              ramOut <= regValue[0];
+            
+              //$display("Reqesting push %h", regValue);
+            end
+          
+            `CallR: begin
+              // Write ip to stack
+              writeReq <= 1;
+              ramAddress <= regarray[`StackPointerReg];
+              ramOut <= ipointer;
+            
+              //$display("Reqesting push %h", regValue);
+            end
           endcase
-        end
 
-        if (opCode == `WritePortRR)
+          mode <= `MemRWComplete;
+        end
+        else if (IsIOOpcode(opCode) == 1)
         begin
-          uartWriteReq <= 1;
-          uartWriteData <= regValue2[0][7:0];
-        end
+          //$display("IO opcode");
 
-        if (opCode == `DoutR)
-        begin
-          dbgBufferWriteReq <= 1;
-          dbgBufferWriteData <= regValue[0];
-        end
+          // Stop request
+          readReq <= 0;
 
-        if (opCode == `DinR)
-        begin
-          dbgBufferReadReq <= 1;
-        end
+          case (opCode)
+            `ReadPortRR: begin
+              case (regValue2[0])
+                1: begin
+                  // Port 1 is read from UART
+                  uartReadReq <= 1;
+                end
+            
+                2: begin
+                  // Port 2 is UART write ready status
+                end
+            
+                default: begin
+                  $display("Unknown port %h being read", regValue[0]);
+                end
+              endcase
+            end
 
-        mode <= `MemRWWait;
+            `WritePortRR: begin
+              uartWriteReq <= 1;
+              uartWriteData <= regValue2[0][7:0];
+            end
+
+            `DoutR: begin
+              //$display("DoutR write req");
+
+              dbgBufferWriteReq <= 1;
+              dbgBufferWriteData <= regValue[0];
+            end
+
+            `DinR: begin
+              dbgBufferReadReq <= 1;
+            end
+          endcase
+
+          mode <= `IORWWait;
+        end
       end
 
-      // Mode `MemRWWait - ramIn is set by RAM module
-      `MemRWWait: begin
-        // Stop request
-        readReq <= 1'b0;
-        writeReq <= 1'b0;
+      `IORWWait: begin
         uartReadReq <= 1'b0;
         uartWriteReq <= 1'b0;
         dbgBufferWriteReq <= 1'b0;
         dbgBufferReadReq <= 1'b0;
 
-        mode <= `MemRWComplete;
-
+        mode <= `IORWComplete;
       end
 
       // Mode MemRWComplete: Complete data read or write if the instruction
       //         requires it.
       `MemRWComplete: begin
-        if (opCode == `MovRdC || opCode == `MovRdRo || opCode == `MovRdRoR || opCode == `MovRdR || opCode == `PopR || opCode == `Ret)
-        begin
-          //$display("Receiving read address value %h", ramIn);
+        // Stop request
+        readReq <= 1'b0;
+        writeReq <= 1'b0;
 
-          // Store ram values requested
-          ramValue <= ramIn;
+        if (ramReady == 1)
+        begin
+          if (opCode == `MovRdC || opCode == `MovRdRo || opCode == `MovRdRoR || opCode == `MovRdR || opCode == `PopR || opCode == `Ret)
+          begin
+            //$display("Receiving read address value %h", ramIn);
+
+            // Store ram values requested
+            ramValue <= ramIn;
+          end
+  
+          mode <= `ProcessOpCode;
         end
-        else if (opCode == `ReadPortRR)
+
+      end
+
+      `IORWComplete: begin
+        if (opCode == `ReadPortRR)
         begin
           case (regValue2[0])
 
@@ -547,6 +566,7 @@ module ALU(
         end
 
         mode <= `ProcessOpCode;
+        
       end
 
       // Mode ProcessOpCode: Finalize the instruction operation, by performing

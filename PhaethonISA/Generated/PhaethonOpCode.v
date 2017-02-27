@@ -88,13 +88,20 @@ function [0:0] IsRAMOpcode;
       opCodeParam == `PushR ||
       opCodeParam == `PopR ||
       opCodeParam == `CallR ||
-      opCodeParam == `Ret ||
-      opCodeParam == `DoutR ||
-      opCodeParam == `DinR ||
-      opCodeParam == `ReadPortRR ||
-      opCodeParam == `WritePortRR)
+      opCodeParam == `Ret)
     IsRAMOpcode = 1;
   else
     IsRAMOpcode = 0;
+endfunction
+
+function [0:0] IsIOOpcode;
+  input [7:0] opCodeParam;
+  if (opCodeParam == `DoutR ||
+      opCodeParam == `DinR ||
+      opCodeParam == `ReadPortRR ||
+      opCodeParam == `WritePortRR)
+    IsIOOpcode = 1;
+  else
+    IsIOOpcode = 0;
 endfunction
 
