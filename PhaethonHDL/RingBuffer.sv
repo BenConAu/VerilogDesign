@@ -118,8 +118,6 @@ module RingBuffer(
         end
         else
         begin
-		      debug2 <= debug2 | 16;
-		  
           // Acknowledge read and return data, advance position
           dataReadAck <= 1;
           dataRead <= dataBuffer[firstPos];
@@ -131,6 +129,11 @@ module RingBuffer(
           begin
             $display("Setting to empty");
             hasData <= 0;
+  		      debug2 <= debug2 | 16;	  
+          end
+          else
+          begin
+  		      debug2 <= debug2 | 32;	  
           end
         end
       end

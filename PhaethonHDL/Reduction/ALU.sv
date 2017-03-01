@@ -348,7 +348,7 @@ module ALU(
         begin
           // Read values from address encoded in code
           readReq <= 1;
-          ramAddress <= opDataWord;
+          ramAddress <= opDataWord + regarray[`CodeSegmentReg];
   
           //$display("Requesting RdC read from %h", opDataWord);
         end
@@ -358,7 +358,7 @@ module ALU(
           // First register is destination, second register is base address, 
           // constant stores offset in bytes.
           readReq <= 1;
-          ramAddress <= opDataWord + regValue2[0];
+          ramAddress <= opDataWord + regValue2[0] + regarray[`CodeSegmentReg];
   
           //$display("Requesting read from %h", opDataWord + regValue2);
         end
@@ -368,7 +368,7 @@ module ALU(
           // First register is destination, second register is base address, 
           // constant stores size of item, and third register stores index of item.
           readReq <= 1;
-          ramAddress <= regValue2[0] + opDataWord * regValue3[0];
+          ramAddress <= regValue2[0] + opDataWord * regValue3[0] + regarray[`CodeSegmentReg];
   
           //$display("Requesting read from %h", regValue2[0] + opDataWord * regValue3[0]);
         end
@@ -377,7 +377,7 @@ module ALU(
         begin
           // Read values from address encoded in code
           readReq <= 1;
-          ramAddress <= regValue2[0];
+          ramAddress <= regValue2[0] + regarray[`CodeSegmentReg];
   
           //$display("Requesting read from %h", opDataWord + regValue2);
         end
@@ -395,7 +395,7 @@ module ALU(
         begin
           // Write values to ram requested by instruction
           writeReq <= 1;
-          ramAddress <= opDataWord;
+          ramAddress <= opDataWord + regarray[`CodeSegmentReg];
           ramOut <= regValue2[0];
   
           //$display("Reqesting write %h to address value %h", regValue2[0], opDataWord);
@@ -405,7 +405,7 @@ module ALU(
         begin
           // Write values to ram requested by instruction
           writeReq <= 1;
-          ramAddress <= opDataWord + regValue[0];
+          ramAddress <= opDataWord + regValue[0] + regarray[`CodeSegmentReg];
           ramOut <= regValue2[0];
   
           //$display("Reqesting write %h to address value %h", regValue2[0], opDataWord + regValue[0]);
@@ -416,7 +416,7 @@ module ALU(
           // first register is base address, constant stores size of items, 
           // second register stores index of item, third register is destination, 
           writeReq <= 1;
-          ramAddress <= regValue[0] + opDataWord * regValue2[0];
+          ramAddress <= regValue[0] + opDataWord * regValue2[0] + regarray[`CodeSegmentReg];
           ramOut <= regValue3[0];
   
           //$display("Reqesting write %h to address value %h", regValue2[0], regValue[0] + opDataWord * regValue2[0]);
@@ -467,7 +467,7 @@ module ALU(
           uartWriteReq <= 1;
           uartWriteData <= regValue2[0][7:0];
           
-          debug2 <= debug2 + 1;
+          //debug2 <= debug2 + 1;
         end
 
         if (opCode == `DoutR)
@@ -534,7 +534,7 @@ module ALU(
               ramValue[0:0] <= uartWriteReady;
               ramValue[31:1] <= 0;
               //debug2 <= debug2 | 1;            
-	          end
+            end
           end
 
           default: begin
@@ -545,11 +545,10 @@ module ALU(
         end
         else if (opCode == `DinR)
         begin
-          ramValue <= dbgBufferReadData;
+            ramValue <= dbgBufferReadData;
         end
   
         mode <= `ProcessOpCode;
-  
       end
     
       // Mode ProcessOpCode: Finalize the instruction operation, by performing
@@ -812,7 +811,6 @@ module ALU(
     r3 <= regarray[rPos + 3];
     r4 <= regarray[rPos + 4];
     r5 <= regarray[rPos + 5];
-  
     //debug2 <= opCode;
     //debug3[8:0] <= mode;
     //debug2[7:0] <= mode;
