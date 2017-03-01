@@ -1,0 +1,27 @@
+void main()
+{
+    // Fill the queue and then some
+    word i = 0;
+    while (i .< 40)
+    {
+        __emit(doutr, i);
+        i = i + 1;
+    }
+
+    // Should be 32 now
+    word l1;
+    __emit(dlenr, l1);
+    __emit(doutr, l1);
+
+    // Empty it out
+    i = 0;
+    while (i .< 32)
+    {
+        word throwaway;
+        __emit(dinr, throwaway);
+        i = i + 1;
+    }
+
+    __emit(dlenr, l1);
+    __emit(doutr, l1);
+}
