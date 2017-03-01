@@ -33,7 +33,8 @@ ALU_tb: \
 	FloatingMultiplyAdd.sv \
 	FloatingCompare.sv \
 	FloatingDivide.sv \
-	MemoryController.sv
+	MemoryController.sv \
+	CPU.sv
 	iverilog -o ALU_tb \
 	ALU_tb.sv \
 	ALU.sv \
@@ -44,4 +45,5 @@ ALU_tb: \
 	FloatingMultiplyAdd.sv \
 	FloatingCompare.sv \
 	FloatingDivide.sv \
-	MemoryController.sv
+	MemoryController.sv \
+	CPU.sv
