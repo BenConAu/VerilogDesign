@@ -1,3 +1,5 @@
+#include <vector>
+
 enum class OpenMode
 {
 	CreateAlways,
@@ -22,6 +24,8 @@ public:
 		{
 			throw _hFile;
 		}
+
+		_fComPort = false;
 	}
 
 	~CFile()
@@ -48,19 +52,35 @@ public:
 		{
 			throw "SetCommState failed";
 		}
+
+		_fComPort = true;
 	}
 
 	void WriteDword(DWORD dwValue) const
 	{
 		DWORD written = 0;
 		::WriteFile(_hFile, &dwValue, sizeof(dwValue), &written, nullptr);
+		if (written != sizeof(dwValue))
+		{
+			throw "Write error";
+		}
 	}
 
-	DWORD ReadDword() const
+	DWORD ReadDword()
 	{
 		DWORD dwValue;
 		DWORD read = 0;
 		::ReadFile(_hFile, &dwValue, sizeof(dwValue), &read, nullptr);
+		if (read != sizeof(dwValue))
+		{
+			throw "Read error";
+		}
+
+		if (_fComPort)
+		{
+			_readWords.push_back(dwValue);
+		}
+
 		return dwValue;
 	}
 
@@ -93,4 +113,6 @@ public:
 
 private:
 	HANDLE _hFile;
+	bool _fComPort;
+	std::vector<DWORD> _readWords;
 };

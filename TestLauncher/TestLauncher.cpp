@@ -3,7 +3,7 @@
 
 void ExecuteTest(
 	wchar_t* pBinFile,
-	const CFile& comPort
+	CFile& comPort
 	)
 {
 	// Open the file we want to send
@@ -47,7 +47,27 @@ int wmain(int argc, wchar_t** argv)
 	CFile comPort(L"COM3", OpenMode::OpenExisting);
 	comPort.SetDCB();
 
-	ExecuteTest(argv[1], comPort);
+	wchar_t pszSearchPath[MAX_PATH] = { 0 };
+	::StringCchCat(pszSearchPath, sizeof(pszSearchPath), argv[1]);
+	::StringCchCat(pszSearchPath, sizeof(pszSearchPath), L"\\AddSimple.bin");
+
+	WIN32_FIND_DATA findData;
+	HANDLE hFind = ::FindFirstFile(pszSearchPath, &findData);
+
+	while (hFind != INVALID_HANDLE_VALUE)
+	{
+		// Report progress
+		::wprintf(L"Processing %s\n", findData.cFileName);
+
+		// Execute the test
+		ExecuteTest(findData.cFileName, comPort);
+
+		// Get the next file
+		if (!::FindNextFile(hFind, &findData))
+		{
+			break;
+		}
+	}
 
     return 0;
 }
