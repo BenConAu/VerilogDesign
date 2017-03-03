@@ -77,6 +77,9 @@ module test;
   wire [31:0] phRamAddress;
   wire [0:0]  phReadReq;
   wire [0:0]  phWriteReq;
+  wire [31:0] debug;
+  wire [31:0] debug2;
+  wire [8:0] debug3;
 
   CPU cpu1(
     clk,            // [Input]  Clock driving the ALU
@@ -92,6 +95,9 @@ module test;
     uartWriteReq,   // [Output] uart write requested
     uartWriteData,  // [Output] uart data to write
     uartWriteReady, // [Input]  uart ready to send
+    debug,          // [Output] Debug port
+    debug2,         // [Output] Another debug port
+    debug3          // [Output] And yet another debug port
     );
 
 endmodule // test

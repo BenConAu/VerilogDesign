@@ -321,6 +321,7 @@ module ALU(
       //         the appropriate opCode is set, so no need to check
       //         the opCode.
       `DataWordComplete: begin
+        // Stop request
         readReq <= 0;
 
         if (ramReady == 1)

@@ -5,6 +5,8 @@
 *.ddb
 *.rdb
 *.summary
+*.tlog
 PhaethonHDL/Reduction/Boards/DE2_70_Default/db/
 PhaethonHDL/Reduction/Boards/DE2_70_Default/incremental_db/
+TestLauncher/Debug/
 a.out

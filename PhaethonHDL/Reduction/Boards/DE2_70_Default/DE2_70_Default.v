@@ -690,42 +690,29 @@ rams u6(
 	.q(ramIn)
 	);
 
-
+wire readReq;
+  
 //=======================================================
 //  Structural coding
 //=======================================================
-ALU u7(
-  .clk(iCLK_50),         // [Input]  Clock driving the ALU
-  .reset(0),       // [Input]  Reset pin
-  .ramIn(ramIn),       // [Input]  RAM at requested address
-  .ramAddress(ramAddress),  // [Output] RAM address requested
-  .ramOut(ramOut),      // [Output] RAM to write
-//  .readReq,     // [Output] RAM read request
-  .writeReq(writeReq),    // [Output] RAM write request
-
-  .uartReadReq(dataReadReq), // [Output] uart read requested
-  .uartReadAck(dataReadAck), // [Input]  Flag to indicate read success
-  .uartReadData(dataRead),    // [Input] Actual data read 
-  .uartWriteReq(dataWriteReq),   // [Output] uart write requested
-  .uartWriteData(dataWrite),  // [Output] uart data to write
-  .uartWriteReady(ready), // [Input]  uart ready to send
-
-  //.ipointer(debughex),    // [Debug]  Instruction pointer value
-  //.opCode(debughex),      // [Debug]  current opCode value
-  .debug(debughex),          // [Debug]  current r0 value
-  
- // .r1,          // [Debug]  current r1 value
- // .r2,          // [Debug]  current r2 value
- // .r3,          // [Debug]  current r3 value
- // .r4,          // [Debug]  current r4 value
- // .r5,          // [Debug]  current r5 value
- // .rPos,        // [Debug]  current rPos (register window) value
-//  .debug(debug)        // [Output] Debug port
-
-  //.debug3(oLEDG),
-  .debug2(oLEDR),
-  );
-  
+CPU cpu1(
+  iCLK_50,
+  0,
+  ramIn,
+  ramAddress,
+  ramOut,
+  readReq,
+  writeReq,
+  dataReadReq,
+  dataReadAck,
+  dataRead,
+  dataWriteReq,
+  dataWrite,
+  ready,
+  debughex,
+  oLEDG,
+  oLEDR
+  );  
 
 wire dataComplete;
 wire[7:0] uartData;
@@ -758,7 +745,7 @@ RingBuffer uartBuffer(
   dataReadAck,      // Flag to indicate read success
   dataRead,         // Actual data read 
   uartDebug1,       // Wire debug to 7seg
-  oLEDG             // Debug2
+  uartDebug2        // Debug2
   ); 
   
  wire dataWriteReq;

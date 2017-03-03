@@ -12,6 +12,9 @@ module CPU(
   uartWriteReq,   // [Output] uart write requested
   uartWriteData,  // [Output] uart data to write
   uartWriteReady, // [Input]  uart ready to send
+  debug,          // [Output] Debug port 1
+  debug2,         // [Output] Debug port 2
+  debug3          // [Output] Debug port 3
   );
 
   input wire [0:0]   clk;
@@ -27,8 +30,12 @@ module CPU(
   output wire        uartWriteReq;
   output wire [7:0]  uartWriteData;
   input wire         uartWriteReady;
+  output wire [31:0] debug;
+  output wire [31:0] debug2;
+  output wire [8:0] debug3;
 
   wire [31:0]  mcRamRead;
+  wire [0:0]   mcRamReady;
   wire [31:0]  mcRamAddress;
   wire [31:0]  mcRamWrite;
   wire [0:0]   mcReadReq;
@@ -44,9 +51,6 @@ module CPU(
   wire [31:0]  r4;
   wire [31:0]  r5;
   wire [7:0]   rPos;
-  wire [31:0]  debug;
-  wire [31:0]  debug2;
-  wire [8:0]   debug3;
 
   ALU alu(
     clk,
