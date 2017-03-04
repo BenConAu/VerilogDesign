@@ -10,9 +10,9 @@ module FloatingAdd(a, b, negate, out, debug, clk, enable);
 
   `include "FloatingHelper.sv"
 
-  reg [1:0] sign;
-  reg [7:0] aExp;
-  reg [7:0] bExp;
+  reg        sign;
+  reg [7:0]  aExp;
+  reg [7:0]  bExp;
   reg [31:0] aMant;
   reg [31:0] bMant;
   reg [31:0] aPrimeMant;

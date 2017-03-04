@@ -675,12 +675,11 @@ begin
     end
 end
 
-              
+// Needed by rams
 wire [31:0] ramAddress;
 wire [31:0] ramIn;
 wire [31:0] ramOut;
 wire writeReq;
-wire [7:0] debug;
 
 rams u6(
 	.clock(iCLK_50),
@@ -690,11 +689,16 @@ rams u6(
 	.q(ramIn)
 	);
 
+// Needed by cpu
 wire readReq;
+wire dataReadReq;
+wire dataReadAck;
+wire [7:0] dataRead;
+wire dataWriteReq;
+wire [7:0] dataWrite;
+wire uartWriteReady;
+wire [31:0] cpuDebug;
   
-//=======================================================
-//  Structural coding
-//=======================================================
 CPU cpu1(
   iCLK_50,
   0,
@@ -708,17 +712,15 @@ CPU cpu1(
   dataRead,
   dataWriteReq,
   dataWrite,
-  ready,
+  uartWriteReady,
   debughex,
   oLEDG,
   oLEDR
   );  
 
+// Needed by UARTReceive
 wire dataComplete;
-wire[7:0] uartData;
-  
-assign oUART_CTS = 1;
-
+wire[7:0] uartData;  
 wire startBits;
 
 UARTReceive uart1(
@@ -729,12 +731,11 @@ UARTReceive uart1(
   uartData,         // Completed byte
   startBits         // Count of start bits
   );
-  
- wire dataReadReq;
- wire dataReadAck;
- wire[7:0] dataRead;
- wire uartDebug1;
- wire uartDebug2;
+
+// Needed by UART ring buffer  
+wire uartDebug1;
+wire uartDebug2;
+wire [31:0] uartRingLength;
   
 RingBuffer uartBuffer(
   iCLK_50,          // Global clock
@@ -744,13 +745,12 @@ RingBuffer uartBuffer(
   dataReadReq,      // Flag to indicate request to read
   dataReadAck,      // Flag to indicate read success
   dataRead,         // Actual data read 
+  uartRingLength,   // Length of UART read buffer
   uartDebug1,       // Wire debug to 7seg
   uartDebug2        // Debug2
   ); 
-  
- wire dataWriteReq;
- wire[7:0] dataWrite;
- wire ready;
+ 
+ // Needed by UARTSend
  wire uartSendDebug;
   
  UARTSend uartSend(
@@ -759,9 +759,12 @@ RingBuffer uartBuffer(
   dataWriteReq,
   dataWrite,
   oUART_TXD,
-  ready,
+  uartWriteReady,
   uartSendDebug
   );
- 
+
+// We don't use CTS, but set it so it is not dangling
+assign oUART_CTS = 1;
+
 endmodule
 
