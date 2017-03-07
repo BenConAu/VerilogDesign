@@ -63,11 +63,27 @@ ExpressionResult::ExpressionResult(const Operand &operand)
     AddOperand(operand, false);
 }
 
-void ExpressionResult::DebugPrint()
+std::string ExpressionResult::DebugPrint()
 {
-    printf(
-        "ExpressionResult _operand[0] = %s\n",
-        _operandList[0].DebugPrint());
+    char debug[200];
+
+    if (_operandList.size() == 1)
+    {
+        sprintf(
+            debug,
+            "ExpressionResult _operand[0] = %s\n",
+            _operandList[0].DebugPrint().c_str());
+    }
+    else
+    {
+        sprintf(
+            debug,
+            "ExpressionResult _operand[0], _operand[1] = %s, %s\n",
+            _operandList[0].DebugPrint().c_str(),
+            _operandList[1].DebugPrint().c_str());
+    }
+
+    return debug;
 }
 
 void ExpressionResult::AddOperand(const Operand &op, bool temp)
@@ -112,6 +128,11 @@ ExpressionResultType ExpressionResult::GetResultType() const
                 _operandList[1].GetType() == OperandType::Register)
             {
                 _type = ExpressionResultType::DerefRegisterIndex;
+            }
+            else if (_operandList[0].GetType() == OperandType::RegisterOffset &&
+                     _operandList[1].GetType() == OperandType::Register)
+            {
+                _type = ExpressionResultType::RegisterIndex;
             }
             else
             {

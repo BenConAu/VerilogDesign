@@ -59,6 +59,7 @@ flag:
 argument:
       operandType                                                   { $$ = ISAOperand::Construct($1, false); }
     | DEREF_TOKEN COLON_TOKEN operandType                           { $$ = ISAOperand::Construct($3, true); }
+    | REGISTER_TOKEN COLON_TOKEN OFFSET_TOKEN                       { $$ = ISAOperand::Construct(OperandType::RegisterOffset, false); }
     | DEREF_TOKEN COLON_TOKEN REGISTER_TOKEN COLON_TOKEN OFFSET_TOKEN { $$ = ISAOperand::Construct(OperandType::DerefRegisterOffset, false); }
     ;
 

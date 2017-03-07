@@ -1,0 +1,21 @@
+struct foo
+{
+    word a;
+    word b;
+};
+
+struct bar
+{
+    foo entries[256];
+};
+
+bar global;
+
+void main()
+{
+    global.entries[0].a = 0xab;
+    global.entries[5].a = 0xcd;
+
+    __emit(doutr, global.entries[0].a);
+    __emit(doutr, global.entries[5].a);
+}

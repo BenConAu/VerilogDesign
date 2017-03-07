@@ -51,3 +51,5 @@ ReadPort    Register              Register              None      IO
 WritePort   Register              Register              None      IO
 Exec        Register              None                  None      NoFlags
 Exit        None                  None                  None      NoFlags
+VpEnable    None                  None                  None      NoFlags
+Lea         Register              Register:Offset       Register  NoFlags

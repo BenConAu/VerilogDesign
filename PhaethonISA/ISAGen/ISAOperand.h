@@ -49,7 +49,8 @@ public:
 	{
 		if (_type == OperandType::Constant ||
 			_type == OperandType::DerefConstant ||
-			_type == OperandType::DerefRegisterOffset
+			_type == OperandType::DerefRegisterOffset ||
+			_type == OperandType::RegisterOffset
 			)
 		{
 			return true;

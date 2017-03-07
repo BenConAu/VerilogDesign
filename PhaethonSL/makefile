@@ -108,6 +108,7 @@ PSLcc: lex.yy.c \
 	   ../PhaethonObjWriter/MifObjWriter.h \
 	   ../PhaethonObjWriter/BinaryWriterBase.cpp \
 	   ../PhaethonObjWriter/BinaryWriterBase.h \
+	   ../PhaethonObjWriter/ObjArgument.h \
 	   ../PhaethonObjWriter/ObjWriter.h
 	clang++ -std=c++11 -Wno-deprecated-register -g lex.yy.c \
 	   ../PhaethonObjWriter/AsmObjWriter.cpp \

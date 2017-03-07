@@ -41,6 +41,7 @@ module CPU(
   wire [0:0]   mcReadReq;
   wire [0:0]   mcWriteReq;
   wire [0:0]   mcAddrVirtual;
+  wire [31:0]  ptAddress;
   
   wire [31:0]  iPointer;
   wire [7:0]   opCode;
@@ -62,6 +63,7 @@ module CPU(
     mcReadReq,
     mcWriteReq,
     mcAddrVirtual,
+    ptAddress,
     uartReadReq,    // [Output] uart read requested
     uartReadAck,    // [Input]  Flag to indicate read success
     uartReadData,   // [Input] Actual data read 
@@ -99,11 +101,12 @@ module CPU(
     phRamWrite,       // [Output] RAM to write
     phReadReq,        // [Output] RAM read request
     phWriteReq,       // [Output] RAM write request
+    ptAddress,        // [Input] Page table address
     mcDebug           // [Output] Debug port
   );
 
   //initial
-     //$monitor("At time %t, ip = %h, opCode = %h, readReq = %h, mcRamReady = %h, ramValue = %h, uartRR = %h, uartRA = %h, uartD = %h, r[0:1:2:3:4:5] = %h:%h:%h:%h:%h:%h, rPos = %h, debug = %h",
-        //$time, iPointer[15:0], opCode, mcReadReq, mcRamReady, mcRamRead, uartReadReq, uartReadAck, uartData, r0, r1, r2, r3, r4, r5, rPos, debug);
+     //$monitor("At time %t, ip = %h, opCode = %h, mcReadReq = %h, mcRamAddress = %h, mcRamReady = %h, ramValue = %h, r[0:1:2:3:4:5] = %h:%h:%h:%h:%h:%h, rPos = %h, debug = %h",
+        //$time, iPointer[15:0], opCode, mcReadReq, mcRamAddress, mcRamReady, mcRamRead, r0, r1, r2, r3, r4, r5, rPos, debug);
 
 endmodule

@@ -75,6 +75,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token DLENR_TOKEN
 %token EXECR_TOKEN
 %token EXIT_TOKEN
+%token VPENABLE_TOKEN
 %token MOVRC_TOKEN
 %token MOVRR_TOKEN
 %token EMIT_TOKEN
@@ -390,6 +391,7 @@ emit_statement:
 
 opcode0_token:
       EXIT_TOKEN                                                    { $$ = OpCode::Exit; }
+    | VPENABLE_TOKEN                                                { $$ = OpCode::VpEnable; }
     ;
 
 opcode1_token:

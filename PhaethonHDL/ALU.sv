@@ -8,6 +8,7 @@ module ALU(
   readReq,        // [Output] RAM read request
   writeReq,       // [Output] RAM write request
   addrVirtual,    // [Output] Virtual flag for RAM
+  ptAddress,      // [Output] Page Table Address
   uartReadReq,    // [Output] uart read requested
   uartReadAck,    // [Input]  Flag to indicate read success
   uartReadData,   // [Input]  Actual data read 
@@ -52,6 +53,7 @@ module ALU(
   output reg [0:0]   readReq;
   output reg [0:0]   writeReq;
   output reg [0:0]   addrVirtual;
+  output reg [31:0]  ptAddress;
   output reg [0:0]   uartReadReq;
   input  wire [0:0]  uartReadAck;
   input  wire [7:0]  uartReadData;
@@ -80,7 +82,8 @@ module ALU(
   `define FlagsReg 1
   `define CodeSegmentReg 2
   `define CodeReturnReg 3
-  `define FixedRegCount 4
+  `define PageTableReg 4
+  `define FixedRegCount 5
 
   // Other local registers that are initialized elsewhere
   reg        [31:0] regarray[0:(63 + `FixedRegCount)];
@@ -335,12 +338,12 @@ module ALU(
           // for opCodes that actually need it.
           if (IsRAMOpcode(opCode) == 1 || IsIOOpcode(opCode) == 1)
           begin
-            //$display("DataWordComplete getting another RW");
+            //$display("DataWordComplete getting another RW %h", opCode);
             mode <= `RWRequest;
           end
           else
           begin
-            //$display("DataWordComplete processing an OpCode");
+            //$display("DataWordComplete processing an OpCode %h", opCode);
             mode <= `ProcessOpCode;
           end
         end
@@ -599,6 +602,11 @@ module ALU(
           `MovdRoR:  begin end // Done above
           `MovdRoRR: begin end // Done above
 
+          `LeaRRoR: begin
+            //$display("Doing lea with opDataWord %h", opDataWord);
+            regarray[regAddress[7:0]] <= regValue2[0] + opDataWord * regValue3[0] + regarray[`CodeSegmentReg];
+          end
+
           `ReadPortRR: regarray[regAddress[7:0]] <= ramValue;             // ReadPort reg, reg
           `WritePortRR: begin end // Done above
 
@@ -774,6 +782,10 @@ module ALU(
 
           `DlenR: begin
             regarray[regAddress[7:0]] <= dbgBufferLength;
+          end
+
+          `VpEnable: begin
+            addrVirtual <= 1;
           end
 
           default: $display("Unknown instruction %h", opCode);

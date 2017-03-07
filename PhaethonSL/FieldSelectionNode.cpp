@@ -79,6 +79,8 @@ void FieldSelectionNode::VerifyNodeImpl()
 
 ExpressionResult *FieldSelectionNode::CalculateResult()
 {
+    //printf("Begin FieldSelectionNode %p\n", this);
+
     // Get the child expression
     ExpressionNode *pChildExpr = dynamic_cast<ExpressionNode *>(GetChild(0));
 
@@ -93,6 +95,9 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
     RegisterCollection *pRegCollection = nullptr;
     RegIndex baseRegister;
     bool fSetBaseRegister = false;
+
+    // Get the member of the struct that we are selecting
+    StructMember *pMember = _pStructTypeInfo->GetMember(_fieldSymIndex);
 
     // We need a register to offset. If we have one already then great, otherwise
     // we need to do the work to ensure that we have one for the path that arrived
@@ -117,7 +122,8 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
     }
     else if (
         childResult->GetResultType() == ExpressionResultType::DerefRegisterOffset ||
-        childResult->GetResultType() == ExpressionResultType::DerefRegisterIndex)
+        childResult->GetResultType() == ExpressionResultType::DerefRegisterIndex ||
+        childResult->GetResultType() == ExpressionResultType::RegisterIndex)
     {
         //printf("Need to upgrade operand from offset operand\n");
 
@@ -130,17 +136,29 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
     // See if the operand that came in requires us to load up the register
     if (fSetBaseRegister)
     {
-        // Spit out the code to load said register
-        pScope->GetContext()->OutputMovInstruction(
-            Operand(baseRegister),
-            *childResult.get());
+        if (childResult->GetResultType() == ExpressionResultType::RegisterIndex)
+        {
+            // We need to have a pointer to offset, but we don't want to pull
+            // what is at the address. We just want to calculate where it is.
+            pScope->GetContext()->OutputInstruction(
+                OpCode::LeaRRoR,
+                Operand(baseRegister),
+                *childResult.get());                
+        }
+        else
+        {
+            // It is a pointer or some other non-array thing that we can get
+            pScope->GetContext()->OutputMovInstruction(
+                Operand(baseRegister),
+                *childResult.get());
+        }
     }
     else
     {
         // It needs to be something that we can select from
         if (childResult->GetResultType() != ExpressionResultType::Register)
         {
-            printf("Type is %d\n", childResult->GetResultType());
+            //printf("Type is %d\n", childResult->GetResultType());
             GetContext()->ReportError(_location, "This pointer needs to be in a register by now");
         }
 
@@ -148,12 +166,11 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
         baseRegister = childResult->GetRegIndex();
     }
 
-    // Get the member of the struct that we are selecting
-    StructMember *pMember = _pStructTypeInfo->GetMember(_fieldSymIndex);
-
     Operand result;
     if (pMember->GetType()->GetTypeClass() == TypeClass::Array)
     {
+        //printf("Accessing array member\n");
+
         // If we have not allocated a register, then the register
         // is the one mapped to the struct. We need to allocate one
         // now because we don't want to fiddle with that register.
@@ -185,6 +202,8 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
             pMember,
             GetContext());
     }
+
+    //printf("End FieldSelectionNode %p\n", this);
 
     if (pRegCollection != nullptr)
     {

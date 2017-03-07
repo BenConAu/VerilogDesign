@@ -1,0 +1,39 @@
+struct PTEntry
+{
+    word virtPage;
+    word physPage;
+};
+
+struct PageTable
+{
+    PTEntry entries[256];
+};
+
+PageTable pageTable;
+
+void main()
+{
+    // Map first page in both physical and virtual to same
+    pageTable.entries[0].virtPage = 0;
+    pageTable.entries[0].physPage = 0;
+
+    // Map 0x0000a?? to 0x3c??; 
+    pageTable.entries[1].virtPage = 0x8;
+    pageTable.entries[1].physPage = 0xf;
+
+    // Write the the physical location that we know is mapped
+    ptr<word> pPhysTest = castptr<word>(0x3c00);
+    pPhysTest[0] = 0xabc;
+
+    // Set the page table and turn on virtual memory
+    ptr<PTEntry> p = pageTable.entries;
+    __emit(movrr, __rpt, p);
+    __emit(vpenable);
+
+    // Find the location where we expect it in virtual
+    ptr<word> pVirtTest = castptr<word>(0xa00);
+    word lookup = pVirtTest[0];
+
+    // We should see 0xabc
+    __emit(doutr, lookup);
+}

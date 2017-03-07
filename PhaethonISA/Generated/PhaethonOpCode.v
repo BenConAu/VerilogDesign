@@ -51,6 +51,8 @@
 `define WritePortRR 51
 `define ExecR 52
 `define Exit 53
+`define VpEnable 54
+`define LeaRRoR 55
 
 function [0:0] Is8ByteOpcode;
   input [7:0] opCodeParam;
@@ -70,7 +72,8 @@ function [0:0] Is8ByteOpcode;
       opCodeParam == `RCallRC ||
       opCodeParam == `AddRRC ||
       opCodeParam == `SubRRC ||
-      opCodeParam == `MulAddRRC)
+      opCodeParam == `MulAddRRC ||
+      opCodeParam == `LeaRRoR)
     Is8ByteOpcode = 1;
   else
     Is8ByteOpcode = 0;

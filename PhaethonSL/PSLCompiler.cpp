@@ -26,7 +26,7 @@ int main(int argc, char **argv)
 
 		context.Parse();
     }
-    catch (const char *pszMessage)
+    catch (char *pszMessage)
     {
 		printf("Error: %s\n", pszMessage);
     }

@@ -98,7 +98,16 @@ Operand::Operand(
     PointerTypeInfo *pTypeInfo,
     PSLCompilerContext *pContext)
 {
-    _objArg._argType = OperandType::DerefRegisterOffset;
+    if (pTypeInfo->GetBaseType()->GetTypeClass() == TypeClass::Struct)
+    {
+        // We cannot dereference a struct so we take out the deref
+        _objArg._argType = OperandType::RegisterOffset;
+    }
+    else
+    {
+        _objArg._argType = OperandType::DerefRegisterOffset;
+    }
+
     _objArg._value = regIndex;
 
     // The offset stores the size of each item
@@ -144,11 +153,9 @@ RegIndex Operand::GetRegIndex() const
     }
 }
 
-const char *Operand::DebugPrint()
+std::string Operand::DebugPrint()
 {
-    static char str[100];
-    sprintf(str, "%d", (int)_objArg._argType);
-    return str;
+    return _objArg.DebugPrint();
 }
 
 const ObjArgument &Operand::GetObjArgument() const

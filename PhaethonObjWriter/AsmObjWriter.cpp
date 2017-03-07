@@ -50,8 +50,17 @@ std::string AsmObjWriter::GetOpString(const ObjArgument &objArg) const
         }
         break;
 
+    case OperandType::RegisterOffset:
+        // Syntax for array lookup
+        result << "[r" << objArg._value << ":sizeof(" << objArg._typeName << ")]";
+        break;
+
     default:
-        throw "Unknown result type";
+        {
+            char buffer[200];
+            sprintf(buffer, "Unknown result type %d\n", objArg._argType);
+            throw std::string(buffer);
+        }
     }
 
     return result.str();

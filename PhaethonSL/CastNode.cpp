@@ -18,7 +18,11 @@ void CastNode::VerifyNodeImpl()
 
     if (pExprTypeInfo == nullptr)
     {
-        GetContext()->ReportError(_location, "Wrong type given to CastPtr");
+        BasicTypeInfo *pBasicTypeInfo = dynamic_cast<BasicTypeInfo *>(pExpr->GetTypeInfo());
+        if (pBasicTypeInfo == nullptr)
+        {
+            GetContext()->ReportError(_location, "Wrong type given to CastPtr");
+        }
     }
 
     SetType(pCastTypeInfo);

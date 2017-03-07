@@ -90,19 +90,20 @@ extern int yydebug;
     DLENR_TOKEN = 300,
     EXECR_TOKEN = 301,
     EXIT_TOKEN = 302,
-    MOVRC_TOKEN = 303,
-    MOVRR_TOKEN = 304,
-    EMIT_TOKEN = 305,
-    SIZEOF_TOKEN = 306,
-    OFFSETPTR_TOKEN = 307,
-    CASTPTR_TOKEN = 308,
-    READPORT_TOKEN = 309,
-    WRITEPORT_TOKEN = 310,
-    PACKBYTE_TOKEN = 311,
-    DATASEGEND_TOKEN = 312,
-    SAVEREG_TOKEN = 313,
-    RSP_TOKEN = 314,
-    IDENTIFIER = 315
+    VPENABLE_TOKEN = 303,
+    MOVRC_TOKEN = 304,
+    MOVRR_TOKEN = 305,
+    EMIT_TOKEN = 306,
+    SIZEOF_TOKEN = 307,
+    OFFSETPTR_TOKEN = 308,
+    CASTPTR_TOKEN = 309,
+    READPORT_TOKEN = 310,
+    WRITEPORT_TOKEN = 311,
+    PACKBYTE_TOKEN = 312,
+    DATASEGEND_TOKEN = 313,
+    SAVEREG_TOKEN = 314,
+    RSP_TOKEN = 315,
+    IDENTIFIER = 316
   };
 #endif
 
@@ -120,7 +121,7 @@ union YYSTYPE
     OpCode opCode;
     RegIndex regIndex;
 
-#line 124 "PSL.tab.h" /* yacc.c:1915  */
+#line 125 "PSL.tab.h" /* yacc.c:1915  */
 };
 
 typedef union YYSTYPE YYSTYPE;

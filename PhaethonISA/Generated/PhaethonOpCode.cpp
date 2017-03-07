@@ -43,6 +43,8 @@ InstructionData InstructionData::s_data[] = {
     { Instructions::WritePort , "writeport" },
     { Instructions::Exec      , "exec" },
     { Instructions::Exit      , "exit" },
+    { Instructions::VpEnable  , "vpenable" },
+    { Instructions::Lea       , "lea" },
 };
 
 int InstructionData::s_dataCount = sizeof(InstructionData::s_data) / sizeof(InstructionData::s_data[0]);
@@ -101,6 +103,8 @@ OpCodeData OpCodeData::s_data[] = {
     { Instructions::WritePort , OpCode::WritePortRR    , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "WritePortRR" },
     { Instructions::Exec      , OpCode::ExecR          , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "ExecR" },
     { Instructions::Exit      , OpCode::Exit           , { OperandType::None                  , OperandType::None                  , OperandType::None         }, -1, "Exit" },
+    { Instructions::VpEnable  , OpCode::VpEnable       , { OperandType::None                  , OperandType::None                  , OperandType::None         }, -1, "VpEnable" },
+    { Instructions::Lea       , OpCode::LeaRRoR        , { OperandType::Register              , OperandType::RegisterOffset        , OperandType::Register     }, 1, "LeaRRoR" },
 };
 
 int OpCodeData::s_dataCount = sizeof(OpCodeData::s_data) / sizeof(OpCodeData::s_data[0]);
@@ -123,7 +127,8 @@ bool Is8ByteOpcode(OpCode opCodeParam)
         opCodeParam == OpCode::RCallRC ||
         opCodeParam == OpCode::AddRRC ||
         opCodeParam == OpCode::SubRRC ||
-        opCodeParam == OpCode::MulAddRRC)
+        opCodeParam == OpCode::MulAddRRC ||
+        opCodeParam == OpCode::LeaRRoR)
         return true;
     else
         return false;

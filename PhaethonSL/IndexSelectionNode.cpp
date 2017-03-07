@@ -87,34 +87,41 @@ ExpressionResult *IndexSelectionNode::CalculateResult()
         Operand(resultIndex),
         *childResult.get());
 
-    // Create an operand with this register
+    // Create an operand with this register - it has a base register
+    // with the size of the type being pointed to encoded in it.
     Operand resultOperand(
         resultIndex,
         pPointerInfo,
         GetContext());        
 
+    // This will be the first part of the expression
     pResult->AddOperand(resultOperand, true);
 
     if (indexResult->GetResultType() != ExpressionResultType::Register)
     {
+        //printf("IndexSelectionNode in not register\n");
+
         // If we don't have a register for the second operand then allocate it
-        //printf("Allocating a second register for IndexSelectionNode\n");
-        RegIndex sizeReg = pScope->GetRegCollection()->AllocateRegister();
-        Operand sizeOperand(sizeReg);
+        RegIndex indexReg = pScope->GetRegCollection()->AllocateRegister();
+        Operand indexOperand(indexReg);
 
         // Move whatever we do have into that register
         GetContext()->OutputMovInstruction(
-            sizeOperand,
+            indexOperand,
             *indexResult.get());
 
         // And that is our other operand
-        pResult->AddOperand(sizeOperand, true);
+        pResult->AddOperand(indexOperand, true);
     }
     else
     {
+        //printf("IndexSelectionNode in register\n");
+
         // Just reuse what we have
         pResult->AddOperand(indexResult->GetOperand(0), false);
     }
+
+    //printf("IndexSelectionNode returning result: %s\n", pResult->DebugPrint().c_str());
 
     return pResult;
 }

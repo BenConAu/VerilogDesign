@@ -51,7 +51,7 @@ class Operand
     OperandType GetType() const { return _objArg._argType; }
     RegIndex GetRegIndex() const;
     const ObjArgument &GetObjArgument() const;
-    const char *DebugPrint();
+    std::string DebugPrint();
     VariableInfo *GetVariableInfo() const { return _pVarInfo; }
 
   private:

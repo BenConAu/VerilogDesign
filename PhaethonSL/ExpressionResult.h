@@ -12,6 +12,7 @@ enum class ExpressionResultType
     None = 0,            // Used for error conditions and the such or unintialized types
     Constant,            // The operand is a constant
     Register,            // The operand is a register
+    RegisterIndex,       // The operand has a location with an index offset
     DerefConstant,       // The operand is a memory location at the given constant location
     DerefRegisterOffset, // Just like above, but with a constant offset
     DerefRegisterIndex,  // Just like above, but with an index offset
@@ -43,7 +44,7 @@ struct ExpressionResult
 
     void AddOperand(const Operand& op, bool temp);
 
-    void DebugPrint();
+    std::string DebugPrint();
     size_t GetOperandCount() const;
     ExpressionResultType GetResultType() const;
     RegIndex GetRegIndex();

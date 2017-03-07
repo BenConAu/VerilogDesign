@@ -47,6 +47,8 @@ namespace Instructions
         WritePort = 40,
         Exec = 41,
         Exit = 42,
+        VpEnable = 43,
+        Lea = 44,
     };
 }
 enum class OpCode
@@ -105,6 +107,8 @@ enum class OpCode
     WritePortRR = 51,
     ExecR = 52,
     Exit = 53,
+    VpEnable = 54,
+    LeaRRoR = 55,
 };
 bool Is8ByteOpcode(OpCode opCodeParam);
 bool IsRAMOpcode(OpCode opCodeParam);

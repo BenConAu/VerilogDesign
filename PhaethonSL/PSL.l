@@ -66,12 +66,14 @@
 "false"              { yylval->intVal = 0; return BOOLCONSTANT; }
 "__emit"             { return EMIT_TOKEN; }
 "__rsp"              { yylval->regIndex = 64; return REG_INDEX; }
+"__rpt"              { yylval->regIndex = 68; return REG_INDEX; }
 "__r"[0-9]           { yylval->regIndex = atoi(yytext + 3); return REG_INDEX; }
 "doutr"              { return DOUTR_TOKEN; }
 "dinr"               { return DINR_TOKEN; }
 "dlenr"              { return DLENR_TOKEN; }
 "execr"              { return EXECR_TOKEN; }
 "exit"               { return EXIT_TOKEN; }
+"vpenable"           { return VPENABLE_TOKEN; }
 "movrc"              { return MOVRC_TOKEN; }
 "movrr"              { return MOVRR_TOKEN; }
 [0-9]+               { yylval->intVal = atoi(yytext); return INTCONSTANT; }

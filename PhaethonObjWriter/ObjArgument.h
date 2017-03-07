@@ -14,6 +14,28 @@ struct ObjArgument
         _offset = -1;
     }
 
+    std::string DebugPrint()
+    {
+        char debug[200];
+
+        switch (_argType)
+        {
+            case OperandType::Register:
+                ::sprintf(debug, "r:%d", _value);
+                break;
+
+            case OperandType::DerefRegisterOffset:
+                ::sprintf(debug, "dro:%d|%d", _value, _offset);
+                break;
+
+            default:
+                ::sprintf(debug, "OpType:%d", _argType);
+                break;
+        }
+        
+        return debug;
+    }
+
     // Type information
     OperandType _argType;
 
