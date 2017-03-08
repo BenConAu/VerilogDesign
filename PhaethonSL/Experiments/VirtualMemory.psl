@@ -18,12 +18,13 @@ void main()
     pageTable.entries[0].physPage = 0;
 
     // Map 0x0000a?? to 0x3c??; 
-    pageTable.entries[1].virtPage = 0x8;
-    pageTable.entries[1].physPage = 0xf;
+    pageTable.entries[2].virtPage = 0x2;
+    pageTable.entries[2].physPage = 0xf;
 
     // Write the the physical location that we know is mapped
-    ptr<word> pPhysTest = castptr<word>(0x3c00);
+    ptr<word> pPhysTest = castptr<word>(0x3e00);
     pPhysTest[0] = 0xabc;
+    __emit(doutr, pPhysTest[0]);
 
     // Set the page table and turn on virtual memory
     ptr<PTEntry> p = pageTable.entries;

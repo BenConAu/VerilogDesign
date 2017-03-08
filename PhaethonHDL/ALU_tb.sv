@@ -14,7 +14,7 @@ module test;
   reg clk = 0;
   always #5 clk = !clk;
 
-  reg [7:0] fileRam[0:2047];
+  reg [7:0] fileRam[0:16383];
   reg [511:0] testname;
   reg fileFound;
 

@@ -13,21 +13,25 @@ mov r2, 0
 mov r1->PTEntry::physPage, r2
 add r1, r0, 0
 mov r2, r1
-mov r3, 1
+mov r3, 2
 lea r1, [r2:sizeof(PTEntry)], r3
-mov r2, 8
+mov r2, 2
 mov r1->PTEntry::virtPage, r2
 add r1, r0, 0
 mov r2, r1
-mov r3, 1
+mov r3, 2
 lea r1, [r2:sizeof(PTEntry)], r3
 mov r2, 15
 mov r1->PTEntry::physPage, r2
-mov r1, 15360
+mov r1, 15872
 mov r2, r1
 mov r3, 0
 mov r4, 2748
 mov [r2:sizeof(Word)], r3, r4
+mov r2, r1
+mov r3, 0
+mov r4, [r2:sizeof(Word)], r3
+dout r4
 add r3, r0, 0
 mov r2, r3
 mov r68, r2

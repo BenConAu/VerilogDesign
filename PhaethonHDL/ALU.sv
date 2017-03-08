@@ -843,6 +843,10 @@ module ALU(
       r3 <= regarray[rPos + 3];
       r4 <= regarray[rPos + 4];
       r5 <= regarray[rPos + 5];
+
+      // Keep the output register in sync with what we have been setting
+      ptAddress <= regarray[`PageTableReg];
+
     //debug3[8:0] <= mode;
     //debug2[7:0] <= mode;
     //debug2[15:8] <= opCode;

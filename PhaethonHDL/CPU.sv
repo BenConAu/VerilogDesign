@@ -106,7 +106,7 @@ module CPU(
   );
 
   //initial
-     //$monitor("At time %t, ip = %h, opCode = %h, mcReadReq = %h, mcRamAddress = %h, mcRamReady = %h, ramValue = %h, r[0:1:2:3:4:5] = %h:%h:%h:%h:%h:%h, rPos = %h, debug = %h",
-        //$time, iPointer[15:0], opCode, mcReadReq, mcRamAddress, mcRamReady, mcRamRead, r0, r1, r2, r3, r4, r5, rPos, debug);
+     //$monitor("At time %t, ip = %h, opCode = %h, mcReadReq = %h, mcRamAddress = %h, mcRamReady = %h, ramValue = %h, ptAddress = %h, r[0:1:2:3:4:5] = %h:%h:%h:%h:%h:%h, rPos = %h, debug = %h",
+        //$time, iPointer[15:0], opCode, mcReadReq, mcRamAddress, mcRamReady, mcRamRead, ptAddress, r0, r1, r2, r3, r4, r5, rPos, debug);
 
 endmodule
