@@ -24,6 +24,8 @@ void main()
     // Write the the physical location that we know is mapped
     ptr<word> pPhysTest = castptr<word>(0x3e00);
     pPhysTest[0] = 0xabc;
+
+    // Verify that reading that from physical works
     __emit(doutr, pPhysTest[0]);
 
     // Set the page table and turn on virtual memory
@@ -36,5 +38,12 @@ void main()
     word lookup = pVirtTest[0];
 
     // We should see 0xabc
+    __emit(doutr, lookup);
+
+    // Test virtual write
+    pVirtTest[0] = 0xdef;
+    lookup = pVirtTest[0];
+
+    // See if it is there
     __emit(doutr, lookup);
 }

@@ -20,11 +20,10 @@ module MemoryController(
   `define Ready 0
   `define PRamWait1 1
   `define PRamWait2 2
-  `define PRamWait3 3
-  `define VPTWait1 4
-  `define VPTWait2 5
-  `define VPTWait3 6
-  `define VPTWait4 7
+  `define VPTWait1 3
+  `define VPTWait2 4
+  `define VPTWait3 5
+  `define VPTWait4 6
 
   input wire clk;
   input wire reset;
@@ -138,7 +137,7 @@ module MemoryController(
                 phRamAddress <= ptAddress + mcRamAddress[17:10] * 8;
                 phReadReq <= 1;
 
-                // Save the address we are looking up
+                // Save the address we are looking up or storing at
                 savedVirtAddr <= mcRamAddress;
 
                 // Save the address of the first word of the PT entry
@@ -214,7 +213,7 @@ module MemoryController(
           //$display("Waited for read %h of page table 2, va Addr = %h", phRamIn, savedVirtAddr);
           
           // Now we have second half of entry, store it in the TLB
-          tlb[GetPageHash(mcRamAddress)] <= {savedFirstWord, phRamIn};
+          tlb[GetPageHash(savedVirtAddr)] <= {savedFirstWord, phRamIn};
 
           // Now we can do the actual request we came here for
           phRamAddress[31:10] <= GetTLBPhysPage({savedFirstWord, phRamIn});

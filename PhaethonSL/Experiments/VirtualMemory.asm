@@ -41,4 +41,12 @@ mov r5, r3
 mov r6, 0
 mov r4, [r5:sizeof(Word)], r6
 dout r4
+mov r5, r3
+mov r6, 0
+mov r7, 3567
+mov [r5:sizeof(Word)], r6, r7
+mov r5, r3
+mov r6, 0
+mov r4, [r5:sizeof(Word)], r6
+dout r4
 exit
