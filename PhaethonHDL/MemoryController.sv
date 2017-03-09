@@ -56,6 +56,30 @@ module MemoryController(
   // The TLB
   reg [63:0] tlb[0:15];
 
+  function [21:0] GetTLBVirtPage;
+    input [63:0] tlbEntry;
+
+    begin
+      GetTLBVirtPage = tlbEntry[53:32];
+    end
+  endfunction
+
+  function [21:0] GetTLBPhysPage;
+    input [63:0] tlbEntry;
+
+    begin
+      GetTLBPhysPage = tlbEntry[21:0];
+    end
+  endfunction
+
+  function [3:0] GetPageHash;
+    input [31:0] virtAddr;
+
+    begin
+      GetPageHash = virtAddr[13:10];
+    end
+  endfunction
+
   always @(posedge clk or posedge reset)
   begin
     if (reset == 1)
@@ -87,12 +111,14 @@ module MemoryController(
             else
             begin
               // Need to translate - use the lower bits of the virtual page
-              if (tlb[mcRamAddress[13:10]][63:32] == mcRamAddress[31:10])
+              if (GetTLBVirtPage(tlb[GetPageHash(mcRamAddress)]) == mcRamAddress[31:10])
               begin
                 //$display("Page to translate %h found in TLB", mcRamAddress);
 
                 // Translate page using TLB
-                phRamAddress[31:10] <= tlb[mcRamAddress[13:10]][31:0];
+                phRamAddress[31:10] <= GetTLBPhysPage(tlb[GetPageHash(mcRamAddress)]);
+
+                // Use lower bits from virtual address in physical address
                 phRamAddress[9:0] <= mcRamAddress[9:0];
 
                 // Otherwise same as physical lookup
@@ -188,11 +214,10 @@ module MemoryController(
           //$display("Waited for read %h of page table 2, va Addr = %h", phRamIn, savedVirtAddr);
           
           // Now we have second half of entry, store it in the TLB
-          tlb[mcRamAddress[13:10]][63:32] <= savedFirstWord;
-          tlb[mcRamAddress[13:10]][31:0] <= phRamIn;
+          tlb[GetPageHash(mcRamAddress)] <= {savedFirstWord, phRamIn};
 
           // Now we can do the actual request we came here for
-          phRamAddress[31:10] <= phRamIn;
+          phRamAddress[31:10] <= GetTLBPhysPage({savedFirstWord, phRamIn});
           phRamAddress[9:0] <= savedVirtAddr[9:0];
 
           // Rehydrate the saved parameters

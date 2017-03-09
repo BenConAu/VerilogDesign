@@ -35,7 +35,7 @@ ALU_tb: \
 	FloatingDivide.sv \
 	MemoryController.sv \
 	CPU.sv
-	iverilog -o ALU_tb \
+	iverilog -Wall -o ALU_tb \
 	ALU_tb.sv \
 	ALU.sv \
 	RingBuffer.sv \
