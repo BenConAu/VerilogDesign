@@ -35,12 +35,13 @@ module CPU(
   output wire [8:0] debug3;
 
   wire [31:0]  mcRamRead;
-  wire [0:0]   mcRamReady;
+  wire [0:1]   mcStatus;
   wire [31:0]  mcRamAddress;
   wire [31:0]  mcRamWrite;
   wire [0:0]   mcReadReq;
   wire [0:0]   mcWriteReq;
   wire [0:0]   mcAddrVirtual;
+  wire [0:0]   mcExecMode;
   wire [31:0]  ptAddress;
   
   wire [31:0]  iPointer;
@@ -57,12 +58,13 @@ module CPU(
     clk,
     reset,
     mcRamRead,
-    mcRamReady,
+    mcStatus,
     mcRamAddress,
     mcRamWrite,
     mcReadReq,
     mcWriteReq,
     mcAddrVirtual,
+    mcExecMode,
     ptAddress,
     uartReadReq,    // [Output] uart read requested
     uartReadAck,    // [Input]  Flag to indicate read success
@@ -90,12 +92,13 @@ module CPU(
     clk,              // Global clock
     reset,            // Reset
     mcRamRead,        // [Output] RAM at requested address
-    mcRamReady,       // [Output] RAM is ready to be picked up
+    mcStatus,         // [Output] RAM is ready to be picked up
     mcRamAddress,     // [Input] RAM address requested
     mcRamWrite,       // [Input] RAM to write
     mcReadReq,        // [Input] RAM read request
     mcWriteReq,       // [Input] RAM write request
     mcAddrVirtual,    // [Input] Virtual flag for RAM
+    mcExecMode,       // [Input] Exec mode
     phRamRead,        // [Input]  RAM at requested address
     phRamAddress,     // [Output] RAM address requested
     phRamWrite,       // [Output] RAM to write

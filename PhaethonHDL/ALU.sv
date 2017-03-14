@@ -2,12 +2,13 @@ module ALU(
   clk,            // [Input]  Clock driving the ALU
   reset,          // [Input]  Reset pin
   ramIn,          // [Input]  RAM at requested address
-  ramReady,       // [Input]  RAM ready signal
+  mcStatus,       // [Input]  RAM ready signal
   ramAddress,     // [Output] RAM address requested
   ramOut,         // [Output] RAM to write
   readReq,        // [Output] RAM read request
   writeReq,       // [Output] RAM write request
   addrVirtual,    // [Output] Virtual flag for RAM
+  execMode,       // [Output] Whether we are in user or kernel
   ptAddress,      // [Output] Page Table Address
   uartReadReq,    // [Output] uart read requested
   uartReadAck,    // [Input]  Flag to indicate read success
@@ -47,12 +48,13 @@ module ALU(
   input  wire        clk;
   input  wire        reset;
   input  wire [31:0] ramIn;
-  input  wire [0:0]  ramReady;
+  input  wire [0:1]  mcStatus;
   output reg [31:0]  ramAddress;
   output reg [31:0]  ramOut;
   output reg [0:0]   readReq;
   output reg [0:0]   writeReq;
   output reg [0:0]   addrVirtual;
+  output reg [0:0]   execMode;
   output reg [31:0]  ptAddress;
   output reg [0:0]   uartReadReq;
   input  wire [0:0]  uartReadAck;
@@ -198,6 +200,7 @@ module ALU(
           dbgBufferReadReq <= 1'b0;
           inExec <= 1'b0;
           addrVirtual <= 1'b0;
+          execMode <= 1'b0;
 
           // First real register position
           rPos <= `FixedRegCount;
@@ -233,7 +236,7 @@ module ALU(
         // Stop request
         readReq <= 0;
 
-        if (ramReady == 1)
+        if (mcStatus == 1)
         begin
           // If ramReady is high then we have received something
           //$display("Receiving value %h from MemoryController", ramIn);
@@ -327,7 +330,7 @@ module ALU(
         // Stop request
         readReq <= 0;
 
-        if (ramReady == 1)
+        if (mcStatus == 1)
         begin
           //$display("DataWordComplete with word %h", ramIn);
 
@@ -516,7 +519,7 @@ module ALU(
         readReq <= 1'b0;
         writeReq <= 1'b0;
 
-        if (ramReady == 1)
+        if (mcStatus == 1)
         begin
           if (opCode == `MovRdC || opCode == `MovRdRo || opCode == `MovRdRoR || opCode == `MovRdR || opCode == `PopR || opCode == `Ret)
           begin
