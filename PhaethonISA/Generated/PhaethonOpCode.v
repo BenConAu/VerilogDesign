@@ -53,6 +53,7 @@
 `define Exit 53
 `define VpEnable 54
 `define LeaRRoR 55
+`define MaxOpCode 55
 
 function [0:0] Is8ByteOpcode;
   input [7:0] opCodeParam;

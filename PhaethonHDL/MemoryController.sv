@@ -18,6 +18,8 @@ module MemoryController(
   debug             // [Output] Debug port
   );
 
+  `include "Common.sv"
+
   `define Ready 0
   `define PRamWait1 1
   `define PRamWait2 2
@@ -25,6 +27,7 @@ module MemoryController(
   `define VPTWait2 4
   `define VPTWait3 5
   `define VPTWait4 6
+  `define Error 7
 
   input wire clk;
   input wire reset;
@@ -74,11 +77,19 @@ module MemoryController(
     end
   endfunction
 
+  function GetTLBValid;
+    input [63:0] tlbEntry;
+
+    begin
+      GetTLBValid = tlbEntry[63:63];
+    end
+  endfunction
+
   function GetTLBProtected;
     input [63:0] tlbEntry;
 
     begin
-      GetTLBProtected = tlbEntry[63:63];
+      GetTLBProtected = tlbEntry[62:62];
     end
   endfunction
 
@@ -98,19 +109,36 @@ module MemoryController(
     input [31:0] reqWriteData;
 
     begin
-      // Translate page using TLB for upper bits
-      phRamAddress[31:10] <= GetTLBPhysPage(reqTLBEntry);
+      if (!GetTLBValid(reqTLBEntry))
+      begin
+        //$display("Address maps to invalid TLB entry %h", reqTLBEntry);
 
-      // Use lower bits from virtual address in physical address
-      phRamAddress[9:0] <= reqVirtAddress[9:0];
+        state <= `Error;
+        mcStatus <= `MCError;
+      end
+      else if (GetTLBProtected(reqTLBEntry) == 1 && mcExecMode == 1)
+      begin
+        //$display("Attempting access to protected page from user mode, execMode = %h", mcExecMode);
 
-      // Otherwise same as physical lookup
-      phReadReq <= reqReadReq;
-      phWriteReq <= reqWriteReq;
-      phRamOut <= reqWriteData;
-      isRead <= (reqReadReq == 1);
-      state <= `PRamWait1;
-      mcStatus <= 0;
+        state <= `Error;
+        mcStatus <= `MCError;
+      end
+      else
+      begin
+        // Translate page using TLB for upper bits
+        phRamAddress[31:10] <= GetTLBPhysPage(reqTLBEntry);
+
+        // Use lower bits from virtual address in physical address
+        phRamAddress[9:0] <= reqVirtAddress[9:0];
+
+        // Otherwise same as physical lookup
+        phReadReq <= reqReadReq;
+        phWriteReq <= reqWriteReq;
+        phRamOut <= reqWriteData;
+        isRead <= (reqReadReq == 1);
+        state <= `PRamWait1;
+        mcStatus <= `MCWaiting;
+      end
     end
   endtask
 
@@ -118,7 +146,7 @@ module MemoryController(
   begin
     if (reset == 1)
     begin
-      mcStatus <= 0;
+      mcStatus <= `MCWaiting;
       state <= `Ready;
       isRead <= 0;
     end
@@ -126,8 +154,6 @@ module MemoryController(
     begin
       case (state)
         `Ready: begin
-          mcStatus <= 0;
-
           if (mcReadReq == 1 || mcWriteReq == 1)
           begin
             if (mcAddrVirtual == 0)
@@ -141,6 +167,7 @@ module MemoryController(
               phRamOut <= mcRamIn;
               isRead <= (mcReadReq == 1);
               state <= `PRamWait1;
+              mcStatus <= `MCWaiting;
             end
             else
             begin
@@ -178,10 +205,14 @@ module MemoryController(
 
                 // Wait for the first word to read out
                 state <= `VPTWait1;
-                mcStatus <= 0;
+                mcStatus <= `MCWaiting;
               end
 
             end
+          end
+          else
+          begin
+            mcStatus <= `MCWaiting;
           end
         end
 
@@ -189,7 +220,7 @@ module MemoryController(
           // Need to wait for another clock for this to complete
           //$display("PR wait 1 for %h", phRamAddress);
 
-          mcStatus <= 0;
+          mcStatus <= `MCWaiting;
           state <= `PRamWait2;
         end
 
@@ -206,7 +237,7 @@ module MemoryController(
             //$display("Finish PRWait2 with isRead not set");
           end
 
-          mcStatus <= 1;
+          mcStatus <= `MCReady;
           state <= `Ready;
         end
 
@@ -214,7 +245,7 @@ module MemoryController(
           //$display("Waiting for read of page table");
 
           // Wait for read to complete
-          mcStatus <= 0;
+          mcStatus <= `MCWaiting;
           state <= `VPTWait2;
         end
 
@@ -226,7 +257,7 @@ module MemoryController(
 
           // Now get second half
           phRamAddress <= savedPTReadAddr + 4;
-          mcStatus <= 0;
+          mcStatus <= `MCWaiting;
           state <= `VPTWait3;
         end
 
@@ -234,22 +265,31 @@ module MemoryController(
           //$display("Waiting again for read of page table");
 
           // Wait for read to complete
-          mcStatus <= 0;
+          mcStatus <= `MCWaiting;
           state <= `VPTWait4;
         end
 
         `VPTWait4: begin
           //$display("Waited for read %h of page table 2, va Addr = %h", phRamIn, savedVirtAddr);
+          //$display("Inserting TLB entry %h", {1'b1, savedFirstWord[30:0], phRamIn});
+
           // Now we have second half of entry, store it in the TLB
-          tlb[GetPageHash(savedVirtAddr)] <= {savedFirstWord, phRamIn};
+          tlb[GetPageHash(savedVirtAddr)] <= {1'b1, savedFirstWord[30:0], phRamIn};
 
           RequestPhysicalPage(
-            GetTLBPhysPage({savedFirstWord, phRamIn}), 
+            {1'b1, savedFirstWord[30:0], phRamIn}, 
             mcRamAddress, 
             savedReadReq, 
             savedWriteReq, 
             savedWriteData);
         end
+
+        `Error: begin
+          // Wait a clock for the error to register
+          mcStatus <= `MCWaiting;
+          state <= `Ready;
+        end
+
       endcase
     end
   end

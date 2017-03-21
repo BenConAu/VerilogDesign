@@ -13,11 +13,13 @@ PageTable pageTable;
 
 void main()
 {
-    // Map first page in both physical and virtual to same
-    pageTable.entries[0].virtPage = 0;
+    // Map first page in both physical and virtual to same, and
+    // protect this page so that it cannot be messed with by
+    // the user mode code.
+    pageTable.entries[0].virtPage = 0x40000000;
     pageTable.entries[0].physPage = 0;
 
-    // Map 0x0000a?? to 0x3c??; 
+    // Map 0x0000a?? to 0x3c??; no protection on this page
     pageTable.entries[2].virtPage = 0x2;
     pageTable.entries[2].physPage = 0xf;
 

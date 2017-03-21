@@ -1,0 +1,5 @@
+DebugOut 00000001
+DebugOut 00000002
+DebugOut 00005678
+Memory controller says access to protected page from user mode, execMode = 1
+DebugOut 0000abcd

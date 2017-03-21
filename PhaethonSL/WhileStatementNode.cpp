@@ -33,6 +33,15 @@ void WhileStatementNode::ProcessNode()
     // We are taking over the whole processing, so we have to be careful and
     // replicate everything that the base class does. We just need a specific
     // order.
+    //
+    // One of the first things to do is push the deallocation stack so that
+    // any temporary registers used in the expression part of the loop are not
+    // reused in other parts of the loop. That causes very bad bugs where
+    // register usage is not tracked properly.
+    FunctionDeclaratorNode *pScope = GetTypedParent<FunctionDeclaratorNode>();
+
+    pScope->GetRegCollection()->Push();
+
     ExpressionNode *pExpr = dynamic_cast<ExpressionNode *>(GetChild(0));
     StatementListNode *pLoop = dynamic_cast<StatementListNode *>(GetChild(1));
 
@@ -52,8 +61,6 @@ void WhileStatementNode::ProcessNode()
     {
         throw "While needs a valid expression";
     }
-
-    FunctionDeclaratorNode *pScope = GetTypedParent<FunctionDeclaratorNode>();
 
     // Need to make a register for this to work
     RegisterWrapper wrapper(
@@ -79,4 +86,6 @@ void WhileStatementNode::ProcessNode()
 
     // Now put the label we jump to for test false
     GetContext()->OutputLabel(endLabel);
+
+    pScope->GetRegCollection()->Pop();    
 }

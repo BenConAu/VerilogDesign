@@ -3,7 +3,7 @@ add r1, r0, 0
 mov r2, r1
 mov r3, 0
 lea r1, [r2:sizeof(PTEntry)], r3
-mov r2, 0
+mov r2, 1073741824
 mov r1->PTEntry::virtPage, r2
 add r1, r0, 0
 mov r2, r1

@@ -1,0 +1,11 @@
+void main()
+{
+    // Point to bad memory
+    ptr<word> pBad = castptr<word>(0x400);
+
+    // Dereference it
+    pBad[0] = 1;
+
+    // Nobody should see this
+    __emit(doutr, 0x1234);    
+}

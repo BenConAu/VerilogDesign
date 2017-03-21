@@ -1,0 +1,72 @@
+struct PTEntry
+{
+    word virtPage;
+    word physPage;
+};
+
+struct PageTable
+{
+    PTEntry entries[256];
+};
+
+PageTable pageTable;
+
+void main()
+{
+    // The collection of words for the program doing invalid things,
+    // which we put into a page after the first two pages.
+    ptr<word> pData = castptr<word>(0x3c00);
+    pData[0] =  0xef000002;
+    pData[1] =  0x00000400;
+    pData[2] =  0xef000101;
+    pData[3] =  0xef000202;
+    pData[4] =  0x00000000;
+    pData[5] =  0xef010302;
+    pData[6] =  0x00000001;
+    pData[7] =  0x03020109;
+    pData[8] =  0x00000004;
+    pData[9] =  0xef340102;
+    pData[10] = 0x00001234;
+    pData[11] = 0xefef012f;
+    pData[12] = 0xefefef35;
+
+    __emit(doutr, 0x1);    
+
+    // We need a 'clean' page table for this to work, at least for the
+    // first two pages. Map first page in both physical and virtual to 
+    // same, and protect this page so that it cannot be messed with by
+    // the user mode code.
+    word i = 0;
+    while (i .< 4)
+    {
+        pageTable.entries[i].virtPage = 0x40000000 + i;
+        pageTable.entries[i].physPage = i;
+
+        i = i + 1;
+    }
+
+    __emit(doutr, 0x2);    
+
+    // Map 0x0000a?? to 0x3e??; no protection on this page
+    pageTable.entries[2].virtPage = 0x2;
+    pageTable.entries[2].physPage = 0xf;
+
+    // Set the page table and turn on virtual memory
+    ptr<PTEntry> p = pageTable.entries;
+    __emit(movrr, __rpt, p);
+    __emit(vpenable);
+
+    // A message before we run the bad program
+    __emit(doutr, 0x5678);
+
+    ptr<word> pVirtData = castptr<word>(0x800);
+
+    // Run the program
+    __saveregisters
+    {
+        __emit(execr, pVirtData);
+    }    
+
+    // A message after we run the bad program
+    __emit(doutr, 0xabcd);
+}

@@ -31,6 +31,7 @@ module ALU(
   );
 
   `include "../PhaethonISA/Generated/PhaethonOpCode.v"
+  `include "Common.sv"
 
   // Make modes easier to read and to insert new ones
   `define InitialMode 0
@@ -42,7 +43,8 @@ module ALU(
   `define IORWWait 6
   `define IORWComplete 7
   `define MemRWComplete 8
-  `define ProcessOpCode 9  
+  `define ProcessOpCode 9
+  `define ErrorHalt 10
 
   // Input / output
   input  wire        clk;
@@ -80,12 +82,16 @@ module ALU(
   reg        [31:0] counter = 0;
   reg               initComplete = 1'b0;
   
-  `define StackPointerReg 0
-  `define FlagsReg 1
-  `define CodeSegmentReg 2
-  `define CodeReturnReg 3
-  `define PageTableReg 4
-  `define FixedRegCount 5
+  `define StackPointerReg     0
+  `define FlagsReg            1
+  `define CodeSegmentReg      2
+  `define CodeReturnReg       3
+  `define PageTableReg        4
+  `define FixedRegCount       5
+
+  `define ErrorCodeBadInstr1  1
+  `define ErrorCodeBadInstr2  2
+  `define ErrorCodeBadMem     3
 
   // Other local registers that are initialized elsewhere
   reg        [31:0] regarray[0:(63 + `FixedRegCount)];
@@ -99,8 +105,9 @@ module ALU(
   reg        [7:0]  regAddress3;
   reg        [6:0]  fOpEnable;
   reg        [0:0]  condJump;
-  reg        [0:0]  inExec;
   reg        [31:0] sentinel;
+  reg        [7:0]  errorHaltCode;
+  reg        [31:0] errorHaltData;
 
   // Wire up the results from the floating units
   wire       [31:0] fAddResult[0:3];
@@ -198,9 +205,8 @@ module ALU(
           condJump <= 1'b0;
           dbgBufferWriteReq <= 1'b0;
           dbgBufferReadReq <= 1'b0;
-          inExec <= 1'b0;
-          addrVirtual <= 1'b0;
           execMode <= 1'b0;
+          addrVirtual <= 1'b0;
 
           // First real register position
           rPos <= `FixedRegCount;
@@ -236,10 +242,10 @@ module ALU(
         // Stop request
         readReq <= 0;
 
-        if (mcStatus == 1)
+        if (mcStatus == `MCReady)
         begin
           // If ramReady is high then we have received something
-          //$display("Receiving value %h from MemoryController", ramIn);
+          //$display("Receiving instr1 value %h from MemoryController", ramIn);
 
           opCode <= ramIn[7:0];
           regAddress <=  (ramIn[15:8] >= 64)  ? (ramIn[15:8] - 64)  : (ramIn[15:8] + rPos);
@@ -248,6 +254,13 @@ module ALU(
 
           // Move to next mode now
           mode <= `RegValueSet;
+        end
+        else if (mcStatus == `MCError)
+        begin
+          // Set error condition
+          mode <= `ErrorHalt;
+          errorHaltCode <= `ErrorCodeBadInstr1;
+          errorHaltData <= ramAddress;
         end
       end
 
@@ -330,7 +343,7 @@ module ALU(
         // Stop request
         readReq <= 0;
 
-        if (mcStatus == 1)
+        if (mcStatus == `MCReady)
         begin
           //$display("DataWordComplete with word %h", ramIn);
 
@@ -350,6 +363,13 @@ module ALU(
             mode <= `ProcessOpCode;
           end
         end
+        else if (mcStatus == `MCError)
+        begin
+          // Set error condition
+          mode <= `ErrorHalt;
+          errorHaltCode <= `ErrorCodeBadInstr2;
+          errorHaltData <= ramAddress;
+        end        
       end
 
       `RWRequest: begin
@@ -519,7 +539,7 @@ module ALU(
         readReq <= 1'b0;
         writeReq <= 1'b0;
 
-        if (mcStatus == 1)
+        if (mcStatus == `MCReady)
         begin
           if (opCode == `MovRdC || opCode == `MovRdRo || opCode == `MovRdRoR || opCode == `MovRdR || opCode == `PopR || opCode == `Ret)
           begin
@@ -530,6 +550,26 @@ module ALU(
           end
   
           mode <= `ProcessOpCode;
+        end
+        else if (mcStatus == `MCError)
+        begin
+          if (execMode == 0)
+          begin
+            $display("Memory controller says access to protected page from kernel mode, execMode = %h", execMode);
+
+            // Set error condition if supervisor hits this
+            mode <= `ErrorHalt;
+            errorHaltCode <= `ErrorCodeBadMem;
+            errorHaltData <= ramAddress;
+          end
+          else
+          begin
+            $display("Memory controller says access to protected page from user mode, execMode = %h", execMode);
+
+            // Exit back to supervisor if user hits this
+            opCode <= `Exit;
+            mode <= `ProcessOpCode;
+          end
         end
 
       end
@@ -739,7 +779,7 @@ module ALU(
           `MulAddRRC:  regarray[regAddress[7:0]] <= regValue[0] + regValue2[0] * opDataWord;
 
           `ExecR: begin
-            if (inExec == 1'b0)
+            if (execMode == 1'b0)
             begin
               // This basically sets the code segment register
               regarray[`CodeSegmentReg] <= regValue[0];
@@ -751,14 +791,16 @@ module ALU(
               ipointer <= 0;
 
               // We are in an exec now
-              inExec <= 1'b1;
+              execMode <= 1'b1;
             end
           end
 
           `Exit: begin
+            //$display("Processing exit");
+
             // If we are not in an exec this will stall because the IP
             // will not change at all.
-            if (inExec == 1'b1)
+            if (execMode == 1'b1)
             begin
               // Return control by clearing code segment
               regarray[`CodeSegmentReg] <= 0;
@@ -767,7 +809,7 @@ module ALU(
               ipointer <= regarray[`CodeReturnReg];
 
               // We are out of an exec now
-              inExec <= 1'b0;
+              execMode <= 1'b0;
             end
           end
 
@@ -791,7 +833,10 @@ module ALU(
             addrVirtual <= 1;
           end
 
-          default: $display("Unknown instruction %h", opCode);
+          default: begin
+            // In simulation we want this to be obvious
+            $display("Unknown instruction %h", opCode);
+          end
         endcase
 
         //$display("opDataWord == %h", opDataWord);
@@ -828,8 +873,22 @@ module ALU(
 
         //$display("Finished instruction %h", opCode);
 
-        // Mode change
-        mode <= `InitialMode;
+        if (opCode != 0 && opCode <= `MaxOpCode)
+        begin
+          // Mode change back if opCode was valid
+          mode <= `InitialMode;
+        end
+        else
+        begin
+          // Bad opCode, halt and report
+          mode <= `ErrorHalt;
+          errorHaltData <= opCode;
+        end
+      end
+
+      `ErrorHalt: begin
+        $display("Halt with error code %h and data %h", errorHaltCode, errorHaltData);
+        debug <= errorHaltData;
       end
 
       default: begin

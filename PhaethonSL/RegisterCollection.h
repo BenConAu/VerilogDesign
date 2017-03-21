@@ -13,6 +13,9 @@ public:
     void DeallocateRegister(RegIndex reg);
     void ReserveRegister(RegIndex reg);
 
+    void Push();
+    void Pop();
+
     RegIndex FirstUnused();
 
     size_t GetUsedCount() const { return _usedReg.size(); }
@@ -21,4 +24,6 @@ public:
 private:
     std::deque<RegIndex> _availableReg;
     std::vector<RegIndex> _usedReg;
+    std::vector<RegIndex> _delayedDeallocations;
+    int _delayStack;
 };

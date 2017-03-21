@@ -214,6 +214,7 @@ void OutputInstructions()
 
         ::fprintf(fvfile, "`define %s %d\n", data.opCode.c_str(), (int)i + 1);
     }
+    ::fprintf(fvfile, "`define MaxOpCode %d\n", (int)g_instructionData.size());
     ::fprintf(fvfile, "\n");
 
     // Verilog function to tell opCodes that have constant data

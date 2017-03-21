@@ -7,6 +7,29 @@ RegisterCollection::RegisterCollection(int regCount)
     {
         _availableReg.push_back(i);
     }
+
+    _delayStack = 0;
+}
+
+void RegisterCollection::Push()
+{
+    _delayStack++;
+}
+
+void RegisterCollection::Pop()
+{
+    _delayStack--;
+
+    if (_delayStack == 0)
+    {
+        for (int i = (int)_delayedDeallocations.size() - 1; i >= 0; i--)
+        {
+            //printf("Doing delayed deallocation of %d\n", (int)_delayedDeallocations[i]);
+            DeallocateRegister(_delayedDeallocations[i]);
+        }
+
+        _delayedDeallocations.clear();
+    }
 }
 
 RegIndex RegisterCollection::AllocateRegister()
@@ -48,15 +71,22 @@ void RegisterCollection::DeallocateRegister(RegIndex reg)
     //}
 
     //printf("Deallocated %d\n", (int)reg);
-    _availableReg.push_front(reg);
-
-    for (size_t i = 0; i < _usedReg.size(); i++)
+    if (_delayStack == 0)
     {
-        if (_usedReg[i] == reg)
+        _availableReg.push_front(reg);
+
+        for (size_t i = 0; i < _usedReg.size(); i++)
         {
-            _usedReg.erase(_usedReg.begin() + i);
-            break;
+            if (_usedReg[i] == reg)
+            {
+                _usedReg.erase(_usedReg.begin() + i);
+                break;
+            }
         }
+    }
+    else
+    {
+        _delayedDeallocations.push_back(reg);        
     }
 }
 
