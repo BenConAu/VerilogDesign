@@ -15,9 +15,9 @@ void main()
 {
     // The collection of words for the program doing invalid things,
     // which we put into a page after the first two pages.
-    ptr<word> pData = castptr<word>(0x3c00);
+    ptr<word> pData = castptr<word>(0xf000);
     pData[0] =  0xef000002;
-    pData[1] =  0x00000400;
+    pData[1] =  0x00001000;
     pData[2] =  0xef000101;
     pData[3] =  0xef000202;
     pData[4] =  0x00000000;
@@ -47,7 +47,7 @@ void main()
 
     __emit(doutr, 0x2);    
 
-    // Map 0x0000a?? to 0x3e??; no protection on this page
+    // Map 0x0002??? to 0xf???; no protection on this page
     pageTable.entries[2].virtPage = 0x2;
     pageTable.entries[2].physPage = 0xf;
 
@@ -59,7 +59,7 @@ void main()
     // A message before we run the bad program
     __emit(doutr, 0x5678);
 
-    ptr<word> pVirtData = castptr<word>(0x800);
+    ptr<word> pVirtData = castptr<word>(0x2000);
 
     // Run the program
     __saveregisters

@@ -23,7 +23,7 @@ mov r3, 2
 lea r1, [r2:sizeof(PTEntry)], r3
 mov r2, 15
 mov r1->PTEntry::physPage, r2
-mov r1, 15872
+mov r1, 61440
 mov r2, r1
 mov r3, 0
 mov r4, 2748
@@ -36,7 +36,7 @@ add r3, r0, 0
 mov r2, r3
 mov r68, r2
 vpenable
-mov r3, 2560
+mov r3, 8192
 mov r5, r3
 mov r6, 0
 mov r4, [r5:sizeof(Word)], r6

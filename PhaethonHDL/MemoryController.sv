@@ -58,22 +58,39 @@ module MemoryController(
   reg [31:0] savedFirstWord;
   reg [31:0] savedWriteData;
 
-  // The TLB
-  reg [63:0] tlb[0:15];
-
-  function [21:0] GetTLBVirtPage;
-    input [63:0] tlbEntry;
+  function [19:0] GetPageNumber;
+    input [31:0] rawAddress;
 
     begin
-      GetTLBVirtPage = tlbEntry[53:32];
+      // It is the upper 20 bits
+      GetPageNumber = rawAddress[31:12];
     end
   endfunction
 
-  function [21:0] GetTLBPhysPage;
+  function [31:0] CalcPTEntryAddress;
+    input [31:0] rawAddress;
+
+    begin
+      CalcPTEntryAddress = ptAddress + rawAddress[17:12] * 8;
+    end
+  endfunction
+
+  // The TLB
+  reg [63:0] tlb[0:15];
+
+  function [19:0] GetTLBVirtPage;
     input [63:0] tlbEntry;
 
     begin
-      GetTLBPhysPage = tlbEntry[21:0];
+      GetTLBVirtPage = tlbEntry[51:32];
+    end
+  endfunction
+
+  function [19:0] GetTLBPhysPage;
+    input [63:0] tlbEntry;
+
+    begin
+      GetTLBPhysPage = tlbEntry[19:0];
     end
   endfunction
 
@@ -125,11 +142,13 @@ module MemoryController(
       end
       else
       begin
+        //$display("Building request from physical page %h and in-page address %h", GetTLBPhysPage(reqTLBEntry), reqVirtAddress[11:0]);
+
         // Translate page using TLB for upper bits
-        phRamAddress[31:10] <= GetTLBPhysPage(reqTLBEntry);
+        phRamAddress[31:12] <= GetTLBPhysPage(reqTLBEntry);
 
         // Use lower bits from virtual address in physical address
-        phRamAddress[9:0] <= reqVirtAddress[9:0];
+        phRamAddress[11:0] <= reqVirtAddress[11:0];
 
         // Otherwise same as physical lookup
         phReadReq <= reqReadReq;
@@ -172,7 +191,7 @@ module MemoryController(
             else
             begin
               // Need to translate - use the lower bits of the virtual page
-              if (GetTLBVirtPage(tlb[GetPageHash(mcRamAddress)]) == mcRamAddress[31:10])
+              if (GetTLBVirtPage(tlb[GetPageHash(mcRamAddress)]) == GetPageNumber(mcRamAddress))
               begin
                 //$display("Page to translate %h found in TLB", mcRamAddress);
                 RequestPhysicalPage(
@@ -189,14 +208,14 @@ module MemoryController(
                 // TLB miss - need to lookup in page table. The page table
                 // currently is a single level, and only supports up to 256
                 // pages to keep it easy (8 bit index).
-                phRamAddress <= ptAddress + mcRamAddress[17:10] * 8;
+                phRamAddress <= CalcPTEntryAddress(mcRamAddress);
                 phReadReq <= 1;
 
                 // Save the address we are looking up or storing at
                 savedVirtAddr <= mcRamAddress;
 
                 // Save the address of the first word of the PT entry
-                savedPTReadAddr <= ptAddress + mcRamAddress[17:10] * 8;
+                savedPTReadAddr <= CalcPTEntryAddress(mcRamAddress);
 
                 // Save our request parameters
                 savedReadReq <= mcReadReq;

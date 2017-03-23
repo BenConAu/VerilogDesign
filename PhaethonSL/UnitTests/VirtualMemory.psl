@@ -19,12 +19,12 @@ void main()
     pageTable.entries[0].virtPage = 0x40000000;
     pageTable.entries[0].physPage = 0;
 
-    // Map 0x0000a?? to 0x3c??; no protection on this page
+    // Map 0x2??? to 0xf???; no protection on this page
     pageTable.entries[2].virtPage = 0x2;
     pageTable.entries[2].physPage = 0xf;
 
     // Write the the physical location that we know is mapped
-    ptr<word> pPhysTest = castptr<word>(0x3e00);
+    ptr<word> pPhysTest = castptr<word>(0xf000);
     pPhysTest[0] = 0xabc;
 
     // Verify that reading that from physical works
@@ -36,7 +36,7 @@ void main()
     __emit(vpenable);
 
     // Find the location where we expect it in virtual
-    ptr<word> pVirtTest = castptr<word>(0xa00);
+    ptr<word> pVirtTest = castptr<word>(0x2000);
     word lookup = pVirtTest[0];
 
     // We should see 0xabc

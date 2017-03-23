@@ -1,4 +1,4 @@
-mov r0, 1024
+mov r0, 4096
 mov r1, r0
 mov r2, 0
 mov r3, 1

@@ -1,11 +1,11 @@
-mov r0, 15360
+mov r0, 61440
 mov r1, r0
 mov r2, 0
 mov r3, 4009754626
 mov [r1:sizeof(Word)], r2, r3
 mov r1, r0
 mov r2, 1
-mov r3, 1024
+mov r3, 4096
 mov [r1:sizeof(Word)], r2, r3
 mov r1, r0
 mov r2, 2
@@ -95,7 +95,7 @@ mov r68, r3
 vpenable
 mov r2, 22136
 dout r2
-mov r2, 2048
+mov r2, 8192
 push r0
 push r1
 push r4

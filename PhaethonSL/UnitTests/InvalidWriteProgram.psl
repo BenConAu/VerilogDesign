@@ -1,7 +1,7 @@
 void main()
 {
     // Point to bad memory
-    ptr<word> pBad = castptr<word>(0x400);
+    ptr<word> pBad = castptr<word>(0x1000);
 
     // Dereference it
     pBad[0] = 1;
