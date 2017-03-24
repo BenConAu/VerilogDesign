@@ -35,6 +35,7 @@ dout r4
 add r3, r0, 0
 mov r2, r3
 mov r68, r2
+mov r69, r2
 vpenable
 mov r3, 8192
 mov r5, r3

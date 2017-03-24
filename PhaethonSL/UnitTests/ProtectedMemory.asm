@@ -92,6 +92,7 @@ mov r3->PTEntry::physPage, r2
 add r2, r4, 0
 mov r3, r2
 mov r68, r3
+mov r69, r3
 vpenable
 mov r2, 22136
 dout r2

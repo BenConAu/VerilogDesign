@@ -14,7 +14,8 @@ module MemoryController(
   phRamOut,         // [Output] RAM to write
   phReadReq,        // [Output] RAM read request
   phWriteReq,       // [Output] RAM write request
-  ptAddress,        // [Input] Page table address
+  kptAddress,       // [Input] Page table address
+  uptAddress,       // [Input] Page table address
   debug             // [Output] Debug port
   );
 
@@ -44,7 +45,8 @@ module MemoryController(
   output reg [31:0] phRamOut;
   output reg phReadReq;
   output reg phWriteReq;
-  input wire [31:0] ptAddress;
+  input wire [31:0] kptAddress;
+  input wire [31:0] uptAddress;
   output reg [31:0] debug;
 
   reg [7:0] state = `Ready;
@@ -71,12 +73,52 @@ module MemoryController(
     input [31:0] rawAddress;
 
     begin
-      CalcPTEntryAddress = ptAddress + rawAddress[17:12] * 8;
+      if (mcExecMode == 0)
+      begin
+        CalcPTEntryAddress = kptAddress + rawAddress[17:12] * 8;
+      end
+      else
+      begin
+        CalcPTEntryAddress = uptAddress + rawAddress[17:12] * 8;
+      end
     end
   endfunction
 
   // The TLB
-  reg [63:0] tlb[0:15];
+  reg [63:0] ktlb[0:15];
+  reg [63:0] utlb[0:15];
+
+  function [63:0] GetTLBEntry;
+    input [3:0] pageNumber;
+
+    begin
+      if (mcExecMode == 0)
+      begin
+        GetTLBEntry = ktlb[pageNumber];
+      end
+      else
+      begin
+        GetTLBEntry = utlb[pageNumber];
+      end
+    end
+  endfunction
+    
+  task SetTLBEntry;
+    input [3:0] pageNumber;
+    input [63:0] newEntry;
+
+    begin
+      if (mcExecMode == 0)
+      begin
+        ktlb[pageNumber] <= newEntry;
+      end
+      else
+      begin
+        utlb[pageNumber] <= newEntry;
+      end
+    end
+  endtask
+
 
   function [19:0] GetTLBVirtPage;
     input [63:0] tlbEntry;
@@ -191,11 +233,16 @@ module MemoryController(
             else
             begin
               // Need to translate - use the lower bits of the virtual page
-              if (GetTLBVirtPage(tlb[GetPageHash(mcRamAddress)]) == GetPageNumber(mcRamAddress))
+              if (GetTLBVirtPage(GetTLBEntry(GetPageHash(mcRamAddress))) == GetPageNumber(mcRamAddress))
               begin
-                //$display("Page to translate %h found in TLB", mcRamAddress);
+                //$display(
+                  //"Page to translate %h found in TLB entry %h, index %h", 
+                  //mcRamAddress, 
+                  //GetTLBEntry(GetPageHash(mcRamAddress)), 
+                  //GetPageHash(mcRamAddress));
+
                 RequestPhysicalPage(
-                  tlb[GetPageHash(mcRamAddress)], 
+                  GetTLBEntry(GetPageHash(mcRamAddress)), 
                   mcRamAddress, 
                   mcReadReq, 
                   mcWriteReq, 
@@ -203,7 +250,7 @@ module MemoryController(
               end
               else
               begin
-                //$display("Page for address %h not found in TLB, page = %h, pt + page = %h", mcRamAddress, mcRamAddress[17:10], ptAddress + mcRamAddress[17:10] * 8);
+                //$display("Page for address %h not found in TLB, page = %h, pt + page = %h", mcRamAddress, mcRamAddress[17:10], CalcPTEntryAddress(mcRamAddress));
 
                 // TLB miss - need to lookup in page table. The page table
                 // currently is a single level, and only supports up to 256
@@ -293,7 +340,7 @@ module MemoryController(
           //$display("Inserting TLB entry %h", {1'b1, savedFirstWord[30:0], phRamIn});
 
           // Now we have second half of entry, store it in the TLB
-          tlb[GetPageHash(savedVirtAddr)] <= {1'b1, savedFirstWord[30:0], phRamIn};
+          SetTLBEntry(GetPageHash(savedVirtAddr), {1'b1, savedFirstWord[30:0], phRamIn});
 
           RequestPhysicalPage(
             {1'b1, savedFirstWord[30:0], phRamIn}, 

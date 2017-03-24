@@ -32,7 +32,8 @@ void main()
 
     // Set the page table and turn on virtual memory
     ptr<PTEntry> p = pageTable.entries;
-    __emit(movrr, __rpt, p);
+    __emit(movrr, __rkpt, p);
+    __emit(movrr, __rupt, p);
     __emit(vpenable);
 
     // Find the location where we expect it in virtual

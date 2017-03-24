@@ -9,7 +9,8 @@ module ALU(
   writeReq,       // [Output] RAM write request
   addrVirtual,    // [Output] Virtual flag for RAM
   execMode,       // [Output] Whether we are in user or kernel
-  ptAddress,      // [Output] Page Table Address
+  kptAddress,     // [Output] Page Table Address
+  uptAddress,     // [Output] Page Table Address
   uartReadReq,    // [Output] uart read requested
   uartReadAck,    // [Input]  Flag to indicate read success
   uartReadData,   // [Input]  Actual data read 
@@ -57,7 +58,8 @@ module ALU(
   output reg [0:0]   writeReq;
   output reg [0:0]   addrVirtual;
   output reg [0:0]   execMode;
-  output reg [31:0]  ptAddress;
+  output reg [31:0]  kptAddress;
+  output reg [31:0]  uptAddress;
   output reg [0:0]   uartReadReq;
   input  wire [0:0]  uartReadAck;
   input  wire [7:0]  uartReadData;
@@ -86,8 +88,9 @@ module ALU(
   `define FlagsReg            1
   `define CodeSegmentReg      2
   `define CodeReturnReg       3
-  `define PageTableReg        4
-  `define FixedRegCount       5
+  `define KPageTableReg       4
+  `define UPageTableReg       5
+  `define FixedRegCount       6
 
   `define ErrorCodeBadInstr1  1
   `define ErrorCodeBadInstr2  2
@@ -907,7 +910,8 @@ module ALU(
       r5 <= regarray[rPos + 5];
 
       // Keep the output register in sync with what we have been setting
-      ptAddress <= regarray[`PageTableReg];
+      kptAddress <= regarray[`KPageTableReg];
+      uptAddress <= regarray[`UPageTableReg];
 
     //debug3[8:0] <= mode;
     //debug2[7:0] <= mode;
