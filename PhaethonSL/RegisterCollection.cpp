@@ -34,6 +34,8 @@ void RegisterCollection::Pop()
 
 RegIndex RegisterCollection::AllocateRegister()
 {
+    //printf("Allocating register for collection %p\n", this);
+
     //for (int i = 0; i < 3; i++)
     //{
         //printf("%d, ", _availableReg[i]);
@@ -70,9 +72,10 @@ void RegisterCollection::DeallocateRegister(RegIndex reg)
         //printf("%d, ", _availableReg[i]);
     //}
 
-    //printf("Deallocated %d\n", (int)reg);
     if (_delayStack == 0)
     {
+        //printf("Deallocated %d\n", (int)reg);
+
         _availableReg.push_front(reg);
 
         for (size_t i = 0; i < _usedReg.size(); i++)

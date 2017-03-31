@@ -43,7 +43,7 @@ void PackByteNode::PostProcessNodeImpl()
     if (pDestIdentifier != nullptr)
     {
         VariableInfo *pVarInfo = pDestIdentifier->GetVariableInfo();
-        RegIndex destIndex = pVarInfo->EnsureRegister(pFunc);
+        RegIndex destIndex = pVarInfo->EnsureRegister(pFunc, nullptr);
 
         GetContext()->OutputInstruction(
             OpCode::PackRRR,

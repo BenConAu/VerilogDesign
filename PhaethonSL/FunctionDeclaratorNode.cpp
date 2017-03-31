@@ -3,6 +3,7 @@
 #include "TypeNode.h"
 #include "StatementListNode.h"
 #include "ReturnNode.h"
+#include "VariableInfo.h"
 
 void FunctionDeclaratorNode::PreVerifyNodeImpl()
 {
@@ -69,6 +70,27 @@ void FunctionDeclaratorNode::PreProcessNodeImpl()
     if (!IsEntryPoint())
     {
         GetContext()->OutputLabel(GetContext()->_symbols[_symIndex].c_str());
+    }
+
+    // Find variables that need preloading of registers
+    std::vector<VariableInfo *> varList;
+    GetContext()->_symbolTable.GetFunctionVariables(this, varList);
+
+    for (size_t i = 0; i < varList.size(); i++)
+    {
+        if (varList[i]->GetFunctionInfo(this)._referenced)
+        {
+            // Allocate and preload the register
+            RegIndex baseRegister = varList[i]->EnsureRegister(this, nullptr);
+
+            // A result that represents the address of the struct
+            ExpressionResult varConstant(Operand(varList[i], GetContext()));
+
+            // It is a pointer or some other non-array thing that we can get
+            GetContext()->OutputMovInstruction(
+                Operand(baseRegister),
+                varConstant);
+        }
     }
 }
 

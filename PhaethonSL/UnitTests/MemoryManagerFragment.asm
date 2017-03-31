@@ -1,12 +1,12 @@
-mov r0, @MemoryInit
-rcall r0, 1
-mov r1, &header
-mov r2, r1->AllocationHeader::first
+mov r0, &header
+mov r1, @MemoryInit
+rcall r1, 2
+mov r2, r0->AllocationHeader::first
 dout r2
-mov r2, r1->AllocationHeader::first
+mov r2, r0->AllocationHeader::first
 mov r3, r2->Allocation::next
 dout r3
-mov r2, r1->AllocationHeader::first
+mov r2, r0->AllocationHeader::first
 mov r3, r2->Allocation::length
 dout r3
 exit

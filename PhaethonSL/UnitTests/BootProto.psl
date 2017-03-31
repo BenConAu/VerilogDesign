@@ -1,19 +1,33 @@
+struct PTEntry
+{
+    word virtPage;
+    word physPage;
+};
+
+struct PageTable
+{
+    PTEntry entries[1];
+};
+
+struct Stack
+{
+    word entries[32];
+};
+
+PageTable kernelPageTable;
+PageTable userPageTable;
+Stack stack;
+
 void main()
 {
-    // For now this is a dummy for doing a loop
-    word i = 0;
+    kernelPageTable.entries[0].virtPage = 0;
+    kernelPageTable.entries[0].physPage = 0;
 
-    // Position in byte we receive
-    word bytePos = 0;
-
-    // Position in word array
-    word wordPos = 0;
-
-    // The word we are currently packing
-    word currentWord = 0;
+    userPageTable.entries[0].virtPage = 0;
+    userPageTable.entries[0].physPage = 1;
 
     // The collection of words
-    ptr<word> pData = castptr<word>(__datasegmentend);
+    ptr<word> pData = castptr<word>(0x1000);
     pData[0] = 0xef040002;
     pData[1] = 0x0000002c;
     pData[2] = 0xefbc0102;
@@ -25,6 +39,16 @@ void main()
     pData[8] = 0xefef012f;
     pData[9] = 0xefefef35;
     
+    // Set the page tables
+    ptr<PTEntry> pK = kernelPageTable.entries;
+    ptr<PTEntry> pU = userPageTable.entries;
+
+    __emit(movrr, __rkpt, pK);
+    __emit(movrr, __rupt, pU);
+
+    // Turn on virtual memory
+    __emit(vpenable);
+
     __emit(doutr, 1);
 
     __saveregisters

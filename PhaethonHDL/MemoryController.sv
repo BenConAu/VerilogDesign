@@ -73,6 +73,8 @@ module MemoryController(
     input [31:0] rawAddress;
 
     begin
+      //$display("Calculating table entry address with tables at %h, %h", kptAddress, uptAddress);
+      
       if (mcExecMode == 0)
       begin
         CalcPTEntryAddress = kptAddress + rawAddress[17:12] * 8;

@@ -69,3 +69,23 @@ SymbolInfo *SymbolTable::GetInfo(
 
     return nullptr;
 }
+
+void SymbolTable::GetFunctionVariables(
+    FunctionDeclaratorNode *pScope, 
+    std::vector<VariableInfo*> &varList)
+{
+    for (auto iter = _symbols.begin(); iter != _symbols.end(); iter++)
+    {
+        VariableInfo *pVarInfo = dynamic_cast<VariableInfo*>(iter->second.get());
+
+        if (pVarInfo != nullptr)
+        {
+            if ((pVarInfo->GetScope() == pScope || pVarInfo->GetScope() == nullptr) && 
+                pVarInfo->GetTypeInfo()->GetTypeClass() == TypeClass::Struct)
+            {
+                //printf("Adding variable %s with type %d\n", pVarInfo->GetSymbol(), pVarInfo->GetTypeInfo()->GetTypeClass());
+                varList.push_back(pVarInfo);
+            }
+        }
+    }
+}

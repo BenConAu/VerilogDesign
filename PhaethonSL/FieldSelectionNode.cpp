@@ -5,6 +5,7 @@
 #include "FunctionDeclaratorNode.h"
 #include "PSLCompilerContext.h"
 #include "RegisterWrapper.h"
+#include "IdentifierNode.h"
 
 FieldSelectionNode::FieldSelectionNode(
     PSLCompilerContext *pContext,
@@ -58,6 +59,15 @@ void FieldSelectionNode::VerifyNodeImpl()
         }
     }
 
+    // If the left part is a variable identifier, then mark it as needing
+    // to be filled when the function starts off.
+    IdentifierNode *pIdent = dynamic_cast<IdentifierNode *>(pLeft);
+    if (pIdent != nullptr)
+    {
+        VariableInfo *pVarInfo = pIdent->GetVariableInfo();
+        pVarInfo->ReferenceFrom(GetTypedParent<FunctionDeclaratorNode>());
+    }
+
     StructMember *pMember = _pStructTypeInfo->GetMember(_fieldSymIndex);
     if (pMember == nullptr)
     {
@@ -104,21 +114,8 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
     // here.
     if (childResult->GetResultType() == ExpressionResultType::Constant)
     {
-        //printf("Need to upgrade operand from constant\n");
-
-        // Since the operand has a memory location in it, we figure that we must
-        // have VariableInfo for when it was loaded. This will now transform into
-        // an offset operation, which requires that the variable info be there so
-        // that we can get the register that we associate with the path.
-        VariableInfo *pInfo = childResult->GetOperand(0).GetVariableInfo();
-        if (pInfo == nullptr)
-        {
-            GetContext()->ReportError(_location, "Need variable info to field select");
-        }
-
-        // If we have a constant, then we need to make it into a register
-        baseRegister = pInfo->EnsureRegister(pScope);
-        fSetBaseRegister = true;
+        // Did not expect that to happen, structs should never be constants
+        throw "Unexpected constant expression as child of FieldExpressionNode";
     }
     else if (
         childResult->GetResultType() == ExpressionResultType::DerefRegisterOffset ||

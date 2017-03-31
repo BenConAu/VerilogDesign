@@ -86,7 +86,7 @@ module ALU(
   
   `define StackPointerReg     0
   `define FlagsReg            1
-  `define CodeSegmentReg      2
+  `define UnusedReg1          2
   `define CodeReturnReg       3
   `define KPageTableReg       4
   `define UPageTableReg       5
@@ -217,7 +217,9 @@ module ALU(
           // Some stuff is hard to do with initializers, so we do it here
           regarray[`StackPointerReg] <= 0;
           regarray[`FlagsReg] <= 0;
-          regarray[`CodeSegmentReg] <= 0; // Code segment
+          regarray[`CodeReturnReg] <= 0;
+          regarray[`KPageTableReg] <= 0;
+          regarray[`UPageTableReg] <= 0;
 
           // Mark initialization as complete
           initComplete <= 1'b1;
@@ -228,7 +230,7 @@ module ALU(
         begin
           // Begin RAM read for instruction data
           readReq <= 1;
-          ramAddress <= ipointer + regarray[`CodeSegmentReg];
+          ramAddress <= ipointer;
           opDataWord <= 'h0badf00d;
 
           // Clear out stuff for the pipeline
@@ -260,6 +262,8 @@ module ALU(
         end
         else if (mcStatus == `MCError)
         begin
+          $display("Memory controller error when reading instruction, halting");
+
           // Set error condition
           mode <= `ErrorHalt;
           errorHaltCode <= `ErrorCodeBadInstr1;
@@ -316,7 +320,7 @@ module ALU(
         begin
           // Read values from ram requested by instruction
           readReq <= 1;
-          ramAddress <= ipointer + regarray[`CodeSegmentReg] + 4;
+          ramAddress <= ipointer + 4;
 
           // We need to move into further modes
           mode <= `DataWordComplete;
@@ -384,7 +388,7 @@ module ALU(
             `MovRdC: begin
               // Read values from address encoded in code
               readReq <= 1;
-              ramAddress <= opDataWord + regarray[`CodeSegmentReg];
+              ramAddress <= opDataWord;
 
               //$display("Requesting RdC read from %h", opDataWord);
             end
@@ -393,7 +397,7 @@ module ALU(
               // First register is destination, second register is base address, 
               // constant stores offset in bytes.
               readReq <= 1;
-              ramAddress <= opDataWord + regValue2[0] + regarray[`CodeSegmentReg];
+              ramAddress <= opDataWord + regValue2[0];
 
               //$display("Requesting read from %h", opDataWord + regValue2);
             end
@@ -402,7 +406,7 @@ module ALU(
               // First register is destination, second register is base address, 
               // constant stores size of item, and third register stores index of item.
               readReq <= 1;
-              ramAddress <= regValue2[0] + opDataWord * regValue3[0] + regarray[`CodeSegmentReg];
+              ramAddress <= regValue2[0] + opDataWord * regValue3[0];
 
               //$display("Requesting read from %h", regValue2[0] + opDataWord * regValue3[0]);
             end
@@ -410,7 +414,7 @@ module ALU(
             `MovRdR: begin
               // Read values from address encoded in code
               readReq <= 1;
-              ramAddress <= regValue2[0] + regarray[`CodeSegmentReg];
+              ramAddress <= regValue2[0];
 
               //$display("Requesting read from %h", opDataWord + regValue2);
             end
@@ -434,7 +438,7 @@ module ALU(
             `MovdCR: begin
               // Write values to ram requested by instruction
               writeReq <= 1;
-              ramAddress <= opDataWord + regarray[`CodeSegmentReg];
+              ramAddress <= opDataWord;
               ramOut <= regValue2[0];
             
               //$display("Reqesting write %h to address value %h", regValue2[0], opDataWord);
@@ -443,7 +447,7 @@ module ALU(
             `MovdRoR: begin
               // Write values to ram requested by instruction
               writeReq <= 1;
-              ramAddress <= opDataWord + regValue[0] + regarray[`CodeSegmentReg];
+              ramAddress <= opDataWord + regValue[0];
               ramOut <= regValue2[0];
             
               //$display("Reqesting write %h to address value %h", regValue2[0], opDataWord + regValue[0]);
@@ -453,7 +457,7 @@ module ALU(
               // first register is base address, constant stores size of items, 
               // second register stores index of item, third register is destination, 
               writeReq <= 1;
-              ramAddress <= regValue[0] + opDataWord * regValue2[0] + regarray[`CodeSegmentReg];
+              ramAddress <= regValue[0] + opDataWord * regValue2[0];
               ramOut <= regValue3[0];
             
               //$display("Reqesting write %h to address value %h", regValue2[0], regValue[0] + opDataWord * regValue2[0]);
@@ -650,7 +654,7 @@ module ALU(
 
           `LeaRRoR: begin
             //$display("Doing lea with opDataWord %h", opDataWord);
-            regarray[regAddress[7:0]] <= regValue2[0] + opDataWord * regValue3[0] + regarray[`CodeSegmentReg];
+            regarray[regAddress[7:0]] <= regValue2[0] + opDataWord * regValue3[0];
           end
 
           `ReadPortRR: regarray[regAddress[7:0]] <= ramValue;             // ReadPort reg, reg
@@ -784,9 +788,6 @@ module ALU(
           `ExecR: begin
             if (execMode == 1'b0)
             begin
-              // This basically sets the code segment register
-              regarray[`CodeSegmentReg] <= regValue[0];
-
               // Also set where to go when it returns (the next instruction)
               regarray[`CodeReturnReg] <= ipointer + 4;
 
@@ -805,9 +806,6 @@ module ALU(
             // will not change at all.
             if (execMode == 1'b1)
             begin
-              // Return control by clearing code segment
-              regarray[`CodeSegmentReg] <= 0;
-
               // Set IP back to where we need it to be
               ipointer <= regarray[`CodeReturnReg];
 
@@ -907,7 +905,7 @@ module ALU(
       r2 <= regarray[rPos + 2];
       r3 <= regarray[rPos + 3];
       r4 <= regarray[rPos + 4];
-      r5 <= regarray[rPos + 5];
+      r5 <= regarray[`StackPointerReg];
 
       // Keep the output register in sync with what we have been setting
       kptAddress <= regarray[`KPageTableReg];

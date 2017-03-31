@@ -2,6 +2,7 @@
 
 #include <map>
 #include <memory>
+#include <vector>
 #include "SymbolInfo.h"
 
 class PSLCompilerContext;
@@ -30,6 +31,11 @@ class SymbolTable
     SymbolInfo *GetInfo(
         int symIndex,
         FunctionDeclaratorNode *pScope);
+
+    void GetFunctionVariables(
+        FunctionDeclaratorNode *pScope, 
+        std::vector<VariableInfo*> &varList
+        );
 
   private:
     PSLCompilerContext *_pContext;

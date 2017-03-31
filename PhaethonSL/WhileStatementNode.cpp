@@ -40,6 +40,7 @@ void WhileStatementNode::ProcessNode()
     // register usage is not tracked properly.
     FunctionDeclaratorNode *pScope = GetTypedParent<FunctionDeclaratorNode>();
 
+    //printf("Starting to process while statement\n");
     pScope->GetRegCollection()->Push();
 
     ExpressionNode *pExpr = dynamic_cast<ExpressionNode *>(GetChild(0));
@@ -87,5 +88,7 @@ void WhileStatementNode::ProcessNode()
     // Now put the label we jump to for test false
     GetContext()->OutputLabel(endLabel);
 
-    pScope->GetRegCollection()->Pop();    
+    pScope->GetRegCollection()->Pop();
+
+    //printf("Finishing of process while statement\n");
 }

@@ -9,6 +9,6 @@ dout r1
 dout r2
 exit
 TestFunction:
-mov r1, &fooVar
-mov r0, r1->foo::a
+mov r0, &fooVar
+mov r1, r0->foo::a
 rret

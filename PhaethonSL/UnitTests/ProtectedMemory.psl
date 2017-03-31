@@ -6,13 +6,23 @@ struct PTEntry
 
 struct PageTable
 {
-    PTEntry entries[256];
+    PTEntry entries[64];
 };
 
-PageTable pageTable;
+struct Stack
+{
+    word entries[32];
+};
+
+PageTable kernelPageTable;
+PageTable userPageTable;
+Stack stack;
 
 void main()
 {
+    ptr<word> stackPtr = stack.entries;
+    __emit(movrr, __rsp, stackPtr);
+
     // The collection of words for the program doing invalid things,
     // which we put into a page after the first two pages.
     ptr<word> pData = castptr<word>(0xf000);
@@ -39,28 +49,44 @@ void main()
     word i = 0;
     while (i .< 4)
     {
-        pageTable.entries[i].virtPage = 0x40000000 + i;
-        pageTable.entries[i].physPage = i;
+        kernelPageTable.entries[i].virtPage = 0x40000000 + i;
+        kernelPageTable.entries[i].physPage = i;
 
         i = i + 1;
     }
 
+    // Clear out the user mode page table with protected pages pointing
+    // back to the first page. This way anything out of range will
+    // hit the protected page code.
+    i = 0;
+    while (i .< 4)
+    {
+        userPageTable.entries[i].virtPage = 0x40000000 + i;
+        userPageTable.entries[i].physPage = 0;
+
+        i = i + 1;
+    }
+
+    // And just have a single entry pointing to page F
+    userPageTable.entries[0].virtPage = 0;
+    userPageTable.entries[0].physPage = 0xf;
+
     __emit(doutr, 0x2);    
 
-    // Map 0x0002??? to 0xf???; no protection on this page
-    pageTable.entries[2].virtPage = 0x2;
-    pageTable.entries[2].physPage = 0xf;
+    // Set the page tables
+    ptr<PTEntry> pK = kernelPageTable.entries;
+    ptr<PTEntry> pU = userPageTable.entries;
 
-    // Set the page table and turn on virtual memory
-    ptr<PTEntry> p = pageTable.entries;
-    __emit(movrr, __rkpt, p);
-    __emit(movrr, __rupt, p);
+    __emit(movrr, __rkpt, pK);
+    __emit(movrr, __rupt, pU);
+
+    // Turn on virtual memory
     __emit(vpenable);
 
     // A message before we run the bad program
     __emit(doutr, 0x5678);
 
-    ptr<word> pVirtData = castptr<word>(0x2000);
+    ptr<word> pVirtData = castptr<word>(0x4000);
 
     // Run the program
     __saveregisters

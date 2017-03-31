@@ -7,7 +7,7 @@ module test;
   initial begin
     # 0 reset = 1;
     # 1 reset = 0;
-    # 20000 $finish;
+    # 30000 $finish;
   end
 
   /* Make a regular pulsing clock. */
@@ -38,7 +38,7 @@ module test;
 
     if (phWriteReq == 1)
     begin
-      //$display("Writing %h into %h", ramOut, ramAddress);
+      //$display("Writing %h into %h", phRamWrite, phRamAddress);
       fileRam[phRamAddress] <= phRamWrite[7:0];
       fileRam[phRamAddress + 1] <= phRamWrite[15:8];
       fileRam[phRamAddress + 2] <= phRamWrite[23:16];

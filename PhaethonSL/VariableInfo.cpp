@@ -22,6 +22,8 @@ VariableInfo::VariableInfo(
 
     if (GetScope() == nullptr)
     {
+        //printf("New memory location for %s at %x\n", GetSymbol(), _dataSegEnd);
+
         // Globals are always backed with memory storage
         _locationType = LocationType::Memory;
 
@@ -45,18 +47,22 @@ ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
     case TypeClass::Basic:
     case TypeClass::Pointer:
     case TypeClass::Struct:
-        if (_pType->GetTypeClass() == TypeClass::Struct && !HasRegister(pScope))
+        if (_pType->GetTypeClass() == TypeClass::Struct && !GetFunctionInfo(pScope)._referenced)
         {
-            // Structs we don't ensure a register for until we absolutely need to, which
-            // is currently only during field selection of the struct. So load the address
-            // into a constant operand for now.
+            //printf("Returning address of struct for result\n");
+
+            // If the struct was not referenced then just return the address and use it
             return new ExpressionResult(Operand(this, pScope->GetContext()));
         }
         else
         {
-            // Structs that already have registers and non-struct things can all go
-            // down the path of being in a register and loading the operand with that.
-            RegIndex regIndex = EnsureRegister(pScope);
+            // The register should have been allocated already if it is a struct
+            // at the start of the function, so in that case this should never
+            // do an allocation. Anything else can get allocated here.
+            RegIndex regIndex = EnsureRegister(pScope, nullptr);
+
+            //printf("Returning register %d for result\n", (int)regIndex);
+
             return new ExpressionResult(Operand(regIndex));
         }
 
@@ -68,35 +74,52 @@ ExpressionResult *VariableInfo::CalculateResult(FunctionDeclaratorNode *pScope)
     }
 }
 
-RegIndex VariableInfo::EnsureRegister(FunctionDeclaratorNode *pScope)
+void VariableInfo::ReferenceFrom(FunctionDeclaratorNode *pScope)
+{
+    // This should create things if not already created and no-op otherwise
+    _regIndexMap[pScope]._referenced = true;
+}
+
+RegIndex VariableInfo::EnsureRegister(
+    FunctionDeclaratorNode *pScope,
+    RegIndex *pIndex)
 {
     //printf("Ensuring register for VariableInfo %s\n", GetSymbol());
 
-    if (_regIndexMap.find(pScope) == _regIndexMap.end())
+    if (_pType->GetTypeClass() == TypeClass::Struct && !_regIndexMap[pScope]._referenced)
     {
-        //printf("Allocating register for VariableInfo %s\n", GetSymbol());
+        throw "Why are you ensuring a register for a struct that was not referenced?";
+    }
 
+    if (!_regIndexMap[pScope]._allocated)
+    {
         // Upon the first request for a register at a particular scope,
-        // allocate the register.
-        _regIndexMap[pScope] = pScope->GetRegCollection()->AllocateRegister();
+        // allocate the register. If something was provided then use that,
+        // otherwise allocate something.
+        if (pIndex == nullptr)
+        {
+            _regIndexMap[pScope]._regIndex = pScope->GetRegCollection()->AllocateRegister();
+        }
+        else
+        {
+            pScope->GetRegCollection()->ReserveRegister(*pIndex);
+            _regIndexMap[pScope]._regIndex = *pIndex;
+        }
+
+        // Mark this as allocated
+        _regIndexMap[pScope]._allocated = true;
+
+        //printf(
+            //"Allocating register %d for VariableInfo %s at location %x\n",
+            //(int)_regIndexMap[pScope]._regIndex,
+            //GetSymbol(),
+            //_memLocation);
     }
 
+    return _regIndexMap[pScope]._regIndex;
+}
+
+const PerFunctionInfo &VariableInfo::GetFunctionInfo(FunctionDeclaratorNode *pScope)
+{
     return _regIndexMap[pScope];
-}
-
-bool VariableInfo::HasRegister(FunctionDeclaratorNode *pScope)
-{
-    if (_regIndexMap.find(pScope) == _regIndexMap.end())
-    {
-        return false;
-    }
-
-    return true;
-}
-
-void VariableInfo::ReserveRegister(FunctionDeclaratorNode *pScope, RegIndex index)
-{
-    // We are being told which register to use
-    pScope->GetRegCollection()->ReserveRegister(index);
-    _regIndexMap[pScope] = index;
 }

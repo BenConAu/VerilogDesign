@@ -9,6 +9,20 @@ class ASTNode;
 class TypeInfo;
 class ExpressionResult;
 
+struct PerFunctionInfo
+{
+    PerFunctionInfo()
+    {
+        _regIndex = 0xFF;
+        _referenced = false;
+        _allocated = false;
+    }
+
+    RegIndex _regIndex;
+    bool _referenced;
+    bool _allocated;
+};
+
 // Every variable that is declared has to have data tracked for it. This includes
 // where it resides in memory (if anywhere), whether it is assigned to a register
 // at all, and what type it is.
@@ -26,9 +40,13 @@ class VariableInfo : public SymbolInfo
     unsigned int GetMemLocation() const { return _memLocation; }
     ExpressionResult *CalculateResult(FunctionDeclaratorNode *pScope);
 
-    void ReserveRegister(FunctionDeclaratorNode *pScope, RegIndex index);
-    RegIndex EnsureRegister(FunctionDeclaratorNode *pScope);
-    bool HasRegister(FunctionDeclaratorNode *pScope);
+    void ReferenceFrom(FunctionDeclaratorNode *pScope);
+    
+    RegIndex EnsureRegister(
+        FunctionDeclaratorNode *pScope,
+        RegIndex *pIndex);
+
+    const PerFunctionInfo& GetFunctionInfo(FunctionDeclaratorNode *pScope);
 
     TypeInfo *GetTypeInfo() { return _pType; }
 
@@ -45,7 +63,7 @@ class VariableInfo : public SymbolInfo
     TypeInfo *_pType;
 
     // Register allocated by scope (globals have multiple register locations mapped)
-    std::map<FunctionDeclaratorNode *, RegIndex> _regIndexMap;
+    std::map<FunctionDeclaratorNode *, PerFunctionInfo> _regIndexMap;
 
     // Track data segment allocations
     static unsigned int _dataSegEnd;

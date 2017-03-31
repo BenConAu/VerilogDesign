@@ -11,6 +11,8 @@ RegisterWrapper::RegisterWrapper(
 
     if (pResult->GetResultType() != ExpressionResultType::Register)
     {
+        //printf("Allocating a register in a wrapper\n");
+
         _converted = Operand(_pCollection->AllocateRegister());
         _fAllocated = true;
 
