@@ -31,6 +31,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %locations
 
 %token MODULE_TOKEN
+%token OUT_TOKEN
 
 %token <intVal> INTCONSTANT
 %token <floatVal> FLOATCONSTANT
@@ -305,7 +306,8 @@ module_header:
     ;
 
 parameter_declaration:
-      fully_specified_type IDENTIFIER                               { $$ = new ModuleParameterNode(pContext, $1, $2); }
+      fully_specified_type IDENTIFIER                               { $$ = new ModuleParameterNode(pContext, $1, $2, false); }
+    | OUT_TOKEN fully_specified_type IDENTIFIER                     { $$ = new ModuleParameterNode(pContext, $2, $3, true); }
 	;
 
 fully_specified_type:

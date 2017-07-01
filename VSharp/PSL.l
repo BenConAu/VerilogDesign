@@ -42,6 +42,7 @@
 "&"                  { return AMPERSAND; }
 "=="                 { return EQUAL_OP; }
 "!="                 { return NOTEQUAL_OP; }
+"out"                { return OUT_TOKEN; }
 "ptr"                { return PTR_TOKEN; }
 "byte"               { return BYTE_TOKEN; }
 "word"               { return WORD_TOKEN; }
