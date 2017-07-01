@@ -2,7 +2,7 @@
 #include "VariableDeclarationNode.h"
 #include "VariableInfo.h"
 #include "FunctionInfo.h"
-#include "PSL.tab.h"
+#include "VSharp.tab.h"
 #include <sstream>
 
 SymbolTable::SymbolTable(PSLCompilerContext *pContext)

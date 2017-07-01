@@ -1,7 +1,7 @@
 #define YYDEBUG 1
 #include "PSLCompilerContext.h"
 #include "ASTTree.h"
-#include "PSL.tab.h"
+#include "VSharp.tab.h"
 #define YY_EXTRA_TYPE PSLCompilerContext *
 #include "lex.h"
 #include <cstdio>

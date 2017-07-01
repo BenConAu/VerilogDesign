@@ -5,7 +5,7 @@
 #include "TypeCollection.h"
 #include "Operand.h"
 #include "ASTNode.h"
-#include "PSL.tab.h"
+#include "VSharp.tab.h"
 #include "ExpressionResult.h"
 #include "VerilogWriter.h"
 

@@ -1,6 +1,6 @@
 #include "OperatorNode.h"
 #include "FunctionDeclaratorNode.h"
-#include "PSL.tab.h"
+#include "VSharp.tab.h"
 
 OperatorInfo OperatorNode::_opTable[] = {
     {Operator::Multiply,    OpCode::Unknown,   OpCode::FmulRRR, ResultTypeMethod::Both},

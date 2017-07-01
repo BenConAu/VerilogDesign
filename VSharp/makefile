@@ -1,5 +1,5 @@
 PSLcc: lex.yy.c \
-	   PSL.tab.c \
+	   VSharp.tab.c \
 	   AddressOfNode.cpp \
 	   AddressOfNode.h \
 	   ArrayTypeInfo.cpp \
@@ -95,7 +95,7 @@ PSLcc: lex.yy.c \
 	   WritePortNode.cpp \
 	   WritePortNode.h
 	clang++ -std=c++11 -Wno-deprecated-register -g lex.yy.c \
-	   PSL.tab.c \
+	   VSharp.tab.c \
 	   ArrayTypeInfo.cpp \
 	   ASTNode.cpp \
 	   AddressOfNode.cpp \
@@ -145,5 +145,5 @@ PSLcc: lex.yy.c \
 lex.yy.c: PSL.l
 	flex --header-file=lex.h PSL.l
 
-PSL.tab.c: PSL.y
-	bison -d PSL.y
+VSharp.tab.c: VSharp.y
+	bison -d VSharp.y

@@ -1,6 +1,6 @@
 #include "TypeCollection.h"
 #include "ASTNode.h"
-#include "PSL.tab.h"
+#include "VSharp.tab.h"
 #include "BasicTypeInfo.h"
 #include "StructTypeInfo.h"
 

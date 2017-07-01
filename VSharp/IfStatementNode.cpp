@@ -4,7 +4,7 @@
 #include "ExpressionNode.h"
 #include "StatementListNode.h"
 #include "../PhaethonObjWriter/ObjWriter.h"
-#include "PSL.tab.h"
+#include "VSharp.tab.h"
 
 int IfStatementNode::s_instanceCount = 0;
 

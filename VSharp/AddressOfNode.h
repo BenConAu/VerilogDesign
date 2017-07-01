@@ -2,7 +2,7 @@
 
 #include "PSLCompilerContext.h"
 #include "ExpressionNode.h"
-#include "PSL.tab.h"
+#include "VSharp.tab.h"
 
 class AddressOfNode : public ExpressionNode
 {

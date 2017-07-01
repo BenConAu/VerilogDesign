@@ -1,6 +1,6 @@
 #include "UnaryOperatorNode.h"
 #include "FunctionDeclaratorNode.h"
-#include "PSL.tab.h"
+#include "VSharp.tab.h"
 
 OperatorInfo UnaryOperatorNode::_opTable[] = {
     { Operator::Negate,  OpCode::NegRR,    OpCode::Unknown, ResultTypeMethod::Both },

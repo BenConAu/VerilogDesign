@@ -2,7 +2,7 @@
 #include "BasicTypeInfo.h"
 #include "PointerTypeInfo.h"
 #include "ASTNode.h"
-#include "PSL.tab.h"
+#include "VSharp.tab.h"
 
 bool TypeInfo::IsFloat(TypeInfo* pInfo)
 {

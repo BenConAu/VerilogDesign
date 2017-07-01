@@ -2,7 +2,7 @@
 
 #include "ASTNode.h"
 #include "PSLCompilerContext.h"
-#include "PSL.tab.h"
+#include "VSharp.tab.h"
 
 class VariableDeclarationNode : public ASTNode
 {

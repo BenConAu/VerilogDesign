@@ -1,6 +1,6 @@
 #include "KnownConstantNode.h"
 #include "PSLCompilerContext.h"
-#include "PSL.tab.h"
+#include "VSharp.tab.h"
 #include "BasicTypeInfo.h"
 
 KnownConstantNode::KnownConstantNode(PSLCompilerContext* pContext, KnownConstants known) : ExpressionNode(pContext)

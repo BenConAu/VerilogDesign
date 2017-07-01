@@ -62,13 +62,13 @@
 
 
 /* Copy the first part of user declarations.  */
-#line 1 "PSL.y" /* yacc.c:339  */
+#line 1 "VSharp.y" /* yacc.c:339  */
 
 #define YYDEBUG 1
 
 #include "PSLCompilerContext.h"
 #include "ASTTree.h"
-#include "PSL.tab.h"
+#include "VSharp.tab.h"
 
 #define YY_EXTRA_TYPE PSLCompilerContext*
 #include "lex.h"
@@ -78,7 +78,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 #define scanner pContext->pScanner
 
 
-#line 82 "PSL.tab.c" /* yacc.c:339  */
+#line 82 "VSharp.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -97,9 +97,9 @@ void yyerror(YYLTYPE*, void*, const char *s);
 #endif
 
 /* In a future release of Bison, this section will be replaced
-   by #include "PSL.tab.h".  */
-#ifndef YY_YY_PSL_TAB_H_INCLUDED
-# define YY_YY_PSL_TAB_H_INCLUDED
+   by #include "VSharp.tab.h".  */
+#ifndef YY_YY_VSHARP_TAB_H_INCLUDED
+# define YY_YY_VSHARP_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -180,7 +180,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 22 "PSL.y" /* yacc.c:355  */
+#line 22 "VSharp.y" /* yacc.c:355  */
 
     int intVal;
     float floatVal;
@@ -189,7 +189,7 @@ union YYSTYPE
     OpCode opCode;
     RegIndex regIndex;
 
-#line 193 "PSL.tab.c" /* yacc.c:355  */
+#line 193 "VSharp.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -215,11 +215,11 @@ struct YYLTYPE
 
 int yyparse (PSLCompilerContext* pContext);
 
-#endif /* !YY_YY_PSL_TAB_H_INCLUDED  */
+#endif /* !YY_YY_VSHARP_TAB_H_INCLUDED  */
 
 /* Copy the second part of user declarations.  */
 
-#line 223 "PSL.tab.c" /* yacc.c:358  */
+#line 223 "VSharp.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -1592,668 +1592,668 @@ yyreduce:
   switch (yyn)
     {
         case 4:
-#line 149 "PSL.y" /* yacc.c:1661  */
+#line 149 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); pContext->AddFuncDef((yyval.pNode)); }
-#line 1598 "PSL.tab.c" /* yacc.c:1661  */
+#line 1598 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 5:
-#line 150 "PSL.y" /* yacc.c:1661  */
+#line 150 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-1].pNode); pContext->AddStructDef((yyval.pNode)); }
-#line 1604 "PSL.tab.c" /* yacc.c:1661  */
+#line 1604 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 6:
-#line 151 "PSL.y" /* yacc.c:1661  */
+#line 151 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); pContext->AddGlobal((yyval.pNode)); }
-#line 1610 "PSL.tab.c" /* yacc.c:1661  */
+#line 1610 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 7:
-#line 155 "PSL.y" /* yacc.c:1661  */
+#line 155 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new StatementListNode(pContext, (yyvsp[0].pNode)); }
-#line 1616 "PSL.tab.c" /* yacc.c:1661  */
+#line 1616 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 8:
-#line 156 "PSL.y" /* yacc.c:1661  */
+#line 156 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-1].pNode); (yyval.pNode)->AddNode((yyvsp[0].pNode)); }
-#line 1622 "PSL.tab.c" /* yacc.c:1661  */
+#line 1622 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 9:
-#line 160 "PSL.y" /* yacc.c:1661  */
+#line 160 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1628 "PSL.tab.c" /* yacc.c:1661  */
+#line 1628 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 10:
-#line 161 "PSL.y" /* yacc.c:1661  */
+#line 161 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1634 "PSL.tab.c" /* yacc.c:1661  */
+#line 1634 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 11:
-#line 162 "PSL.y" /* yacc.c:1661  */
+#line 162 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1640 "PSL.tab.c" /* yacc.c:1661  */
+#line 1640 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 12:
-#line 163 "PSL.y" /* yacc.c:1661  */
+#line 163 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1646 "PSL.tab.c" /* yacc.c:1661  */
+#line 1646 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 13:
-#line 164 "PSL.y" /* yacc.c:1661  */
+#line 164 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1652 "PSL.tab.c" /* yacc.c:1661  */
+#line 1652 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 14:
-#line 165 "PSL.y" /* yacc.c:1661  */
+#line 165 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1658 "PSL.tab.c" /* yacc.c:1661  */
+#line 1658 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 15:
-#line 166 "PSL.y" /* yacc.c:1661  */
+#line 166 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1664 "PSL.tab.c" /* yacc.c:1661  */
+#line 1664 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 16:
-#line 167 "PSL.y" /* yacc.c:1661  */
+#line 167 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1670 "PSL.tab.c" /* yacc.c:1661  */
+#line 1670 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 17:
-#line 171 "PSL.y" /* yacc.c:1661  */
+#line 171 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-1].pNode); }
-#line 1676 "PSL.tab.c" /* yacc.c:1661  */
+#line 1676 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 18:
-#line 176 "PSL.y" /* yacc.c:1661  */
+#line 176 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); dynamic_cast<IfStatementNode*>((yyval.pNode))->SetStatementList((yyvsp[-2].pNode)); }
-#line 1682 "PSL.tab.c" /* yacc.c:1661  */
+#line 1682 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 19:
-#line 178 "PSL.y" /* yacc.c:1661  */
+#line 178 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new WhileStatementNode(pContext, (yyvsp[-2].pNode), (yyvsp[0].pNode)); }
-#line 1688 "PSL.tab.c" /* yacc.c:1661  */
+#line 1688 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 20:
-#line 182 "PSL.y" /* yacc.c:1661  */
+#line 182 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new IfStatementNode(pContext, (yyvsp[-2].pNode), (yyvsp[0].pNode)); }
-#line 1694 "PSL.tab.c" /* yacc.c:1661  */
+#line 1694 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 21:
-#line 183 "PSL.y" /* yacc.c:1661  */
+#line 183 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new IfStatementNode(pContext, (yyvsp[0].pNode), nullptr); }
-#line 1700 "PSL.tab.c" /* yacc.c:1661  */
+#line 1700 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 22:
-#line 187 "PSL.y" /* yacc.c:1661  */
+#line 187 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new SaveRegistersNode(pContext, (yyloc), (yyvsp[0].pNode)); }
-#line 1706 "PSL.tab.c" /* yacc.c:1661  */
+#line 1706 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 23:
-#line 191 "PSL.y" /* yacc.c:1661  */
+#line 191 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1712 "PSL.tab.c" /* yacc.c:1661  */
+#line 1712 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 24:
-#line 195 "PSL.y" /* yacc.c:1661  */
+#line 195 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1718 "PSL.tab.c" /* yacc.c:1661  */
+#line 1718 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 25:
-#line 196 "PSL.y" /* yacc.c:1661  */
+#line 196 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new AssignmentNode(pContext, (yyloc), (yyvsp[-2].pNode), (yyvsp[0].pNode)); }
-#line 1724 "PSL.tab.c" /* yacc.c:1661  */
+#line 1724 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 26:
-#line 200 "PSL.y" /* yacc.c:1661  */
+#line 200 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1730 "PSL.tab.c" /* yacc.c:1661  */
+#line 1730 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 27:
-#line 201 "PSL.y" /* yacc.c:1661  */
+#line 201 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new OperatorNode(pContext, (yyloc), (yyvsp[-2].pNode), (yyvsp[0].pNode), Operator::Equal); }
-#line 1736 "PSL.tab.c" /* yacc.c:1661  */
+#line 1736 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 28:
-#line 202 "PSL.y" /* yacc.c:1661  */
+#line 202 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new OperatorNode(pContext, (yyloc), (yyvsp[-2].pNode), (yyvsp[0].pNode), Operator::NotEqual); }
-#line 1742 "PSL.tab.c" /* yacc.c:1661  */
+#line 1742 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 29:
-#line 206 "PSL.y" /* yacc.c:1661  */
+#line 206 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1748 "PSL.tab.c" /* yacc.c:1661  */
+#line 1748 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 30:
-#line 207 "PSL.y" /* yacc.c:1661  */
+#line 207 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new OperatorNode(pContext, (yyloc), (yyvsp[-2].pNode), (yyvsp[0].pNode), Operator::LessThan); }
-#line 1754 "PSL.tab.c" /* yacc.c:1661  */
+#line 1754 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 31:
-#line 208 "PSL.y" /* yacc.c:1661  */
+#line 208 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new OperatorNode(pContext, (yyloc), (yyvsp[-2].pNode), (yyvsp[0].pNode), Operator::GreaterThan); }
-#line 1760 "PSL.tab.c" /* yacc.c:1661  */
+#line 1760 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 32:
-#line 212 "PSL.y" /* yacc.c:1661  */
+#line 212 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1766 "PSL.tab.c" /* yacc.c:1661  */
+#line 1766 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 33:
-#line 213 "PSL.y" /* yacc.c:1661  */
+#line 213 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new OperatorNode(pContext, (yyloc), (yyvsp[-2].pNode), (yyvsp[0].pNode), Operator::ShiftLeft); }
-#line 1772 "PSL.tab.c" /* yacc.c:1661  */
+#line 1772 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 34:
-#line 214 "PSL.y" /* yacc.c:1661  */
+#line 214 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new OperatorNode(pContext, (yyloc), (yyvsp[-2].pNode), (yyvsp[0].pNode), Operator::ShiftRight); }
-#line 1778 "PSL.tab.c" /* yacc.c:1661  */
+#line 1778 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 35:
-#line 218 "PSL.y" /* yacc.c:1661  */
+#line 218 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1784 "PSL.tab.c" /* yacc.c:1661  */
+#line 1784 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 36:
-#line 219 "PSL.y" /* yacc.c:1661  */
+#line 219 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new OperatorNode(pContext, (yyloc), (yyvsp[-2].pNode), (yyvsp[0].pNode), Operator::Add); }
-#line 1790 "PSL.tab.c" /* yacc.c:1661  */
+#line 1790 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 37:
-#line 220 "PSL.y" /* yacc.c:1661  */
+#line 220 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new OperatorNode(pContext, (yyloc), (yyvsp[-2].pNode), (yyvsp[0].pNode), Operator::Subtract); }
-#line 1796 "PSL.tab.c" /* yacc.c:1661  */
+#line 1796 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 38:
-#line 224 "PSL.y" /* yacc.c:1661  */
+#line 224 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1802 "PSL.tab.c" /* yacc.c:1661  */
+#line 1802 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 39:
-#line 225 "PSL.y" /* yacc.c:1661  */
+#line 225 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new OperatorNode(pContext, (yyloc), (yyvsp[-2].pNode), (yyvsp[0].pNode), Operator::Multiply); }
-#line 1808 "PSL.tab.c" /* yacc.c:1661  */
+#line 1808 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 40:
-#line 229 "PSL.y" /* yacc.c:1661  */
+#line 229 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1814 "PSL.tab.c" /* yacc.c:1661  */
+#line 1814 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 41:
-#line 230 "PSL.y" /* yacc.c:1661  */
+#line 230 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new UnaryOperatorNode(pContext, (yyvsp[0].pNode), Operator::Negate); }
-#line 1820 "PSL.tab.c" /* yacc.c:1661  */
+#line 1820 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 43:
-#line 238 "PSL.y" /* yacc.c:1661  */
+#line 238 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1826 "PSL.tab.c" /* yacc.c:1661  */
+#line 1826 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 44:
-#line 239 "PSL.y" /* yacc.c:1661  */
+#line 239 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new IndexSelectionNode(pContext, (yyloc), (yyvsp[-3].pNode), (yyvsp[-1].pNode)); }
-#line 1832 "PSL.tab.c" /* yacc.c:1661  */
+#line 1832 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 45:
-#line 240 "PSL.y" /* yacc.c:1661  */
+#line 240 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1838 "PSL.tab.c" /* yacc.c:1661  */
+#line 1838 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 46:
-#line 241 "PSL.y" /* yacc.c:1661  */
+#line 241 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new FieldSelectionNode(pContext, (yyloc), (yyvsp[-2].pNode), false, (yyvsp[0].symIndex)); }
-#line 1844 "PSL.tab.c" /* yacc.c:1661  */
+#line 1844 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 47:
-#line 242 "PSL.y" /* yacc.c:1661  */
+#line 242 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new FieldSelectionNode(pContext, (yyloc), (yyvsp[-2].pNode), true, (yyvsp[0].symIndex)); }
-#line 1850 "PSL.tab.c" /* yacc.c:1661  */
+#line 1850 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 48:
-#line 246 "PSL.y" /* yacc.c:1661  */
+#line 246 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1856 "PSL.tab.c" /* yacc.c:1661  */
+#line 1856 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 49:
-#line 247 "PSL.y" /* yacc.c:1661  */
+#line 247 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new AddressOfNode(pContext, (yyvsp[0].pNode)); }
-#line 1862 "PSL.tab.c" /* yacc.c:1661  */
+#line 1862 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 50:
-#line 248 "PSL.y" /* yacc.c:1661  */
+#line 248 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new ConstantNode(pContext, ConstantNode::Word, (yyvsp[0].intVal)); }
-#line 1868 "PSL.tab.c" /* yacc.c:1661  */
+#line 1868 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 51:
-#line 249 "PSL.y" /* yacc.c:1661  */
+#line 249 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new ConstantNode(pContext, ConstantNode::Bool, (yyvsp[0].intVal)); }
-#line 1874 "PSL.tab.c" /* yacc.c:1661  */
+#line 1874 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 52:
-#line 250 "PSL.y" /* yacc.c:1661  */
+#line 250 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new ConstantNode(pContext, (yyvsp[0].floatVal)); }
-#line 1880 "PSL.tab.c" /* yacc.c:1661  */
+#line 1880 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 53:
-#line 251 "PSL.y" /* yacc.c:1661  */
+#line 251 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new ConstantNode(pContext, ConstantNode::Pointer); }
-#line 1886 "PSL.tab.c" /* yacc.c:1661  */
+#line 1886 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 54:
-#line 252 "PSL.y" /* yacc.c:1661  */
+#line 252 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new KnownConstantNode(pContext, KnownConstants::DataSegmentEnd); }
-#line 1892 "PSL.tab.c" /* yacc.c:1661  */
+#line 1892 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 55:
-#line 253 "PSL.y" /* yacc.c:1661  */
+#line 253 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1898 "PSL.tab.c" /* yacc.c:1661  */
+#line 1898 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 56:
-#line 254 "PSL.y" /* yacc.c:1661  */
+#line 254 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1904 "PSL.tab.c" /* yacc.c:1661  */
+#line 1904 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 57:
-#line 255 "PSL.y" /* yacc.c:1661  */
+#line 255 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1910 "PSL.tab.c" /* yacc.c:1661  */
+#line 1910 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 58:
-#line 256 "PSL.y" /* yacc.c:1661  */
+#line 256 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1916 "PSL.tab.c" /* yacc.c:1661  */
+#line 1916 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 59:
-#line 257 "PSL.y" /* yacc.c:1661  */
+#line 257 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new RegisterNode(pContext, (yyloc), (yyvsp[0].regIndex)); }
-#line 1922 "PSL.tab.c" /* yacc.c:1661  */
+#line 1922 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 60:
-#line 261 "PSL.y" /* yacc.c:1661  */
+#line 261 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new SizeOfNode(pContext, (yyvsp[-1].pNode)); }
-#line 1928 "PSL.tab.c" /* yacc.c:1661  */
+#line 1928 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 61:
-#line 266 "PSL.y" /* yacc.c:1661  */
+#line 266 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new OffsetNode(pContext, (yyloc), (yyvsp[-6].pNode), (yyvsp[-3].pNode), (yyvsp[-1].pNode)); }
-#line 1934 "PSL.tab.c" /* yacc.c:1661  */
+#line 1934 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 62:
-#line 271 "PSL.y" /* yacc.c:1661  */
+#line 271 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new CastNode(pContext, (yyloc), (yyvsp[-4].pNode), (yyvsp[-1].pNode)); }
-#line 1940 "PSL.tab.c" /* yacc.c:1661  */
+#line 1940 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 63:
-#line 276 "PSL.y" /* yacc.c:1661  */
+#line 276 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new ReadPortNode(pContext, (yyloc), (yyvsp[-1].pNode)); }
-#line 1946 "PSL.tab.c" /* yacc.c:1661  */
+#line 1946 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 64:
-#line 280 "PSL.y" /* yacc.c:1661  */
+#line 280 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-1].pNode); }
-#line 1952 "PSL.tab.c" /* yacc.c:1661  */
+#line 1952 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 65:
-#line 284 "PSL.y" /* yacc.c:1661  */
+#line 284 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new IdentifierNode(pContext, (yyloc), (yyvsp[0].symIndex)); }
-#line 1958 "PSL.tab.c" /* yacc.c:1661  */
+#line 1958 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 66:
-#line 288 "PSL.y" /* yacc.c:1661  */
+#line 288 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-1].pNode); }
-#line 1964 "PSL.tab.c" /* yacc.c:1661  */
+#line 1964 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 67:
-#line 292 "PSL.y" /* yacc.c:1661  */
+#line 292 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1970 "PSL.tab.c" /* yacc.c:1661  */
+#line 1970 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 68:
-#line 293 "PSL.y" /* yacc.c:1661  */
+#line 293 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1976 "PSL.tab.c" /* yacc.c:1661  */
+#line 1976 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 69:
-#line 297 "PSL.y" /* yacc.c:1661  */
+#line 297 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-1].pNode); dynamic_cast<FunctionDeclaratorNode*>((yyval.pNode))->AddParameter((yyvsp[0].pNode)); }
-#line 1982 "PSL.tab.c" /* yacc.c:1661  */
+#line 1982 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 70:
-#line 298 "PSL.y" /* yacc.c:1661  */
+#line 298 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-2].pNode); dynamic_cast<FunctionDeclaratorNode*>((yyval.pNode))->AddParameter((yyvsp[0].pNode)); }
-#line 1988 "PSL.tab.c" /* yacc.c:1661  */
+#line 1988 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 71:
-#line 302 "PSL.y" /* yacc.c:1661  */
+#line 302 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new FunctionDeclaratorNode(pContext, (yyvsp[-2].pNode), (yyvsp[-1].symIndex), -1); }
-#line 1994 "PSL.tab.c" /* yacc.c:1661  */
+#line 1994 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 72:
-#line 303 "PSL.y" /* yacc.c:1661  */
+#line 303 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new FunctionDeclaratorNode(pContext, (yyvsp[-5].pNode), (yyvsp[-4].symIndex), (yyvsp[-2].symIndex)); }
-#line 2000 "PSL.tab.c" /* yacc.c:1661  */
+#line 2000 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 73:
-#line 307 "PSL.y" /* yacc.c:1661  */
+#line 307 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new FunctionParameterNode(pContext, (yyvsp[-1].pNode), (yyvsp[0].symIndex)); }
-#line 2006 "PSL.tab.c" /* yacc.c:1661  */
+#line 2006 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 74:
-#line 311 "PSL.y" /* yacc.c:1661  */
+#line 311 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new TypeNode(pContext, (yyloc), TypeClass::Basic, WORD_TOKEN); }
-#line 2012 "PSL.tab.c" /* yacc.c:1661  */
+#line 2012 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 75:
-#line 312 "PSL.y" /* yacc.c:1661  */
+#line 312 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new TypeNode(pContext, (yyloc), TypeClass::Basic, BYTE_TOKEN); }
-#line 2018 "PSL.tab.c" /* yacc.c:1661  */
+#line 2018 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 76:
-#line 313 "PSL.y" /* yacc.c:1661  */
+#line 313 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new TypeNode(pContext, (yyloc), TypeClass::Basic, FLOAT_TOKEN); }
-#line 2024 "PSL.tab.c" /* yacc.c:1661  */
+#line 2024 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 77:
-#line 314 "PSL.y" /* yacc.c:1661  */
+#line 314 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new TypeNode(pContext, (yyloc), TypeClass::Basic, VOID_TOKEN); }
-#line 2030 "PSL.tab.c" /* yacc.c:1661  */
+#line 2030 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 78:
-#line 315 "PSL.y" /* yacc.c:1661  */
+#line 315 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new TypeNode(pContext, (yyloc), TypeClass::Basic, BOOL_TOKEN); }
-#line 2036 "PSL.tab.c" /* yacc.c:1661  */
+#line 2036 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 79:
-#line 316 "PSL.y" /* yacc.c:1661  */
+#line 316 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new TypeNode(pContext, (yyloc), TypeClass::Struct, (yyvsp[0].symIndex)); }
-#line 2042 "PSL.tab.c" /* yacc.c:1661  */
+#line 2042 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 80:
-#line 317 "PSL.y" /* yacc.c:1661  */
+#line 317 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new TypeNode(pContext, (yyloc), (yyvsp[-1].pNode)); }
-#line 2048 "PSL.tab.c" /* yacc.c:1661  */
+#line 2048 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 81:
-#line 321 "PSL.y" /* yacc.c:1661  */
+#line 321 "VSharp.y" /* yacc.c:1661  */
     {
 	                                    							  (yyval.pNode) = (yyvsp[-1].pNode); dynamic_cast<StructSpecifierNode*>((yyval.pNode))->SetName((yyvsp[-3].symIndex)); }
-#line 2055 "PSL.tab.c" /* yacc.c:1661  */
+#line 2055 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 82:
-#line 326 "PSL.y" /* yacc.c:1661  */
+#line 326 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new StructSpecifierNode(pContext, (yyvsp[0].pNode)); }
-#line 2061 "PSL.tab.c" /* yacc.c:1661  */
+#line 2061 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 83:
-#line 327 "PSL.y" /* yacc.c:1661  */
+#line 327 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-1].pNode); (yyval.pNode)->AddNode((yyvsp[0].pNode)); }
-#line 2067 "PSL.tab.c" /* yacc.c:1661  */
+#line 2067 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 84:
-#line 331 "PSL.y" /* yacc.c:1661  */
+#line 331 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new StructDeclarationNode(pContext, (yyvsp[-2].pNode), (yyvsp[-1].symIndex), -1); }
-#line 2073 "PSL.tab.c" /* yacc.c:1661  */
+#line 2073 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 85:
-#line 333 "PSL.y" /* yacc.c:1661  */
+#line 333 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new StructDeclarationNode(pContext, (yyvsp[-5].pNode), (yyvsp[-4].symIndex), (yyvsp[-2].intVal)); }
-#line 2079 "PSL.tab.c" /* yacc.c:1661  */
+#line 2079 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 86:
-#line 337 "PSL.y" /* yacc.c:1661  */
+#line 337 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-1].pNode); dynamic_cast<FunctionDeclaratorNode*>((yyval.pNode))->SetStatementList((yyvsp[0].pNode)); }
-#line 2085 "PSL.tab.c" /* yacc.c:1661  */
+#line 2085 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 87:
-#line 341 "PSL.y" /* yacc.c:1661  */
+#line 341 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 2091 "PSL.tab.c" /* yacc.c:1661  */
+#line 2091 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 88:
-#line 345 "PSL.y" /* yacc.c:1661  */
+#line 345 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new VariableDeclarationNode(pContext, (yyloc), (yyvsp[-1].pNode), (yyvsp[0].symIndex), nullptr); }
-#line 2097 "PSL.tab.c" /* yacc.c:1661  */
+#line 2097 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 89:
-#line 346 "PSL.y" /* yacc.c:1661  */
+#line 346 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new VariableDeclarationNode(pContext, (yyloc), (yyvsp[-3].pNode), (yyvsp[-2].symIndex), (yyvsp[0].pNode)); }
-#line 2103 "PSL.tab.c" /* yacc.c:1661  */
+#line 2103 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 90:
-#line 350 "PSL.y" /* yacc.c:1661  */
+#line 350 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 2109 "PSL.tab.c" /* yacc.c:1661  */
+#line 2109 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 91:
-#line 354 "PSL.y" /* yacc.c:1661  */
+#line 354 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new StatementListNode(pContext, nullptr); }
-#line 2115 "PSL.tab.c" /* yacc.c:1661  */
+#line 2115 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 92:
-#line 355 "PSL.y" /* yacc.c:1661  */
+#line 355 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-1].pNode); }
-#line 2121 "PSL.tab.c" /* yacc.c:1661  */
+#line 2121 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 93:
-#line 359 "PSL.y" /* yacc.c:1661  */
+#line 359 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-1].pNode); }
-#line 2127 "PSL.tab.c" /* yacc.c:1661  */
+#line 2127 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 94:
-#line 360 "PSL.y" /* yacc.c:1661  */
+#line 360 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-1].pNode); }
-#line 2133 "PSL.tab.c" /* yacc.c:1661  */
+#line 2133 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 95:
-#line 364 "PSL.y" /* yacc.c:1661  */
+#line 364 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new FunctionCallNode(pContext, (yyloc), (yyvsp[-1].symIndex), nullptr, nullptr); }
-#line 2139 "PSL.tab.c" /* yacc.c:1661  */
+#line 2139 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 96:
-#line 365 "PSL.y" /* yacc.c:1661  */
+#line 365 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new FunctionCallNode(pContext, (yyloc), (yyvsp[-4].symIndex), (yyvsp[-2].pNode), nullptr); }
-#line 2145 "PSL.tab.c" /* yacc.c:1661  */
+#line 2145 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 97:
-#line 369 "PSL.y" /* yacc.c:1661  */
+#line 369 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new FunctionCallNode(pContext, (yyloc), (yyvsp[-2].symIndex), nullptr, (yyvsp[0].pNode)); }
-#line 2151 "PSL.tab.c" /* yacc.c:1661  */
+#line 2151 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 98:
-#line 371 "PSL.y" /* yacc.c:1661  */
+#line 371 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new FunctionCallNode(pContext, (yyloc), (yyvsp[-5].symIndex), (yyvsp[-3].pNode), (yyvsp[0].pNode)); }
-#line 2157 "PSL.tab.c" /* yacc.c:1661  */
+#line 2157 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 99:
-#line 372 "PSL.y" /* yacc.c:1661  */
+#line 372 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-2].pNode); (yyval.pNode)->AddNode((yyvsp[0].pNode)); }
-#line 2163 "PSL.tab.c" /* yacc.c:1661  */
+#line 2163 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 100:
-#line 376 "PSL.y" /* yacc.c:1661  */
+#line 376 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 2169 "PSL.tab.c" /* yacc.c:1661  */
+#line 2169 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 101:
-#line 380 "PSL.y" /* yacc.c:1661  */
+#line 380 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new ReturnNode(pContext, (yyvsp[-1].pNode)); }
-#line 2175 "PSL.tab.c" /* yacc.c:1661  */
+#line 2175 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 102:
-#line 385 "PSL.y" /* yacc.c:1661  */
+#line 385 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new EmitNode(pContext, (yyloc), (yyvsp[-2].opCode), nullptr, nullptr); }
-#line 2181 "PSL.tab.c" /* yacc.c:1661  */
+#line 2181 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 103:
-#line 387 "PSL.y" /* yacc.c:1661  */
+#line 387 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new EmitNode(pContext, (yyloc), (yyvsp[-4].opCode), (yyvsp[-2].pNode), nullptr); }
-#line 2187 "PSL.tab.c" /* yacc.c:1661  */
+#line 2187 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 104:
-#line 389 "PSL.y" /* yacc.c:1661  */
+#line 389 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new EmitNode(pContext, (yyloc), (yyvsp[-6].opCode), (yyvsp[-4].pNode), (yyvsp[-2].pNode)); }
-#line 2193 "PSL.tab.c" /* yacc.c:1661  */
+#line 2193 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 105:
-#line 393 "PSL.y" /* yacc.c:1661  */
+#line 393 "VSharp.y" /* yacc.c:1661  */
     { (yyval.opCode) = OpCode::Exit; }
-#line 2199 "PSL.tab.c" /* yacc.c:1661  */
+#line 2199 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 106:
-#line 394 "PSL.y" /* yacc.c:1661  */
+#line 394 "VSharp.y" /* yacc.c:1661  */
     { (yyval.opCode) = OpCode::VpEnable; }
-#line 2205 "PSL.tab.c" /* yacc.c:1661  */
+#line 2205 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 107:
-#line 398 "PSL.y" /* yacc.c:1661  */
+#line 398 "VSharp.y" /* yacc.c:1661  */
     { (yyval.opCode) = OpCode::DoutR; }
-#line 2211 "PSL.tab.c" /* yacc.c:1661  */
+#line 2211 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 108:
-#line 399 "PSL.y" /* yacc.c:1661  */
+#line 399 "VSharp.y" /* yacc.c:1661  */
     { (yyval.opCode) = OpCode::DinR; }
-#line 2217 "PSL.tab.c" /* yacc.c:1661  */
+#line 2217 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 109:
-#line 400 "PSL.y" /* yacc.c:1661  */
+#line 400 "VSharp.y" /* yacc.c:1661  */
     { (yyval.opCode) = OpCode::DlenR; }
-#line 2223 "PSL.tab.c" /* yacc.c:1661  */
+#line 2223 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 110:
-#line 401 "PSL.y" /* yacc.c:1661  */
+#line 401 "VSharp.y" /* yacc.c:1661  */
     { (yyval.opCode) = OpCode::ExecR; }
-#line 2229 "PSL.tab.c" /* yacc.c:1661  */
+#line 2229 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 111:
-#line 405 "PSL.y" /* yacc.c:1661  */
+#line 405 "VSharp.y" /* yacc.c:1661  */
     { (yyval.opCode) = OpCode::MovRC; }
-#line 2235 "PSL.tab.c" /* yacc.c:1661  */
+#line 2235 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 112:
-#line 406 "PSL.y" /* yacc.c:1661  */
+#line 406 "VSharp.y" /* yacc.c:1661  */
     { (yyval.opCode) = OpCode::MovRR; }
-#line 2241 "PSL.tab.c" /* yacc.c:1661  */
+#line 2241 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 113:
-#line 411 "PSL.y" /* yacc.c:1661  */
+#line 411 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new PackByteNode(pContext, (yyloc), (yyvsp[-6].pNode), (yyvsp[-4].pNode), (yyvsp[-2].pNode)); }
-#line 2247 "PSL.tab.c" /* yacc.c:1661  */
+#line 2247 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 114:
-#line 416 "PSL.y" /* yacc.c:1661  */
+#line 416 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new WritePortNode(pContext, (yyloc), (yyvsp[-4].pNode), (yyvsp[-2].pNode)); }
-#line 2253 "PSL.tab.c" /* yacc.c:1661  */
+#line 2253 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
 
-#line 2257 "PSL.tab.c" /* yacc.c:1661  */
+#line 2257 "VSharp.tab.c" /* yacc.c:1661  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2488,5 +2488,5 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 419 "PSL.y" /* yacc.c:1906  */
+#line 419 "VSharp.y" /* yacc.c:1906  */
 

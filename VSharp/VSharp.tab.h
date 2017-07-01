@@ -30,8 +30,8 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-#ifndef YY_YY_PSL_TAB_H_INCLUDED
-# define YY_YY_PSL_TAB_H_INCLUDED
+#ifndef YY_YY_VSHARP_TAB_H_INCLUDED
+# define YY_YY_VSHARP_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -112,7 +112,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 22 "PSL.y" /* yacc.c:1915  */
+#line 22 "VSharp.y" /* yacc.c:1915  */
 
     int intVal;
     float floatVal;
@@ -121,7 +121,7 @@ union YYSTYPE
     OpCode opCode;
     RegIndex regIndex;
 
-#line 125 "PSL.tab.h" /* yacc.c:1915  */
+#line 125 "VSharp.tab.h" /* yacc.c:1915  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -147,4 +147,4 @@ struct YYLTYPE
 
 int yyparse (PSLCompilerContext* pContext);
 
-#endif /* !YY_YY_PSL_TAB_H_INCLUDED  */
+#endif /* !YY_YY_VSHARP_TAB_H_INCLUDED  */

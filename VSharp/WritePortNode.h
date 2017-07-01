@@ -2,7 +2,7 @@
 
 #include "ConstantNode.h"
 #include "ASTNode.h"
-#include "PSL.tab.h"
+#include "VSharp.tab.h"
 
 class WritePortNode : public ASTNode
 {

@@ -2,7 +2,7 @@
 
 #include "ASTTree.h"
 #include "PSLCompilerContext.h"
-#include "PSL.tab.h"
+#include "VSharp.tab.h"
 
 #define YY_EXTRA_TYPE PSLCompilerContext*
 #define YY_USER_ACTION yyextra->UserAction(yylloc, yytext);

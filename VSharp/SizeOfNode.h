@@ -2,7 +2,7 @@
 
 #include "PSLCompilerContext.h"
 #include "ASTNode.h"
-#include "PSL.tab.h"
+#include "VSharp.tab.h"
 
 class SizeOfNode : public ExpressionNode
 {
