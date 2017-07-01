@@ -1,6 +1,6 @@
 module DemoModule(
-	bit<8> in1,
-	out bit<8> out1
+	byte in1,
+	out byte out1
 	)
 {
 	DemoModule()
@@ -22,5 +22,5 @@ module DemoModule(
 		transition(StartState);
 	}
 
-	bit<8> _ExampleRegister;
+	byte _ExampleRegister;
 }
