@@ -1,21 +1,21 @@
-#include "WritePortNode.h"
+#include "StateDeclaratorNode.h"
 #include "PSLCompilerContext.h"
 #include "ModuleDeclaratorNode.h"
 #include "../PhaethonObjWriter/ObjWriter.h"
 
-WritePortNode::WritePortNode(
+StateDeclaratorNode::StateDeclaratorNode(
     PSLCompilerContext *pContext,
     const YYLTYPE &location,
-    ASTNode *pPort,
-    ASTNode *pData) : ASTNode(pContext)
+    int ident,
+    ASTNode *pStatementList) : ASTNode(pContext)
 {
     _location = location;
+    _identifier = ident;
 
-    AddNode(pPort);
-    AddNode(pData);
+    AddNode(pStatementList);
 }
 
-void WritePortNode::VerifyNodeImpl()
+void StateDeclaratorNode::VerifyNodeImpl()
 {
     ExpressionNode *pPort = dynamic_cast<ExpressionNode *>(GetChild(0));
     ExpressionNode *pData = dynamic_cast<ExpressionNode *>(GetChild(1));
@@ -36,7 +36,7 @@ void WritePortNode::VerifyNodeImpl()
     }
 }
 
-void WritePortNode::PostProcessNodeImpl()
+void StateDeclaratorNode::PostProcessNodeImpl()
 {
 /*    FunctionDeclaratorNode *pFunc = GetTypedParent<FunctionDeclaratorNode>();
 

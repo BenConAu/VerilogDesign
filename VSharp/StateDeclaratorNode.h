@@ -4,19 +4,20 @@
 #include "ASTNode.h"
 #include "VSharp.tab.h"
 
-class WritePortNode : public ASTNode
+class StateDeclaratorNode : public ASTNode
 {
 public:
-  WritePortNode(
+  StateDeclaratorNode(
       PSLCompilerContext *pContext,
       const YYLTYPE &location,
-      ASTNode *pPort,
-      ASTNode *pData);
+      int ident,
+      ASTNode *pStatementList);
 
   void VerifyNodeImpl() override;
   void PostProcessNodeImpl() override;
-  const char *GetDebugName() override { return "WritePortNode"; }
+  const char *GetDebugName() override { return "StateDeclaratorNode"; }
 
 private:
+  int _identifier;
   YYLTYPE _location;
 };

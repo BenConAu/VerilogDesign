@@ -15,8 +15,6 @@ PSLcc: lex.yy.c \
 	   CastNode.h \
 	   ConstantNode.cpp \
 	   ConstantNode.h \
-	   EmitNode.cpp \
-	   EmitNode.h \
 	   ExpressionNode.cpp \
 	   ExpressionNode.h \
 	   ExpressionResult.cpp \
@@ -64,7 +62,7 @@ PSLcc: lex.yy.c \
 	   SaveRegistersNode.cpp \
 	   SaveRegistersNode.h \
 	   SizeOfNode.h \
-	   StatementListNode.h \
+	   ListNode.h \
 	   StructMember.h \
 	   SmartRegister.cpp \
 	   SmartRegister.h \
@@ -92,8 +90,8 @@ PSLcc: lex.yy.c \
 	   VariableInfo.h \
 	   WhileStatementNode.cpp \
 	   WhileStatementNode.h \
-	   WritePortNode.cpp \
-	   WritePortNode.h
+	   StateDeclaratorNode.cpp \
+	   StateDeclaratorNode.h
 	clang++ -std=c++11 -Wno-deprecated-register -g lex.yy.c \
 	   VSharp.tab.c \
 	   ArrayTypeInfo.cpp \
@@ -103,7 +101,6 @@ PSLcc: lex.yy.c \
 	   BasicTypeInfo.cpp \
 	   CastNode.cpp \
 	   ConstantNode.cpp \
-	   EmitNode.cpp \
 	   ExpressionNode.cpp \
 	   ExpressionResult.cpp \
 	   FieldSelectionNode.cpp \
@@ -139,7 +136,7 @@ PSLcc: lex.yy.c \
 	   UnaryOperatorNode.cpp \
 	   VariableDeclarationNode.cpp \
 	   VariableInfo.cpp \
-	   WritePortNode.cpp \
+	   StateDeclaratorNode.cpp \
 	   WhileStatementNode.cpp -o VSharpC
 
 lex.yy.c: VSharp.l

@@ -32,6 +32,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 
 %token MODULE_TOKEN
 %token OUT_TOKEN
+%token STATE_TOKEN
 
 %token <intVal> INTCONSTANT
 %token <floatVal> FLOATCONSTANT
@@ -77,7 +78,6 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token OFFSETPTR_TOKEN
 %token CASTPTR_TOKEN
 %token READPORT_TOKEN
-%token WRITEPORT_TOKEN
 %token PACKBYTE_TOKEN
 %token DATASEGEND_TOKEN
 %token SAVEREG_TOKEN
@@ -119,7 +119,6 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> jump_statement
 %type <pNode> cast_expression
 %type <pNode> readport_expression
-%type <pNode> writeport_statement
 %type <pNode> selection_statement
 %type <pNode> selection_rest_statement
 %type <pNode> equality_expression
@@ -127,6 +126,9 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> relational_expression
 %type <pNode> unary_expression
 %type <pNode> savereg_statement
+%type <pNode> module_states
+%type <pNode> module_state
+%type <pNode> state_list
 
 %%
 
@@ -142,7 +144,7 @@ external_declaration:
     ;
 
 statement_list:
-      statement                                                     { $$ = new StatementListNode(pContext, $1); }
+      statement                                                     { $$ = new ListNode(pContext, $1); }
     | statement_list statement                                      { $$ = $1; $$->AddNode($2); }
     ;
 
@@ -152,7 +154,6 @@ statement:
     | declaration_statement                                         { $$ = $1; }
     | jump_statement                                                { $$ = $1; }
     | packbyte_statement                                            { $$ = $1; }
-    | writeport_statement                                           { $$ = $1; }
     | savereg_statement                                             { $$ = $1; }
     ;
 
@@ -323,7 +324,21 @@ struct_declaration:
     ;
 
 module_definition:
-      module_prototype compound_statement                         { $$ = $1; dynamic_cast<ModuleDeclaratorNode*>($$)->SetStatementList($2); }
+      module_prototype module_states                                { $$ = $1; dynamic_cast<ModuleDeclaratorNode*>($$)->SetStatementList($2); }
+    ;
+
+module_states:
+      LEFT_BRACE RIGHT_BRACE                                        { $$ = new ListNode(pContext, nullptr); }
+    | LEFT_BRACE state_list RIGHT_BRACE                             { $$ = $2; }
+    ;
+
+state_list:
+      module_state                                                  { $$ = new ListNode(pContext, $1); }
+    | state_list module_state                                       { $$ = $1; $$->AddNode($2); }
+    ;
+
+module_state:
+      STATE_TOKEN IDENTIFIER compound_statement                     { $$ = new StateDeclaratorNode(pContext, @$, $2, $3); }
     ;
 
 init_declarator_list:
@@ -340,7 +355,7 @@ declaration_statement:
     ;
 
 compound_statement:
-      LEFT_BRACE RIGHT_BRACE                                        { $$ = new StatementListNode(pContext, nullptr); }
+      LEFT_BRACE RIGHT_BRACE                                        { $$ = new ListNode(pContext, nullptr); }
     | LEFT_BRACE statement_list RIGHT_BRACE                         { $$ = $2; }
     ;
 
@@ -372,11 +387,6 @@ return_statement:
 packbyte_statement:
       PACKBYTE_TOKEN LEFT_PAREN expression COMMA expression COMMA expression RIGHT_PAREN SEMICOLON
                                                                     { $$ = new PackByteNode(pContext, @$, $3, $5, $7); }
-    ;
-
-writeport_statement:
-      WRITEPORT_TOKEN LEFT_PAREN expression COMMA expression RIGHT_PAREN SEMICOLON
-                                                                    { $$ = new WritePortNode(pContext, @$, $3, $5); }
     ;
 
 %%
