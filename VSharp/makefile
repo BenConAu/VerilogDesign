@@ -25,12 +25,8 @@ PSLcc: lex.yy.c \
 	   FieldSelectionNode.h \
 	   FunctionCallNode.h \
 	   FunctionCallNode.cpp \
-	   FunctionDeclaratorNode.cpp \
-	   FunctionDeclaratorNode.h \
 	   FunctionInfo.cpp \
 	   FunctionInfo.h \
-	   FunctionParameterNode.cpp \
-	   FunctionParameterNode.h \
 	   GenericTypeInfo.h \
 	   IdentifierNode.cpp \
 	   IdentifierNode.h \
@@ -40,6 +36,10 @@ PSLcc: lex.yy.c \
 	   IndexSelectionNode.h \
 	   KnownConstantNode.cpp \
 	   KnownConstantNode.h \
+	   ModuleDeclaratorNode.cpp \
+	   ModuleDeclaratorNode.h \
+	   ModuleParameterNode.cpp \
+	   ModuleParameterNode.h \
 	   OffsetNode.cpp \
 	   OffsetNode.h \
 	   Operand.cpp \
@@ -108,13 +108,13 @@ PSLcc: lex.yy.c \
 	   ExpressionResult.cpp \
 	   FieldSelectionNode.cpp \
    	   FunctionCallNode.cpp \
-	   FunctionDeclaratorNode.cpp \
 	   FunctionInfo.cpp \
-	   FunctionParameterNode.cpp \
 	   IdentifierNode.cpp \
 	   IfStatementNode.cpp \
 	   IndexSelectionNode.cpp \
 	   KnownConstantNode.cpp \
+	   ModuleDeclaratorNode.cpp \
+	   ModuleParameterNode.cpp \
 	   OffsetNode.cpp \
 	   OperatorNode.cpp \
 	   Operand.cpp \
@@ -140,7 +140,7 @@ PSLcc: lex.yy.c \
 	   VariableDeclarationNode.cpp \
 	   VariableInfo.cpp \
 	   WritePortNode.cpp \
-	   WhileStatementNode.cpp -o PSLcc
+	   WhileStatementNode.cpp -o VSharpC
 
 lex.yy.c: PSL.l
 	flex --header-file=lex.h PSL.l

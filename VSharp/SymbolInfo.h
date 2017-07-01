@@ -1,14 +1,14 @@
 #pragma once
 
 class PSLCompilerContext;
-class FunctionDeclaratorNode;
+class ModuleDeclaratorNode;
 
 class SymbolInfo
 {
   public:
     SymbolInfo(
         PSLCompilerContext *pContext,   // The context that this symbol lives in
-        FunctionDeclaratorNode *pScope, // The scope of the symbol
+        ModuleDeclaratorNode *pScope, // The scope of the symbol
         int symIndex                    // The symbol index for the identifier for the symbol
         );
 
@@ -17,7 +17,7 @@ class SymbolInfo
     PSLCompilerContext *GetContext() { return _pContext; }
     int GetSymbolIndex() const { return _symIndex; }
     const char *GetSymbol();
-    FunctionDeclaratorNode *GetScope() { return _pScope; }
+    ModuleDeclaratorNode *GetScope() { return _pScope; }
 
   private:
     // The compiler context
@@ -27,5 +27,5 @@ class SymbolInfo
     int _symIndex;
 
     // Scope symbol was declared in (null if global)
-    FunctionDeclaratorNode *_pScope;    
+    ModuleDeclaratorNode *_pScope;    
 };

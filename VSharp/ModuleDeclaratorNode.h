@@ -3,20 +3,17 @@
 #include "PSLCompilerContext.h"
 #include "ASTNode.h"
 
-class FunctionDeclaratorNode : public ASTNode
+class ModuleDeclaratorNode : public ASTNode
 {
 public:
-    FunctionDeclaratorNode(
+    ModuleDeclaratorNode(
         PSLCompilerContext* pContext, 
-        ASTNode* pTypeNode, 
         int symIndex,
         int genericSym
         ) : 
             ASTNode(pContext),
             _regCollection(32)  // TODO: Shrink registers on function calls somehow
     {
-        AddNode(pTypeNode);
-
         _symIndex = symIndex;
         _genericIndex = genericSym;
         _paramCount = 0;

@@ -1,5 +1,5 @@
 #include "OperatorNode.h"
-#include "FunctionDeclaratorNode.h"
+#include "ModuleDeclaratorNode.h"
 #include "VSharp.tab.h"
 
 OperatorInfo OperatorNode::_opTable[] = {

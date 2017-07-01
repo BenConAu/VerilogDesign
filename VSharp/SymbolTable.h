@@ -10,7 +10,7 @@ class VariableInfo;
 class FunctionInfo;
 class TypeInfo;
 class GenericTypeInfo;
-class FunctionDeclaratorNode;
+class ModuleDeclaratorNode;
 
 class SymbolTable
 {
@@ -20,7 +20,7 @@ class SymbolTable
 
     VariableInfo *AddVariable(
         int symIndex,
-        FunctionDeclaratorNode *pScope,
+        ModuleDeclaratorNode *pScope,
         TypeInfo *pTypeInfo);
 
     FunctionInfo *AddFunction(
@@ -30,10 +30,10 @@ class SymbolTable
 
     SymbolInfo *GetInfo(
         int symIndex,
-        FunctionDeclaratorNode *pScope);
+        ModuleDeclaratorNode *pScope);
 
     void GetFunctionVariables(
-        FunctionDeclaratorNode *pScope, 
+        ModuleDeclaratorNode *pScope, 
         std::vector<VariableInfo*> &varList
         );
 

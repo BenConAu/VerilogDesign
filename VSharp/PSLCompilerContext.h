@@ -24,7 +24,7 @@ class PSLCompilerContext
     void SetEntryPoint(FunctionDeclaratorNode *pNode);
 
     void AddStructDef(ASTNode *pNode);
-    void AddFuncDef(ASTNode *pNode);
+    void AddModuleDef(ASTNode *pNode);
     void AddGlobal(ASTNode *pNode);
 
     void OutputString(

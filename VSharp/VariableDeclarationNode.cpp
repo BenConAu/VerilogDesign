@@ -1,5 +1,5 @@
 #include "VariableDeclarationNode.h"
-#include "FunctionDeclaratorNode.h"
+#include "ModuleDeclaratorNode.h"
 #include "AssignmentNode.h"
 #include "IdentifierNode.h"
 #include "TypeNode.h"
@@ -29,7 +29,7 @@ void VariableDeclarationNode::PreVerifyNodeImpl()
 {
     //printf("Adding variable %s\n", GetContext()->_symbols[_symIndex].c_str());
     // Is this a global?
-    FunctionDeclaratorNode *pFunc = GetTypedParent<FunctionDeclaratorNode>();
+    ModuleDeclaratorNode *pFunc = GetTypedParent<ModuleDeclaratorNode>();
     if (pFunc == nullptr)
     {
         _fGlobal = true;

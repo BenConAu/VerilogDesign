@@ -2,7 +2,7 @@
 #include "PSLCompilerContext.h"
 #include "BasicTypeInfo.h"
 #include "StructTypeInfo.h"
-#include "FunctionDeclaratorNode.h"
+#include "ModuleDeclaratorNode.h"
 #include <sstream>
 
 TypeNode::TypeNode(
@@ -32,7 +32,7 @@ TypeNode::TypeNode(
 
 TypeInfo *TypeNode::GetTypeInfo()
 {
-    FunctionDeclaratorNode *pScope = GetTypedParent<FunctionDeclaratorNode>();
+    ModuleDeclaratorNode *pScope = GetTypedParent<ModuleDeclaratorNode>();
     //printf("Scope for typeNode is %p\n", pScope);
 
     if (_pTypeInfo == nullptr)

@@ -32,21 +32,17 @@ class VariableInfo : public SymbolInfo
     VariableInfo(
         PSLCompilerContext *pContext,   // The context that this variable lives in
         int symIndex,                   // The symbol index for the identifier for the variable
-        FunctionDeclaratorNode *pScope, // The scope that the variable is declared in
+        ModuleDeclaratorNode *pScope, // The scope that the variable is declared in
         TypeInfo *pInfo                 // The type of the variable
         );
 
     LocationType GetLocationType() const { return _locationType; }
     unsigned int GetMemLocation() const { return _memLocation; }
-    ExpressionResult *CalculateResult(FunctionDeclaratorNode *pScope);
+    ExpressionResult *CalculateResult(ModuleDeclaratorNode *pScope);
 
-    void ReferenceFrom(FunctionDeclaratorNode *pScope);
+    void ReferenceFrom(ModuleDeclaratorNode *pScope);
     
-    RegIndex EnsureRegister(
-        FunctionDeclaratorNode *pScope,
-        RegIndex *pIndex);
-
-    const PerFunctionInfo& GetFunctionInfo(FunctionDeclaratorNode *pScope);
+    const PerFunctionInfo& GetFunctionInfo(ModuleDeclaratorNode *pScope);
 
     TypeInfo *GetTypeInfo() { return _pType; }
 
@@ -63,7 +59,7 @@ class VariableInfo : public SymbolInfo
     TypeInfo *_pType;
 
     // Register allocated by scope (globals have multiple register locations mapped)
-    std::map<FunctionDeclaratorNode *, PerFunctionInfo> _regIndexMap;
+    std::map<ModuleDeclaratorNode *, PerFunctionInfo> _regIndexMap;
 
     // Track data segment allocations
     static unsigned int _dataSegEnd;

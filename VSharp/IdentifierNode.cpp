@@ -1,7 +1,7 @@
 #include "IdentifierNode.h"
 #include "VariableInfo.h"
 #include "PSLCompilerContext.h"
-#include "FunctionDeclaratorNode.h"
+#include "ModuleDeclaratorNode.h"
 
 IdentifierNode::IdentifierNode(PSLCompilerContext *pContext, const YYLTYPE &location, int symIndex) : ExpressionNode(pContext)
 {
@@ -18,15 +18,16 @@ void IdentifierNode::VerifyNodeImpl()
 }
 
 ExpressionResult *IdentifierNode::CalculateResult()
-{
+{/*
     VariableInfo *pInfo = GetVariableInfo();
     FunctionDeclaratorNode *pScope = GetTypedParent<FunctionDeclaratorNode>();
 
-    return pInfo->CalculateResult(pScope);
+    return pInfo->CalculateResult(pScope);*/
+    return nullptr;
 }
 
 VariableInfo *IdentifierNode::GetVariableInfo()
-{
+{/*
     FunctionDeclaratorNode *pScope = GetTypedParent<FunctionDeclaratorNode>();
     VariableInfo *pInfo = dynamic_cast<VariableInfo *>(GetContext()->_symbolTable.GetInfo(_symIndex, pScope));
     if (pInfo == nullptr)
@@ -36,5 +37,6 @@ VariableInfo *IdentifierNode::GetVariableInfo()
         GetContext()->ReportError(_location, message);
     }
 
-    return pInfo;
+    return pInfo;*/
+    return nullptr;
 }

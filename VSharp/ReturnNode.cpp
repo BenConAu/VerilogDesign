@@ -1,6 +1,6 @@
 #include "ReturnNode.h"
 #include "ExpressionNode.h"
-#include "FunctionDeclaratorNode.h"
+#include "ModuleDeclaratorNode.h"
 
 void ReturnNode::PostProcessNodeImpl()
 {

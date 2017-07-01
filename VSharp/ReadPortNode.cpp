@@ -1,6 +1,6 @@
 #include "ReadPortNode.h"
 #include "PSLCompilerContext.h"
-#include "FunctionDeclaratorNode.h"
+#include "ModuleDeclaratorNode.h"
 #include "../PhaethonObjWriter/ObjWriter.h"
 
 ReadPortNode::ReadPortNode(

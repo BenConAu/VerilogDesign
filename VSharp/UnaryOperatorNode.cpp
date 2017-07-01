@@ -1,5 +1,5 @@
 #include "UnaryOperatorNode.h"
-#include "FunctionDeclaratorNode.h"
+#include "ModuleDeclaratorNode.h"
 #include "VSharp.tab.h"
 
 OperatorInfo UnaryOperatorNode::_opTable[] = {

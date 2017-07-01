@@ -2,7 +2,7 @@
 #include "StructMember.h"
 #include "StructTypeInfo.h"
 #include "VariableInfo.h"
-#include "FunctionDeclaratorNode.h"
+#include "ModuleDeclaratorNode.h"
 #include "PSLCompilerContext.h"
 #include "IdentifierNode.h"
 
@@ -23,7 +23,7 @@ FieldSelectionNode::FieldSelectionNode(
 }
 
 void FieldSelectionNode::VerifyNodeImpl()
-{
+{/*
     ExpressionNode *pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));
     if (pLeft == nullptr)
     {
@@ -83,7 +83,7 @@ void FieldSelectionNode::VerifyNodeImpl()
     {
         // The type of this expression is the type of the member
         SetType(pMember->GetType());
-    }
+    }*/
 }
 
 ExpressionResult *FieldSelectionNode::CalculateResult()

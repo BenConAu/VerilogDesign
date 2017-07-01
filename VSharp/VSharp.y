@@ -30,6 +30,8 @@ void yyerror(YYLTYPE*, void*, const char *s);
 
 %locations
 
+%token MODULE_TOKEN
+
 %token <intVal> INTCONSTANT
 %token <floatVal> FLOATCONSTANT
 %token <intVal> BOOLCONSTANT
@@ -99,11 +101,11 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> expression
 %type <pNode> statement
 %type <pNode> statement_list
-%type <pNode> function_header
+%type <pNode> module_header
 %type <pNode> fully_specified_type
-%type <pNode> function_prototype
-%type <pNode> function_declarator
-%type <pNode> function_definition
+%type <pNode> module_prototype
+%type <pNode> module_declarator
+%type <pNode> module_definition
 %type <pNode> compound_statement
 %type <pNode> init_declarator_list
 %type <pNode> single_declaration
@@ -114,7 +116,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> struct_declaration
 %type <pNode> external_declaration
 %type <pNode> parameter_declaration
-%type <pNode> function_header_with_parameters
+%type <pNode> module_header_with_parameters
 %type <pNode> emit_statement
 %type <opCode> opcode0_token
 %type <opCode> opcode1_token
@@ -146,7 +148,7 @@ translation_unit:
     ;
 
 external_declaration:
-      function_definition                                           { $$ = $1; pContext->AddFuncDef($$); }
+      module_definition                                             { $$ = $1; pContext->AddModuleDef($$); }
 	| struct_specifier SEMICOLON                                    { $$ = $1; pContext->AddStructDef($$); }
 	| declaration                                                   { $$ = $1; pContext->AddGlobal($$); }
     ;
@@ -284,27 +286,26 @@ variable_identifier:
       IDENTIFIER                                                    { $$ = new IdentifierNode(pContext, @$, $1); }
     ;
 
-function_prototype:
-      function_declarator RIGHT_PAREN                               { $$ = $1; }
+module_prototype:
+      module_declarator RIGHT_PAREN                                 { $$ = $1; }
     ;
 
-function_declarator:
-      function_header                                               { $$ = $1; }
-	| function_header_with_parameters								{ $$ = $1; }
+module_declarator:
+	  module_header_with_parameters								    { $$ = $1; }
     ;
 
-function_header_with_parameters:
-	  function_header parameter_declaration							{ $$ = $1; dynamic_cast<FunctionDeclaratorNode*>($$)->AddParameter($2); }
-	| function_header_with_parameters COMMA parameter_declaration   { $$ = $1; dynamic_cast<FunctionDeclaratorNode*>($$)->AddParameter($3); }
+module_header_with_parameters:
+	  module_header parameter_declaration							{ $$ = $1; dynamic_cast<ModuleDeclaratorNode*>($$)->AddParameter($2); }
+	| module_header_with_parameters COMMA parameter_declaration     { $$ = $1; dynamic_cast<ModuleDeclaratorNode*>($$)->AddParameter($3); }
 	;
 
-function_header:
-      fully_specified_type IDENTIFIER LEFT_PAREN                    { $$ = new FunctionDeclaratorNode(pContext, $1, $2, -1); }
-    | fully_specified_type IDENTIFIER LT IDENTIFIER GT LEFT_PAREN   { $$ = new FunctionDeclaratorNode(pContext, $1, $2, $4); } 
+module_header:
+      MODULE_TOKEN IDENTIFIER LEFT_PAREN                            { $$ = new ModuleDeclaratorNode(pContext, $2, -1); }
+    | MODULE_TOKEN IDENTIFIER LT IDENTIFIER GT LEFT_PAREN           { $$ = new ModuleDeclaratorNode(pContext, $2, $4); } 
     ;
 
 parameter_declaration:
-      fully_specified_type IDENTIFIER                               { $$ = new FunctionParameterNode(pContext, $1, $2); }
+      fully_specified_type IDENTIFIER                               { $$ = new ModuleParameterNode(pContext, $1, $2); }
 	;
 
 fully_specified_type:
@@ -333,8 +334,8 @@ struct_declaration:
                                                                     { $$ = new StructDeclarationNode(pContext, $1, $2, $4); }
     ;
 
-function_definition:
-      function_prototype compound_statement                         { $$ = $1; dynamic_cast<FunctionDeclaratorNode*>($$)->SetStatementList($2); }
+module_definition:
+      module_prototype compound_statement                         { $$ = $1; dynamic_cast<ModuleDeclaratorNode*>($$)->SetStatementList($2); }
     ;
 
 init_declarator_list:

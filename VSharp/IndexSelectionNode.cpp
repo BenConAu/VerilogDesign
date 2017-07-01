@@ -2,7 +2,7 @@
 #include "StructMember.h"
 #include "StructTypeInfo.h"
 #include "VariableInfo.h"
-#include "FunctionDeclaratorNode.h"
+#include "ModuleDeclaratorNode.h"
 #include "PSLCompilerContext.h"
 
 IndexSelectionNode::IndexSelectionNode(

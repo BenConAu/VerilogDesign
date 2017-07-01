@@ -2,7 +2,7 @@
 #include "IdentifierNode.h"
 #include "VariableInfo.h"
 #include "PSLCompilerContext.h"
-#include "FunctionDeclaratorNode.h"
+#include "ModuleDeclaratorNode.h"
 #include "../PhaethonObjWriter/ObjWriter.h"
 
 PackByteNode::PackByteNode(

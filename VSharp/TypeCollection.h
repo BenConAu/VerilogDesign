@@ -9,7 +9,7 @@
 #include "ArrayTypeInfo.h"
 #include "GenericTypeInfo.h"
 
-class FunctionDeclaratorNode;
+class ModuleDeclaratorNode;
 
 class TypeCollection
 {
@@ -19,10 +19,10 @@ public:
     BasicTypeInfo* GetBasicType(int type);
     PointerTypeInfo* GetPointerType(TypeInfo* pBaseType);
     ArrayTypeInfo* GetArrayType(TypeInfo* pBaseType);
-    GenericTypeInfo* GetGenericType(int symIndex, FunctionDeclaratorNode* pScope);
+    GenericTypeInfo* GetGenericType(int symIndex, ModuleDeclaratorNode* pScope);
 
     void AddStructType(int symIndex, StructTypeInfo* pInfo);
-    GenericTypeInfo* AddGenericType(int symIndex, FunctionDeclaratorNode* pScope);
+    GenericTypeInfo* AddGenericType(int symIndex, ModuleDeclaratorNode* pScope);
 
 private:
     std::map<int, std::unique_ptr<StructTypeInfo> > _structTypes;

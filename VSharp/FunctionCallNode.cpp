@@ -1,7 +1,7 @@
 #include "FunctionCallNode.h"
 #include "VariableInfo.h"
 #include "FunctionInfo.h"
-#include "FunctionDeclaratorNode.h"
+#include "ModuleDeclaratorNode.h"
 #include "PSLCompilerContext.h"
 #include "TypeNode.h"
 #include "VSharp.tab.h"

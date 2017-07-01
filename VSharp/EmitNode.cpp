@@ -1,6 +1,6 @@
 #include "EmitNode.h"
 #include "ExpressionNode.h"
-#include "FunctionDeclaratorNode.h"
+#include "ModuleDeclaratorNode.h"
 
 EmitNode::EmitNode(
     PSLCompilerContext *pContext,

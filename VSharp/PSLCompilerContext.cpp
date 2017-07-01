@@ -68,7 +68,7 @@ void PSLCompilerContext::AddGlobal(ASTNode *pNode)
     _numGlobals++;
 }
 
-void PSLCompilerContext::AddFuncDef(ASTNode *pNode)
+void PSLCompilerContext::AddModuleDef(ASTNode *pNode)
 {
     // Just tack onto the end
     _rootNodes.push_back(std::unique_ptr<ASTNode>(pNode));
@@ -97,9 +97,9 @@ void PSLCompilerContext::Parse()
     for (size_t i = _numStructs + _numGlobals + 1; i < _rootNodes.size(); i++)
     {
         // Add after most recent function node unless it is main
-        FunctionDeclaratorNode *pFuncNode = dynamic_cast<FunctionDeclaratorNode *>(_rootNodes[i].get());
+        ModuleDeclaratorNode *pModuleNode = dynamic_cast<ModuleDeclaratorNode *>(_rootNodes[i].get());
 
-        if (pFuncNode->IsEntryPoint())
+        if (pModuleNode->IsEntryPoint())
         {
             //printf("Moving entry point\n");
             std::unique_ptr<ASTNode> temp = std::move(_rootNodes[i]);

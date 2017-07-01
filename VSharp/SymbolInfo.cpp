@@ -3,7 +3,7 @@
 
 SymbolInfo::SymbolInfo(
     PSLCompilerContext *pContext,   // The context that this symbol lives in
-    FunctionDeclaratorNode *pScope, // The scope of the symbol
+    ModuleDeclaratorNode *pScope,   // The scope of the symbol
     int symIndex                    // The symbol index for the identifier for the symbol
     )
 {

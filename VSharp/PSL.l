@@ -56,6 +56,7 @@
 "readport"           { return READPORT_TOKEN; }
 "writeport"          { return WRITEPORT_TOKEN; }
 "packbyte"           { return PACKBYTE_TOKEN; }
+"module"             { return MODULE_TOKEN; }
 "__datasegmentend"   { return DATASEGEND_TOKEN; }
 "return"             { return RETURN_TOKEN; }
 "if"                 { return IF_TOKEN; }

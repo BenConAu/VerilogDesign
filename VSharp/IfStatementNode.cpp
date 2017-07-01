@@ -1,6 +1,6 @@
 #include "IfStatementNode.h"
 #include "PSLCompilerContext.h"
-#include "FunctionDeclaratorNode.h"
+#include "ModuleDeclaratorNode.h"
 #include "ExpressionNode.h"
 #include "StatementListNode.h"
 #include "../PhaethonObjWriter/ObjWriter.h"
