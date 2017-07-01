@@ -127,6 +127,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> unary_expression
 %type <pNode> savereg_statement
 %type <pNode> module_states
+%type <pNode> module_member
 %type <pNode> module_state
 %type <pNode> state_list
 
@@ -333,8 +334,13 @@ module_states:
     ;
 
 state_list:
-      module_state                                                  { $$ = new ListNode(pContext, $1); }
-    | state_list module_state                                       { $$ = $1; $$->AddNode($2); }
+      module_member                                                 { $$ = new ListNode(pContext, $1); }
+    | state_list module_member                                      { $$ = $1; $$->AddNode($2); }
+    ;
+
+module_member:
+      module_state                                                  { $$ = $1; }
+    | declaration_statement                                         { $$ = $1; }
     ;
 
 module_state:
