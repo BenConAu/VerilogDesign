@@ -142,8 +142,8 @@ PSLcc: lex.yy.c \
 	   WritePortNode.cpp \
 	   WhileStatementNode.cpp -o VSharpC
 
-lex.yy.c: PSL.l
-	flex --header-file=lex.h PSL.l
+lex.yy.c: VSharp.l
+	flex --header-file=lex.h VSharp.l
 
 VSharp.tab.c: VSharp.y
 	bison -d VSharp.y
