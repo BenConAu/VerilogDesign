@@ -87,25 +87,16 @@ extern int yydebug;
     ELSE_TOKEN = 297,
     WHILE_TOKEN = 298,
     NULLPTR_TOKEN = 299,
-    DOUTR_TOKEN = 300,
-    DINR_TOKEN = 301,
-    DLENR_TOKEN = 302,
-    EXECR_TOKEN = 303,
-    EXIT_TOKEN = 304,
-    VPENABLE_TOKEN = 305,
-    MOVRC_TOKEN = 306,
-    MOVRR_TOKEN = 307,
-    EMIT_TOKEN = 308,
-    SIZEOF_TOKEN = 309,
-    OFFSETPTR_TOKEN = 310,
-    CASTPTR_TOKEN = 311,
-    READPORT_TOKEN = 312,
-    WRITEPORT_TOKEN = 313,
-    PACKBYTE_TOKEN = 314,
-    DATASEGEND_TOKEN = 315,
-    SAVEREG_TOKEN = 316,
-    RSP_TOKEN = 317,
-    IDENTIFIER = 318
+    SIZEOF_TOKEN = 300,
+    OFFSETPTR_TOKEN = 301,
+    CASTPTR_TOKEN = 302,
+    READPORT_TOKEN = 303,
+    WRITEPORT_TOKEN = 304,
+    PACKBYTE_TOKEN = 305,
+    DATASEGEND_TOKEN = 306,
+    SAVEREG_TOKEN = 307,
+    RSP_TOKEN = 308,
+    IDENTIFIER = 309
   };
 #endif
 
@@ -123,7 +114,7 @@ union YYSTYPE
     OpCode opCode;
     RegIndex regIndex;
 
-#line 127 "VSharp.tab.h" /* yacc.c:1915  */
+#line 118 "VSharp.tab.h" /* yacc.c:1915  */
 };
 
 typedef union YYSTYPE YYSTYPE;

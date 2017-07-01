@@ -66,20 +66,6 @@
 "__saveregisters"    { return SAVEREG_TOKEN; }
 "true"               { yylval->intVal = 1; return BOOLCONSTANT; }
 "false"              { yylval->intVal = 0; return BOOLCONSTANT; }
-"__emit"             { return EMIT_TOKEN; }
-"__rsp"              { yylval->regIndex = 64; return REG_INDEX; }
-"__sct"              { yylval->regIndex = 66; return REG_INDEX; }
-"__rkpt"             { yylval->regIndex = 68; return REG_INDEX; }
-"__rupt"             { yylval->regIndex = 69; return REG_INDEX; }
-"__r"[0-9]           { yylval->regIndex = atoi(yytext + 3); return REG_INDEX; }
-"doutr"              { return DOUTR_TOKEN; }
-"dinr"               { return DINR_TOKEN; }
-"dlenr"              { return DLENR_TOKEN; }
-"execr"              { return EXECR_TOKEN; }
-"exit"               { return EXIT_TOKEN; }
-"vpenable"           { return VPENABLE_TOKEN; }
-"movrc"              { return MOVRC_TOKEN; }
-"movrr"              { return MOVRR_TOKEN; }
 [0-9]+               { yylval->intVal = atoi(yytext); return INTCONSTANT; }
 "0x"[0-9A-Fa-f]+     { yylval->intVal = strtol(yytext, nullptr, 16); return INTCONSTANT; }
 "f"[0-9]+"\."[0-9]*  { yylval->floatVal = (float)atof(yytext + 1); return FLOATCONSTANT; }

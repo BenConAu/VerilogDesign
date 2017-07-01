@@ -3,23 +3,25 @@ module DemoModule(
 	out byte out1
 	)
 {
-	DemoModule()
+	state initial
 	{
 		_ExampleRegister = 0;
+
+		transition StartState;
 	}
 
-	initial state StartState
+	state StartState
 	{
 		_ExampleRegister = ExampleRegister + 1;
 		
-		transition(EndState);
+		transition EndState;
 	}
 
 	state EndState
 	{
 		_ExampleRegister = ExampleRegister - 1;
 		
-		transition(StartState);
+		transition StartState;
 	}
 
 	byte _ExampleRegister;
