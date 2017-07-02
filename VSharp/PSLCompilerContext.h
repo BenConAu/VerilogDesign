@@ -3,7 +3,6 @@
 #include "RegisterCollection.h"
 #include "SymbolTable.h"
 #include "TypeCollection.h"
-#include "Operand.h"
 #include "ASTNode.h"
 #include "VSharp.tab.h"
 #include "ExpressionResult.h"

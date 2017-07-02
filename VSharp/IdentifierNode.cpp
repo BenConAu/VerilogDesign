@@ -18,12 +18,11 @@ void IdentifierNode::VerifyNodeImpl()
 }
 
 ExpressionResult *IdentifierNode::CalculateResult()
-{/*
+{
     VariableInfo *pInfo = GetVariableInfo();
-    FunctionDeclaratorNode *pScope = GetTypedParent<FunctionDeclaratorNode>();
+    ModuleDeclaratorNode *pScope = GetTypedParent<ModuleDeclaratorNode>();
 
-    return pInfo->CalculateResult(pScope);*/
-    return nullptr;
+    return pInfo->CalculateResult(pScope);
 }
 
 VariableInfo *IdentifierNode::GetVariableInfo()

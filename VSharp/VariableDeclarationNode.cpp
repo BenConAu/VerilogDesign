@@ -22,18 +22,12 @@ VariableDeclarationNode::VariableDeclarationNode(
     }
 
     _symIndex = symIndex;
-    _fGlobal = false;
 }
 
 void VariableDeclarationNode::PreVerifyNodeImpl()
 {
-    printf("Adding variable %s\n", GetContext()->_symbols[_symIndex].c_str());
-    // Is this a global?
+    //printf("Adding variable %s\n", GetContext()->_symbols[_symIndex].c_str());
     ModuleDeclaratorNode *pFunc = GetTypedParent<ModuleDeclaratorNode>();
-    if (pFunc == nullptr)
-    {
-        _fGlobal = true;
-    }
 
     // Add variable to collection and mark first usage
     GetContext()->_symbolTable.AddVariable(

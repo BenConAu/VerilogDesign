@@ -13,12 +13,10 @@ struct PerFunctionInfo
 {
     PerFunctionInfo()
     {
-        _regIndex = 0xFF;
         _referenced = false;
         _allocated = false;
     }
 
-    RegIndex _regIndex;
     bool _referenced;
     bool _allocated;
 };
@@ -32,12 +30,11 @@ class VariableInfo : public SymbolInfo
     VariableInfo(
         PSLCompilerContext *pContext,   // The context that this variable lives in
         int symIndex,                   // The symbol index for the identifier for the variable
-        ModuleDeclaratorNode *pScope, // The scope that the variable is declared in
+        ModuleDeclaratorNode *pScope,   // The scope that the variable is declared in
         TypeInfo *pInfo                 // The type of the variable
         );
 
     LocationType GetLocationType() const { return _locationType; }
-    unsigned int GetMemLocation() const { return _memLocation; }
     ExpressionResult *CalculateResult(ModuleDeclaratorNode *pScope);
 
     void ReferenceFrom(ModuleDeclaratorNode *pScope);
@@ -46,21 +43,13 @@ class VariableInfo : public SymbolInfo
 
     TypeInfo *GetTypeInfo() { return _pType; }
 
-    static unsigned int GetDataSegmentEnd() { return _dataSegEnd; }
-
   private:
     // Type of location (globals are stored in data segment, local backed by register)
     LocationType _locationType;
-
-    // Location of variable in memory (not valid for register backed)
-    unsigned int _memLocation;
 
     // C++ type of variable
     TypeInfo *_pType;
 
     // Register allocated by scope (globals have multiple register locations mapped)
     std::map<ModuleDeclaratorNode *, PerFunctionInfo> _regIndexMap;
-
-    // Track data segment allocations
-    static unsigned int _dataSegEnd;
 };

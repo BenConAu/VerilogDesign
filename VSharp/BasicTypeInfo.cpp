@@ -20,7 +20,9 @@ TypeClass BasicTypeInfo::GetTypeClass()
 
 std::string BasicTypeInfo::DebugPrint()
 {
-    return "BasicTypeInfo";
+    char result[100];
+    sprintf(result, "BasicTypeInfo token = %d", _typeToken);
+    return result;
 }
 
 std::string BasicTypeInfo::GetTypeName()

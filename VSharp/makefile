@@ -32,16 +32,12 @@ PSLcc: lex.yy.c \
 	   IfStatementNode.h \
 	   IndexSelectionNode.cpp \
 	   IndexSelectionNode.h \
-	   KnownConstantNode.cpp \
-	   KnownConstantNode.h \
 	   ModuleDeclaratorNode.cpp \
 	   ModuleDeclaratorNode.h \
 	   ModuleParameterNode.cpp \
 	   ModuleParameterNode.h \
 	   OffsetNode.cpp \
 	   OffsetNode.h \
-	   Operand.cpp \
-	   Operand.h \
 	   OperatorNode.cpp \
 	   OperatorNode.h \
 	   PackByteNode.cpp \
@@ -55,13 +51,10 @@ PSLcc: lex.yy.c \
 	   ReadPortNode.h \
 	   RegisterCollection.cpp \
 	   RegisterCollection.h \
-	   RegisterNode.cpp \
-	   RegisterNode.h \
 	   ReturnNode.cpp \
 	   ReturnNode.h \
 	   SaveRegistersNode.cpp \
 	   SaveRegistersNode.h \
-	   SizeOfNode.h \
 	   ListNode.h \
 	   StructMember.h \
 	   SmartRegister.cpp \
@@ -109,19 +102,16 @@ PSLcc: lex.yy.c \
 	   IdentifierNode.cpp \
 	   IfStatementNode.cpp \
 	   IndexSelectionNode.cpp \
-	   KnownConstantNode.cpp \
 	   ModuleDeclaratorNode.cpp \
 	   ModuleParameterNode.cpp \
 	   OffsetNode.cpp \
 	   OperatorNode.cpp \
-	   Operand.cpp \
 	   PackByteNode.cpp \
 	   PointerTypeInfo.cpp \
 	   PSLCompiler.cpp \
 	   PSLCompilerContext.cpp \
 	   ReadPortNode.cpp \
 	   RegisterCollection.cpp \
-	   RegisterNode.cpp \
 	   ReturnNode.cpp \
 	   SaveRegistersNode.cpp \
 	   SmartRegister.cpp \

@@ -21,5 +21,4 @@ public:
 private:
   int _symIndex;
   YYLTYPE _location;
-  bool _fGlobal;
 };

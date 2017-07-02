@@ -25,7 +25,6 @@ void yyerror(YYLTYPE*, void*, const char *s);
     int symIndex;
     ASTNode* pNode;
     OpCode opCode;
-    RegIndex regIndex;
 }
 
 %locations
@@ -37,7 +36,6 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token <intVal> INTCONSTANT
 %token <floatVal> FLOATCONSTANT
 %token <intVal> BOOLCONSTANT
-%token <regIndex> REG_INDEX
 %token AT
 %token SEMICOLON
 %token EQUAL
@@ -79,7 +77,6 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token CASTPTR_TOKEN
 %token READPORT_TOKEN
 %token PACKBYTE_TOKEN
-%token DATASEGEND_TOKEN
 %token SAVEREG_TOKEN
 %token RSP_TOKEN
 %token <symIndex> IDENTIFIER
@@ -110,7 +107,6 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> parameter_declaration
 %type <pNode> module_header_with_parameters
 %type <pNode> packbyte_statement
-%type <pNode> sizeof_expression
 %type <pNode> offset_expression
 %type <pNode> function_call_header
 %type <pNode> function_call_header_no_param
@@ -240,16 +236,9 @@ primary_expression:
     | BOOLCONSTANT                                                  { $$ = new ConstantNode(pContext, ConstantNode::Bool, $1); }
     | FLOATCONSTANT                                                 { $$ = new ConstantNode(pContext, $1); }
 	| NULLPTR_TOKEN                                                 { $$ = new ConstantNode(pContext, ConstantNode::Pointer); }
-    | DATASEGEND_TOKEN                                              { $$ = new KnownConstantNode(pContext, KnownConstants::DataSegmentEnd); }
-    | sizeof_expression                                             { $$ = $1; }
     | offset_expression                                             { $$ = $1; }
     | cast_expression                                               { $$ = $1; }
     | readport_expression                                           { $$ = $1; }
-    | REG_INDEX                                                     { $$ = new RegisterNode(pContext, @$, $1); }
-    ;
-
-sizeof_expression:
-      SIZEOF_TOKEN LEFT_PAREN fully_specified_type RIGHT_PAREN      { $$ = new SizeOfNode(pContext, $3); }
     ;
 
 offset_expression:

@@ -77,5 +77,7 @@ void ConstantNode::VerifyNodeImpl()
 
 ExpressionResult *ConstantNode::CalculateResult()
 {
-    return new ExpressionResult(Operand(GetInteger()));
+    char result[100];
+    sprintf(result, "%d", GetInteger());
+    return new ExpressionResult(result);
 }

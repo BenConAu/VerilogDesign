@@ -1,6 +1,6 @@
 module DemoModule(
-	byte in1,
-	out byte out1
+	word in1,
+	out word out1
 	)
 {
 	state initial
@@ -24,5 +24,5 @@ module DemoModule(
 		transition StartState;
 	}
 
-	byte _ExampleRegister;
+	word _ExampleRegister;
 }

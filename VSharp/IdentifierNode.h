@@ -3,6 +3,8 @@
 #include "ExpressionNode.h"
 #include "VSharp.tab.h"
 
+class VariableInfo;
+
 class IdentifierNode : public ExpressionNode
 {
 public:

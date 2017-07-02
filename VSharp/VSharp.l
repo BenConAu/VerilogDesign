@@ -52,13 +52,11 @@
 "void"               { return VOID_TOKEN; }
 "struct"             { return STRUCT_TOKEN; }
 "nullptr"            { return NULLPTR_TOKEN; }
-"sizeof"             { return SIZEOF_TOKEN; }
 "offsetptr"          { return OFFSETPTR_TOKEN; }
 "castptr"            { return CASTPTR_TOKEN; }
 "readport"           { return READPORT_TOKEN; }
 "packbyte"           { return PACKBYTE_TOKEN; }
 "module"             { return MODULE_TOKEN; }
-"__datasegmentend"   { return DATASEGEND_TOKEN; }
 "return"             { return RETURN_TOKEN; }
 "if"                 { return IF_TOKEN; }
 "while"              { return WHILE_TOKEN; }
