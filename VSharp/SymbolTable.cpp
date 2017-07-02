@@ -2,6 +2,7 @@
 #include "VariableDeclarationNode.h"
 #include "VariableInfo.h"
 #include "ModuleInfo.h"
+#include "StateInfo.h"
 #include "VSharp.tab.h"
 #include <sstream>
 
@@ -47,6 +48,21 @@ ModuleInfo *SymbolTable::AddModule(
     }
 
     ModuleInfo *pNewInfo = new ModuleInfo(_pContext, symIndex, pGenType);
+    _symbols.emplace(std::make_pair(symIndex, std::unique_ptr<SymbolInfo>(pNewInfo)));
+    return pNewInfo;
+}
+
+StateInfo *SymbolTable::AddState(
+    int symIndex,
+    ModuleDeclaratorNode *pScope)
+{
+    for (auto iter = _symbols.lower_bound(symIndex); iter != _symbols.upper_bound(symIndex); iter++)
+    {
+        // Caller can decide how to report this error
+        return nullptr;
+    }
+
+    StateInfo *pNewInfo = new StateInfo(_pContext, pScope, symIndex);
     _symbols.emplace(std::make_pair(symIndex, std::unique_ptr<SymbolInfo>(pNewInfo)));
     return pNewInfo;
 }

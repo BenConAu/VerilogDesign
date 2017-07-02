@@ -9,6 +9,7 @@ class PSLCompilerContext;
 class VariableInfo;
 class ModuleInfo;
 class TypeInfo;
+class StateInfo;
 class GenericTypeInfo;
 class ModuleDeclaratorNode;
 
@@ -26,6 +27,10 @@ class SymbolTable
     ModuleInfo *AddModule(
         int symIndex,
         GenericTypeInfo *pGenType);
+
+    StateInfo *AddState(
+        int symIndex,
+        ModuleDeclaratorNode *pScope);
 
     SymbolInfo *GetInfo(
         int symIndex,

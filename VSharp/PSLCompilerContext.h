@@ -29,11 +29,47 @@ class PSLCompilerContext
     void OutputString(
         const char* pszString);
 
+    void OutputLine(
+        const char* pszLine
+        )
+    {
+        for (int i = 0; i < _outputIndent; i++)
+        {
+            OutputString("  ");
+        }
+        
+        OutputString(pszLine);
+        OutputString("\n");
+    }
+
+
+    template<typename... PT> 
+    void OutputLine(
+        const char* pszLine,
+        PT... params
+        )
+    {
+        char line[512];
+
+        for (int i = 0; i < _outputIndent; i++)
+        {
+            OutputString("  ");
+        }
+        
+        sprintf(line, pszLine, params...);
+        OutputString(line);
+        OutputString("\n");
+    }
+
+    void IncreaseIndent() { _outputIndent++; }
+    void DecreaseIndent() { _outputIndent--; }
+
+    int _indent = 0;
     void *pScanner;
     SymbolTable _symbolTable;
     TypeCollection _typeCollection;
     std::vector<std::string> _symbols;
-    int _indent = 0;
+
     void PrintIndent()
     {
         for (int i = 0; i < _indent; i++)
@@ -54,6 +90,7 @@ class PSLCompilerContext
     std::vector<std::unique_ptr<VerilogWriter>> _writers;
     size_t _numStructs;
     size_t _numGlobals;
+    int _outputIndent = 0;
 
     // Verification stuff
     FunctionDeclaratorNode *_pEntryPoint;

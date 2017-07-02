@@ -23,8 +23,6 @@ PSLcc: lex.yy.c \
 	   FieldSelectionNode.h \
 	   FunctionCallNode.h \
 	   FunctionCallNode.cpp \
-	   ModuleInfo.cpp \
-	   ModuleInfo.h \
 	   GenericTypeInfo.h \
 	   IdentifierNode.cpp \
 	   IdentifierNode.h \
@@ -34,6 +32,8 @@ PSLcc: lex.yy.c \
 	   IndexSelectionNode.h \
 	   ModuleDeclaratorNode.cpp \
 	   ModuleDeclaratorNode.h \
+	   ModuleInfo.cpp \
+	   ModuleInfo.h \
 	   ModuleParameterNode.cpp \
 	   ModuleParameterNode.h \
 	   OffsetNode.cpp \
@@ -51,6 +51,8 @@ PSLcc: lex.yy.c \
 	   ReadPortNode.h \
 	   RegisterCollection.cpp \
 	   RegisterCollection.h \
+	   StateInfo.cpp \
+	   StateInfo.h \
 	   TransitionNode.cpp \
 	   TransitionNode.h \
 	   SaveRegistersNode.cpp \
@@ -98,10 +100,10 @@ PSLcc: lex.yy.c \
 	   ExpressionResult.cpp \
 	   FieldSelectionNode.cpp \
    	   FunctionCallNode.cpp \
-	   ModuleInfo.cpp \
 	   IdentifierNode.cpp \
 	   IfStatementNode.cpp \
 	   IndexSelectionNode.cpp \
+	   ModuleInfo.cpp \
 	   ModuleDeclaratorNode.cpp \
 	   ModuleParameterNode.cpp \
 	   OffsetNode.cpp \
@@ -112,6 +114,7 @@ PSLcc: lex.yy.c \
 	   PSLCompilerContext.cpp \
 	   ReadPortNode.cpp \
 	   RegisterCollection.cpp \
+	   StateInfo.cpp \
 	   TransitionNode.cpp \
 	   SaveRegistersNode.cpp \
 	   SmartRegister.cpp \
