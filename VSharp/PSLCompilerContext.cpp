@@ -19,7 +19,7 @@ PSLCompilerContext::PSLCompilerContext(
     std::string base = pszInputFile;
     base = base.substr(0, base.length() - 3);
 
-    _writers.push_back(std::unique_ptr<VerilogWriter>(new VerilogWriter((base + "asm").c_str())));
+    _writers.push_back(std::unique_ptr<VerilogWriter>(new VerilogWriter((base + ".sv").c_str())));
 
     yylex_init(&pScanner);
     yyset_extra(this, pScanner);
@@ -152,3 +152,12 @@ void PSLCompilerContext::UserAction(void *pVoidLocation, const char *pszText)
         }
     }
 }
+
+void PSLCompilerContext::OutputString(const char *pszLabel)
+{
+    for (int i = 0; i < _writers.size(); i++)
+    {
+        _writers[i]->OutputString(pszLabel);
+    }
+}
+

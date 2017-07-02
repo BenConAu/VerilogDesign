@@ -50,6 +50,21 @@ public:
         return nullptr;
     }
 
+    template<typename T>
+    T* GetTypedChild()
+    {
+        for (size_t i = 0; i < GetChildCount(); i++)
+        {
+            T* pTypedChild = dynamic_cast<T*>(GetChild(i));
+            if (pTypedChild != nullptr)
+            {
+                return pTypedChild;
+            }
+        }
+
+        return nullptr;
+    }
+
     virtual bool IsConstant() const { return false; }
     virtual const char* GetDebugName() { return "NoDebugName"; }
     virtual void PreVerifyNodeImpl() {}
@@ -60,6 +75,7 @@ public:
     size_t GetChildCount() const { return _children.size(); }
     ASTNode* GetChild(size_t i) { return _children[i].get(); }
     ASTNode* GetParent() { return _pParent; }
+    void MoveChild(size_t from, size_t to);
     
     int GetChildIndex(ASTNode* pNode);
 

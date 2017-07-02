@@ -27,7 +27,7 @@ VariableDeclarationNode::VariableDeclarationNode(
 
 void VariableDeclarationNode::PreVerifyNodeImpl()
 {
-    //printf("Adding variable %s\n", GetContext()->_symbols[_symIndex].c_str());
+    printf("Adding variable %s\n", GetContext()->_symbols[_symIndex].c_str());
     // Is this a global?
     ModuleDeclaratorNode *pFunc = GetTypedParent<ModuleDeclaratorNode>();
     if (pFunc == nullptr)

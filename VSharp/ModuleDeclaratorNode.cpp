@@ -4,6 +4,8 @@
 #include "ListNode.h"
 #include "ReturnNode.h"
 #include "VariableInfo.h"
+#include "ModuleInfo.h"
+#include "VariableDeclarationNode.h"
 
 void ModuleDeclaratorNode::PreVerifyNodeImpl()
 {
@@ -15,6 +17,21 @@ void ModuleDeclaratorNode::PreVerifyNodeImpl()
             _genericIndex,
             this);*/
     }
+
+    ListNode* pModuleChildList = GetTypedChild<ListNode>();
+
+    // Sort so that declarations are always first
+    size_t Insert = 0;
+    for (size_t i = 0; i < pModuleChildList->GetChildCount(); i++)
+    {
+        VariableDeclarationNode* pDecl = dynamic_cast<VariableDeclarationNode*>(pModuleChildList->GetChild(i));
+        if (pDecl != nullptr)
+        {
+            //printf("Swapping child to %d\n", (int)i);
+            pModuleChildList->MoveChild(i, Insert);
+            Insert++;
+        }
+    }
 }
 
 void ModuleDeclaratorNode::VerifyNodeImpl()
@@ -24,7 +41,7 @@ void ModuleDeclaratorNode::VerifyNodeImpl()
     TypeNode *pReturnTypeNode = dynamic_cast<TypeNode *>(GetChild(0));
 
     // Add function to collection
-    GetContext()->_symbolTable.AddFunction(
+    GetContext()->_symbolTable.AddModule(
         _symIndex,
         nullptr,
         pReturnTypeNode->GetTypeInfo());
@@ -32,6 +49,9 @@ void ModuleDeclaratorNode::VerifyNodeImpl()
 
 void ModuleDeclaratorNode::PreProcessNodeImpl()
 {
+    
+
+    //GetContext()->OutputString("")
     //printf("PreProcessNodeImpl for %s\n", GetContext()->_symbols[_symIndex].c_str());
 
     // Allocate registers for locals
@@ -70,8 +90,11 @@ void ModuleDeclaratorNode::PreProcessNodeImpl()
 
 void ModuleDeclaratorNode::PostProcessNodeImpl()
 {
-/*    if (IsEntryPoint())
-    {
-        GetContext()->OutputInstruction(OpCode::Exit);
-    }*/
+    char starter[100];
+
+    ModuleInfo* pInfo = dynamic_cast<ModuleInfo*>(GetContext()->_symbolTable.GetInfo(_symIndex, nullptr));
+
+    sprintf(starter, "module %s\nbegin\n", pInfo->GetSymbol());
+    
+    GetContext()->OutputString(starter);
 }

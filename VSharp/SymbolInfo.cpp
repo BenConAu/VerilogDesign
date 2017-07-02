@@ -1,4 +1,4 @@
-#include "SymbolInfo.h"
+#include "ModuleInfo.h"
 #include "PSLCompilerContext.h"
 
 SymbolInfo::SymbolInfo(

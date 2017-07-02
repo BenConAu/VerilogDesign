@@ -27,8 +27,8 @@ ExpressionResult *IdentifierNode::CalculateResult()
 }
 
 VariableInfo *IdentifierNode::GetVariableInfo()
-{/*
-    FunctionDeclaratorNode *pScope = GetTypedParent<FunctionDeclaratorNode>();
+{
+    ModuleDeclaratorNode *pScope = GetTypedParent<ModuleDeclaratorNode>();
     VariableInfo *pInfo = dynamic_cast<VariableInfo *>(GetContext()->_symbolTable.GetInfo(_symIndex, pScope));
     if (pInfo == nullptr)
     {
@@ -37,6 +37,5 @@ VariableInfo *IdentifierNode::GetVariableInfo()
         GetContext()->ReportError(_location, message);
     }
 
-    return pInfo;*/
-    return nullptr;
+    return pInfo;
 }

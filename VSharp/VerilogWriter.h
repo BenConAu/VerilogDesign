@@ -3,8 +3,26 @@
 class VerilogWriter
 {
 public:
-    VerilogWriter(const char* pszFile) {}
+    VerilogWriter(const char *pszFilename)
+    {
+        _pOutFile = ::fopen(pszFilename, "w");
+    }
 
-    void WriteString(const char* pszOut) {}
+    ~VerilogWriter()
+    {
+        ::fclose(_pOutFile);
+    }
+
+    void OutputString(const char* pszOut) 
+    {
+        fprintf(
+            _pOutFile,
+            "%s",
+            pszOut);
+    }
+
     void FinishCode() {}
+
+private:
+    FILE *_pOutFile;
 };

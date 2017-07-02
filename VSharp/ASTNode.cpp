@@ -71,3 +71,10 @@ int ASTNode::GetChildIndex(ASTNode *pNode)
 
     throw "Invalid child given for index query";
 }
+
+void ASTNode::MoveChild(size_t from, size_t to)
+{
+    ASTNode* pRemoved = _children[from].release();
+    _children.erase(_children.begin() + from);
+    _children.emplace(_children.begin() + to, pRemoved);
+}

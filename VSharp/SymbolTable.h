@@ -7,7 +7,7 @@
 
 class PSLCompilerContext;
 class VariableInfo;
-class FunctionInfo;
+class ModuleInfo;
 class TypeInfo;
 class GenericTypeInfo;
 class ModuleDeclaratorNode;
@@ -23,7 +23,7 @@ class SymbolTable
         ModuleDeclaratorNode *pScope,
         TypeInfo *pTypeInfo);
 
-    FunctionInfo *AddFunction(
+    ModuleInfo *AddModule(
         int symIndex,
         GenericTypeInfo *pGenType,
         TypeInfo *pReturnTypeInfo);

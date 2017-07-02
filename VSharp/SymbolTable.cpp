@@ -1,7 +1,7 @@
 #include "SymbolTable.h"
 #include "VariableDeclarationNode.h"
 #include "VariableInfo.h"
-#include "FunctionInfo.h"
+#include "ModuleInfo.h"
 #include "VSharp.tab.h"
 #include <sstream>
 
@@ -36,7 +36,7 @@ VariableInfo *SymbolTable::AddVariable(
     return pNewInfo;
 }
 
-FunctionInfo *SymbolTable::AddFunction(
+ModuleInfo *SymbolTable::AddModule(
     int symIndex,
     GenericTypeInfo *pGenType,
     TypeInfo *pReturnTypeInfo)
@@ -47,7 +47,7 @@ FunctionInfo *SymbolTable::AddFunction(
         return nullptr;
     }
 
-    FunctionInfo *pNewInfo = new FunctionInfo(_pContext, symIndex, pGenType, pReturnTypeInfo);
+    ModuleInfo *pNewInfo = new ModuleInfo(_pContext, symIndex, pGenType, pReturnTypeInfo);
     _symbols.emplace(std::make_pair(symIndex, std::unique_ptr<SymbolInfo>(pNewInfo)));
     return pNewInfo;
 }

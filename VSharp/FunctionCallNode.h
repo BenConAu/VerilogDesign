@@ -3,7 +3,7 @@
 #include "ExpressionNode.h"
 #include "VSharp.tab.h"
 
-class FunctionInfo;
+class ModuleInfo;
 
 class FunctionCallNode : public ExpressionNode
 {
@@ -19,7 +19,7 @@ public:
   ExpressionResult *CalculateResult() override;
   const char *GetDebugName() override { return "FunctionCallNode"; }
 
-  FunctionInfo *GetFunctionInfo();
+  ModuleInfo *GetModuleInfo();
 
 private:
   int _symIndex;

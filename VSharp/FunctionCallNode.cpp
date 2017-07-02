@@ -1,6 +1,6 @@
 #include "FunctionCallNode.h"
 #include "VariableInfo.h"
-#include "FunctionInfo.h"
+#include "ModuleInfo.h"
 #include "ModuleDeclaratorNode.h"
 #include "PSLCompilerContext.h"
 #include "TypeNode.h"
@@ -27,7 +27,7 @@ FunctionCallNode::FunctionCallNode(
 void FunctionCallNode::VerifyNodeImpl()
 {
     // Function needs to be defined
-    FunctionInfo *pInfo = GetFunctionInfo();
+    ModuleInfo *pInfo = GetModuleInfo();
     if (pInfo == nullptr)
     {
         GetContext()->ReportError(_location, "Unknown function called");
@@ -118,7 +118,7 @@ ExpressionResult *FunctionCallNode::CalculateResult()
     return nullptr;
 }
 
-FunctionInfo *FunctionCallNode::GetFunctionInfo()
+ModuleInfo *FunctionCallNode::GetModuleInfo()
 {
-    return dynamic_cast<FunctionInfo *>(GetContext()->_symbolTable.GetInfo(_symIndex, nullptr));
+    return dynamic_cast<ModuleInfo *>(GetContext()->_symbolTable.GetInfo(_symIndex, nullptr));
 }

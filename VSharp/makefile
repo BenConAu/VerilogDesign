@@ -23,8 +23,8 @@ PSLcc: lex.yy.c \
 	   FieldSelectionNode.h \
 	   FunctionCallNode.h \
 	   FunctionCallNode.cpp \
-	   FunctionInfo.cpp \
-	   FunctionInfo.h \
+	   ModuleInfo.cpp \
+	   ModuleInfo.h \
 	   GenericTypeInfo.h \
 	   IdentifierNode.cpp \
 	   IdentifierNode.h \
@@ -92,7 +92,7 @@ PSLcc: lex.yy.c \
 	   WhileStatementNode.h \
 	   StateDeclaratorNode.cpp \
 	   StateDeclaratorNode.h
-	clang++ -std=c++11 -Wno-deprecated-register -g lex.yy.c \
+	clang++ -std=c++14 -Wno-deprecated-register -g lex.yy.c \
 	   VSharp.tab.c \
 	   ArrayTypeInfo.cpp \
 	   ASTNode.cpp \
@@ -105,7 +105,7 @@ PSLcc: lex.yy.c \
 	   ExpressionResult.cpp \
 	   FieldSelectionNode.cpp \
    	   FunctionCallNode.cpp \
-	   FunctionInfo.cpp \
+	   ModuleInfo.cpp \
 	   IdentifierNode.cpp \
 	   IfStatementNode.cpp \
 	   IndexSelectionNode.cpp \
