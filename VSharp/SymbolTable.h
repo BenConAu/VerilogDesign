@@ -25,8 +25,7 @@ class SymbolTable
 
     ModuleInfo *AddModule(
         int symIndex,
-        GenericTypeInfo *pGenType,
-        TypeInfo *pReturnTypeInfo);
+        GenericTypeInfo *pGenType);
 
     SymbolInfo *GetInfo(
         int symIndex,

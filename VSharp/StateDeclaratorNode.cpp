@@ -17,23 +17,6 @@ StateDeclaratorNode::StateDeclaratorNode(
 
 void StateDeclaratorNode::VerifyNodeImpl()
 {
-    ExpressionNode *pPort = dynamic_cast<ExpressionNode *>(GetChild(0));
-    ExpressionNode *pData = dynamic_cast<ExpressionNode *>(GetChild(1));
-
-    BasicTypeInfo *pPortType = dynamic_cast<BasicTypeInfo *>(pPort->GetTypeInfo());
-    BasicTypeInfo *pDataType = dynamic_cast<BasicTypeInfo *>(pData->GetTypeInfo());
-
-    if (pPortType == nullptr ||
-        pPortType->GetTypeToken() != WORD_TOKEN)
-    {
-        GetContext()->ReportError(_location, "writeport requires word for input");
-    }
-
-    if (pDataType == nullptr ||
-        pDataType->GetTypeToken() != WORD_TOKEN)
-    {
-        GetContext()->ReportError(_location, "writeport requires word for data");
-    }
 }
 
 void StateDeclaratorNode::PostProcessNodeImpl()

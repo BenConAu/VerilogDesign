@@ -12,14 +12,14 @@ module DemoModule(
 
 	state StartState
 	{
-		_ExampleRegister = ExampleRegister + 1;
+		_ExampleRegister = _ExampleRegister + 1;
 		
 		transition EndState;
 	}
 
 	state EndState
 	{
-		_ExampleRegister = ExampleRegister - 1;
+		_ExampleRegister = _ExampleRegister - 1;
 		
 		transition StartState;
 	}

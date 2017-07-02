@@ -1,8 +1,8 @@
-#include "ReturnNode.h"
+#include "TransitionNode.h"
 #include "ExpressionNode.h"
 #include "ModuleDeclaratorNode.h"
 
-void ReturnNode::PostProcessNodeImpl()
+void TransitionNode::PostProcessNodeImpl()
 {
     // What function are we returning from
 /*    FunctionDeclaratorNode *pFunc = GetTypedParent<FunctionDeclaratorNode>();

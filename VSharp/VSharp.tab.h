@@ -78,7 +78,7 @@ extern int yydebug;
     FLOAT_TOKEN = 288,
     VOID_TOKEN = 289,
     STRUCT_TOKEN = 290,
-    RETURN_TOKEN = 291,
+    TRANSITION_TOKEN = 291,
     LEFT_BRACE = 292,
     RIGHT_BRACE = 293,
     LEFT_BRACKET = 294,

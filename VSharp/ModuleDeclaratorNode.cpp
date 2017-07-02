@@ -2,7 +2,7 @@
 #include "ModuleParameterNode.h"
 #include "TypeNode.h"
 #include "ListNode.h"
-#include "ReturnNode.h"
+#include "TransitionNode.h"
 #include "VariableInfo.h"
 #include "ModuleInfo.h"
 #include "VariableDeclarationNode.h"
@@ -36,15 +36,11 @@ void ModuleDeclaratorNode::PreVerifyNodeImpl()
 
 void ModuleDeclaratorNode::VerifyNodeImpl()
 {
-    //printf("Verifying function declaration of %s\n", GetContext()->_symbols[_symIndex].c_str());
-
-    TypeNode *pReturnTypeNode = dynamic_cast<TypeNode *>(GetChild(0));
-
     // Add function to collection
     GetContext()->_symbolTable.AddModule(
         _symIndex,
-        nullptr,
-        pReturnTypeNode->GetTypeInfo());
+        nullptr
+        );
 }
 
 void ModuleDeclaratorNode::PreProcessNodeImpl()

@@ -63,7 +63,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token FLOAT_TOKEN
 %token VOID_TOKEN
 %token STRUCT_TOKEN
-%token RETURN_TOKEN
+%token TRANSITION_TOKEN
 %token LEFT_BRACE
 %token RIGHT_BRACE
 %token LEFT_BRACKET
@@ -111,7 +111,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> function_call_header
 %type <pNode> function_call_header_no_param
 %type <pNode> function_call
-%type <pNode> return_statement
+%type <pNode> transition_statement
 %type <pNode> jump_statement
 %type <pNode> cast_expression
 %type <pNode> readport_expression
@@ -372,11 +372,11 @@ function_call_header:
     ;
 
 jump_statement:
-      return_statement                                              { $$ = $1; }
+      transition_statement                                          { $$ = $1; }
     ;
 
-return_statement:
-      RETURN_TOKEN assignment_expression SEMICOLON                  { $$ = new ReturnNode(pContext, $2); }
+transition_statement:
+      TRANSITION_TOKEN IDENTIFIER SEMICOLON                         { $$ = new TransitionNode(pContext, $2); }
     ;
 
 packbyte_statement:

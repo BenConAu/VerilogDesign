@@ -38,8 +38,7 @@ VariableInfo *SymbolTable::AddVariable(
 
 ModuleInfo *SymbolTable::AddModule(
     int symIndex,
-    GenericTypeInfo *pGenType,
-    TypeInfo *pReturnTypeInfo)
+    GenericTypeInfo *pGenType)
 {
     for (auto iter = _symbols.lower_bound(symIndex); iter != _symbols.upper_bound(symIndex); iter++)
     {
@@ -47,7 +46,7 @@ ModuleInfo *SymbolTable::AddModule(
         return nullptr;
     }
 
-    ModuleInfo *pNewInfo = new ModuleInfo(_pContext, symIndex, pGenType, pReturnTypeInfo);
+    ModuleInfo *pNewInfo = new ModuleInfo(_pContext, symIndex, pGenType);
     _symbols.emplace(std::make_pair(symIndex, std::unique_ptr<SymbolInfo>(pNewInfo)));
     return pNewInfo;
 }

@@ -26,7 +26,7 @@ FunctionCallNode::FunctionCallNode(
 
 void FunctionCallNode::VerifyNodeImpl()
 {
-    // Function needs to be defined
+    /*// Function needs to be defined
     ModuleInfo *pInfo = GetModuleInfo();
     if (pInfo == nullptr)
     {
@@ -56,7 +56,7 @@ void FunctionCallNode::VerifyNodeImpl()
         }
 
         SetType(pInfo->GetReturnTypeInfo());
-    }
+    }*/
 }
 
 ExpressionResult *FunctionCallNode::CalculateResult()
