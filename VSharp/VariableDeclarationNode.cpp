@@ -3,6 +3,7 @@
 #include "AssignmentNode.h"
 #include "IdentifierNode.h"
 #include "TypeNode.h"
+#include "VariableLocationType.h"
 
 VariableDeclarationNode::VariableDeclarationNode(
     PSLCompilerContext *pContext,
@@ -31,8 +32,9 @@ void VariableDeclarationNode::PreVerifyNodeImpl()
 
     // Add variable to collection and mark first usage
     GetContext()->_symbolTable.AddVariable(
-        _symIndex,
         pFunc,
+        _symIndex,
+        VariableLocationType::Member,
         dynamic_cast<TypeNode *>(GetChild(0))->GetTypeInfo());
 }
 

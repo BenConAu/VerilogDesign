@@ -1,13 +1,13 @@
 #pragma once
 
 #include <map>
-#include "RegisterCollection.h"
-#include "VariableLocation.h"
+#include "VariableLocationType.h"
 #include "SymbolInfo.h"
 
 class ASTNode;
 class TypeInfo;
 class ExpressionResult;
+enum class VariableLocationType;
 
 struct PerFunctionInfo
 {
@@ -21,20 +21,18 @@ struct PerFunctionInfo
     bool _allocated;
 };
 
-// Every variable that is declared has to have data tracked for it. This includes
-// where it resides in memory (if anywhere), whether it is assigned to a register
-// at all, and what type it is.
 class VariableInfo : public SymbolInfo
 {
   public:
     VariableInfo(
         PSLCompilerContext *pContext,   // The context that this variable lives in
-        int symIndex,                   // The symbol index for the identifier for the variable
         ModuleDeclaratorNode *pScope,   // The scope that the variable is declared in
+        int symIndex,                   // The symbol index for the identifier for the variable
+        VariableLocationType location,  // The location of the variable
         TypeInfo *pInfo                 // The type of the variable
         );
 
-    LocationType GetLocationType() const { return _locationType; }
+    VariableLocationType GetLocationType() const { return _locationType; }
     ExpressionResult *CalculateResult(ModuleDeclaratorNode *pScope);
 
     void ReferenceFrom(ModuleDeclaratorNode *pScope);
@@ -45,7 +43,7 @@ class VariableInfo : public SymbolInfo
 
   private:
     // Type of location (globals are stored in data segment, local backed by register)
-    LocationType _locationType;
+    VariableLocationType _locationType;
 
     // C++ type of variable
     TypeInfo *_pType;

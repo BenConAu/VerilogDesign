@@ -9,13 +9,20 @@ void ModuleParameterNode::VerifyNodeImpl()
     // Is this a global?
     ModuleDeclaratorNode *pModule = GetTypedParent<ModuleDeclaratorNode>();
 
+    VariableLocationType location = VariableLocationType::Member;
+    if (_fOut)
+    {
+        location = VariableLocationType::Output;
+    }
+    else
+    {
+        location = VariableLocationType::Input;
+    }
+
     // Add variable to collection and mark first usage
     VariableInfo *pParamInfo = GetContext()->_symbolTable.AddVariable(
-        _symIndex,
         pModule,
+        _symIndex,
+        location,
         dynamic_cast<TypeNode *>(GetChild(0))->GetTypeInfo());
-
-    // Our index in the function is the register we want
-    int index = GetParent()->GetChildIndex(this);
-    RegIndex regIndex = static_cast<RegIndex>(index - 1);
 }

@@ -12,6 +12,7 @@ class TypeInfo;
 class StateInfo;
 class GenericTypeInfo;
 class ModuleDeclaratorNode;
+enum class VariableLocationType;
 
 class SymbolTable
 {
@@ -20,8 +21,9 @@ class SymbolTable
     void AddBuiltin();
 
     VariableInfo *AddVariable(
-        int symIndex,
         ModuleDeclaratorNode *pScope,
+        int symIndex,
+        VariableLocationType location,
         TypeInfo *pTypeInfo);
 
     ModuleInfo *AddModule(

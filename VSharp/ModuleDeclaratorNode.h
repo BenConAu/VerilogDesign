@@ -11,8 +11,7 @@ public:
         int symIndex,
         int genericSym
         ) : 
-            ASTNode(pContext),
-            _regCollection(32)  // TODO: Shrink registers on function calls somehow
+            ASTNode(pContext)
     {
         _symIndex = symIndex;
         _genericIndex = genericSym;
@@ -44,17 +43,12 @@ public:
         return (GetContext()->_symbols[_symIndex] == "main");
     }
 
-    RegisterCollection* GetRegCollection() { return &_regCollection; }
-
 private:
     // The symbol index of the function identifier
     int _symIndex;
 
     // The symbol index of the generic type
     int _genericIndex;
-
-    // The register allocator for this function
-    RegisterCollection _regCollection;
 
     // Param count
     int _paramCount;

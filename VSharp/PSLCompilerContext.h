@@ -1,6 +1,5 @@
 #pragma once
 
-#include "RegisterCollection.h"
 #include "SymbolTable.h"
 #include "TypeCollection.h"
 #include "ASTNode.h"

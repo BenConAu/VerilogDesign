@@ -13,14 +13,12 @@ SymbolTable::SymbolTable(PSLCompilerContext *pContext)
 
 void SymbolTable::AddBuiltin()
 {
-    int dseIndex = _pContext->AddSymbol("__datasegmentend");
-    PointerTypeInfo *pDseType = _pContext->_typeCollection.GetPointerType(nullptr);
-    AddVariable(dseIndex, nullptr, pDseType);
 }
 
 VariableInfo *SymbolTable::AddVariable(
-    int symIndex,
     ModuleDeclaratorNode *pScope,
+    int symIndex,
+    VariableLocationType location,
     TypeInfo *pTypeInfo)
 {
     for (auto iter = _symbols.lower_bound(symIndex); iter != _symbols.upper_bound(symIndex); iter++)
@@ -32,7 +30,7 @@ VariableInfo *SymbolTable::AddVariable(
         }
     }
 
-    VariableInfo *pNewInfo = new VariableInfo(_pContext, symIndex, pScope, pTypeInfo);
+    VariableInfo *pNewInfo = new VariableInfo(_pContext, pScope, symIndex, location, pTypeInfo);
     _symbols.emplace(std::make_pair(symIndex, std::unique_ptr<SymbolInfo>(pNewInfo)));
     return pNewInfo;
 }

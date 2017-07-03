@@ -3,8 +3,6 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "VariableLocation.h"
-#include "SmartRegister.h"
 
 class TypeInfo;
 

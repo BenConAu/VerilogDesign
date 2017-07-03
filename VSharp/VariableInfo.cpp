@@ -5,8 +5,9 @@
 
 VariableInfo::VariableInfo(
     PSLCompilerContext *pContext,   // The context that this variable lives in
-    int symIndex,                   // The symbol index for the identifier for the variable
     ModuleDeclaratorNode *pScope,   // The scope that the variable is declared in
+    int symIndex,                   // The symbol index for the identifier for the variable
+    VariableLocationType location,  // The location of the variable
     TypeInfo *pInfo                 // The type of the variable
     ) : SymbolInfo(pContext, pScope, symIndex)
 {
@@ -16,18 +17,7 @@ VariableInfo::VariableInfo(
     }
 
     _pType = pInfo;
-
-    if (GetScope() == nullptr)
-    {
-        //printf("New memory location for %s at %x\n", GetSymbol(), _dataSegEnd);
-
-        // Globals are always backed with memory storage
-        _locationType = LocationType::Memory;
-    }
-    else
-    {
-        _locationType = LocationType::Register;
-    }
+    _locationType = location;
 }
 
 ExpressionResult *VariableInfo::CalculateResult(ModuleDeclaratorNode *pScope)

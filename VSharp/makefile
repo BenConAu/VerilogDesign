@@ -49,8 +49,6 @@ PSLcc: lex.yy.c \
 	   PSLCompiler.cpp \
 	   ReadPortNode.cpp \
 	   ReadPortNode.h \
-	   RegisterCollection.cpp \
-	   RegisterCollection.h \
 	   StateInfo.cpp \
 	   StateInfo.h \
 	   TransitionNode.cpp \
@@ -59,8 +57,6 @@ PSLcc: lex.yy.c \
 	   SaveRegistersNode.h \
 	   ListNode.h \
 	   StructMember.h \
-	   SmartRegister.cpp \
-	   SmartRegister.h \
 	   StructDeclarationNode.cpp \
 	   StructDeclarationNode.h \
 	   StructSpecifierNode.cpp \
@@ -113,11 +109,9 @@ PSLcc: lex.yy.c \
 	   PSLCompiler.cpp \
 	   PSLCompilerContext.cpp \
 	   ReadPortNode.cpp \
-	   RegisterCollection.cpp \
 	   StateInfo.cpp \
 	   TransitionNode.cpp \
 	   SaveRegistersNode.cpp \
-	   SmartRegister.cpp \
 	   StructDeclarationNode.cpp \
 	   StructSpecifierNode.cpp \
 	   StructTypeInfo.cpp \

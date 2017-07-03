@@ -6,7 +6,6 @@
 #include <deque>
 #include <map>
 
-#include "RegisterCollection.h"
 #include "../PhaethonISA/Generated/PhaethonOpCode.h"
 
 class PSLCompilerContext;
