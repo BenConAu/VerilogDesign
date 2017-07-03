@@ -5,8 +5,6 @@
 
 void ModuleParameterNode::VerifyNodeImpl()
 {
-    //printf("Adding parameter %s\n", GetContext()->_symbols[_symIndex].c_str());
-    // Is this a global?
     ModuleDeclaratorNode *pModule = GetTypedParent<ModuleDeclaratorNode>();
 
     VariableLocationType location = VariableLocationType::Member;
@@ -26,3 +24,15 @@ void ModuleParameterNode::VerifyNodeImpl()
         location,
         dynamic_cast<TypeNode *>(GetChild(0))->GetTypeInfo());
 }
+
+void ModuleParameterNode::PreProcessNodeImpl()
+{
+    ModuleDeclaratorNode *pModule = GetTypedParent<ModuleDeclaratorNode>();
+
+    // Spit out the preamble
+    VariableInfo* pInfo = dynamic_cast<VariableInfo*>(GetContext()->_symbolTable.GetInfo(_symIndex, pModule));
+    const char* pszModifier = _fOut ? "output reg" : "input wire";
+
+    GetContext()->OutputLine("%s[7:0] %s;", pszModifier, pInfo->GetSymbol());
+}
+

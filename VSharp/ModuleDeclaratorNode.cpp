@@ -45,6 +45,7 @@ void ModuleDeclaratorNode::VerifyNodeImpl()
 
 void ModuleDeclaratorNode::PreProcessNodeImpl()
 {
+    // Spit out the preamble
     ModuleInfo* pInfo = dynamic_cast<ModuleInfo*>(GetContext()->_symbolTable.GetInfo(_symIndex, nullptr));
     GetContext()->OutputLine("module %s", pInfo->GetSymbol());
     GetContext()->OutputLine("begin");

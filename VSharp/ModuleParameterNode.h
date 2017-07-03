@@ -13,6 +13,7 @@ public:
     }
 
     void VerifyNodeImpl() override;
+    void PreProcessNodeImpl() override;
     const char* GetDebugName() override { return "ModuleParameterNode"; }
 
 private:
