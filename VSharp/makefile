@@ -43,8 +43,6 @@ PSLcc: lex.yy.c \
 	   StateInfo.h \
 	   TransitionNode.cpp \
 	   TransitionNode.h \
-	   SaveRegistersNode.cpp \
-	   SaveRegistersNode.h \
 	   ListNode.h \
 	   StructMember.h \
 	   StructDeclarationNode.cpp \
@@ -96,7 +94,6 @@ PSLcc: lex.yy.c \
 	   StateInfo.cpp \
 	   TransitionNode.cpp \
 	   RegisterTypeInfo.cpp \
-	   SaveRegistersNode.cpp \
 	   StructDeclarationNode.cpp \
 	   StructSpecifierNode.cpp \
 	   StructTypeInfo.cpp \

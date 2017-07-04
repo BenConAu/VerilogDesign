@@ -21,7 +21,6 @@ void yyerror(YYLTYPE*, void*, const char *s);
 
 %union {
     int intVal;
-    float floatVal;
     int symIndex;
     ASTNode* pNode;
     OpCode opCode;
@@ -33,9 +32,11 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token OUT_TOKEN
 %token STATE_TOKEN
 %token REG_TOKEN
+%token UINT32_TOKEN
+%token UINT16_TOKEN
+%token UINT8_TOKEN
 
 %token <intVal> INTCONSTANT
-%token <floatVal> FLOATCONSTANT
 %token <intVal> BOOLCONSTANT
 %token AT
 %token SEMICOLON
@@ -57,11 +58,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token AMPERSAND
 %token EQUAL_OP
 %token NOTEQUAL_OP
-%token PTR_TOKEN
-%token BYTE_TOKEN
-%token WORD_TOKEN
 %token BOOL_TOKEN
-%token FLOAT_TOKEN
 %token VOID_TOKEN
 %token STRUCT_TOKEN
 %token TRANSITION_TOKEN
@@ -74,7 +71,6 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token WHILE_TOKEN
 %token SIZEOF_TOKEN
 %token PACKBYTE_TOKEN
-%token SAVEREG_TOKEN
 %token RSP_TOKEN
 %token <symIndex> IDENTIFIER
 %type <pNode> variable_identifier
@@ -115,7 +111,6 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> shift_expression
 %type <pNode> relational_expression
 %type <pNode> unary_expression
-%type <pNode> savereg_statement
 %type <pNode> module_states
 %type <pNode> module_member
 %type <pNode> module_state
@@ -145,7 +140,6 @@ statement:
     | declaration_statement                                         { $$ = $1; }
     | jump_statement                                                { $$ = $1; }
     | packbyte_statement                                            { $$ = $1; }
-    | savereg_statement                                             { $$ = $1; }
     ;
 
 expression_statement:
@@ -162,10 +156,6 @@ selection_statement:
 selection_rest_statement:
       compound_statement ELSE_TOKEN compound_statement              { $$ = new IfStatementNode(pContext, $1, $3); }
     | compound_statement                                            { $$ = new IfStatementNode(pContext, $1, nullptr); }
-    ;
-
-savereg_statement:
-      SAVEREG_TOKEN compound_statement                              { $$ = new SaveRegistersNode(pContext, @$, $2); }
     ;
 
 expression:
@@ -227,7 +217,6 @@ primary_expression:
       variable_identifier                                           { $$ = $1; }
     | INTCONSTANT                                                   { $$ = new ConstantNode(pContext, ConstantNode::Word, $1); }
     | BOOLCONSTANT                                                  { $$ = new ConstantNode(pContext, ConstantNode::Bool, $1); }
-    | FLOATCONSTANT                                                 { $$ = new ConstantNode(pContext, $1); }
     ;
 
 declaration:
@@ -262,10 +251,9 @@ parameter_declaration:
 	;
 
 fully_specified_type:
-      WORD_TOKEN                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Register, 32); }
-    | BYTE_TOKEN                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Register, 8); }
-    | FLOAT_TOKEN                                                   { $$ = new TypeNode(pContext, @$, TypeClass::Register, 32); }
-	| VOID_TOKEN                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Register, 32); }
+      UINT32_TOKEN                                                  { $$ = new TypeNode(pContext, @$, TypeClass::Register, 32); }
+    | UINT16_TOKEN                                                  { $$ = new TypeNode(pContext, @$, TypeClass::Register, 8); }
+    | UINT8_TOKEN                                                   { $$ = new TypeNode(pContext, @$, TypeClass::Register, 32); }
 	| BOOL_TOKEN                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Register, 1); }
 	| IDENTIFIER                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Struct, $1); }
     | REG_TOKEN LT INTCONSTANT GT                                   { $$ = new TypeNode(pContext, @$, $3); }

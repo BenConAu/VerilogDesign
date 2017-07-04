@@ -24,5 +24,7 @@ module DemoModule(
 		transition StartState;
 	}
 
-	reg<32> _ExampleRegister;
+	uint32 _ExampleRegister;
+	uint16 _ExampleWord;
+	uint8 _ExampleByte;
 }

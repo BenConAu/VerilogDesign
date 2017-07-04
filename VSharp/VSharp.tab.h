@@ -49,49 +49,46 @@ extern int yydebug;
     OUT_TOKEN = 259,
     STATE_TOKEN = 260,
     REG_TOKEN = 261,
-    INTCONSTANT = 262,
-    FLOATCONSTANT = 263,
-    BOOLCONSTANT = 264,
-    AT = 265,
-    SEMICOLON = 266,
-    EQUAL = 267,
-    STAR = 268,
-    PLUS = 269,
-    MINUS = 270,
-    LEFT_PAREN = 271,
-    RIGHT_PAREN = 272,
-    LT = 273,
-    GT = 274,
-    LT_OP = 275,
-    GT_OP = 276,
-    SHIFTLEFT = 277,
-    SHIFTRIGHT = 278,
-    ARROW = 279,
-    DOT = 280,
-    COMMA = 281,
-    AMPERSAND = 282,
-    EQUAL_OP = 283,
-    NOTEQUAL_OP = 284,
-    PTR_TOKEN = 285,
-    BYTE_TOKEN = 286,
-    WORD_TOKEN = 287,
-    BOOL_TOKEN = 288,
-    FLOAT_TOKEN = 289,
-    VOID_TOKEN = 290,
-    STRUCT_TOKEN = 291,
-    TRANSITION_TOKEN = 292,
-    LEFT_BRACE = 293,
-    RIGHT_BRACE = 294,
-    LEFT_BRACKET = 295,
-    RIGHT_BRACKET = 296,
-    IF_TOKEN = 297,
-    ELSE_TOKEN = 298,
-    WHILE_TOKEN = 299,
-    SIZEOF_TOKEN = 300,
-    PACKBYTE_TOKEN = 301,
-    SAVEREG_TOKEN = 302,
-    RSP_TOKEN = 303,
-    IDENTIFIER = 304
+    UINT32_TOKEN = 262,
+    UINT16_TOKEN = 263,
+    UINT8_TOKEN = 264,
+    INTCONSTANT = 265,
+    BOOLCONSTANT = 266,
+    AT = 267,
+    SEMICOLON = 268,
+    EQUAL = 269,
+    STAR = 270,
+    PLUS = 271,
+    MINUS = 272,
+    LEFT_PAREN = 273,
+    RIGHT_PAREN = 274,
+    LT = 275,
+    GT = 276,
+    LT_OP = 277,
+    GT_OP = 278,
+    SHIFTLEFT = 279,
+    SHIFTRIGHT = 280,
+    ARROW = 281,
+    DOT = 282,
+    COMMA = 283,
+    AMPERSAND = 284,
+    EQUAL_OP = 285,
+    NOTEQUAL_OP = 286,
+    BOOL_TOKEN = 287,
+    VOID_TOKEN = 288,
+    STRUCT_TOKEN = 289,
+    TRANSITION_TOKEN = 290,
+    LEFT_BRACE = 291,
+    RIGHT_BRACE = 292,
+    LEFT_BRACKET = 293,
+    RIGHT_BRACKET = 294,
+    IF_TOKEN = 295,
+    ELSE_TOKEN = 296,
+    WHILE_TOKEN = 297,
+    SIZEOF_TOKEN = 298,
+    PACKBYTE_TOKEN = 299,
+    RSP_TOKEN = 300,
+    IDENTIFIER = 301
   };
 #endif
 
@@ -103,12 +100,11 @@ union YYSTYPE
 #line 22 "VSharp.y" /* yacc.c:1915  */
 
     int intVal;
-    float floatVal;
     int symIndex;
     ASTNode* pNode;
     OpCode opCode;
 
-#line 112 "VSharp.tab.h" /* yacc.c:1915  */
+#line 108 "VSharp.tab.h" /* yacc.c:1915  */
 };
 
 typedef union YYSTYPE YYSTYPE;
