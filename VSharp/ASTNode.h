@@ -20,7 +20,7 @@ public:
     }
 
     void AddNode(ASTNode* pNode);
-    virtual void ProcessNode();
+    void ProcessNode();
 
     void VerifyNode();
 
@@ -69,12 +69,15 @@ public:
     virtual void PreVerifyNodeImpl() {}
     virtual void VerifyNodeImpl() {}
     virtual void PreProcessNodeImpl() {}
+    virtual void ProcessNodeImpl();
     virtual void PostProcessNodeImpl() {}
 
     size_t GetChildCount() const { return _children.size(); }
     ASTNode* GetChild(size_t i) { return _children[i].get(); }
     ASTNode* GetParent() { return _pParent; }
     void MoveChild(size_t from, size_t to);
+    ASTNode* ExtractChild(size_t index);
+    void InsertChild(size_t index, ASTNode* pChild);
     
     int GetChildIndex(ASTNode* pNode);
 

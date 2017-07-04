@@ -6,6 +6,7 @@
 #include "VariableInfo.h"
 #include "ModuleInfo.h"
 #include "VariableDeclarationNode.h"
+#include "StateDeclaratorNode.h"
 
 void ModuleDeclaratorNode::PreVerifyNodeImpl()
 {
@@ -18,20 +19,28 @@ void ModuleDeclaratorNode::PreVerifyNodeImpl()
             this);*/
     }
 
+    // We are going to add all of the children of the list node to be
+    // children of the module node, since in Verilog the states become
+    // cases of a case statement and the member variables become
+    // declarations right next to the parameters.
     ListNode* pModuleChildList = GetTypedChild<ListNode>();
+    size_t ListIndex = GetChildCount() - 1;
 
-    // Sort so that declarations are always first
-    size_t Insert = 0;
-    for (size_t i = 0; i < pModuleChildList->GetChildCount(); i++)
+    // Add the declarations first after the parameters
+    MoveListChildren<VariableDeclarationNode>(pModuleChildList, GetChildCount());
+
+    // Then add the states after that
+    MoveListChildren<StateDeclaratorNode>(pModuleChildList, GetChildCount());
+
+    if (pModuleChildList->GetChildCount() != 0)
     {
-        VariableDeclarationNode* pDecl = dynamic_cast<VariableDeclarationNode*>(pModuleChildList->GetChild(i));
-        if (pDecl != nullptr)
-        {
-            //printf("Swapping child to %d\n", (int)i);
-            pModuleChildList->MoveChild(i, Insert);
-            Insert++;
-        }
+        printf("List is %d long\n", (int)pModuleChildList->GetChildCount());
+
+        throw "Internal compiler error, unexpected children left in module";
     }
+
+    // No longer need the list
+    delete ExtractChild(ListIndex);
 }
 
 void ModuleDeclaratorNode::VerifyNodeImpl()
@@ -50,6 +59,26 @@ void ModuleDeclaratorNode::PreProcessNodeImpl()
     GetContext()->OutputLine("module %s", pInfo->GetSymbol());
     GetContext()->OutputLine("begin");
     GetContext()->IncreaseIndent();
+}
+
+void ModuleDeclaratorNode::ProcessNodeImpl()
+{
+    // Get all of the parameters first
+    /*for (size_t i = 0; i < pModuleChildList->GetChildCount(); i++)
+    {
+        VariableDeclarationNode* pDecl = dynamic_cast<VariableDeclarationNode*>(pModuleChildList->GetChild(i));
+        if (pDecl != nullptr)
+        {
+            pDecl->ProcessNode();
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    // */
+    ASTNode::ProcessNodeImpl();
 }
 
 void ModuleDeclaratorNode::PostProcessNodeImpl()

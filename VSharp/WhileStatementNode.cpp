@@ -27,7 +27,7 @@ void WhileStatementNode::VerifyNodeImpl()
     }
 }
 
-void WhileStatementNode::ProcessNode()
+void WhileStatementNode::ProcessNodeImpl()
 {
 /*    // We are taking over the whole processing, so we have to be careful and
     // replicate everything that the base class does. We just need a specific

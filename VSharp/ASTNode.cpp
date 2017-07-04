@@ -34,6 +34,17 @@ void ASTNode::AddNode(ASTNode *pNode)
     }
 }
 
+void ASTNode::ProcessNodeImpl()
+{
+    for (size_t i = 0; i < _children.size(); i++)
+    {
+        if (_children[i] != nullptr)
+        {
+            _children[i]->ProcessNode();
+        }
+    }
+}
+
 void ASTNode::ProcessNode()
 {
     //_pContext->PrintIndent();
@@ -43,13 +54,8 @@ void ASTNode::ProcessNode()
     // Processing before children are done
     PreProcessNodeImpl();
 
-    for (size_t i = 0; i < _children.size(); i++)
-    {
-        if (_children[i] != nullptr)
-        {
-            _children[i]->ProcessNode();
-        }
-    }
+    // Actual processing
+    ProcessNodeImpl();
 
     // Processing after children are done
     PostProcessNodeImpl();
@@ -74,7 +80,19 @@ int ASTNode::GetChildIndex(ASTNode *pNode)
 
 void ASTNode::MoveChild(size_t from, size_t to)
 {
-    ASTNode* pRemoved = _children[from].release();
-    _children.erase(_children.begin() + from);
-    _children.emplace(_children.begin() + to, pRemoved);
+    ASTNode* pRemoved = ExtractChild(from);
+    InsertChild(to, pRemoved);
+}
+
+ASTNode* ASTNode::ExtractChild(size_t index)
+{
+    ASTNode* pRemoved = _children[index].release();
+    _children.erase(_children.begin() + index);
+    return pRemoved;
+}
+
+void ASTNode::InsertChild(size_t index, ASTNode* pChild)
+{
+    _children.emplace(_children.begin() + index, pChild);
+    pChild->_pParent = this;
 }

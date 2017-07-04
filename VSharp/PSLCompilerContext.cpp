@@ -91,23 +91,6 @@ void PSLCompilerContext::Parse()
 
     //printf("Doing Process pass\n");
 
-    // Before processing, reorder things so that the entry point is before
-    // all of the other functions. It needs to have the code first, because
-    // it is an entry point after all.
-    for (size_t i = _numStructs + _numGlobals + 1; i < _rootNodes.size(); i++)
-    {
-        // Add after most recent function node unless it is main
-        ModuleDeclaratorNode *pModuleNode = dynamic_cast<ModuleDeclaratorNode *>(_rootNodes[i].get());
-
-        if (pModuleNode->IsEntryPoint())
-        {
-            //printf("Moving entry point\n");
-            std::unique_ptr<ASTNode> temp = std::move(_rootNodes[i]);
-            _rootNodes[i] = std::move(_rootNodes[_numStructs + _numGlobals]);
-            _rootNodes[_numStructs + _numGlobals] = std::move(temp);
-        }
-    }
-
     // Process the tree
     for (size_t i = 0; i < _rootNodes.size(); i++)
     {
