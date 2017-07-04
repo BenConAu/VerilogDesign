@@ -17,12 +17,22 @@ void ModuleParameterNode::VerifyNodeImpl()
         location = VariableLocationType::Input;
     }
 
+    TypeInfo* pTypeInfo = dynamic_cast<TypeNode *>(GetChild(0))->GetTypeInfo();
+
+    // Needs to be a register
+    RegisterTypeInfo* pRegInfo = dynamic_cast<RegisterTypeInfo*>(pTypeInfo);
+    if (pRegInfo == nullptr)
+    {
+        throw "Parameters to modules need to be registers";
+    }
+
     // Add variable to collection and mark first usage
     VariableInfo *pParamInfo = GetContext()->_symbolTable.AddVariable(
         pModule,
         _symIndex,
         location,
-        dynamic_cast<TypeNode *>(GetChild(0))->GetTypeInfo());
+        pTypeInfo
+        );
 }
 
 void ModuleParameterNode::PreProcessNodeImpl()
@@ -33,6 +43,9 @@ void ModuleParameterNode::PreProcessNodeImpl()
     VariableInfo* pInfo = dynamic_cast<VariableInfo*>(GetContext()->_symbolTable.GetInfo(_symIndex, pModule));
     const char* pszModifier = _fOut ? "output reg" : "input wire";
 
-    GetContext()->OutputLine("%s[7:0] %s;", pszModifier, pInfo->GetSymbol());
+    // Find out the bit width
+    RegisterTypeInfo* pRegInfo = dynamic_cast<RegisterTypeInfo*>(pInfo->GetTypeInfo());
+
+    GetContext()->OutputLine("%s[%d:0] %s;", pszModifier, pRegInfo->GetBitLength() - 1, pInfo->GetSymbol());
 }
 
