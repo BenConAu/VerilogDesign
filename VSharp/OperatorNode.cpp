@@ -35,7 +35,7 @@ void OperatorNode::VerifyNodeImpl()
             }
             else if (_opTable[i]._resultType == ResultTypeMethod::Bool)
             {
-                pResultType = GetContext()->_typeCollection.GetBasicType(BOOL_TOKEN);
+                pResultType = GetContext()->_typeCollection.GetRegisterType(BOOL_TOKEN);
             }
             else
             {

@@ -3,18 +3,18 @@
 #include "TypeInfo.h"
 #include <string>
 
-class BasicTypeInfo : public TypeInfo
+class RegisterTypeInfo : public TypeInfo
 {
   public:
-    BasicTypeInfo(int typeToken);
+    RegisterTypeInfo(int bitLength);
     unsigned int GetSize() override;
     TypeClass GetTypeClass() override;
     std::string DebugPrint() override;
     std::string GetTypeName() override;
-    int GetTypeToken() const;
     bool EqualType(TypeInfo *pOther) override;
+    int GetBitLength() const { return _bitLength; }
     TypeInfo *MakeSpecificType(TypeInfo *pGenericArgType, TypeCollection *pCollection) override;
 
   private:
-    int _typeToken;
+    int _bitLength;
 };

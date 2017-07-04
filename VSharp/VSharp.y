@@ -32,6 +32,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token MODULE_TOKEN
 %token OUT_TOKEN
 %token STATE_TOKEN
+%token REG_TOKEN
 
 %token <intVal> INTCONSTANT
 %token <floatVal> FLOATCONSTANT
@@ -71,11 +72,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token IF_TOKEN
 %token ELSE_TOKEN
 %token WHILE_TOKEN
-%token NULLPTR_TOKEN
 %token SIZEOF_TOKEN
-%token OFFSETPTR_TOKEN
-%token CASTPTR_TOKEN
-%token READPORT_TOKEN
 %token PACKBYTE_TOKEN
 %token SAVEREG_TOKEN
 %token RSP_TOKEN
@@ -107,14 +104,11 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> parameter_declaration
 %type <pNode> module_header_with_parameters
 %type <pNode> packbyte_statement
-%type <pNode> offset_expression
 %type <pNode> function_call_header
 %type <pNode> function_call_header_no_param
 %type <pNode> function_call
 %type <pNode> transition_statement
 %type <pNode> jump_statement
-%type <pNode> cast_expression
-%type <pNode> readport_expression
 %type <pNode> selection_statement
 %type <pNode> selection_rest_statement
 %type <pNode> equality_expression
@@ -231,29 +225,9 @@ postfix_expression:
 
 primary_expression:
       variable_identifier                                           { $$ = $1; }
-    | AMPERSAND variable_identifier                                 { $$ = new AddressOfNode(pContext, $2); }
     | INTCONSTANT                                                   { $$ = new ConstantNode(pContext, ConstantNode::Word, $1); }
     | BOOLCONSTANT                                                  { $$ = new ConstantNode(pContext, ConstantNode::Bool, $1); }
     | FLOATCONSTANT                                                 { $$ = new ConstantNode(pContext, $1); }
-	| NULLPTR_TOKEN                                                 { $$ = new ConstantNode(pContext, ConstantNode::Pointer); }
-    | offset_expression                                             { $$ = $1; }
-    | cast_expression                                               { $$ = $1; }
-    | readport_expression                                           { $$ = $1; }
-    ;
-
-offset_expression:
-      OFFSETPTR_TOKEN LT fully_specified_type GT LEFT_PAREN expression COMMA expression RIGHT_PAREN
-                                                                    { $$ = new OffsetNode(pContext, @$, $3, $6, $8); }
-    ;
-
-cast_expression:
-      CASTPTR_TOKEN LT fully_specified_type GT LEFT_PAREN expression RIGHT_PAREN
-                                                                    { $$ = new CastNode(pContext, @$, $3, $6); }
-    ;
-
-readport_expression:
-      READPORT_TOKEN LEFT_PAREN expression RIGHT_PAREN
-                                                                    { $$ = new ReadPortNode(pContext, @$, $3); }
     ;
 
 declaration:
@@ -288,13 +262,13 @@ parameter_declaration:
 	;
 
 fully_specified_type:
-      WORD_TOKEN                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Basic, WORD_TOKEN); }
-    | BYTE_TOKEN                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Basic, BYTE_TOKEN); }
-    | FLOAT_TOKEN                                                   { $$ = new TypeNode(pContext, @$, TypeClass::Basic, FLOAT_TOKEN); }
-	| VOID_TOKEN                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Basic, VOID_TOKEN); }
-	| BOOL_TOKEN                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Basic, BOOL_TOKEN); }
+      WORD_TOKEN                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Register, 32); }
+    | BYTE_TOKEN                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Register, 8); }
+    | FLOAT_TOKEN                                                   { $$ = new TypeNode(pContext, @$, TypeClass::Register, 32); }
+	| VOID_TOKEN                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Register, 32); }
+	| BOOL_TOKEN                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Register, 1); }
 	| IDENTIFIER                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Struct, $1); }
-    | PTR_TOKEN LT fully_specified_type GT                          { $$ = new TypeNode(pContext, @$, $3); }
+    | REG_TOKEN LT INTCONSTANT GT                                   { $$ = new TypeNode(pContext, @$, $3); }
     ;
 
 struct_specifier:

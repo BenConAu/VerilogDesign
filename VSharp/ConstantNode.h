@@ -10,7 +10,6 @@ public:
         Bool,
         Word,
         Float,
-        Pointer,
     };
 
 public:

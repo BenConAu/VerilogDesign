@@ -1,17 +1,11 @@
 #include "TypeCollection.h"
 #include "ASTNode.h"
 #include "VSharp.tab.h"
-#include "BasicTypeInfo.h"
+#include "GenericTypeInfo.h"
 #include "StructTypeInfo.h"
 
 TypeCollection::TypeCollection()
 {
-    // Built in types
-    _basicTypes[VOID_TOKEN] = std::unique_ptr<BasicTypeInfo>(new BasicTypeInfo(VOID_TOKEN));
-    _basicTypes[BOOL_TOKEN] = std::unique_ptr<BasicTypeInfo>(new BasicTypeInfo(BOOL_TOKEN));
-    _basicTypes[BYTE_TOKEN] = std::unique_ptr<BasicTypeInfo>(new BasicTypeInfo(BYTE_TOKEN));
-    _basicTypes[WORD_TOKEN] = std::unique_ptr<BasicTypeInfo>(new BasicTypeInfo(WORD_TOKEN));
-    _basicTypes[FLOAT_TOKEN] = std::unique_ptr<BasicTypeInfo>(new BasicTypeInfo(FLOAT_TOKEN));
 }
 
 StructTypeInfo* TypeCollection::GetStructType(int symIndex)
@@ -24,29 +18,14 @@ StructTypeInfo* TypeCollection::GetStructType(int symIndex)
     return nullptr;
 }
 
-BasicTypeInfo* TypeCollection::GetBasicType(int type)
+RegisterTypeInfo* TypeCollection::GetRegisterType(int bitLength)
 {
-    if (_basicTypes.find(type) != _basicTypes.end())
+    if (_registerTypes.find(bitLength) == _registerTypes.end())
     {
-        return _basicTypes[type].get();
+        _registerTypes[bitLength] = std::unique_ptr<RegisterTypeInfo>(new RegisterTypeInfo(bitLength));
     }
 
-    throw "That basic type does not exist";
-}
-
-PointerTypeInfo* TypeCollection::GetPointerType(TypeInfo* pBaseType)
-{
-    if (pBaseType == nullptr)
-    {
-        pBaseType = GetBasicType(VOID_TOKEN);
-    }
-
-    if (_pointerTypes.find(pBaseType) == _pointerTypes.end())
-    {
-        _pointerTypes[pBaseType] = std::unique_ptr<PointerTypeInfo>(new PointerTypeInfo(pBaseType));
-    }
-
-    return _pointerTypes[pBaseType].get();
+    return _registerTypes[bitLength].get();
 }
 
 ArrayTypeInfo* TypeCollection::GetArrayType(TypeInfo* pBaseType)

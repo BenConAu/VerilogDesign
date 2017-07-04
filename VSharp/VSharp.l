@@ -44,6 +44,7 @@
 "!="                 { return NOTEQUAL_OP; }
 "out"                { return OUT_TOKEN; }
 "state"              { return STATE_TOKEN; }
+"reg"                { return REG_TOKEN; }
 "ptr"                { return PTR_TOKEN; }
 "byte"               { return BYTE_TOKEN; }
 "word"               { return WORD_TOKEN; }
@@ -51,10 +52,6 @@
 "float"              { return FLOAT_TOKEN; }
 "void"               { return VOID_TOKEN; }
 "struct"             { return STRUCT_TOKEN; }
-"nullptr"            { return NULLPTR_TOKEN; }
-"offsetptr"          { return OFFSETPTR_TOKEN; }
-"castptr"            { return CASTPTR_TOKEN; }
-"readport"           { return READPORT_TOKEN; }
 "packbyte"           { return PACKBYTE_TOKEN; }
 "module"             { return MODULE_TOKEN; }
 "transition"         { return TRANSITION_TOKEN; }

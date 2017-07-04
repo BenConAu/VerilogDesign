@@ -3,9 +3,8 @@
 #include <vector>
 #include <map>
 #include <memory>
-#include "BasicTypeInfo.h"
+#include "RegisterTypeInfo.h"
 #include "StructTypeInfo.h"
-#include "PointerTypeInfo.h"
 #include "ArrayTypeInfo.h"
 #include "GenericTypeInfo.h"
 
@@ -16,8 +15,7 @@ class TypeCollection
 public:
     TypeCollection();
     StructTypeInfo* GetStructType(int symIndex);
-    BasicTypeInfo* GetBasicType(int type);
-    PointerTypeInfo* GetPointerType(TypeInfo* pBaseType);
+    RegisterTypeInfo* GetRegisterType(int bitLength);
     ArrayTypeInfo* GetArrayType(TypeInfo* pBaseType);
     GenericTypeInfo* GetGenericType(int symIndex, ModuleDeclaratorNode* pScope);
 
@@ -26,8 +24,7 @@ public:
 
 private:
     std::map<int, std::unique_ptr<StructTypeInfo> > _structTypes;
-    std::map<int, std::unique_ptr<BasicTypeInfo> > _basicTypes;
-    std::map<TypeInfo*, std::unique_ptr<PointerTypeInfo> > _pointerTypes;
+    std::map<int, std::unique_ptr<RegisterTypeInfo> > _registerTypes;
     std::map<TypeInfo*, std::unique_ptr<ArrayTypeInfo> > _arrayTypes;
     std::vector<std::unique_ptr<GenericTypeInfo> > _genericTypes;
 };

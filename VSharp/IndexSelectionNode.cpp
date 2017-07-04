@@ -19,7 +19,7 @@ IndexSelectionNode::IndexSelectionNode(
 
 void IndexSelectionNode::VerifyNodeImpl()
 {
-    ExpressionNode *pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));
+/*    ExpressionNode *pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));
     if (pLeft == nullptr)
     {
         GetContext()->ReportError(_location, "Can only index select expressions");
@@ -54,7 +54,7 @@ void IndexSelectionNode::VerifyNodeImpl()
     }
 
     // The type of this expression is the type of the pointer
-    SetType(pPointerInfo->GetBaseType());
+    SetType(pPointerInfo->GetBaseType());*/
 }
 
 ExpressionResult *IndexSelectionNode::CalculateResult()

@@ -1,7 +1,7 @@
 #include "ConstantNode.h"
 #include "PSLCompilerContext.h"
 #include "VSharp.tab.h"
-#include "BasicTypeInfo.h"
+#include "RegisterTypeInfo.h"
 #include <string.h>
 
 ConstantNode::ConstantNode(PSLCompilerContext *pContext, ConstantType t, int v) : ExpressionNode(pContext)
@@ -27,7 +27,6 @@ int ConstantNode::GetInteger()
     switch (_type)
     {
     case Word:
-    case Pointer:
     case Bool:
         return _intValue;
 
@@ -48,31 +47,8 @@ bool ConstantNode::IsConstant() const
 
 void ConstantNode::VerifyNodeImpl()
 {
-    TypeInfo *pTypeInfo = nullptr;
-
-    switch (_type)
-    {
-    case Bool:
-        pTypeInfo = GetContext()->_typeCollection.GetBasicType(BOOL_TOKEN);
-        break;
-
-    case Word:
-        pTypeInfo = GetContext()->_typeCollection.GetBasicType(WORD_TOKEN);
-        break;
-
-    case Float:
-        pTypeInfo = GetContext()->_typeCollection.GetBasicType(FLOAT_TOKEN);
-        break;
-
-    case Pointer:
-        pTypeInfo = GetContext()->_typeCollection.GetPointerType(nullptr);
-        break;
-
-    default:
-        throw "Unknown type so cannot calculate result";
-    }
-
-    SetType(pTypeInfo);
+    // Constants are 32 bit unless we extend things somehow
+    SetType(GetContext()->_typeCollection.GetRegisterType(32));
 }
 
 ExpressionResult *ConstantNode::CalculateResult()

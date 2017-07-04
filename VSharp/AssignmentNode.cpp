@@ -22,31 +22,9 @@ void AssignmentNode::VerifyNodeImpl()
         ExpressionNode *pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));
         ExpressionNode *pRight = dynamic_cast<ExpressionNode *>(GetChild(1));
 
-        PointerTypeInfo *pLeftType = dynamic_cast<PointerTypeInfo *>(pLeft->GetTypeInfo());
-        PointerTypeInfo *pRightType = dynamic_cast<PointerTypeInfo *>(pRight->GetTypeInfo());
+        printf("Type %s and type %s are not equal\n", pLeft->GetTypeInfo()->DebugPrint().c_str(), pRight->GetTypeInfo()->DebugPrint().c_str());
 
-        if (pLeftType != nullptr &&
-            pRightType != nullptr &&
-            pLeftType->GetBaseType()->GetTypeClass() == TypeClass::Basic &&
-            dynamic_cast<BasicTypeInfo *>(pLeftType->GetBaseType())->GetTypeToken() == VOID_TOKEN)
-        {
-            // We can allow void pointers to be on the left if there is another pointer on the right
-        }
-        else if (
-            pLeftType != nullptr &&
-            pRightType != nullptr &&
-            pRightType->GetBaseType()->GetTypeClass() == TypeClass::Basic &&
-            dynamic_cast<BasicTypeInfo *>(pRightType->GetBaseType())->GetTypeToken() == VOID_TOKEN &&
-            pRight->IsConstant())
-        {
-            // We can allow void pointers to be on the right if they are constant
-        }
-        else
-        {
-            printf("Type %s and type %s are not equal\n", pLeft->GetTypeInfo()->DebugPrint().c_str(), pRight->GetTypeInfo()->DebugPrint().c_str());
-
-            GetContext()->ReportError(_location, "Assignment must have equal types on each side");
-        }
+        GetContext()->ReportError(_location, "Assignment must have equal types on each side");
     }
 }
 

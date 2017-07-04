@@ -6,11 +6,10 @@ class TypeCollection;
 
 enum class TypeClass
 {
-    Basic,
     Struct,
-    Pointer,
     Array,
     Generic,
+    Register
 };
 
 class TypeInfo

@@ -1,7 +1,5 @@
 PSLcc: lex.yy.c \
 	   VSharp.tab.c \
-	   AddressOfNode.cpp \
-	   AddressOfNode.h \
 	   ArrayTypeInfo.cpp \
 	   ArrayTypeInfo.h \
 	   ASTNode.h \
@@ -9,10 +7,6 @@ PSLcc: lex.yy.c \
 	   ASTTree.h \
 	   AssignmentNode.cpp \
 	   AssignmentNode.h \
-	   BasicTypeInfo.cpp \
-	   BasicTypeInfo.h \
-	   CastNode.cpp \
-	   CastNode.h \
 	   ConstantNode.cpp \
 	   ConstantNode.h \
 	   ExpressionNode.cpp \
@@ -36,19 +30,15 @@ PSLcc: lex.yy.c \
 	   ModuleInfo.h \
 	   ModuleParameterNode.cpp \
 	   ModuleParameterNode.h \
-	   OffsetNode.cpp \
-	   OffsetNode.h \
 	   OperatorNode.cpp \
 	   OperatorNode.h \
 	   PackByteNode.cpp \
 	   PackByteNode.h \
-	   PointerTypeInfo.cpp \
-	   PointerTypeInfo.h \
 	   PSLCompilerContext.cpp \
 	   PSLCompilerContext.h \
 	   PSLCompiler.cpp \
-	   ReadPortNode.cpp \
-	   ReadPortNode.h \
+	   RegisterTypeInfo.cpp \
+	   RegisterTypeInfo.h \
 	   StateInfo.cpp \
 	   StateInfo.h \
 	   TransitionNode.cpp \
@@ -87,10 +77,7 @@ PSLcc: lex.yy.c \
 	   VSharp.tab.c \
 	   ArrayTypeInfo.cpp \
 	   ASTNode.cpp \
-	   AddressOfNode.cpp \
 	   AssignmentNode.cpp \
-	   BasicTypeInfo.cpp \
-	   CastNode.cpp \
 	   ConstantNode.cpp \
 	   ExpressionNode.cpp \
 	   ExpressionResult.cpp \
@@ -102,15 +89,13 @@ PSLcc: lex.yy.c \
 	   ModuleInfo.cpp \
 	   ModuleDeclaratorNode.cpp \
 	   ModuleParameterNode.cpp \
-	   OffsetNode.cpp \
 	   OperatorNode.cpp \
 	   PackByteNode.cpp \
-	   PointerTypeInfo.cpp \
 	   PSLCompiler.cpp \
 	   PSLCompilerContext.cpp \
-	   ReadPortNode.cpp \
 	   StateInfo.cpp \
 	   TransitionNode.cpp \
+	   RegisterTypeInfo.cpp \
 	   SaveRegistersNode.cpp \
 	   StructDeclarationNode.cpp \
 	   StructSpecifierNode.cpp \

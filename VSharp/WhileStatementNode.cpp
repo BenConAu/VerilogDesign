@@ -20,8 +20,8 @@ WhileStatementNode::WhileStatementNode(PSLCompilerContext *pContext, ASTNode *pE
 void WhileStatementNode::VerifyNodeImpl()
 {
     ExpressionNode *pExpr = dynamic_cast<ExpressionNode *>(GetChild(0));
-    BasicTypeInfo *pTestType = dynamic_cast<BasicTypeInfo *>(pExpr->GetTypeInfo());
-    if (pTestType == nullptr || pTestType->GetTypeToken() != BOOL_TOKEN)
+    RegisterTypeInfo *pTestType = dynamic_cast<RegisterTypeInfo *>(pExpr->GetTypeInfo());
+    if (pTestType == nullptr || pTestType->GetBitLength() != 1)
     {
         throw "While statement must have bool type expression for test";
     }

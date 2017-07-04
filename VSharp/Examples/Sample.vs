@@ -1,6 +1,6 @@
 module DemoModule(
-	word in1,
-	out word out1
+	reg<32> in1,
+	out reg<32> out1
 	)
 {
 	state initial
@@ -24,5 +24,5 @@ module DemoModule(
 		transition StartState;
 	}
 
-	word _ExampleRegister;
+	reg<32> _ExampleRegister;
 }

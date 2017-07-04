@@ -20,8 +20,8 @@ IfStatementNode::IfStatementNode(PSLCompilerContext *pContext, ASTNode *pTrue, A
 void IfStatementNode::VerifyNodeImpl()
 {
     ExpressionNode *pTest = dynamic_cast<ExpressionNode *>(GetChild(2));
-    BasicTypeInfo *pTestType = dynamic_cast<BasicTypeInfo *>(pTest->GetTypeInfo());
-    if (pTestType == nullptr || pTestType->GetTypeToken() != BOOL_TOKEN)
+    RegisterTypeInfo *pTestType = dynamic_cast<RegisterTypeInfo *>(pTest->GetTypeInfo());
+    if (pTestType == nullptr || pTestType->GetBitLength() != 1)
     {
         throw "If statement must have bool type expression for test";
     }
