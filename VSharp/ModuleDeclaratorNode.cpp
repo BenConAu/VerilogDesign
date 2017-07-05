@@ -63,22 +63,30 @@ void ModuleDeclaratorNode::PreProcessNodeImpl()
 
 void ModuleDeclaratorNode::ProcessNodeImpl()
 {
+    bool fVariablesDone = false;
+
     // Get all of the parameters first
-    /*for (size_t i = 0; i < pModuleChildList->GetChildCount(); i++)
+    for (size_t i = 0; i < GetChildCount(); i++)
     {
-        VariableDeclarationNode* pDecl = dynamic_cast<VariableDeclarationNode*>(pModuleChildList->GetChild(i));
-        if (pDecl != nullptr)
+        // Figure out what we have here
+        StateDeclaratorNode* pState = dynamic_cast<StateDeclaratorNode*>(GetChild(i));
+        //printf("Processing state %p\n", pState);
+
+        if (pState != nullptr && !fVariablesDone)
         {
-            pDecl->ProcessNode();
+            // Before we do states we have a preamble
+            fVariablesDone = true;
+
+            GetContext()->OutputLine("always @(posedge clk)");
+            GetContext()->OutputLine("begin");
+            GetContext()->IncreaseIndent();
         }
-        else
-        {
-            break;
-        }
+
+        GetChild(i)->ProcessNode();
     }
 
-    // */
-    ASTNode::ProcessNodeImpl();
+    GetContext()->DecreaseIndent();
+    GetContext()->OutputLine("end");
 }
 
 void ModuleDeclaratorNode::PostProcessNodeImpl()

@@ -252,8 +252,8 @@ parameter_declaration:
 
 fully_specified_type:
       UINT32_TOKEN                                                  { $$ = new TypeNode(pContext, @$, TypeClass::Register, 32); }
-    | UINT16_TOKEN                                                  { $$ = new TypeNode(pContext, @$, TypeClass::Register, 8); }
-    | UINT8_TOKEN                                                   { $$ = new TypeNode(pContext, @$, TypeClass::Register, 32); }
+    | UINT16_TOKEN                                                  { $$ = new TypeNode(pContext, @$, TypeClass::Register, 16); }
+    | UINT8_TOKEN                                                   { $$ = new TypeNode(pContext, @$, TypeClass::Register, 8); }
 	| BOOL_TOKEN                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Register, 1); }
 	| IDENTIFIER                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Struct, $1); }
     | REG_TOKEN LT INTCONSTANT GT                                   { $$ = new TypeNode(pContext, @$, $3); }

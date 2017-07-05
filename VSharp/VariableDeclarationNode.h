@@ -15,7 +15,7 @@ public:
       ASTNode *pInitExpr);
 
   void PreVerifyNodeImpl() override;
-  void PostProcessNodeImpl() override;
+  void PreProcessNodeImpl() override;
   const char *GetDebugName() override { return "VariableDeclarationNode"; }
 
 private:

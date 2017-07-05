@@ -84,4 +84,8 @@ private:
 
     // Param count
     int _paramCount;
+
+    // Helpful pointers to inside the collection
+    size_t _MemberStart;
+    size_t _StateStart;
 };

@@ -1841,13 +1841,13 @@ yyreduce:
 
   case 58:
 #line 255 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new TypeNode(pContext, (yyloc), TypeClass::Register, 8); }
+    { (yyval.pNode) = new TypeNode(pContext, (yyloc), TypeClass::Register, 16); }
 #line 1846 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 59:
 #line 256 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new TypeNode(pContext, (yyloc), TypeClass::Register, 32); }
+    { (yyval.pNode) = new TypeNode(pContext, (yyloc), TypeClass::Register, 8); }
 #line 1852 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 

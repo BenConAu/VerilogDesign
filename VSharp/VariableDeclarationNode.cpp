@@ -4,6 +4,7 @@
 #include "IdentifierNode.h"
 #include "TypeNode.h"
 #include "VariableLocationType.h"
+#include "VariableInfo.h"
 
 VariableDeclarationNode::VariableDeclarationNode(
     PSLCompilerContext *pContext,
@@ -38,7 +39,15 @@ void VariableDeclarationNode::PreVerifyNodeImpl()
         dynamic_cast<TypeNode *>(GetChild(0))->GetTypeInfo());
 }
 
-void VariableDeclarationNode::PostProcessNodeImpl()
+void VariableDeclarationNode::PreProcessNodeImpl()
 {
-    // Nothing to output for declarations
+    ModuleDeclaratorNode *pModule = GetTypedParent<ModuleDeclaratorNode>();
+
+    // Spit out the preamble
+    VariableInfo* pInfo = dynamic_cast<VariableInfo*>(GetContext()->_symbolTable.GetInfo(_symIndex, pModule));
+
+    // Find out the bit width
+    RegisterTypeInfo* pRegInfo = dynamic_cast<RegisterTypeInfo*>(pInfo->GetTypeInfo());
+
+    GetContext()->OutputLine("reg[%d:0] %s;", pRegInfo->GetBitLength() - 1, pInfo->GetSymbol());
 }
