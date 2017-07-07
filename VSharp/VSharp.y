@@ -23,7 +23,6 @@ void yyerror(YYLTYPE*, void*, const char *s);
     int intVal;
     int symIndex;
     ASTNode* pNode;
-    OpCode opCode;
 }
 
 %locations

@@ -3,7 +3,7 @@
 #include "VSharp.tab.h"
 
 OperatorInfo UnaryOperatorNode::_opTable[] = {
-    { Operator::Negate,  OpCode::NegRR,    OpCode::Unknown, ResultTypeMethod::Both },
+    { Operator::Negate,  "-", ResultTypeMethod::Both },
 };
 
 void UnaryOperatorNode::VerifyNodeImpl()

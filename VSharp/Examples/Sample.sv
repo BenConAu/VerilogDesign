@@ -16,12 +16,15 @@ begin
     case(fsmState)
     begin
       `__initial: begin
+        _ExampleRegister <= 0
         fsmState <= `__StartState;
       end
       `__StartState: begin
+        _ExampleRegister <= _ExampleRegister + 1
         fsmState <= `__EndState;
       end
       `__EndState: begin
+        _ExampleRegister <= _ExampleRegister - 1
         fsmState <= `__StartState;
       end
     end

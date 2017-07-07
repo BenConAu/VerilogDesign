@@ -6,8 +6,6 @@
 #include <deque>
 #include <map>
 
-#include "../PhaethonISA/Generated/PhaethonOpCode.h"
-
 class PSLCompilerContext;
 
 class ASTNode

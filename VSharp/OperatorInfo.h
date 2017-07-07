@@ -23,7 +23,6 @@ enum class ResultTypeMethod
 struct OperatorInfo
 {
     Operator _operator;
-    OpCode _opCodeWord;
-    OpCode _opCodeFloat;
+    const char* _pszVerilog;
     ResultTypeMethod _resultType;
 };

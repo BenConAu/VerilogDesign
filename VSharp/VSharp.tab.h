@@ -103,9 +103,8 @@ union YYSTYPE
     int intVal;
     int symIndex;
     ASTNode* pNode;
-    OpCode opCode;
 
-#line 109 "VSharp.tab.h" /* yacc.c:1915  */
+#line 108 "VSharp.tab.h" /* yacc.c:1915  */
 };
 
 typedef union YYSTYPE YYSTYPE;

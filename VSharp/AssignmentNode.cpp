@@ -30,11 +30,11 @@ void AssignmentNode::VerifyNodeImpl()
 
 void AssignmentNode::PostProcessNodeImpl()
 {
-/*    FunctionDeclaratorNode *pFunc = GetTypedParent<FunctionDeclaratorNode>();
+    ModuleDeclaratorNode *pFunc = GetTypedParent<ModuleDeclaratorNode>();
 
     ExpressionNode *pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));
     ExpressionNode *pRight = dynamic_cast<ExpressionNode *>(GetChild(1));
-
+    
     std::unique_ptr<ExpressionResult> leftResult(pLeft->TakeResult());
     std::unique_ptr<ExpressionResult> rightResult(pRight->TakeResult());
 
@@ -46,39 +46,5 @@ void AssignmentNode::PostProcessNodeImpl()
     //leftResult->DebugPrint();
     //rightResult->DebugPrint();
 
-    // Figure out what kind of LHS expression we have
-    switch (leftResult->GetResultType())
-    {
-    case ExpressionResultType::Register:
-    {
-        // The great thing about registers is that everything can move into them
-        GetContext()->OutputMovInstruction(
-            *leftResult.get(),
-            *rightResult.get());
-    }
-    break;
-
-    case ExpressionResultType::DerefConstant:
-    case ExpressionResultType::DerefRegisterOffset:
-    case ExpressionResultType::DerefRegisterIndex:
-    {
-        // Need to make a register for this to work
-        RegisterWrapper wrapper(
-            GetContext(),
-            pFunc->GetRegCollection(),
-            rightResult.get());
-
-        // Push the wrapped register into the memory
-        GetContext()->OutputMovInstruction(
-            *leftResult.get(),
-            wrapper.GetWrapped());
-
-        // Now we have generated code, the temporary register will
-        // go out of scope and be returned back.
-    }
-    break;
-
-    default:
-        GetContext()->ReportError(_location, "Unexpected LHS expression result");
-    }*/
+    GetContext()->OutputLine("%s <= %s", leftResult->GetString().c_str(), rightResult->GetString().c_str());
 }
