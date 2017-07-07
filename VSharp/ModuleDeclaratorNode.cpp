@@ -124,6 +124,7 @@ void ModuleDeclaratorNode::ProcessNodeImpl()
             // Start the case statement
             GetContext()->OutputLine("case(fsmState)");
             GetContext()->OutputLine("begin");
+            GetContext()->IncreaseIndent();
         }
 
         GetChild(i)->ProcessNode();

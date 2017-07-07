@@ -1,30 +1,16 @@
 #include "TransitionNode.h"
 #include "ExpressionNode.h"
 #include "ModuleDeclaratorNode.h"
+#include "StateInfo.h"
 
-void TransitionNode::PostProcessNodeImpl()
+void TransitionNode::PreProcessNodeImpl()
 {
-    // What function are we returning from
-/*    FunctionDeclaratorNode *pFunc = GetTypedParent<FunctionDeclaratorNode>();
+    // What module are we transitioning in
+    ModuleDeclaratorNode *pFunc = GetTypedParent<ModuleDeclaratorNode>();
 
-    if (GetChild(0) != nullptr)
-    {
-        // We have some expression inside us that we are returning
-        ExpressionNode *pChild = dynamic_cast<ExpressionNode *>(GetChild(0));
+    // Get the info
+    StateInfo* pInfo = dynamic_cast<StateInfo*>(GetContext()->_symbolTable.GetInfo(_symIndex, pFunc));
 
-        // Get the result of that
-        std::unique_ptr<ExpressionResult> childResult(pChild->TakeResult());
-
-        // Convention is to store the result in r0, so move it there if it
-        // is not there already.
-        if (childResult->GetResultType() != ExpressionResultType::Register ||
-            childResult->GetRegIndex() != 0)
-        {
-            GetContext()->OutputMovInstruction(
-                Operand((RegIndex)0),
-                *childResult.get());
-        }
-    }
-
-    GetContext()->OutputInstruction(OpCode::RRet);*/
+    // Write out the state change
+    GetContext()->OutputLine("fsmState <= `__%s;", pInfo->GetSymbol());
 }

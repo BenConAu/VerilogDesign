@@ -15,12 +15,15 @@ begin
   begin
     case(fsmState)
     begin
-    `__initial: begin
-    end
-    `__StartState: begin
-    end
-    `__EndState: begin
+      `__initial: begin
+        fsmState <= `__StartState;
+      end
+      `__StartState: begin
+        fsmState <= `__EndState;
+      end
+      `__EndState: begin
+        fsmState <= `__StartState;
+      end
     end
   end
-end
 end
