@@ -41,6 +41,28 @@ void ModuleDeclaratorNode::PreVerifyNodeImpl()
 
     // No longer need the list
     delete ExtractChild(ListIndex);
+
+    // Add all of the states into a list - the initial state has
+    // value zero, but all other states start at this number and
+    // work their way up.
+    _stateList.resize(1);
+
+    for (size_t i = 0; i < GetChildCount(); i++)
+    {
+        StateDeclaratorNode* pState = dynamic_cast<StateDeclaratorNode*>(GetChild(i));
+        if (pState != nullptr)
+        {
+            // Initial state is special
+            if (pState->GetIdentifier() == -1)
+            {
+                _stateList[0] = pState;
+            }
+            else
+            {
+                _stateList.push_back(pState);
+            }
+        }    
+    }
 }
 
 void ModuleDeclaratorNode::VerifyNodeImpl()
@@ -59,11 +81,25 @@ void ModuleDeclaratorNode::PreProcessNodeImpl()
     GetContext()->OutputLine("module %s", pInfo->GetSymbol());
     GetContext()->OutputLine("begin");
     GetContext()->IncreaseIndent();
+
+    // Define states so they are readable
+    GetContext()->OutputLine("// State definitions");
+    for (size_t i = 0; i < _stateList.size(); i++)
+    {
+        const char* pszStateName = (i == 0) ? "initial" : GetContext()->_symbolTable.GetInfo(_stateList[i]->GetIdentifier(), this)->GetSymbol();
+
+        GetContext()->OutputLine(
+            "`define __%s %d", 
+            pszStateName,
+            i);
+    }
 }
 
 void ModuleDeclaratorNode::ProcessNodeImpl()
 {
     bool fVariablesDone = false;
+
+    GetContext()->OutputLine("// inputs / outputs / locals");
 
     // Get all of the parameters first
     for (size_t i = 0; i < GetChildCount(); i++)
@@ -77,20 +113,34 @@ void ModuleDeclaratorNode::ProcessNodeImpl()
             // Before we do states we have a preamble
             fVariablesDone = true;
 
+            // We have a register that we store the current state in
+            GetContext()->OutputLine("reg [7:0] fsmState = 0;");
+
+            // Start the always block
             GetContext()->OutputLine("always @(posedge clk)");
             GetContext()->OutputLine("begin");
             GetContext()->IncreaseIndent();
+
+            // Start the case statement
+            GetContext()->OutputLine("case(fsmState)");
+            GetContext()->OutputLine("begin");
         }
 
         GetChild(i)->ProcessNode();
     }
 
+    // End the case statement
+    GetContext()->DecreaseIndent();
+    GetContext()->OutputLine("end");
+
+    // End the always statement
     GetContext()->DecreaseIndent();
     GetContext()->OutputLine("end");
 }
 
 void ModuleDeclaratorNode::PostProcessNodeImpl()
 {
+    // End the module
     GetContext()->DecreaseIndent();
     GetContext()->OutputLine("end");
 }

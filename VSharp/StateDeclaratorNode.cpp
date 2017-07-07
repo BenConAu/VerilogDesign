@@ -29,10 +29,18 @@ void StateDeclaratorNode::VerifyNodeImpl()
 void StateDeclaratorNode::PreProcessNodeImpl()
 {
     ModuleDeclaratorNode *pFunc = GetTypedParent<ModuleDeclaratorNode>();
-    SymbolInfo* pStateSymbolInfo = GetContext()->_symbolTable.GetInfo(_identifier, pFunc);
 
-    GetContext()->OutputLine("case %s", pStateSymbolInfo->GetSymbol());
-    GetContext()->OutputLine("begin");
+    SymbolInfo* pStateSymbolInfo = nullptr;
+    if (_identifier != -1)
+    {
+        pStateSymbolInfo = GetContext()->_symbolTable.GetInfo(_identifier, pFunc);
+        GetContext()->OutputLine("`__%s: begin", pStateSymbolInfo->GetSymbol());
+    }
+    else
+    {
+        GetContext()->OutputLine("`__initial: begin");
+    }
+
     GetContext()->IncreaseIndent();
 }
 

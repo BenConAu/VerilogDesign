@@ -3,6 +3,8 @@
 #include "PSLCompilerContext.h"
 #include "ASTNode.h"
 
+class StateDeclaratorNode;
+
 class ModuleDeclaratorNode : public ASTNode
 {
 public:
@@ -15,16 +17,11 @@ public:
     {
         _symIndex = symIndex;
         _genericIndex = genericSym;
-        _paramCount = 0;
-
-        //printf("Creating function declarator node\n");
     }
 
     void AddParameter(ASTNode* pNode)
     {
         AddNode(pNode);
-
-        _paramCount++;
     }
 
     void SetStatementList(ASTNode* pList)
@@ -82,10 +79,9 @@ private:
     // The symbol index of the generic type
     int _genericIndex;
 
-    // Param count
-    int _paramCount;
-
     // Helpful pointers to inside the collection
     size_t _MemberStart;
     size_t _StateStart;
+
+    std::vector<StateDeclaratorNode*> _stateList;
 };

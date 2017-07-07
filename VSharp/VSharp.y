@@ -35,6 +35,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token UINT32_TOKEN
 %token UINT16_TOKEN
 %token UINT8_TOKEN
+%token INITIAL_TOKEN
 
 %token <intVal> INTCONSTANT
 %token <intVal> BOOLCONSTANT
@@ -296,6 +297,7 @@ module_member:
 
 module_state:
       STATE_TOKEN IDENTIFIER compound_statement                     { $$ = new StateDeclaratorNode(pContext, @$, $2, $3); }
+    | STATE_TOKEN INITIAL_TOKEN compound_statement                  { $$ = new StateDeclaratorNode(pContext, @$, -1, $3); }
     ;
 
 init_declarator_list:

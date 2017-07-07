@@ -17,6 +17,7 @@ public:
   void PreProcessNodeImpl() override;
   void PostProcessNodeImpl() override;
   const char *GetDebugName() override { return "StateDeclaratorNode"; }
+  int GetIdentifier() const { return _identifier; }
 
 private:
   int _identifier;
