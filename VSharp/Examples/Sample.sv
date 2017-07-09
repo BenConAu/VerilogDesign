@@ -1,12 +1,20 @@
-module DemoModule
+module DemoModule(
+  clk,
+  reset,
+  in1,
+  out1
+  )
 begin
   // State definitions
   `define __initial 0
   `define __StartState 1
   `define __EndState 2
-  // inputs / outputs / locals
+  // inputs / outputs
+  input wire clk;
+  input wire reset;
   input wire[31:0] in1;
   output reg[31:0] out1;
+  // locals
   reg[31:0] _ExampleRegister;
   reg[15:0] _ExampleWord;
   reg[7:0] _ExampleByte;

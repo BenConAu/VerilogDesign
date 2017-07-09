@@ -78,7 +78,32 @@ void ModuleDeclaratorNode::PreProcessNodeImpl()
 {
     // Spit out the preamble
     ModuleInfo* pInfo = dynamic_cast<ModuleInfo*>(GetContext()->_symbolTable.GetInfo(_symIndex, nullptr));
-    GetContext()->OutputLine("module %s", pInfo->GetSymbol());
+    GetContext()->OutputLine("module %s(", pInfo->GetSymbol());
+    GetContext()->IncreaseIndent();
+
+    GetContext()->OutputLine("clk,");
+    GetContext()->OutputLine("reset,");
+
+    for (size_t i = 0; i < GetChildCount(); i++)
+    {
+        ModuleParameterNode* pParam = dynamic_cast<ModuleParameterNode*>(GetChild(i));
+
+        if (pParam == nullptr)
+        {
+            GetContext()->OutputLine(")");
+            GetContext()->DecreaseIndent();
+            break;
+        }
+
+        bool last = (dynamic_cast<ModuleParameterNode*>(GetChild(i + 1)) == nullptr);
+        const char* pszComma = last ? "" : ",";
+
+        GetContext()->OutputLine(
+            "%s%s", 
+            GetContext()->_symbolTable.GetInfo(pParam->GetSymbolIndex(), this)->GetSymbol(), 
+            pszComma);
+    }
+
     GetContext()->OutputLine("begin");
     GetContext()->IncreaseIndent();
 
@@ -93,20 +118,31 @@ void ModuleDeclaratorNode::PreProcessNodeImpl()
             pszStateName,
             i);
     }
+
+    // All modules have a reset and a clock
+    GetContext()->OutputLine("// inputs / outputs");
+    GetContext()->OutputLine("input wire clk;");
+    GetContext()->OutputLine("input wire reset;");
 }
 
 void ModuleDeclaratorNode::ProcessNodeImpl()
 {
+    bool fParamsDone = false;
     bool fVariablesDone = false;
-
-    GetContext()->OutputLine("// inputs / outputs / locals");
 
     // Get all of the parameters first
     for (size_t i = 0; i < GetChildCount(); i++)
     {
         // Figure out what we have here
+        VariableDeclarationNode* pVar = dynamic_cast<VariableDeclarationNode*>(GetChild(i));
         StateDeclaratorNode* pState = dynamic_cast<StateDeclaratorNode*>(GetChild(i));
-        //printf("Processing state %p\n", pState);
+
+        if (pVar != nullptr && !fParamsDone)
+        {
+            fParamsDone = true;
+
+            GetContext()->OutputLine("// locals");
+        }
 
         if (pState != nullptr && !fVariablesDone)
         {
