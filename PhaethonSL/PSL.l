@@ -66,6 +66,7 @@
 "false"              { yylval->intVal = 0; return BOOLCONSTANT; }
 "__emit"             { return EMIT_TOKEN; }
 "__rsp"              { yylval->regIndex = 64; return REG_INDEX; }
+"__sct"              { yylval->regIndex = 66; return REG_INDEX; }
 "__rkpt"             { yylval->regIndex = 68; return REG_INDEX; }
 "__rupt"             { yylval->regIndex = 69; return REG_INDEX; }
 "__r"[0-9]           { yylval->regIndex = atoi(yytext + 3); return REG_INDEX; }

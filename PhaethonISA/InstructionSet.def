@@ -53,3 +53,4 @@ Exec        Register              None                  None      NoFlags
 Exit        None                  None                  None      NoFlags
 VpEnable    None                  None                  None      NoFlags
 Lea         Register              Register:Offset       Register  NoFlags
+SysCall     Register              Register              Register  RAM

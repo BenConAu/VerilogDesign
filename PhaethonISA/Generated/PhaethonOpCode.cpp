@@ -45,6 +45,7 @@ InstructionData InstructionData::s_data[] = {
     { Instructions::Exit      , "exit" },
     { Instructions::VpEnable  , "vpenable" },
     { Instructions::Lea       , "lea" },
+    { Instructions::SysCall   , "syscall" },
 };
 
 int InstructionData::s_dataCount = sizeof(InstructionData::s_data) / sizeof(InstructionData::s_data[0]);
@@ -105,6 +106,7 @@ OpCodeData OpCodeData::s_data[] = {
     { Instructions::Exit      , OpCode::Exit           , { OperandType::None                  , OperandType::None                  , OperandType::None         }, -1, "Exit" },
     { Instructions::VpEnable  , OpCode::VpEnable       , { OperandType::None                  , OperandType::None                  , OperandType::None         }, -1, "VpEnable" },
     { Instructions::Lea       , OpCode::LeaRRoR        , { OperandType::Register              , OperandType::RegisterOffset        , OperandType::Register     }, 1, "LeaRRoR" },
+    { Instructions::SysCall   , OpCode::SysCallRRR     , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "SysCallRRR" },
 };
 
 int OpCodeData::s_dataCount = sizeof(OpCodeData::s_data) / sizeof(OpCodeData::s_data[0]);
@@ -146,7 +148,8 @@ bool IsRAMOpcode(OpCode opCodeParam)
         opCodeParam == OpCode::PushR ||
         opCodeParam == OpCode::PopR ||
         opCodeParam == OpCode::CallR ||
-        opCodeParam == OpCode::Ret)
+        opCodeParam == OpCode::Ret ||
+        opCodeParam == OpCode::SysCallRRR)
         return true;
     else
         return false;

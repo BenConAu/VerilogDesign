@@ -86,7 +86,7 @@ module ALU(
   
   `define StackPointerReg     0
   `define FlagsReg            1
-  `define UnusedReg1          2
+  `define SysCallReg          2
   `define CodeReturnReg       3
   `define KPageTableReg       4
   `define UPageTableReg       5
@@ -217,6 +217,7 @@ module ALU(
           // Some stuff is hard to do with initializers, so we do it here
           regarray[`StackPointerReg] <= 0;
           regarray[`FlagsReg] <= 0;
+          regarray[`SysCallReg] <= 0;
           regarray[`CodeReturnReg] <= 0;
           regarray[`KPageTableReg] <= 0;
           regarray[`UPageTableReg] <= 0;
@@ -479,6 +480,12 @@ module ALU(
               ramOut <= ipointer;
             
               //$display("Reqesting push %h", regValue);
+            end
+
+            `SysCallRRR: begin
+              // Read function address from register
+              readReq <= 1;
+              ramAddress <= regValue[0];
             end
           endcase
 

@@ -49,6 +49,7 @@ namespace Instructions
         Exit = 42,
         VpEnable = 43,
         Lea = 44,
+        SysCall = 45,
     };
 }
 enum class OpCode
@@ -109,6 +110,7 @@ enum class OpCode
     Exit = 53,
     VpEnable = 54,
     LeaRRoR = 55,
+    SysCallRRR = 56,
 };
 bool Is8ByteOpcode(OpCode opCodeParam);
 bool IsRAMOpcode(OpCode opCodeParam);
