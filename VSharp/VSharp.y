@@ -35,6 +35,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token UINT16_TOKEN
 %token UINT8_TOKEN
 %token INITIAL_TOKEN
+%token FUNCTION_TOKEN
 
 %token <intVal> INTCONSTANT
 %token <intVal> BOOLCONSTANT
@@ -86,7 +87,6 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> module_header
 %type <pNode> fully_specified_type
 %type <pNode> module_prototype
-%type <pNode> module_declarator
 %type <pNode> module_definition
 %type <pNode> compound_statement
 %type <pNode> init_declarator_list
@@ -115,6 +115,10 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> module_member
 %type <pNode> module_state
 %type <pNode> state_list
+%type <pNode> function_prototype
+%type <pNode> function_header
+%type <pNode> function_header_with_parameters
+%type <pNode> function_definition
 
 %%
 
@@ -228,11 +232,7 @@ variable_identifier:
     ;
 
 module_prototype:
-      module_declarator RIGHT_PAREN                                 { $$ = $1; }
-    ;
-
-module_declarator:
-	  module_header_with_parameters								    { $$ = $1; }
+      module_header_with_parameters RIGHT_PAREN                     { $$ = $1; }
     ;
 
 module_header_with_parameters:
@@ -243,6 +243,23 @@ module_header_with_parameters:
 module_header:
       MODULE_TOKEN IDENTIFIER LEFT_PAREN                            { $$ = new ModuleDeclaratorNode(pContext, $2, -1); }
     | MODULE_TOKEN IDENTIFIER LT IDENTIFIER GT LEFT_PAREN           { $$ = new ModuleDeclaratorNode(pContext, $2, $4); } 
+    ;
+
+function_definition:
+      function_prototype compound_statement                         { $$ = $1; dynamic_cast<FunctionDeclaratorNode*>($$)->SetStatementList($2); }
+    ;
+
+function_prototype:
+      function_header_with_parameters RIGHT_PAREN                   { $$ = $1; }
+
+function_header_with_parameters:
+	  function_header parameter_declaration							{ $$ = $1; dynamic_cast<FunctionDeclaratorNode*>($$)->AddParameter($2); }
+	| function_header_with_parameters COMMA parameter_declaration   { $$ = $1; dynamic_cast<FunctionDeclaratorNode*>($$)->AddParameter($3); }
+	;
+
+function_header:
+      FUNCTION_TOKEN IDENTIFIER LEFT_PAREN                          { $$ = new FunctionDeclaratorNode(pContext, $2, -1); }
+    | FUNCTION_TOKEN IDENTIFIER LT IDENTIFIER GT LEFT_PAREN         { $$ = new FunctionDeclaratorNode(pContext, $2, $4); } 
     ;
 
 parameter_declaration:
@@ -292,6 +309,7 @@ state_list:
 module_member:
       module_state                                                  { $$ = $1; }
     | declaration_statement                                         { $$ = $1; }
+    | function_definition                                           { $$ = $1; }
     ;
 
 module_state:

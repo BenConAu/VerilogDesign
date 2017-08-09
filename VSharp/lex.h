@@ -336,7 +336,7 @@ extern int yylex \
 #undef YY_DECL
 #endif
 
-#line 67 "VSharp.l"
+#line 68 "VSharp.l"
 
 
 #line 343 "lex.h"

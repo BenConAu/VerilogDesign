@@ -3,6 +3,13 @@ module DemoModule(
 	out reg<32> out1
 	)
 {
+	function CalcThing(
+		uint32 input,
+		out uint32 output)
+	{
+		output = input + 1;
+	}
+
 	state initial
 	{
 		_ExampleRegister = 0;

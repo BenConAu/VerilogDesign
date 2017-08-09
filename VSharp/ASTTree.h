@@ -19,3 +19,4 @@
 #include "UnaryOperatorNode.h"
 #include "StateDeclaratorNode.h"
 #include "PackByteNode.h"
+#include "FunctionDeclaratorNode.h"

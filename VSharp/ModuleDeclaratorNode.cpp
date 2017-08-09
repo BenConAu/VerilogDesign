@@ -7,6 +7,7 @@
 #include "ModuleInfo.h"
 #include "VariableDeclarationNode.h"
 #include "StateDeclaratorNode.h"
+#include "FunctionDeclaratorNode.h"
 
 void ModuleDeclaratorNode::PreVerifyNodeImpl()
 {
@@ -25,6 +26,9 @@ void ModuleDeclaratorNode::PreVerifyNodeImpl()
     // declarations right next to the parameters.
     ListNode* pModuleChildList = GetTypedChild<ListNode>();
     size_t ListIndex = GetChildCount() - 1;
+
+    // Functions go first
+    MoveListChildren<FunctionDeclaratorNode>(pModuleChildList, GetChildCount());
 
     // Add the declarations first after the parameters
     MoveListChildren<VariableDeclarationNode>(pModuleChildList, GetChildCount());

@@ -54,6 +54,7 @@
 "struct"             { return STRUCT_TOKEN; }
 "packbyte"           { return PACKBYTE_TOKEN; }
 "module"             { return MODULE_TOKEN; }
+"function"           { return FUNCTION_TOKEN; }
 "transition"         { return TRANSITION_TOKEN; }
 "if"                 { return IF_TOKEN; }
 "while"              { return WHILE_TOKEN; }

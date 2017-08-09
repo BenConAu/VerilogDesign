@@ -17,6 +17,8 @@ PSLcc: lex.yy.c \
 	   FieldSelectionNode.h \
 	   FunctionCallNode.h \
 	   FunctionCallNode.cpp \
+   	   FunctionDeclaratorNode.h \
+   	   FunctionDeclaratorNode.cpp \
 	   GenericTypeInfo.h \
 	   IdentifierNode.cpp \
 	   IdentifierNode.h \
@@ -81,6 +83,7 @@ PSLcc: lex.yy.c \
 	   ExpressionResult.cpp \
 	   FieldSelectionNode.cpp \
    	   FunctionCallNode.cpp \
+   	   FunctionDeclaratorNode.cpp \
 	   IdentifierNode.cpp \
 	   IfStatementNode.cpp \
 	   IndexSelectionNode.cpp \
