@@ -28,7 +28,6 @@ begin
         fsmState <= `__StartState;
       end
       `__StartState: begin
-        _ExampleRegister <= _ExampleRegister + 1
         fsmState <= `__EndState;
       end
       `__EndState: begin

@@ -447,16 +447,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  23
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   226
+#define YYLAST   241
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  49
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  48
+#define YYNNTS  49
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  98
+#define YYNRULES  100
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  187
+#define YYNSTATES  190
 
 /* YYTRANSLATE[YYX] -- Symbol number corresponding to YYX as returned
    by yylex, with out-of-bounds checking.  */
@@ -507,16 +507,17 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   126,   126,   127,   131,   132,   133,   137,   138,   142,
-     143,   144,   145,   146,   150,   154,   156,   161,   162,   166,
-     170,   171,   175,   176,   177,   181,   182,   183,   187,   188,
-     189,   193,   194,   195,   199,   200,   204,   205,   209,   213,
-     214,   215,   216,   217,   221,   222,   223,   227,   231,   235,
-     239,   240,   244,   245,   249,   253,   256,   257,   261,   262,
-     266,   267,   271,   272,   273,   274,   275,   276,   280,   285,
-     286,   290,   291,   296,   300,   301,   305,   306,   310,   311,
-     312,   316,   317,   321,   325,   326,   330,   334,   335,   339,
-     340,   344,   345,   349,   350,   352,   356,   360,   364
+       0,   127,   127,   128,   132,   133,   134,   138,   139,   143,
+     144,   145,   146,   147,   151,   155,   157,   162,   163,   167,
+     171,   172,   176,   177,   178,   182,   183,   184,   188,   189,
+     190,   194,   195,   196,   200,   201,   205,   206,   210,   214,
+     215,   216,   217,   218,   222,   223,   224,   228,   232,   236,
+     240,   241,   245,   246,   250,   254,   257,   258,   262,   263,
+     267,   268,   272,   273,   274,   275,   276,   277,   281,   286,
+     287,   291,   292,   297,   301,   302,   306,   307,   311,   312,
+     313,   317,   318,   322,   326,   327,   331,   335,   336,   340,
+     341,   345,   346,   350,   351,   352,   356,   357,   361,   365,
+     369
 };
 #endif
 
@@ -549,7 +550,7 @@ static const char *const yytname[] =
   "module_definition", "module_states", "state_list", "module_member",
   "module_state", "init_declarator_list", "single_declaration",
   "declaration_statement", "compound_statement", "function_call",
-  "function_call_header_no_param", "function_call_header",
+  "function_call_header_no_param", "function_call_header", "fn_call_arg",
   "jump_statement", "transition_statement", "packbyte_statement", YY_NULLPTR
 };
 #endif
@@ -567,10 +568,10 @@ static const yytype_uint16 yytoknum[] =
 };
 # endif
 
-#define YYPACT_NINF -111
+#define YYPACT_NINF -127
 
 #define yypact_value_is_default(Yystate) \
-  (!!((Yystate) == (-111)))
+  (!!((Yystate) == (-127)))
 
 #define YYTABLE_NINF -67
 
@@ -581,25 +582,25 @@ static const yytype_uint16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
-      22,   -39,    -2,  -111,  -111,  -111,  -111,   -22,  -111,     5,
-    -111,  -111,     4,     3,    53,   -10,    29,  -111,    58,  -111,
-      28,   114,    99,  -111,  -111,    60,  -111,  -111,    53,   170,
-    -111,    93,   135,  -111,  -111,  -111,   105,   142,   170,    -3,
-     122,  -111,  -111,  -111,   134,    75,    53,    84,  -111,  -111,
-    -111,  -111,   126,  -111,    24,   157,  -111,   136,   151,  -111,
-     134,   134,    78,   108,  -111,  -111,    53,  -111,  -111,  -111,
-    -111,  -111,  -111,    90,    87,  -111,  -111,    92,    86,   103,
-     130,   166,  -111,   115,  -111,  -111,  -111,   167,    76,   169,
-       0,  -111,  -111,  -111,  -111,  -111,   143,   144,  -111,   173,
-     174,   175,     1,   127,  -111,  -111,  -111,   181,  -111,  -111,
-    -111,  -111,  -111,    23,    24,   170,    24,    24,    24,    24,
-      24,    24,    24,    24,    24,  -111,   149,   150,    24,    24,
-    -111,  -111,    24,  -111,  -111,   188,   178,   187,    24,    24,
-      24,  -111,  -111,  -111,  -111,   180,    86,    23,    86,   103,
-     103,   130,   130,   166,   166,  -111,  -111,  -111,   164,    92,
-    -111,   165,   189,  -111,   186,   190,   182,   193,  -111,   195,
-    -111,   134,   134,    24,    24,  -111,  -111,   171,  -111,   185,
-    -111,   134,    24,  -111,   196,   201,  -111
+       2,   -32,     9,  -127,  -127,  -127,  -127,   -24,  -127,    34,
+    -127,  -127,   -12,    -2,    69,     6,    51,  -127,    66,  -127,
+      26,   115,    92,  -127,  -127,    90,  -127,  -127,    69,    84,
+    -127,    85,   121,  -127,  -127,  -127,   104,   143,    84,     5,
+     119,  -127,  -127,  -127,   132,    59,    69,   100,  -127,  -127,
+    -127,  -127,   129,  -127,   101,   149,  -127,   131,   193,  -127,
+     132,   132,    80,   134,  -127,  -127,    69,  -127,  -127,  -127,
+    -127,  -127,  -127,    17,   106,  -127,  -127,   103,   120,   124,
+     136,   164,  -127,     4,  -127,  -127,  -127,   162,    89,   168,
+      -1,  -127,  -127,  -127,  -127,  -127,   142,   145,  -127,   171,
+     175,   177,     1,   150,  -127,  -127,  -127,   188,  -127,  -127,
+    -127,  -127,  -127,    43,    75,    84,   101,   101,   101,   101,
+     101,   101,   101,   101,   101,  -127,   156,   157,   101,   101,
+    -127,  -127,    75,  -127,  -127,   194,   184,   195,   101,   101,
+     101,  -127,  -127,  -127,   160,  -127,  -127,   186,   120,    43,
+     120,   124,   124,   136,   136,   164,   164,  -127,  -127,  -127,
+     170,   103,  -127,   172,   192,  -127,   196,   197,   185,  -127,
+     199,  -127,   201,  -127,   132,   132,   101,    75,  -127,  -127,
+     178,  -127,   190,  -127,   132,   101,  -127,   202,   207,  -127
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -618,34 +619,34 @@ static const yytype_uint8 yydefact[] =
       28,    31,    34,    36,    39,    44,    41,     0,     0,     0,
        0,    68,    70,    82,    81,    58,     0,     0,    87,     0,
        0,     0,    48,     0,     7,     9,    10,     0,    11,    12,
-      96,    13,    57,    37,    91,     0,     0,     0,     0,     0,
+      98,    13,    57,    37,    91,     0,     0,     0,     0,     0,
        0,     0,     0,     0,     0,    38,     0,     0,     0,     0,
       90,    89,     0,    53,    71,     0,     0,     0,     0,     0,
-       0,    88,     8,    14,    93,     0,    23,    36,    24,    26,
-      27,    29,    30,    32,    33,    35,    43,    42,     0,    21,
-      95,     0,     0,    97,     0,     0,     0,     0,    40,     0,
-      59,     0,     0,     0,    92,    72,    15,    18,    16,     0,
-      94,     0,     0,    17,     0,     0,    98
+       0,    88,     8,    14,     0,    96,    93,     0,    23,    36,
+      24,    26,    27,    29,    30,    32,    33,    35,    43,    42,
+       0,    21,    95,     0,     0,    99,     0,     0,     0,    97,
+       0,    40,     0,    59,     0,     0,     0,    92,    72,    15,
+      18,    16,     0,    94,     0,     0,    17,     0,     0,   100
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int16 yypgoto[] =
 {
-    -111,  -111,   199,  -111,   116,  -111,  -111,  -111,   -54,  -110,
-      91,    46,    49,    61,    64,    97,  -111,   -41,  -111,    10,
-    -111,  -111,  -111,  -111,  -111,  -111,  -111,  -111,   -12,   -11,
-    -111,  -111,   168,  -111,  -111,  -111,   176,  -111,  -111,  -111,
-     -57,   -59,  -111,  -111,  -111,  -111,  -111,  -111
+    -127,  -127,   205,  -127,   122,  -127,  -127,  -127,   -54,  -110,
+      95,    44,    46,    54,    63,   102,  -127,   -60,  -127,   112,
+    -127,  -127,  -127,  -127,  -127,  -127,  -127,  -127,   -21,   -11,
+    -127,  -127,   173,  -127,  -127,  -127,   181,  -127,  -127,  -127,
+     -51,   -59,  -127,  -127,  -127,  -126,  -127,  -127,  -127
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int16 yydefgoto[] =
 {
-      -1,     9,    10,   103,   104,   105,   106,   176,   107,    76,
+      -1,     9,    10,   103,   104,   105,   106,   179,   107,    76,
       77,    78,    79,    80,    81,    82,   129,    83,    84,    42,
       85,    12,    13,    14,    43,    44,    45,    46,    30,    15,
       16,    58,    59,    17,    26,    47,    48,    49,    18,    19,
-      50,    64,    86,    87,    88,   109,   110,   111
+      50,    64,    86,    87,    88,   146,   109,   110,   111
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -653,56 +654,60 @@ static const yytype_int16 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int16 yytable[] =
 {
-      75,    93,    94,    31,   144,    23,   108,    60,     1,    20,
-      11,     2,     3,     4,     5,   134,    51,    31,    52,    11,
-      21,   114,   160,   115,    27,     1,    22,    57,     2,     3,
-       4,     5,   113,    28,    67,    31,    71,    72,    32,     6,
-     135,     7,    25,    73,    33,    61,   108,    57,    35,   -66,
-      36,   126,   127,     8,   112,    31,     6,    29,     7,     2,
-       3,     4,     5,   128,   180,    39,     2,     3,     4,     5,
-       8,    40,    74,    34,   158,   147,   147,   147,   147,   147,
-     147,   147,   147,   147,   164,   165,   166,     6,   147,    39,
-       2,     3,     4,     5,     6,    40,    65,   131,    95,    41,
-      96,     8,    71,    72,   145,    66,   132,   114,     8,   115,
-     118,   119,   177,   178,     2,     3,     4,     5,     6,   179,
-      71,    72,   183,    68,   116,   117,    37,    73,   184,   120,
-     121,   125,     8,     2,     3,     4,     5,    38,    74,    71,
-      72,    53,     6,   126,   127,    97,    73,    98,   122,   123,
-      99,    54,   100,    55,   101,   128,   102,     2,     3,     4,
-       5,     6,   146,   148,    97,    56,   141,   149,   150,    99,
-      62,   100,    63,   101,    70,   102,     2,     3,     4,     5,
-      89,   151,   152,   124,    90,     6,   153,   154,   130,   133,
-      91,   136,   137,   138,   139,   140,   143,   156,   157,     8,
-     161,   162,   163,   167,     6,   168,   169,   171,    24,   170,
-     175,   172,   173,   174,   181,   182,   186,   185,     8,   142,
-     159,   155,     0,    69,     0,     0,    92
+      75,    93,    94,    31,   145,     1,   162,    51,     2,     3,
+       4,     5,   108,   113,   134,    60,    20,    31,    52,    27,
+     125,   114,   145,   115,    22,    67,    25,    57,    28,    71,
+      72,    21,   126,   127,    23,    31,     6,     1,     7,   135,
+       2,     3,     4,     5,   128,   112,    35,    57,    36,   -66,
+       8,   183,   108,    61,    32,    31,   149,   149,   149,   149,
+     149,   149,   149,   149,   149,    74,    33,   145,     6,   149,
+       7,   126,   127,    29,   160,     2,     3,     4,     5,   144,
+      65,    34,     8,   128,   166,   167,   168,    71,    72,    66,
+       2,     3,     4,     5,    73,    39,     2,     3,     4,     5,
+      95,    40,    96,     6,   147,    39,     2,     3,     4,     5,
+     131,    40,    11,    71,    72,   180,   181,     8,     6,   132,
+      73,    11,   182,    74,     6,   186,   114,    37,   115,    41,
+      38,   187,     8,    53,     6,   116,   117,    54,     8,    68,
+       2,     3,     4,     5,   118,   119,    71,    72,     8,    74,
+     120,   121,    55,    73,   122,   123,     2,     3,     4,     5,
+     148,   150,    71,    72,   151,   152,    56,    62,     6,    73,
+      63,    97,    89,    98,   153,   154,    99,    70,   100,    90,
+     101,   124,   102,   130,     6,   155,   156,    97,   133,   141,
+     136,   138,    99,   137,   100,   139,   101,   140,   102,     2,
+       3,     4,     5,   143,   158,   159,   163,   164,   169,   170,
+     165,   171,   173,   172,    24,   176,   178,   174,   175,   177,
+     185,   184,   189,   188,   161,   142,   157,     6,    69,     0,
+       0,    92,    91,     0,     0,     0,     0,     0,     0,     0,
+       0,     8
 };
 
 static const yytype_int16 yycheck[] =
 {
-      54,    60,    61,    14,   114,     0,    63,    10,     3,    48,
-       0,     6,     7,     8,     9,    15,    28,    28,    29,     9,
-      22,    20,   132,    22,    21,     3,    48,    38,     6,     7,
-       8,     9,    73,    30,    46,    46,    12,    13,    48,    34,
-      40,    36,    38,    19,    15,    48,   103,    58,    20,    48,
-      22,    28,    29,    48,    66,    66,    34,     4,    36,     6,
-       7,     8,     9,    40,   174,     5,     6,     7,     8,     9,
-      48,    11,    48,    15,   128,   116,   117,   118,   119,   120,
-     121,   122,   123,   124,   138,   139,   140,    34,   129,     5,
-       6,     7,     8,     9,    34,    11,    21,    21,    20,    39,
-      22,    48,    12,    13,   115,    30,    30,    20,    48,    22,
-      24,    25,   171,   172,     6,     7,     8,     9,    34,   173,
-      12,    13,   181,    39,    32,    33,    12,    19,   182,    26,
-      27,    16,    48,     6,     7,     8,     9,    38,    48,    12,
-      13,    48,    34,    28,    29,    37,    19,    39,    18,    19,
-      42,    16,    44,    48,    46,    40,    48,     6,     7,     8,
-       9,    34,   116,   117,    37,    23,    39,   118,   119,    42,
-      48,    44,    38,    46,    48,    48,     6,     7,     8,     9,
-      23,   120,   121,    17,    48,    34,   122,   123,    21,    20,
-      39,    48,    48,    20,    20,    20,    15,    48,    48,    48,
-      12,    23,    15,    23,    34,    41,    41,    21,     9,    20,
-      15,    21,    30,    20,    43,    30,    15,    21,    48,   103,
-     129,   124,    -1,    47,    -1,    -1,    58
+      54,    60,    61,    14,   114,     3,   132,    28,     6,     7,
+       8,     9,    63,    73,    15,    10,    48,    28,    29,    21,
+      16,    20,   132,    22,    48,    46,    38,    38,    30,    12,
+      13,    22,    28,    29,     0,    46,    34,     3,    36,    40,
+       6,     7,     8,     9,    40,    66,    20,    58,    22,    48,
+      48,   177,   103,    48,    48,    66,   116,   117,   118,   119,
+     120,   121,   122,   123,   124,    48,    15,   177,    34,   129,
+      36,    28,    29,     4,   128,     6,     7,     8,     9,     4,
+      21,    15,    48,    40,   138,   139,   140,    12,    13,    30,
+       6,     7,     8,     9,    19,     5,     6,     7,     8,     9,
+      20,    11,    22,    34,   115,     5,     6,     7,     8,     9,
+      21,    11,     0,    12,    13,   174,   175,    48,    34,    30,
+      19,     9,   176,    48,    34,   184,    20,    12,    22,    39,
+      38,   185,    48,    48,    34,    32,    33,    16,    48,    39,
+       6,     7,     8,     9,    24,    25,    12,    13,    48,    48,
+      26,    27,    48,    19,    18,    19,     6,     7,     8,     9,
+     116,   117,    12,    13,   118,   119,    23,    48,    34,    19,
+      38,    37,    23,    39,   120,   121,    42,    48,    44,    48,
+      46,    17,    48,    21,    34,   122,   123,    37,    20,    39,
+      48,    20,    42,    48,    44,    20,    46,    20,    48,     6,
+       7,     8,     9,    15,    48,    48,    12,    23,    48,    23,
+      15,    41,    20,    41,     9,    30,    15,    21,    21,    20,
+      30,    43,    15,    21,   129,   103,   124,    34,    47,    -1,
+      -1,    58,    39,    -1,    -1,    -1,    -1,    -1,    -1,    -1,
+      -1,    48
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
@@ -719,15 +724,15 @@ static const yytype_uint8 yystos[] =
       48,    12,    13,    19,    48,    57,    58,    59,    60,    61,
       62,    63,    64,    66,    67,    69,    91,    92,    93,    23,
       48,    39,    81,    90,    90,    20,    22,    37,    39,    42,
-      44,    46,    48,    52,    53,    54,    55,    57,    89,    94,
-      95,    96,    77,    66,    20,    22,    32,    33,    24,    25,
+      44,    46,    48,    52,    53,    54,    55,    57,    89,    95,
+      96,    97,    77,    66,    20,    22,    32,    33,    24,    25,
       26,    27,    18,    19,    17,    16,    28,    29,    40,    65,
       21,    21,    30,    20,    15,    40,    48,    48,    20,    20,
-      20,    39,    53,    15,    58,    78,    60,    66,    60,    61,
-      61,    62,    62,    63,    63,    64,    48,    48,    57,    59,
-      58,    12,    23,    15,    57,    57,    57,    23,    41,    41,
-      20,    21,    21,    30,    20,    15,    56,    90,    90,    57,
-      58,    43,    30,    90,    57,    21,    15
+      20,    39,    53,    15,     4,    58,    94,    78,    60,    66,
+      60,    61,    61,    62,    62,    63,    63,    64,    48,    48,
+      57,    59,    94,    12,    23,    15,    57,    57,    57,    48,
+      23,    41,    41,    20,    21,    21,    30,    20,    15,    56,
+      90,    90,    57,    94,    43,    30,    90,    57,    21,    15
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
@@ -742,7 +747,8 @@ static const yytype_uint8 yyr1[] =
       77,    77,    78,    78,    78,    78,    78,    78,    79,    80,
       80,    81,    81,    82,    83,    83,    84,    84,    85,    85,
       85,    86,    86,    87,    88,    88,    89,    90,    90,    91,
-      91,    92,    92,    93,    93,    93,    94,    95,    96
+      91,    92,    92,    93,    93,    93,    94,    94,    95,    96,
+      97
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
@@ -757,7 +763,8 @@ static const yytype_uint8 yyr2[] =
        2,     3,     1,     1,     1,     1,     1,     4,     5,     1,
        2,     3,     6,     2,     2,     3,     1,     2,     1,     1,
        1,     3,     3,     1,     2,     4,     1,     2,     3,     2,
-       2,     2,     5,     3,     6,     3,     1,     3,     9
+       2,     2,     5,     3,     6,     3,     1,     2,     1,     3,
+       9
 };
 
 
@@ -1535,572 +1542,584 @@ yyreduce:
   switch (yyn)
     {
         case 4:
-#line 131 "VSharp.y" /* yacc.c:1661  */
+#line 132 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); pContext->AddModuleDef((yyval.pNode)); }
-#line 1541 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1548 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 5:
-#line 132 "VSharp.y" /* yacc.c:1661  */
+#line 133 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-1].pNode); pContext->AddStructDef((yyval.pNode)); }
-#line 1547 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1554 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 6:
-#line 133 "VSharp.y" /* yacc.c:1661  */
+#line 134 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); pContext->AddGlobal((yyval.pNode)); }
-#line 1553 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1560 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 7:
-#line 137 "VSharp.y" /* yacc.c:1661  */
+#line 138 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new ListNode(pContext, (yyvsp[0].pNode)); }
-#line 1559 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1566 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 8:
-#line 138 "VSharp.y" /* yacc.c:1661  */
+#line 139 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-1].pNode); (yyval.pNode)->AddNode((yyvsp[0].pNode)); }
-#line 1565 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1572 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 9:
-#line 142 "VSharp.y" /* yacc.c:1661  */
+#line 143 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1571 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1578 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 10:
-#line 143 "VSharp.y" /* yacc.c:1661  */
+#line 144 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1577 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1584 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 11:
-#line 144 "VSharp.y" /* yacc.c:1661  */
+#line 145 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1583 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1590 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 12:
-#line 145 "VSharp.y" /* yacc.c:1661  */
+#line 146 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1589 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1596 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 13:
-#line 146 "VSharp.y" /* yacc.c:1661  */
+#line 147 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1595 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1602 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 14:
-#line 150 "VSharp.y" /* yacc.c:1661  */
+#line 151 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-1].pNode); }
-#line 1601 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1608 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 15:
-#line 155 "VSharp.y" /* yacc.c:1661  */
+#line 156 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); dynamic_cast<IfStatementNode*>((yyval.pNode))->SetStatementList((yyvsp[-2].pNode)); }
-#line 1607 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1614 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 16:
-#line 157 "VSharp.y" /* yacc.c:1661  */
+#line 158 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new WhileStatementNode(pContext, (yyvsp[-2].pNode), (yyvsp[0].pNode)); }
-#line 1613 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1620 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 17:
-#line 161 "VSharp.y" /* yacc.c:1661  */
+#line 162 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new IfStatementNode(pContext, (yyvsp[-2].pNode), (yyvsp[0].pNode)); }
-#line 1619 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1626 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 18:
-#line 162 "VSharp.y" /* yacc.c:1661  */
+#line 163 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new IfStatementNode(pContext, (yyvsp[0].pNode), nullptr); }
-#line 1625 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1632 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 19:
-#line 166 "VSharp.y" /* yacc.c:1661  */
+#line 167 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1631 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1638 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 20:
-#line 170 "VSharp.y" /* yacc.c:1661  */
+#line 171 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1637 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1644 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 21:
-#line 171 "VSharp.y" /* yacc.c:1661  */
+#line 172 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new AssignmentNode(pContext, (yyloc), (yyvsp[-2].pNode), (yyvsp[0].pNode)); }
-#line 1643 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1650 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 22:
-#line 175 "VSharp.y" /* yacc.c:1661  */
+#line 176 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1649 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1656 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 23:
-#line 176 "VSharp.y" /* yacc.c:1661  */
+#line 177 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new OperatorNode(pContext, (yyloc), (yyvsp[-2].pNode), (yyvsp[0].pNode), Operator::Equal); }
-#line 1655 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1662 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 24:
-#line 177 "VSharp.y" /* yacc.c:1661  */
+#line 178 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new OperatorNode(pContext, (yyloc), (yyvsp[-2].pNode), (yyvsp[0].pNode), Operator::NotEqual); }
-#line 1661 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1668 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 25:
-#line 181 "VSharp.y" /* yacc.c:1661  */
+#line 182 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1667 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1674 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 26:
-#line 182 "VSharp.y" /* yacc.c:1661  */
+#line 183 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new OperatorNode(pContext, (yyloc), (yyvsp[-2].pNode), (yyvsp[0].pNode), Operator::LessThan); }
-#line 1673 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1680 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 27:
-#line 183 "VSharp.y" /* yacc.c:1661  */
+#line 184 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new OperatorNode(pContext, (yyloc), (yyvsp[-2].pNode), (yyvsp[0].pNode), Operator::GreaterThan); }
-#line 1679 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1686 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 28:
-#line 187 "VSharp.y" /* yacc.c:1661  */
+#line 188 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1685 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1692 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 29:
-#line 188 "VSharp.y" /* yacc.c:1661  */
+#line 189 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new OperatorNode(pContext, (yyloc), (yyvsp[-2].pNode), (yyvsp[0].pNode), Operator::ShiftLeft); }
-#line 1691 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1698 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 30:
-#line 189 "VSharp.y" /* yacc.c:1661  */
+#line 190 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new OperatorNode(pContext, (yyloc), (yyvsp[-2].pNode), (yyvsp[0].pNode), Operator::ShiftRight); }
-#line 1697 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1704 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 31:
-#line 193 "VSharp.y" /* yacc.c:1661  */
+#line 194 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1703 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1710 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 32:
-#line 194 "VSharp.y" /* yacc.c:1661  */
+#line 195 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new OperatorNode(pContext, (yyloc), (yyvsp[-2].pNode), (yyvsp[0].pNode), Operator::Add); }
-#line 1709 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1716 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 33:
-#line 195 "VSharp.y" /* yacc.c:1661  */
+#line 196 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new OperatorNode(pContext, (yyloc), (yyvsp[-2].pNode), (yyvsp[0].pNode), Operator::Subtract); }
-#line 1715 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1722 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 34:
-#line 199 "VSharp.y" /* yacc.c:1661  */
+#line 200 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1721 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1728 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 35:
-#line 200 "VSharp.y" /* yacc.c:1661  */
+#line 201 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new OperatorNode(pContext, (yyloc), (yyvsp[-2].pNode), (yyvsp[0].pNode), Operator::Multiply); }
-#line 1727 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1734 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 36:
-#line 204 "VSharp.y" /* yacc.c:1661  */
+#line 205 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1733 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1740 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 37:
-#line 205 "VSharp.y" /* yacc.c:1661  */
+#line 206 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new UnaryOperatorNode(pContext, (yyvsp[0].pNode), Operator::Negate); }
-#line 1739 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1746 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 39:
-#line 213 "VSharp.y" /* yacc.c:1661  */
+#line 214 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1745 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1752 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 40:
-#line 214 "VSharp.y" /* yacc.c:1661  */
+#line 215 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new IndexSelectionNode(pContext, (yyloc), (yyvsp[-3].pNode), (yyvsp[-1].pNode)); }
-#line 1751 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1758 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 41:
-#line 215 "VSharp.y" /* yacc.c:1661  */
+#line 216 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1757 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1764 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 42:
-#line 216 "VSharp.y" /* yacc.c:1661  */
+#line 217 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new FieldSelectionNode(pContext, (yyloc), (yyvsp[-2].pNode), false, (yyvsp[0].symIndex)); }
-#line 1763 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1770 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 43:
-#line 217 "VSharp.y" /* yacc.c:1661  */
+#line 218 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new FieldSelectionNode(pContext, (yyloc), (yyvsp[-2].pNode), true, (yyvsp[0].symIndex)); }
-#line 1769 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1776 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 44:
-#line 221 "VSharp.y" /* yacc.c:1661  */
+#line 222 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1775 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1782 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 45:
-#line 222 "VSharp.y" /* yacc.c:1661  */
+#line 223 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new ConstantNode(pContext, ConstantNode::Word, (yyvsp[0].intVal)); }
-#line 1781 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1788 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 46:
-#line 223 "VSharp.y" /* yacc.c:1661  */
+#line 224 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new ConstantNode(pContext, ConstantNode::Bool, (yyvsp[0].intVal)); }
-#line 1787 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1794 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 47:
-#line 227 "VSharp.y" /* yacc.c:1661  */
+#line 228 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-1].pNode); }
-#line 1793 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1800 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 48:
-#line 231 "VSharp.y" /* yacc.c:1661  */
+#line 232 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new IdentifierNode(pContext, (yyloc), (yyvsp[0].symIndex)); }
-#line 1799 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1806 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 49:
-#line 235 "VSharp.y" /* yacc.c:1661  */
+#line 236 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-1].pNode); }
-#line 1805 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1812 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 50:
-#line 239 "VSharp.y" /* yacc.c:1661  */
+#line 240 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-1].pNode); dynamic_cast<ModuleDeclaratorNode*>((yyval.pNode))->AddParameter((yyvsp[0].pNode)); }
-#line 1811 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1818 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 51:
-#line 240 "VSharp.y" /* yacc.c:1661  */
+#line 241 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-2].pNode); dynamic_cast<ModuleDeclaratorNode*>((yyval.pNode))->AddParameter((yyvsp[0].pNode)); }
-#line 1817 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1824 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 52:
-#line 244 "VSharp.y" /* yacc.c:1661  */
+#line 245 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new ModuleDeclaratorNode(pContext, (yyvsp[-1].symIndex), -1); }
-#line 1823 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1830 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 53:
-#line 245 "VSharp.y" /* yacc.c:1661  */
+#line 246 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new ModuleDeclaratorNode(pContext, (yyvsp[-4].symIndex), (yyvsp[-2].symIndex)); }
-#line 1829 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1836 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 54:
-#line 249 "VSharp.y" /* yacc.c:1661  */
+#line 250 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-1].pNode); dynamic_cast<FunctionDeclaratorNode*>((yyval.pNode))->SetStatementList((yyvsp[0].pNode)); }
-#line 1835 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1842 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 55:
-#line 253 "VSharp.y" /* yacc.c:1661  */
+#line 254 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-1].pNode); }
-#line 1841 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1848 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 56:
-#line 256 "VSharp.y" /* yacc.c:1661  */
+#line 257 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-1].pNode); dynamic_cast<FunctionDeclaratorNode*>((yyval.pNode))->AddParameter((yyvsp[0].pNode)); }
-#line 1847 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1854 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 57:
-#line 257 "VSharp.y" /* yacc.c:1661  */
+#line 258 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-2].pNode); dynamic_cast<FunctionDeclaratorNode*>((yyval.pNode))->AddParameter((yyvsp[0].pNode)); }
-#line 1853 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1860 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 58:
-#line 261 "VSharp.y" /* yacc.c:1661  */
+#line 262 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new FunctionDeclaratorNode(pContext, (yyvsp[-1].symIndex), -1); }
-#line 1859 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1866 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 59:
-#line 262 "VSharp.y" /* yacc.c:1661  */
+#line 263 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new FunctionDeclaratorNode(pContext, (yyvsp[-4].symIndex), (yyvsp[-2].symIndex)); }
-#line 1865 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1872 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 60:
-#line 266 "VSharp.y" /* yacc.c:1661  */
+#line 267 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new ModuleParameterNode(pContext, (yyvsp[-1].pNode), (yyvsp[0].symIndex), false); }
-#line 1871 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1878 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 61:
-#line 267 "VSharp.y" /* yacc.c:1661  */
+#line 268 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new ModuleParameterNode(pContext, (yyvsp[-1].pNode), (yyvsp[0].symIndex), true); }
-#line 1877 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1884 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 62:
-#line 271 "VSharp.y" /* yacc.c:1661  */
+#line 272 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new TypeNode(pContext, (yyloc), TypeClass::Register, 32); }
-#line 1883 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1890 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 63:
-#line 272 "VSharp.y" /* yacc.c:1661  */
+#line 273 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new TypeNode(pContext, (yyloc), TypeClass::Register, 16); }
-#line 1889 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1896 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 64:
-#line 273 "VSharp.y" /* yacc.c:1661  */
+#line 274 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new TypeNode(pContext, (yyloc), TypeClass::Register, 8); }
-#line 1895 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1902 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 65:
-#line 274 "VSharp.y" /* yacc.c:1661  */
+#line 275 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new TypeNode(pContext, (yyloc), TypeClass::Register, 1); }
-#line 1901 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1908 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 66:
-#line 275 "VSharp.y" /* yacc.c:1661  */
+#line 276 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new TypeNode(pContext, (yyloc), TypeClass::Struct, (yyvsp[0].symIndex)); }
-#line 1907 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1914 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 67:
-#line 276 "VSharp.y" /* yacc.c:1661  */
+#line 277 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new TypeNode(pContext, (yyloc), (yyvsp[-1].intVal)); }
-#line 1913 "VSharp.tab.c" /* yacc.c:1661  */
-    break;
-
-  case 68:
-#line 280 "VSharp.y" /* yacc.c:1661  */
-    {
-	                                    							  (yyval.pNode) = (yyvsp[-1].pNode); dynamic_cast<StructSpecifierNode*>((yyval.pNode))->SetName((yyvsp[-3].symIndex)); }
 #line 1920 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
+  case 68:
+#line 281 "VSharp.y" /* yacc.c:1661  */
+    {
+	                                    							  (yyval.pNode) = (yyvsp[-1].pNode); dynamic_cast<StructSpecifierNode*>((yyval.pNode))->SetName((yyvsp[-3].symIndex)); }
+#line 1927 "VSharp.tab.c" /* yacc.c:1661  */
+    break;
+
   case 69:
-#line 285 "VSharp.y" /* yacc.c:1661  */
+#line 286 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new StructSpecifierNode(pContext, (yyvsp[0].pNode)); }
-#line 1926 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1933 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 70:
-#line 286 "VSharp.y" /* yacc.c:1661  */
+#line 287 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-1].pNode); (yyval.pNode)->AddNode((yyvsp[0].pNode)); }
-#line 1932 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1939 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 71:
-#line 290 "VSharp.y" /* yacc.c:1661  */
+#line 291 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new StructDeclarationNode(pContext, (yyvsp[-2].pNode), (yyvsp[-1].symIndex), -1); }
-#line 1938 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1945 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 72:
-#line 292 "VSharp.y" /* yacc.c:1661  */
+#line 293 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new StructDeclarationNode(pContext, (yyvsp[-5].pNode), (yyvsp[-4].symIndex), (yyvsp[-2].intVal)); }
-#line 1944 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1951 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 73:
-#line 296 "VSharp.y" /* yacc.c:1661  */
+#line 297 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-1].pNode); dynamic_cast<ModuleDeclaratorNode*>((yyval.pNode))->SetStatementList((yyvsp[0].pNode)); }
-#line 1950 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1957 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 74:
-#line 300 "VSharp.y" /* yacc.c:1661  */
+#line 301 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new ListNode(pContext, nullptr); }
-#line 1956 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1963 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 75:
-#line 301 "VSharp.y" /* yacc.c:1661  */
+#line 302 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-1].pNode); }
-#line 1962 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1969 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 76:
-#line 305 "VSharp.y" /* yacc.c:1661  */
+#line 306 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new ListNode(pContext, (yyvsp[0].pNode)); }
-#line 1968 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1975 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 77:
-#line 306 "VSharp.y" /* yacc.c:1661  */
+#line 307 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-1].pNode); (yyval.pNode)->AddNode((yyvsp[0].pNode)); }
-#line 1974 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1981 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 78:
-#line 310 "VSharp.y" /* yacc.c:1661  */
+#line 311 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1980 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1987 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 79:
-#line 311 "VSharp.y" /* yacc.c:1661  */
+#line 312 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1986 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1993 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 80:
-#line 312 "VSharp.y" /* yacc.c:1661  */
+#line 313 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 1992 "VSharp.tab.c" /* yacc.c:1661  */
+#line 1999 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 81:
-#line 316 "VSharp.y" /* yacc.c:1661  */
+#line 317 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new StateDeclaratorNode(pContext, (yyloc), (yyvsp[-1].symIndex), (yyvsp[0].pNode)); }
-#line 1998 "VSharp.tab.c" /* yacc.c:1661  */
+#line 2005 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 82:
-#line 317 "VSharp.y" /* yacc.c:1661  */
+#line 318 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new StateDeclaratorNode(pContext, (yyloc), -1, (yyvsp[0].pNode)); }
-#line 2004 "VSharp.tab.c" /* yacc.c:1661  */
+#line 2011 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 83:
-#line 321 "VSharp.y" /* yacc.c:1661  */
+#line 322 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 2010 "VSharp.tab.c" /* yacc.c:1661  */
+#line 2017 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 84:
-#line 325 "VSharp.y" /* yacc.c:1661  */
+#line 326 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new VariableDeclarationNode(pContext, (yyloc), (yyvsp[-1].pNode), (yyvsp[0].symIndex), nullptr); }
-#line 2016 "VSharp.tab.c" /* yacc.c:1661  */
+#line 2023 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 85:
-#line 326 "VSharp.y" /* yacc.c:1661  */
+#line 327 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new VariableDeclarationNode(pContext, (yyloc), (yyvsp[-3].pNode), (yyvsp[-2].symIndex), (yyvsp[0].pNode)); }
-#line 2022 "VSharp.tab.c" /* yacc.c:1661  */
+#line 2029 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 86:
-#line 330 "VSharp.y" /* yacc.c:1661  */
+#line 331 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 2028 "VSharp.tab.c" /* yacc.c:1661  */
+#line 2035 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 87:
-#line 334 "VSharp.y" /* yacc.c:1661  */
+#line 335 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new ListNode(pContext, nullptr); }
-#line 2034 "VSharp.tab.c" /* yacc.c:1661  */
+#line 2041 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 88:
-#line 335 "VSharp.y" /* yacc.c:1661  */
+#line 336 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-1].pNode); }
-#line 2040 "VSharp.tab.c" /* yacc.c:1661  */
+#line 2047 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 89:
-#line 339 "VSharp.y" /* yacc.c:1661  */
+#line 340 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-1].pNode); }
-#line 2046 "VSharp.tab.c" /* yacc.c:1661  */
+#line 2053 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 90:
-#line 340 "VSharp.y" /* yacc.c:1661  */
+#line 341 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-1].pNode); }
-#line 2052 "VSharp.tab.c" /* yacc.c:1661  */
+#line 2059 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 91:
-#line 344 "VSharp.y" /* yacc.c:1661  */
+#line 345 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new FunctionCallNode(pContext, (yyloc), (yyvsp[-1].symIndex), nullptr, nullptr); }
-#line 2058 "VSharp.tab.c" /* yacc.c:1661  */
+#line 2065 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 92:
-#line 345 "VSharp.y" /* yacc.c:1661  */
+#line 346 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new FunctionCallNode(pContext, (yyloc), (yyvsp[-4].symIndex), (yyvsp[-2].pNode), nullptr); }
-#line 2064 "VSharp.tab.c" /* yacc.c:1661  */
+#line 2071 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 93:
-#line 349 "VSharp.y" /* yacc.c:1661  */
+#line 350 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new FunctionCallNode(pContext, (yyloc), (yyvsp[-2].symIndex), nullptr, (yyvsp[0].pNode)); }
-#line 2070 "VSharp.tab.c" /* yacc.c:1661  */
+#line 2077 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 94:
 #line 351 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new FunctionCallNode(pContext, (yyloc), (yyvsp[-5].symIndex), (yyvsp[-3].pNode), (yyvsp[0].pNode)); }
-#line 2076 "VSharp.tab.c" /* yacc.c:1661  */
+#line 2083 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 95:
 #line 352 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-2].pNode); (yyval.pNode)->AddNode((yyvsp[0].pNode)); }
-#line 2082 "VSharp.tab.c" /* yacc.c:1661  */
+#line 2089 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 96:
 #line 356 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[0].pNode); }
-#line 2088 "VSharp.tab.c" /* yacc.c:1661  */
+#line 2095 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 97:
-#line 360 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new TransitionNode(pContext, (yyvsp[-1].symIndex)); }
-#line 2094 "VSharp.tab.c" /* yacc.c:1661  */
+#line 357 "VSharp.y" /* yacc.c:1661  */
+    { (yyval.pNode) = new FunctionOutParamNode(pContext, (yyloc), (yyvsp[0].symIndex)); }
+#line 2101 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 98:
+#line 361 "VSharp.y" /* yacc.c:1661  */
+    { (yyval.pNode) = (yyvsp[0].pNode); }
+#line 2107 "VSharp.tab.c" /* yacc.c:1661  */
+    break;
+
+  case 99:
 #line 365 "VSharp.y" /* yacc.c:1661  */
+    { (yyval.pNode) = new TransitionNode(pContext, (yyvsp[-1].symIndex)); }
+#line 2113 "VSharp.tab.c" /* yacc.c:1661  */
+    break;
+
+  case 100:
+#line 370 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = new PackByteNode(pContext, (yyloc), (yyvsp[-6].pNode), (yyvsp[-4].pNode), (yyvsp[-2].pNode)); }
-#line 2100 "VSharp.tab.c" /* yacc.c:1661  */
+#line 2119 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
 
-#line 2104 "VSharp.tab.c" /* yacc.c:1661  */
+#line 2123 "VSharp.tab.c" /* yacc.c:1661  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2335,5 +2354,5 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 368 "VSharp.y" /* yacc.c:1906  */
+#line 373 "VSharp.y" /* yacc.c:1906  */
 

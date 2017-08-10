@@ -103,6 +103,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> function_call_header
 %type <pNode> function_call_header_no_param
 %type <pNode> function_call
+%type <pNode> fn_call_arg
 %type <pNode> transition_statement
 %type <pNode> jump_statement
 %type <pNode> selection_statement
@@ -346,10 +347,14 @@ function_call_header_no_param:
     ;
 
 function_call_header:
-      IDENTIFIER LEFT_PAREN assignment_expression                   { $$ = new FunctionCallNode(pContext, @$, $1, nullptr, $3); }
-    | IDENTIFIER LT fully_specified_type GT LEFT_PAREN assignment_expression  
-                                                                    { $$ = new FunctionCallNode(pContext, @$, $1, $3, $6); }
-    | function_call_header COMMA assignment_expression              { $$ = $1; $$->AddNode($3); }
+      IDENTIFIER LEFT_PAREN fn_call_arg                             { $$ = new FunctionCallNode(pContext, @$, $1, nullptr, $3); }
+    | IDENTIFIER LT fully_specified_type GT LEFT_PAREN fn_call_arg  { $$ = new FunctionCallNode(pContext, @$, $1, $3, $6); }
+    | function_call_header COMMA fn_call_arg                        { $$ = $1; $$->AddNode($3); }
+    ;
+
+fn_call_arg:
+      assignment_expression                                         { $$ = $1; }
+    | OUT_TOKEN IDENTIFIER                                          { $$ = new FunctionOutParamNode(pContext, @$, $2); }
     ;
 
 jump_statement:

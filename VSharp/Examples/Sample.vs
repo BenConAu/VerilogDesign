@@ -19,7 +19,7 @@ module DemoModule(
 
 	state StartState
 	{
-		_ExampleRegister = _ExampleRegister + 1;
+		CalcThing(_ExampleRegister, out _ExampleRegister);
 		
 		transition EndState;
 	}
