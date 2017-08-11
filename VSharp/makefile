@@ -19,6 +19,8 @@ PSLcc: lex.yy.c \
 	   FunctionCallNode.cpp \
    	   FunctionDeclaratorNode.h \
    	   FunctionDeclaratorNode.cpp \
+	   FunctionInfo.h \
+	   FunctionInfo.cpp \
 	   FunctionOutParamNode.h \
 	   FunctionOutParamNode.cpp \
 	   GenericTypeInfo.h \
@@ -38,8 +40,6 @@ PSLcc: lex.yy.c \
 	   OperatorNode.h \
 	   PackByteNode.cpp \
 	   PackByteNode.h \
-	   PSLCompilerContext.cpp \
-	   PSLCompilerContext.h \
 	   PSLCompiler.cpp \
 	   RegisterTypeInfo.cpp \
 	   RegisterTypeInfo.h \
@@ -71,6 +71,8 @@ PSLcc: lex.yy.c \
 	   VariableDeclarationNode.h \
 	   VariableInfo.cpp \
 	   VariableInfo.h \
+	   VSharpCompilerContext.cpp \
+	   VSharpCompilerContext.h \
 	   WhileStatementNode.cpp \
 	   WhileStatementNode.h \
 	   StateDeclaratorNode.cpp \
@@ -86,6 +88,7 @@ PSLcc: lex.yy.c \
 	   FieldSelectionNode.cpp \
    	   FunctionCallNode.cpp \
    	   FunctionDeclaratorNode.cpp \
+	   FunctionInfo.cpp \
 	   FunctionOutParamNode.cpp \
 	   IdentifierNode.cpp \
 	   IfStatementNode.cpp \
@@ -96,7 +99,6 @@ PSLcc: lex.yy.c \
 	   OperatorNode.cpp \
 	   PackByteNode.cpp \
 	   PSLCompiler.cpp \
-	   PSLCompilerContext.cpp \
 	   StateInfo.cpp \
 	   TransitionNode.cpp \
 	   RegisterTypeInfo.cpp \
@@ -111,6 +113,7 @@ PSLcc: lex.yy.c \
 	   UnaryOperatorNode.cpp \
 	   VariableDeclarationNode.cpp \
 	   VariableInfo.cpp \
+	   VSharpCompilerContext.cpp \
 	   StateDeclaratorNode.cpp \
 	   WhileStatementNode.cpp -o VSharpC
 

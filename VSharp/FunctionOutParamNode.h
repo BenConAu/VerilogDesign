@@ -1,23 +1,21 @@
 #pragma once
 
-#include "ASTNode.h"
+#include "ExpressionNode.h"
 #include "VSharp.tab.h"
 
-class FunctionOutParamNode : public ASTNode
+class FunctionOutParamNode : public ExpressionNode
 {
 public:
-    FunctionOutParamNode(PSLCompilerContext* pContext, const YYLTYPE &location, int symIndex) : ASTNode(pContext)
+    FunctionOutParamNode(PSLCompilerContext* pContext, const YYLTYPE &location, ASTNode* pIdent) : ExpressionNode(pContext)
     {
-        _symIndex = symIndex;
+        AddNode(pIdent);
         _location = location;
     }
 
     void VerifyNodeImpl() override;
-    void PreProcessNodeImpl() override;
     const char* GetDebugName() override { return "FunctionOutParamNode"; }
-    int GetSymbolIndex() const { return _symIndex; }
+    ExpressionResult* CalculateResult() override;
 
 private:
     YYLTYPE _location;
-    int _symIndex;
 };

@@ -1,16 +1,15 @@
 #include "FunctionOutParamNode.h"
 #include "FunctionDeclaratorNode.h"
-#include "ModuleDeclaratorNode.h"
+#include "IdentifierNode.h"
 #include "TypeNode.h"
 #include "VariableInfo.h"
 
 void FunctionOutParamNode::VerifyNodeImpl()
 {
-    ModuleDeclaratorNode *pModule = GetTypedParent<ModuleDeclaratorNode>();
+    IdentifierNode* pIdent = dynamic_cast<IdentifierNode*>(GetChild(0));
 
     // Needs to refer to an existing variable
-    VariableInfo* pInfo = dynamic_cast<VariableInfo*>(GetContext()->_symbolTable.GetInfo(_symIndex, pModule));
-    if (pInfo == nullptr)
+    if (pIdent == nullptr)
     {
         throw "Unknown identifier used as out param in function";
     }
@@ -18,8 +17,7 @@ void FunctionOutParamNode::VerifyNodeImpl()
     // TODO: Make a mapping from the variable here to the one in the function definition
 }
 
-void FunctionOutParamNode::PreProcessNodeImpl()
+ExpressionResult *FunctionOutParamNode::CalculateResult()
 {
-    // Nothing generated specifically for these, we replace at place of use
+    return dynamic_cast<ExpressionNode*>(GetChild(0))->CalculateResult();
 }
-

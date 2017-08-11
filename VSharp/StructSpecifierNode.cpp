@@ -2,7 +2,7 @@
 #include "TypeCollection.h"
 #include "StructDeclarationNode.h"
 #include "StructTypeInfo.h"
-#include "PSLCompilerContext.h"
+#include "VSharpCompilerContext.h"
 
 StructSpecifierNode::StructSpecifierNode(PSLCompilerContext* pContext, ASTNode* pTypeNode) : ASTNode(pContext)
 {

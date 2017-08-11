@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ASTNode.h"
-#include "PSLCompilerContext.h"
+#include "VSharpCompilerContext.h"
 #include "VSharp.tab.h"
 
 class VariableDeclarationNode : public ASTNode

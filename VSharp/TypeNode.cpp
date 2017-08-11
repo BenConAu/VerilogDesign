@@ -1,5 +1,5 @@
 #include "TypeNode.h"
-#include "PSLCompilerContext.h"
+#include "VSharpCompilerContext.h"
 #include "RegisterTypeInfo.h"
 #include "StructTypeInfo.h"
 #include "ModuleDeclaratorNode.h"

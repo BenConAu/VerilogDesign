@@ -1,5 +1,5 @@
 #include "ModuleInfo.h"
-#include "PSLCompilerContext.h"
+#include "VSharpCompilerContext.h"
 
 SymbolInfo::SymbolInfo(
     PSLCompilerContext *pContext,   // The context that this symbol lives in

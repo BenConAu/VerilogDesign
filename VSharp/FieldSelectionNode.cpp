@@ -3,7 +3,7 @@
 #include "StructTypeInfo.h"
 #include "VariableInfo.h"
 #include "ModuleDeclaratorNode.h"
-#include "PSLCompilerContext.h"
+#include "VSharpCompilerContext.h"
 #include "IdentifierNode.h"
 
 FieldSelectionNode::FieldSelectionNode(

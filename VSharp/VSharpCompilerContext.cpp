@@ -1,4 +1,4 @@
-#include "PSLCompilerContext.h"
+#include "VSharpCompilerContext.h"
 #include "ASTTree.h"
 #include "VSharp.tab.h"
 #define YY_EXTRA_TYPE PSLCompilerContext *
@@ -144,3 +144,22 @@ void PSLCompilerContext::OutputString(const char *pszLabel)
     }
 }
 
+void PSLCompilerContext::PushCall(FunctionCallNode* pNode) 
+{ 
+    _callStack.push(pNode); 
+}
+
+void PSLCompilerContext::PopCall() 
+{ 
+    _callStack.pop(); 
+}
+
+FunctionCallNode* PSLCompilerContext::GetCurrentFunction() 
+{
+    if (_callStack.empty())
+    {
+        return nullptr;
+    }
+    
+    return _callStack.top(); 
+}

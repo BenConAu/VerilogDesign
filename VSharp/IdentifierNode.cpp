@@ -1,7 +1,8 @@
 #include "IdentifierNode.h"
 #include "VariableInfo.h"
-#include "PSLCompilerContext.h"
+#include "VSharpCompilerContext.h"
 #include "ModuleDeclaratorNode.h"
+#include "FunctionDeclaratorNode.h"
 
 IdentifierNode::IdentifierNode(PSLCompilerContext *pContext, const YYLTYPE &location, int symIndex) : ExpressionNode(pContext)
 {
@@ -19,10 +20,22 @@ void IdentifierNode::VerifyNodeImpl()
 
 ExpressionResult *IdentifierNode::CalculateResult()
 {
-    VariableInfo *pInfo = GetVariableInfo();
-    ModuleDeclaratorNode *pScope = GetTypedParent<ModuleDeclaratorNode>();
+    // Are we in a function?
+    FunctionDeclaratorNode *pFuncDecl = GetTypedParent<FunctionDeclaratorNode>();
+    if (pFuncDecl != nullptr)
+    {
+        // The function knows how to make the actual result that we want - 
+        // pass the symbol index that was used to define the function and ask it
+        // to make the result.
+        return pFuncDecl->ResultFromSymbol(_symIndex);
+    }
+    else
+    {
+        VariableInfo *pInfo = GetVariableInfo();
+        ModuleDeclaratorNode *pScope = GetTypedParent<ModuleDeclaratorNode>();
 
-    return pInfo->CalculateResult(pScope);
+        return pInfo->CalculateResult(pScope);
+    }
 }
 
 VariableInfo *IdentifierNode::GetVariableInfo()

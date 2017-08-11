@@ -1,7 +1,10 @@
 #pragma once
 
-#include "PSLCompilerContext.h"
+#include "VSharpCompilerContext.h"
 #include "ASTNode.h"
+#include <stack>
+
+class FunctionCallNode;
 
 class FunctionDeclaratorNode : public ASTNode
 {
@@ -29,10 +32,10 @@ public:
 
     void PreVerifyNodeImpl() override;
     void VerifyNodeImpl() override;
-    void PreProcessNodeImpl() override;
     void ProcessNodeImpl() override;
-    void PostProcessNodeImpl() override;
     const char* GetDebugName() override { return "FunctionDeclaratorNode"; }
+
+    ExpressionResult* ResultFromSymbol(int symIndex);
 
 private:
     // The symbol index of the function identifier
@@ -40,4 +43,7 @@ private:
 
     // The symbol index of the generic type
     int _genericIndex;
+
+    // Arguments
+    std::map<int, size_t> _passedArgs;
 };

@@ -1,7 +1,7 @@
 %{
 #define YYDEBUG 1
 
-#include "PSLCompilerContext.h"
+#include "VSharpCompilerContext.h"
 #include "ASTTree.h"
 #include "VSharp.tab.h"
 
@@ -354,7 +354,7 @@ function_call_header:
 
 fn_call_arg:
       assignment_expression                                         { $$ = $1; }
-    | OUT_TOKEN IDENTIFIER                                          { $$ = new FunctionOutParamNode(pContext, @$, $2); }
+    | OUT_TOKEN variable_identifier                                 { $$ = new FunctionOutParamNode(pContext, @$, $2); }
     ;
 
 jump_statement:

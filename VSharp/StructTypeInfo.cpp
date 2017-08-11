@@ -1,5 +1,5 @@
 #include "StructTypeInfo.h"
-#include "PSLCompilerContext.h"
+#include "VSharpCompilerContext.h"
 
 void StructTypeInfo::AddMember(
     PSLCompilerContext *pContext,

@@ -17,11 +17,11 @@ public:
     void PostProcessNodeImpl() override;
 
     ExpressionResult* TakeResult() { ExpressionResult* pRet = _pResult; _pResult = nullptr; return pRet; }
+    virtual ExpressionResult* CalculateResult() = 0;
 
     static bool EqualType(ASTNode* pA, ASTNode* pB);
 
 protected:
-    virtual ExpressionResult* CalculateResult() = 0;
     void SetType(TypeInfo* pInfo);
 
 private:
