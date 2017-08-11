@@ -21,3 +21,4 @@
 #include "PackByteNode.h"
 #include "FunctionDeclaratorNode.h"
 #include "FunctionOutParamNode.h"
+#include "FunctionParameterNode.h"

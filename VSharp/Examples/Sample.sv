@@ -28,8 +28,6 @@ begin
         fsmState <= `__StartState;
       end
       `__StartState: begin
-        input wire[31:0] input;
-        output reg[31:0] output;
         _ExampleRegister <= _ExampleRegister + 1
         fsmState <= `__EndState;
       end

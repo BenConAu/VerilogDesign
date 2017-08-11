@@ -1,5 +1,5 @@
 #include "FunctionDeclaratorNode.h"
-#include "ModuleParameterNode.h"
+#include "FunctionParameterNode.h"
 #include "TypeNode.h"
 #include "ListNode.h"
 #include "TransitionNode.h"
@@ -28,7 +28,7 @@ void FunctionDeclaratorNode::VerifyNodeImpl()
 
     for (size_t i = 1; i < GetChildCount(); i++)
     {
-        ModuleParameterNode* pParam = dynamic_cast<ModuleParameterNode*>(GetChild(i - 1));
+        FunctionParameterNode* pParam = dynamic_cast<FunctionParameterNode*>(GetChild(i - 1));
         int symIndex = pParam->GetSymbolIndex();
 
         _passedArgs.emplace(std::make_pair(symIndex, i - 1));

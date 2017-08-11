@@ -23,6 +23,8 @@ PSLcc: lex.yy.c \
 	   FunctionInfo.cpp \
 	   FunctionOutParamNode.h \
 	   FunctionOutParamNode.cpp \
+	   FunctionParameterNode.h \
+	   FunctionParameterNode.cpp \
 	   GenericTypeInfo.h \
 	   IdentifierNode.cpp \
 	   IdentifierNode.h \
@@ -90,6 +92,7 @@ PSLcc: lex.yy.c \
    	   FunctionDeclaratorNode.cpp \
 	   FunctionInfo.cpp \
 	   FunctionOutParamNode.cpp \
+	   FunctionParameterNode.cpp \
 	   IdentifierNode.cpp \
 	   IfStatementNode.cpp \
 	   IndexSelectionNode.cpp \
