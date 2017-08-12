@@ -65,10 +65,6 @@ class PSLCompilerContext
     void IncreaseIndent() { _outputIndent++; }
     void DecreaseIndent() { _outputIndent--; }
 
-    void PushCall(FunctionCallNode* pNode);
-    void PopCall();
-    FunctionCallNode* GetCurrentFunction();
-
     int _indent = 0;
     void *pScanner;
     SymbolTable _symbolTable;
@@ -99,7 +95,4 @@ class PSLCompilerContext
 
     // Verification stuff
     FunctionDeclaratorNode *_pEntryPoint;
-
-    // The current function call being expanded
-    std::stack<FunctionCallNode*> _callStack;
 };

@@ -2106,13 +2106,13 @@ yyreduce:
 
   case 98:
 #line 362 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = (yyvsp[0].pNode); }
+    { (yyval.pNode) = new FunctionCallParamNode(pContext, (yyloc), false, (yyvsp[0].pNode)); }
 #line 2111 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 99:
 #line 363 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new FunctionOutParamNode(pContext, (yyloc), (yyvsp[0].pNode)); }
+    { (yyval.pNode) = new FunctionCallParamNode(pContext, (yyloc), true, (yyvsp[0].pNode)); }
 #line 2117 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 

@@ -97,7 +97,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> struct_declaration_list
 %type <pNode> struct_declaration
 %type <pNode> external_declaration
-%type <pNode> parameter_declaration
+%type <pNode> module_param_decl
 %type <pNode> module_header_with_parameters
 %type <pNode> packbyte_statement
 %type <pNode> function_call_header
@@ -120,6 +120,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> function_header
 %type <pNode> function_header_with_parameters
 %type <pNode> function_definition
+%type <pNode> function_param_decl
 
 %%
 
@@ -237,14 +238,19 @@ module_prototype:
     ;
 
 module_header_with_parameters:
-	  module_header parameter_declaration							{ $$ = $1; dynamic_cast<ModuleDeclaratorNode*>($$)->AddParameter($2); }
-	| module_header_with_parameters COMMA parameter_declaration     { $$ = $1; dynamic_cast<ModuleDeclaratorNode*>($$)->AddParameter($3); }
+	  module_header module_param_decl						        { $$ = $1; dynamic_cast<ModuleDeclaratorNode*>($$)->AddParameter($2); }
+	| module_header_with_parameters COMMA module_param_decl         { $$ = $1; dynamic_cast<ModuleDeclaratorNode*>($$)->AddParameter($3); }
 	;
 
 module_header:
       MODULE_TOKEN IDENTIFIER LEFT_PAREN                            { $$ = new ModuleDeclaratorNode(pContext, $2, -1); }
     | MODULE_TOKEN IDENTIFIER LT IDENTIFIER GT LEFT_PAREN           { $$ = new ModuleDeclaratorNode(pContext, $2, $4); } 
     ;
+
+module_param_decl:
+      fully_specified_type IDENTIFIER                               { $$ = new ModuleParameterNode(pContext, $1, $2, false); }
+    | OUT_TOKEN fully_specified_type IDENTIFIER                     { $$ = new ModuleParameterNode(pContext, $2, $3, true); }
+	;
 
 function_definition:
       function_prototype compound_statement                         { $$ = $1; dynamic_cast<FunctionDeclaratorNode*>($$)->SetStatementList($2); }
@@ -254,8 +260,8 @@ function_prototype:
       function_header_with_parameters RIGHT_PAREN                   { $$ = $1; }
 
 function_header_with_parameters:
-	  function_header parameter_declaration							{ $$ = $1; dynamic_cast<FunctionDeclaratorNode*>($$)->AddParameter($2); }
-	| function_header_with_parameters COMMA parameter_declaration   { $$ = $1; dynamic_cast<FunctionDeclaratorNode*>($$)->AddParameter($3); }
+	  function_header function_param_decl							{ $$ = $1; dynamic_cast<FunctionDeclaratorNode*>($$)->AddParameter($2); }
+	| function_header_with_parameters COMMA function_param_decl     { $$ = $1; dynamic_cast<FunctionDeclaratorNode*>($$)->AddParameter($3); }
 	;
 
 function_header:
@@ -263,9 +269,9 @@ function_header:
     | FUNCTION_TOKEN IDENTIFIER LT IDENTIFIER GT LEFT_PAREN         { $$ = new FunctionDeclaratorNode(pContext, $2, $4); } 
     ;
 
-parameter_declaration:
-      fully_specified_type IDENTIFIER                               { $$ = new ModuleParameterNode(pContext, $1, $2, false); }
-    | OUT_TOKEN fully_specified_type IDENTIFIER                     { $$ = new ModuleParameterNode(pContext, $2, $3, true); }
+function_param_decl:
+      fully_specified_type IDENTIFIER                               { $$ = new FunctionParameterNode(pContext, $1, $2, false); }
+    | OUT_TOKEN fully_specified_type IDENTIFIER                     { $$ = new FunctionParameterNode(pContext, $2, $3, true); }
 	;
 
 fully_specified_type:
@@ -353,8 +359,8 @@ function_call_header:
     ;
 
 fn_call_arg:
-      assignment_expression                                         { $$ = $1; }
-    | OUT_TOKEN variable_identifier                                 { $$ = new FunctionOutParamNode(pContext, @$, $2); }
+      assignment_expression                                         { $$ = new FunctionCallParamNode(pContext, @$, false, $1); }
+    | OUT_TOKEN variable_identifier                                 { $$ = new FunctionCallParamNode(pContext, @$, true, $2); }
     ;
 
 jump_statement:

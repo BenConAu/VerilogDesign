@@ -18,6 +18,7 @@ public:
     {
         _symIndex = symIndex;
         _genericIndex = genericSym;
+        _pCallNode = nullptr;
     }
 
     void AddParameter(ASTNode* pNode)
@@ -29,6 +30,8 @@ public:
     {
         AddNode(pList);
     }
+
+    void SetCall(FunctionCallNode* pCall);
 
     void PreVerifyNodeImpl() override;
     void VerifyNodeImpl() override;
@@ -46,4 +49,7 @@ private:
 
     // Arguments
     std::map<int, size_t> _passedArgs;
+
+    // The call that we are currently expanding
+    FunctionCallNode* _pCallNode;
 };

@@ -143,23 +143,3 @@ void PSLCompilerContext::OutputString(const char *pszLabel)
         _writers[i]->OutputString(pszLabel);
     }
 }
-
-void PSLCompilerContext::PushCall(FunctionCallNode* pNode) 
-{ 
-    _callStack.push(pNode); 
-}
-
-void PSLCompilerContext::PopCall() 
-{ 
-    _callStack.pop(); 
-}
-
-FunctionCallNode* PSLCompilerContext::GetCurrentFunction() 
-{
-    if (_callStack.empty())
-    {
-        return nullptr;
-    }
-    
-    return _callStack.top(); 
-}

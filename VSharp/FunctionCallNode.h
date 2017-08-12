@@ -4,6 +4,7 @@
 #include "VSharp.tab.h"
 
 class ModuleInfo;
+class FunctionDeclaratorNode;
 
 class FunctionCallNode : public ExpressionNode
 {
@@ -20,6 +21,7 @@ public:
   const char *GetDebugName() override { return "FunctionCallNode"; }
 
   ExpressionNode* GetParameter(size_t index) { return dynamic_cast<ExpressionNode*>(GetChild(index + 1)); }
+  FunctionDeclaratorNode* GetDeclarator();
   ModuleInfo *GetModuleInfo();
 
 private:

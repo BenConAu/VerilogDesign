@@ -3,11 +3,19 @@ module DemoModule(
 	out reg<32> out1
 	)
 {
+	function CalcOtherThing(
+		uint32 input,
+		uint32 add,
+		out uint32 output)
+	{
+		output = input + add;
+	}
+
 	function CalcThing(
 		uint32 input,
 		out uint32 output)
 	{
-		output = input + 1;
+		CalcOtherThing(input, 2, out output);
 	}
 
 	state initial

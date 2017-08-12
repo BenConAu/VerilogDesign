@@ -17,12 +17,12 @@ PSLcc: lex.yy.c \
 	   FieldSelectionNode.h \
 	   FunctionCallNode.h \
 	   FunctionCallNode.cpp \
+	   FunctionCallParamNode.h \
+	   FunctionCallParamNode.cpp \
    	   FunctionDeclaratorNode.h \
    	   FunctionDeclaratorNode.cpp \
 	   FunctionInfo.h \
 	   FunctionInfo.cpp \
-	   FunctionOutParamNode.h \
-	   FunctionOutParamNode.cpp \
 	   FunctionParameterNode.h \
 	   FunctionParameterNode.cpp \
 	   GenericTypeInfo.h \
@@ -89,9 +89,9 @@ PSLcc: lex.yy.c \
 	   ExpressionResult.cpp \
 	   FieldSelectionNode.cpp \
    	   FunctionCallNode.cpp \
+	   FunctionCallParamNode.cpp \
    	   FunctionDeclaratorNode.cpp \
 	   FunctionInfo.cpp \
-	   FunctionOutParamNode.cpp \
 	   FunctionParameterNode.cpp \
 	   IdentifierNode.cpp \
 	   IfStatementNode.cpp \

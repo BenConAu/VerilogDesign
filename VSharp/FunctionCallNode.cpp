@@ -30,16 +30,18 @@ void FunctionCallNode::VerifyNodeImpl()
 {
 }
 
-ExpressionResult *FunctionCallNode::CalculateResult()
+FunctionDeclaratorNode* FunctionCallNode::GetDeclarator()
 {
-    // Find the info for the function
     ModuleDeclaratorNode *pModule = GetTypedParent<ModuleDeclaratorNode>();
     FunctionInfo* pInfo = dynamic_cast<FunctionInfo*>(GetContext()->_symbolTable.GetInfo(_symIndex, pModule));
-    FunctionDeclaratorNode* pFuncDecl = pInfo->GetFunctionDeclarator();
+    return pInfo->GetFunctionDeclarator();
+}
 
-    GetContext()->PushCall(this);
-    pFuncDecl->ProcessNode();
-    GetContext()->PopCall();
+ExpressionResult *FunctionCallNode::CalculateResult()
+{
+    GetDeclarator()->SetCall(this);
+    GetDeclarator()->ProcessNode();
+    GetDeclarator()->SetCall(nullptr);
 
     return nullptr;
 }

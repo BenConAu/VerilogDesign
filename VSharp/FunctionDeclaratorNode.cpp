@@ -44,20 +44,34 @@ void FunctionDeclaratorNode::VerifyNodeImpl()
 
 ExpressionResult* FunctionDeclaratorNode::ResultFromSymbol(int symIndex)
 {
+    //printf("Result from symbol\n");
+
     // Which parameter did this refer to?
     size_t pIndex = _passedArgs[symIndex];
 
     // What was passed for that in the current call?
-    ExpressionNode* pParamExpr = GetContext()->GetCurrentFunction()->GetParameter(pIndex);
+    ExpressionNode* pParamExpr = _pCallNode->GetParameter(pIndex);
 
     return pParamExpr->CalculateResult();
 }
 
 void FunctionDeclaratorNode::ProcessNodeImpl()
 {
-    if (GetContext()->GetCurrentFunction() != nullptr)
+    if (_pCallNode != nullptr)
     {
+        //printf("Processing a function while expanding it\n");
+
         // Since somebody is expanding a function, actually do the processing
         ASTNode::ProcessNodeImpl();
     }
+}
+
+void FunctionDeclaratorNode::SetCall(FunctionCallNode* pCall) 
+{ 
+    if (pCall != nullptr && _pCallNode != nullptr)
+    {
+        throw "Recursion not allowed with function calls";
+    }
+
+    _pCallNode = pCall; 
 }
