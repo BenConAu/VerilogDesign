@@ -7,6 +7,8 @@ PSLcc: lex.yy.c \
 	   ASTTree.h \
 	   AssignmentNode.cpp \
 	   AssignmentNode.h \
+	   BitSelectionNode.cpp \
+	   BitSelectionNode.h \
 	   ConstantNode.cpp \
 	   ConstantNode.h \
 	   ExpressionNode.cpp \
@@ -84,6 +86,7 @@ PSLcc: lex.yy.c \
 	   ArrayTypeInfo.cpp \
 	   ASTNode.cpp \
 	   AssignmentNode.cpp \
+	   BitSelectionNode.cpp \
 	   ConstantNode.cpp \
 	   ExpressionNode.cpp \
 	   ExpressionResult.cpp \

@@ -30,7 +30,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token MODULE_TOKEN
 %token OUT_TOKEN
 %token STATE_TOKEN
-%token REG_TOKEN
+%token UINT_TOKEN
 %token UINT32_TOKEN
 %token UINT16_TOKEN
 %token UINT8_TOKEN
@@ -41,6 +41,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token <intVal> BOOLCONSTANT
 %token AT
 %token SEMICOLON
+%token COLON
 %token EQUAL
 %token STAR
 %token PLUS
@@ -214,6 +215,8 @@ assignment_operator:
 postfix_expression:
       primary_expression                                            { $$ = $1; }
     | postfix_expression LEFT_BRACKET expression RIGHT_BRACKET      { $$ = new IndexSelectionNode(pContext, @$, $1, $3); }
+    | postfix_expression LEFT_BRACKET INTCONSTANT COLON INTCONSTANT RIGHT_BRACKET      
+                                                                    { $$ = new BitSelectionNode(pContext, @$, $1, $3, $5); }
     | function_call                                                 { $$ = $1; }
 	| postfix_expression DOT IDENTIFIER								{ $$ = new FieldSelectionNode(pContext, @$, $1, false, $3); }
 	| postfix_expression ARROW IDENTIFIER							{ $$ = new FieldSelectionNode(pContext, @$, $1, true, $3); }
@@ -280,7 +283,7 @@ fully_specified_type:
     | UINT8_TOKEN                                                   { $$ = new TypeNode(pContext, @$, TypeClass::Register, 8); }
 	| BOOL_TOKEN                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Register, 1); }
 	| IDENTIFIER                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Struct, $1); }
-    | REG_TOKEN LT INTCONSTANT GT                                   { $$ = new TypeNode(pContext, @$, $3); }
+    | UINT_TOKEN LT INTCONSTANT GT                                  { $$ = new TypeNode(pContext, @$, $3); }
     ;
 
 struct_specifier:
@@ -329,8 +332,10 @@ init_declarator_list:
     ;
 
 single_declaration:
-      fully_specified_type IDENTIFIER                               { $$ = new VariableDeclarationNode(pContext, @$, $1, $2, nullptr); }
-    | fully_specified_type IDENTIFIER EQUAL expression              { $$ = new VariableDeclarationNode(pContext, @$, $1, $2, $4); }
+      fully_specified_type IDENTIFIER                               { $$ = new VariableDeclarationNode(pContext, @$, $1, $2, -1, nullptr); }
+    | fully_specified_type IDENTIFIER LEFT_BRACKET INTCONSTANT RIGHT_BRACKET
+                                                                    { $$ = new VariableDeclarationNode(pContext, @$, $1, $2, $4, nullptr); }
+    | fully_specified_type IDENTIFIER EQUAL expression              { $$ = new VariableDeclarationNode(pContext, @$, $1, $2, -1, $4); }
     ;
 
 declaration_statement:

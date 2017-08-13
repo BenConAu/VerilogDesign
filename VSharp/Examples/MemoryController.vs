@@ -1,6 +1,6 @@
 module MemoryController(
   out uint32 mcRamOut,         // [Output] RAM at requested address
-  out uint<2> mcStatus,         // [Output] Status of controller (0 means not ready, 1 means ready, 2 means error)
+  out uint<2> mcStatus,        // [Output] Status of controller (0 means not ready, 1 means ready, 2 means error)
   uint32 mcRamAddress,         // [Input] RAM address requested
   uint32 mcRamIn,              // [Input] RAM to write
   bool mcReadReq,              // [Input] RAM read request
@@ -15,18 +15,17 @@ module MemoryController(
   uint32 kptAddress,           // [Input] Page table address
   uint32 uptAddress,           // [Input] Page table address
   out uint32 debug             // [Output] Debug port
-  );
-
-  reg [7:0] state = `Ready;
-  reg [0:0] isRead;
+  )
+{
+  bool isRead;
 
   // Stuff saved when TLB misses
-  reg savedReadReq;
-  reg savedWriteReq;
-  reg [31:0] savedVirtAddr;
-  reg [31:0] savedPTReadAddr;
-  reg [31:0] savedFirstWord;
-  reg [31:0] savedWriteData;
+  bool savedReadReq;
+  bool savedWriteReq;
+  uint32 savedVirtAddr;
+  uint32 savedPTReadAddr;
+  uint32 savedFirstWord;
+  uint32 savedWriteData;
 
   fn GetPageNumber(
     uint32 rawAddress,
@@ -36,123 +35,115 @@ module MemoryController(
     pageNumber = rawAddress[31:12];
   }
 
-  function [31:0] CalcPTEntryAddress;
-    input [31:0] rawAddress;
-
-    begin
-      //$display("Calculating table entry address with tables at %h, %h", kptAddress, uptAddress);
-      
-      if (mcExecMode == 0)
-      begin
-        CalcPTEntryAddress = kptAddress + rawAddress[17:12] * 8;
-      end
-      else
-      begin
-        CalcPTEntryAddress = uptAddress + rawAddress[17:12] * 8;
-      end
-    end
-  endfunction
+  fn CalcPTEntryAddress(
+    uint32 rawAddress,
+    out uint32 entryAddress
+    )
+  {
+    //$display("Calculating table entry address with tables at %h, %h", kptAddress, uptAddress);
+    
+    if (!mcExecMode)
+    {
+      entryAddress = kptAddress + rawAddress[17:12] * 8;
+    }
+    else
+    {
+      entryAddress = uptAddress + rawAddress[17:12] * 8;
+    }
+  }
 
   // The TLB
-  reg [63:0] ktlb[0:15];
-  reg [63:0] utlb[0:15];
+  uint64 ktlb[16];
+  uint64 utlb[16];
 
-  function [63:0] GetTLBEntry;
-    input [3:0] pageNumber;
-
-    begin
-      if (mcExecMode == 0)
-      begin
-        GetTLBEntry = ktlb[pageNumber];
-      end
-      else
-      begin
-        GetTLBEntry = utlb[pageNumber];
-      end
-    end
-  endfunction
+  fn GetTLBEntry(
+    uint<4> pageNumber,
+    out uint64 tlbEntry)
+  {
+    if (!mcExecMode)
+    {
+      tlbEntry = ktlb[pageNumber];
+    }
+    else
+    {
+      tlbEntry = utlb[pageNumber];
+    }
+  }
     
-  task SetTLBEntry;
-    input [3:0] pageNumber;
-    input [63:0] newEntry;
+  fn SetTLBEntry(
+    uint<4> pageNumber,
+    uint64 newEntry)
+  {
+    if (!mcExecMode)
+    {
+      ktlb[pageNumber] = newEntry;
+    }
+    else
+    {
+      utlb[pageNumber] = newEntry;
+    }
+  }
 
-    begin
-      if (mcExecMode == 0)
-      begin
-        ktlb[pageNumber] <= newEntry;
-      end
-      else
-      begin
-        utlb[pageNumber] <= newEntry;
-      end
-    end
-  endtask
+  fn GetTLBVirtPage(
+    uint64 tlbEntry,
+    out uint<20> tlbVirtPage)
+  {
+    tlbVirtPage = tlbEntry[51:32];
+  }
 
+  fn GetTLBPhysPage(
+    uint64 tlbEntry,
+    out uint<20> tlbPhysPage)
+  {
+    GetTLBPhysPage = tlbEntry[19:0];
+  }
 
-  function [19:0] GetTLBVirtPage;
-    input [63:0] tlbEntry;
+  fn GetTLBValid(
+    uint64 tlbEntry,
+    out bool tlbValid)
+  {
+    tlbValid = tlbEntry[63:63];
+  }
 
-    begin
-      GetTLBVirtPage = tlbEntry[51:32];
-    end
-  endfunction
+  fn GetTLBProtected(
+    uint64 tlbEntry,
+    out bool tlbProtected)
+  {
+    tlbProtected = tlbEntry[62:62];
+  }
 
-  function [19:0] GetTLBPhysPage;
-    input [63:0] tlbEntry;
+  fn GetPageHash(
+    uint32 virtAddr,
+    out uint<4> pageHash)
+  {
+    pageHash = virtAddr[13:10];
+  }
 
-    begin
-      GetTLBPhysPage = tlbEntry[19:0];
-    end
-  endfunction
+  fn RequestPhysicalPage(
+    uint64 reqTLBEntry,
+    uint32 reqVirtAddress,
+    bool reqReadReq,
+    bool reqWriteReq,
+    uint32 reqWriteData)
+  {
+    if (!GetTLBValid(reqTLBEntry))
+    {
+      //$display("Address maps to invalid TLB entry %h", reqTLBEntry);
 
-  function GetTLBValid;
-    input [63:0] tlbEntry;
-
-    begin
-      GetTLBValid = tlbEntry[63:63];
-    end
-  endfunction
-
-  function GetTLBProtected;
-    input [63:0] tlbEntry;
-
-    begin
-      GetTLBProtected = tlbEntry[62:62];
-    end
-  endfunction
-
-  function [3:0] GetPageHash;
-    input [31:0] virtAddr;
-
-    begin
-      GetPageHash = virtAddr[13:10];
-    end
-  endfunction
-
-  task RequestPhysicalPage;
-    input [63:0] reqTLBEntry;
-    input [31:0] reqVirtAddress;
-    input reqReadReq;
-    input reqWriteReq;
-    input [31:0] reqWriteData;
-
-    begin
-      if (!GetTLBValid(reqTLBEntry))
-      begin
-        //$display("Address maps to invalid TLB entry %h", reqTLBEntry);
-
-        state <= `Error;
-        mcStatus <= `MCError;
-      end
-      else if (GetTLBProtected(reqTLBEntry) == 1 && mcExecMode == 1)
-      begin
+      mcStatus = `MCError;
+      transition Error;
+    }
+    else
+    {
+      if (GetTLBProtected(reqTLBEntry) == 1 && mcExecMode)
+      {
         //$display("Attempting access to protected page from user mode, execMode = %h", mcExecMode);
 
-        state <= `Error;
-        mcStatus <= `MCError;
-      end
+        mcStatus = `MCError;
+        transition Error;
+      }
       else
-      begin
+      {
         //$display("Building request from physical page %h and in-page address %h", GetTLBPhysPage(reqTLBEntry), reqVirtAddress[11:0]);
 
         // Translate page using TLB for upper bits
@@ -168,26 +159,26 @@ module MemoryController(
         isRead <= (reqReadReq == 1);
         state <= `PRamWait1;
         mcStatus <= `MCWaiting;
-      end
-    end
-  endtask
+      }
+    } 
+  }
 
   always @(posedge clk or posedge reset)
-  begin
+  {
     if (reset == 1)
-    begin
+    {
       mcStatus <= `MCWaiting;
       state <= `Ready;
       isRead <= 0;
-    end
+    }
     else
-    begin
+    {
       case (state)
-        `Ready: begin
+        `Ready: {
           if (mcReadReq == 1 || mcWriteReq == 1)
-          begin
+          {
             if (mcAddrVirtual == 0)
-            begin
+            {
               //$display("Physical access, mcReadReq is %h, addr is %h, ramIn is %h", mcReadReq, mcRamAddress, mcRamIn);
 
               // Divert to the physical RAM
@@ -198,12 +189,12 @@ module MemoryController(
               isRead <= (mcReadReq == 1);
               state <= `PRamWait1;
               mcStatus <= `MCWaiting;
-            end
+            }
             else
-            begin
+            {
               // Need to translate - use the lower bits of the virtual page
               if (GetTLBVirtPage(GetTLBEntry(GetPageHash(mcRamAddress))) == GetPageNumber(mcRamAddress))
-              begin
+              {
                 //$display(
                   //"Page to translate %h found in TLB entry %h, index %h", 
                   //mcRamAddress, 
@@ -216,9 +207,9 @@ module MemoryController(
                   mcReadReq, 
                   mcWriteReq, 
                   mcRamIn);
-              end
+              }
               else
-              begin
+              {
                 //$display("Page for address %h not found in TLB, page = %h, pt + page = %h", mcRamAddress, mcRamAddress[17:10], CalcPTEntryAddress(mcRamAddress));
 
                 // TLB miss - need to lookup in page table. The page table
@@ -241,50 +232,50 @@ module MemoryController(
                 // Wait for the first word to read out
                 state <= `VPTWait1;
                 mcStatus <= `MCWaiting;
-              end
+              }
 
-            end
-          end
+            }
+          }
           else
-          begin
+          {
             mcStatus <= `MCWaiting;
-          end
-        end
+          }
+        }
 
-        `PRamWait1: begin
+        `PRamWait1: {
           // Need to wait for another clock for this to complete
           //$display("PR wait 1 for %h", phRamAddress);
 
           mcStatus <= `MCWaiting;
           state <= `PRamWait2;
-        end
+        }
 
-        `PRamWait2: begin
+        `PRamWait2: {
           if (isRead == 1)
-          begin
+          {
             //$display("Finish physical read value of %h in mc", phRamIn);
 
             // Deliver to the caller now
             mcRamOut <= phRamIn;
-          end
+          }
           else
-          begin
+          {
             //$display("Finish PRWait2 with isRead not set");
-          end
+          }
 
           mcStatus <= `MCReady;
           state <= `Ready;
-        end
+        }
 
-        `VPTWait1: begin
+        `VPTWait1: {
           //$display("Waiting for read of page table");
 
           // Wait for read to complete
           mcStatus <= `MCWaiting;
           state <= `VPTWait2;
-        end
+        }
 
-        `VPTWait2: begin
+        `VPTWait2: {
           //$display("Waited for read %h from %h of page table 1", phRamIn, savedPTReadAddr);
           
           // Store first half of entry
@@ -294,17 +285,17 @@ module MemoryController(
           phRamAddress <= savedPTReadAddr + 4;
           mcStatus <= `MCWaiting;
           state <= `VPTWait3;
-        end
+        }
 
-        `VPTWait3: begin
+        `VPTWait3: {
           //$display("Waiting again for read of page table");
 
           // Wait for read to complete
           mcStatus <= `MCWaiting;
           state <= `VPTWait4;
-        end
+        }
 
-        `VPTWait4: begin
+        `VPTWait4: {
           //$display("Waited for read %h of page table 2, va Addr = %h", phRamIn, savedVirtAddr);
           //$display("Inserting TLB entry %h", {1'b1, savedFirstWord[30:0], phRamIn});
 
@@ -317,15 +308,15 @@ module MemoryController(
             savedReadReq, 
             savedWriteReq, 
             savedWriteData);
-        end
+        }
 
-        `Error: begin
+        `Error: {
           // Wait a clock for the error to register
           mcStatus <= `MCWaiting;
           state <= `Ready;
-        end
+        }
 
       endcase
-    end
-  end
+    }
+  }
 endmodule

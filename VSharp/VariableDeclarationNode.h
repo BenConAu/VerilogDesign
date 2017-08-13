@@ -12,6 +12,7 @@ public:
       const YYLTYPE &location,
       ASTNode *pType,
       int symIndex,
+      int arraySize,
       ASTNode *pInitExpr);
 
   void PreVerifyNodeImpl() override;
@@ -20,5 +21,6 @@ public:
 
 private:
   int _symIndex;
+  int _arraySize;
   YYLTYPE _location;
 };

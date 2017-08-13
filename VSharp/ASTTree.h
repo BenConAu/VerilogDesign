@@ -1,5 +1,6 @@
 #include "AssignmentNode.h"
 #include "ASTNode.h"
+#include "BitSelectionNode.h"
 #include "ConstantNode.h"
 #include "FieldSelectionNode.h"
 #include "FunctionCallNode.h"

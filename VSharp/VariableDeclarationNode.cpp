@@ -11,6 +11,7 @@ VariableDeclarationNode::VariableDeclarationNode(
     const YYLTYPE &location,
     ASTNode *pType,
     int symIndex,
+    int arraySize,
     ASTNode *pInitExpr) : ASTNode(pContext)
 {
     AddNode(pType);
@@ -24,6 +25,7 @@ VariableDeclarationNode::VariableDeclarationNode(
     }
 
     _symIndex = symIndex;
+    _arraySize = arraySize;
 }
 
 void VariableDeclarationNode::PreVerifyNodeImpl()
@@ -49,5 +51,12 @@ void VariableDeclarationNode::PreProcessNodeImpl()
     // Find out the bit width
     RegisterTypeInfo* pRegInfo = dynamic_cast<RegisterTypeInfo*>(pInfo->GetTypeInfo());
 
-    GetContext()->OutputLine("reg[%d:0] %s;", pRegInfo->GetBitLength() - 1, pInfo->GetSymbol());
+    if (_arraySize == -1)
+    {
+        GetContext()->OutputLine("reg[%d:0] %s;", pRegInfo->GetBitLength() - 1, pInfo->GetSymbol());
+    }
+    else
+    {
+        GetContext()->OutputLine("reg[%d:0] %s[%d:0];", pRegInfo->GetBitLength() - 1, pInfo->GetSymbol(), _arraySize - 1);
+    }
 }

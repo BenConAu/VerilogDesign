@@ -23,6 +23,7 @@
 "+"                  { return PLUS; }
 "-"                  { return MINUS; }
 "="                  { return EQUAL; }
+":"                  { return COLON; }
 ";"                  { return SEMICOLON; }
 "{"                  { return LEFT_BRACE; }
 "}"                  { return RIGHT_BRACE; }
@@ -44,7 +45,7 @@
 "!="                 { return NOTEQUAL_OP; }
 "out"                { return OUT_TOKEN; }
 "state"              { return STATE_TOKEN; }
-"reg"                { return REG_TOKEN; }
+"uint"               { return UINT_TOKEN; }
 "uint32"             { return UINT32_TOKEN; }
 "uint16"             { return UINT16_TOKEN; }
 "uint8"              { return UINT8_TOKEN; }
@@ -54,7 +55,7 @@
 "struct"             { return STRUCT_TOKEN; }
 "packbyte"           { return PACKBYTE_TOKEN; }
 "module"             { return MODULE_TOKEN; }
-"function"           { return FUNCTION_TOKEN; }
+"fn"                 { return FUNCTION_TOKEN; }
 "transition"         { return TRANSITION_TOKEN; }
 "if"                 { return IF_TOKEN; }
 "while"              { return WHILE_TOKEN; }
