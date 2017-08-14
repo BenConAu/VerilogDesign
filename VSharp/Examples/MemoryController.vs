@@ -301,10 +301,10 @@ module MemoryController(
     //$display("Inserting TLB entry %h", {1'b1, savedFirstWord[30:0], phRamIn});
 
     // Now we have second half of entry, store it in the TLB
-    SetTLBEntry(GetPageHash(savedVirtAddr), {1'b1, savedFirstWord[30:0], phRamIn});
+    SetTLBEntry(GetPageHash(savedVirtAddr), {0b1, savedFirstWord[30:0], phRamIn});
 
     RequestPhysicalPage(
-      {1'b1, savedFirstWord[30:0], phRamIn}, 
+      {0b1, savedFirstWord[30:0], phRamIn}, 
       mcRamAddress, 
       savedReadReq, 
       savedWriteReq, 
@@ -315,6 +315,7 @@ module MemoryController(
   {
     // Wait a clock for the error to register
     mcStatus = `MCWaiting;
-    state = `Ready;
+
+    transition Ready;
   }
 }

@@ -28,6 +28,8 @@ PSLcc: lex.yy.c \
 	   FunctionParameterNode.h \
 	   FunctionParameterNode.cpp \
 	   GenericTypeInfo.h \
+	   GlomExpressionNode.cpp \
+	   GlomExpressionNode.h \
 	   IdentifierNode.cpp \
 	   IdentifierNode.h \
 	   IfStatementNode.cpp \
@@ -97,6 +99,7 @@ PSLcc: lex.yy.c \
    	   FunctionDeclaratorNode.cpp \
 	   FunctionInfo.cpp \
 	   FunctionParameterNode.cpp \
+	   GlomExpressionNode.cpp \
 	   IdentifierNode.cpp \
 	   IfStatementNode.cpp \
 	   IndexSelectionNode.cpp \

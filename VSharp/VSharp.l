@@ -67,6 +67,7 @@
 "false"              { yylval->intVal = 0; return BOOLCONSTANT; }
 [0-9]+               { yylval->intVal = atoi(yytext); return INTCONSTANT; }
 "0x"[0-9A-Fa-f]+     { yylval->intVal = strtol(yytext, nullptr, 16); return INTCONSTANT; }
+"0b"[0-1]+           { yylval->intVal = strtol(yytext, nullptr, 2); return INTCONSTANT; }
 [A-Za-z_][A-Za-z0-9_]* { yylval->symIndex = yyextra->AddSymbol(yytext); return IDENTIFIER; }
 .                    ;
 %%

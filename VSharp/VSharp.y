@@ -127,6 +127,8 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> return_statement
 %type <pNode> logical_and_expression
 %type <pNode> logical_or_expression
+%type <pNode> glom_expression
+%type <pNode> glom_list
 
 %%
 
@@ -239,8 +241,18 @@ postfix_expression:
 
 primary_expression:
       variable_identifier                                           { $$ = $1; }
+    | glom_expression                                               { $$ = $1; }
     | INTCONSTANT                                                   { $$ = new ConstantNode(pContext, ConstantNode::Word, $1); }
     | BOOLCONSTANT                                                  { $$ = new ConstantNode(pContext, ConstantNode::Bool, $1); }
+    ;
+
+glom_expression:
+      LEFT_BRACE glom_list RIGHT_BRACE                              { $$ = new GlomExpressionNode(pContext, @$, $2); }
+    ;
+
+glom_list:
+      postfix_expression                                            { $$ = new ListNode(pContext, $1); }
+    | glom_list COMMA postfix_expression                            { $$ = $1; dynamic_cast<ListNode*>($$)->AddNode($3); }
     ;
 
 declaration:

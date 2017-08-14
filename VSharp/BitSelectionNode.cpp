@@ -21,7 +21,33 @@ BitSelectionNode::BitSelectionNode(
 
 void BitSelectionNode::VerifyNodeImpl()
 {
-    // TODO: Range check
+    // Must be a uint type
+    ExpressionNode *pExpr = dynamic_cast<ExpressionNode *>(GetChild(0));
+
+    // Should verify that the type exists
+    TypeInfo *pTypeInfo = pExpr->GetTypeInfo();
+    RegisterTypeInfo* pRegTypeInfo = dynamic_cast<RegisterTypeInfo*>(pTypeInfo);
+    if (pRegTypeInfo == nullptr)
+    {
+        GetContext()->ReportError(_location, "Can only select bits from uint types");
+    }
+
+    if (_i1 < 0 || _i2 < 0)
+    {
+        GetContext()->ReportError(_location, "Must have positive bit indices to select bits");
+    }
+
+    if (_i1 >= pRegTypeInfo->GetBitLength() || _i2 >= pRegTypeInfo->GetBitLength())
+    {
+        GetContext()->ReportError(_location, "Bit index out of range");
+    }
+
+    if (_i1 < _i2)
+    {
+        GetContext()->ReportError(_location, "Bit indices out of order");
+    }
+
+    SetType(GetContext()->_typeCollection.GetRegisterType(_i1 - _i2 + 1));
 }
 
 ExpressionResult *BitSelectionNode::CalculateResult()

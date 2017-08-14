@@ -7,6 +7,7 @@
 #include "FunctionDeclaratorNode.h"
 #include "FunctionCallParamNode.h"
 #include "FunctionParameterNode.h"
+#include "GlomExpressionNode.h"
 #include "IdentifierNode.h"
 #include "IfStatementNode.h"
 #include "IndexSelectionNode.h"
