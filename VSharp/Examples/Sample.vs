@@ -1,9 +1,9 @@
 module DemoModule(
-	reg<32> in1,
-	out reg<32> out1
+	uint<32> in1,
+	out uint<32> out1
 	)
 {
-	function CalcOtherThing(
+	void CalcOtherThing(
 		uint32 input,
 		uint32 add,
 		out uint32 output)
@@ -11,7 +11,7 @@ module DemoModule(
 		output = input + add;
 	}
 
-	function CalcThing(
+	void CalcThing(
 		uint32 input,
 		out uint32 output)
 	{

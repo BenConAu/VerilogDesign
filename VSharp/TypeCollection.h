@@ -7,6 +7,7 @@
 #include "StructTypeInfo.h"
 #include "ArrayTypeInfo.h"
 #include "GenericTypeInfo.h"
+#include "VoidTypeInfo.h"
 
 class ModuleDeclaratorNode;
 
@@ -18,6 +19,7 @@ public:
     RegisterTypeInfo* GetRegisterType(int bitLength);
     ArrayTypeInfo* GetArrayType(TypeInfo* pBaseType);
     GenericTypeInfo* GetGenericType(int symIndex, ModuleDeclaratorNode* pScope);
+    VoidTypeInfo* GetVoidType();
 
     void AddStructType(int symIndex, StructTypeInfo* pInfo);
     GenericTypeInfo* AddGenericType(int symIndex, ModuleDeclaratorNode* pScope);
@@ -27,4 +29,5 @@ private:
     std::map<int, std::unique_ptr<RegisterTypeInfo> > _registerTypes;
     std::map<TypeInfo*, std::unique_ptr<ArrayTypeInfo> > _arrayTypes;
     std::vector<std::unique_ptr<GenericTypeInfo> > _genericTypes;
+    std::unique_ptr<VoidTypeInfo> _voidType;
 };

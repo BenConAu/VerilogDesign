@@ -34,8 +34,10 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token UINT32_TOKEN
 %token UINT16_TOKEN
 %token UINT8_TOKEN
+%token VOID_TOKEN
 %token INITIAL_TOKEN
-%token FUNCTION_TOKEN
+%token RETURN_TOKEN
+%token AND_OP
 
 %token <intVal> INTCONSTANT
 %token <intVal> BOOLCONSTANT
@@ -61,7 +63,6 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token EQUAL_OP
 %token NOTEQUAL_OP
 %token BOOL_TOKEN
-%token VOID_TOKEN
 %token STRUCT_TOKEN
 %token TRANSITION_TOKEN
 %token LEFT_BRACE
@@ -122,6 +123,8 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> function_header_with_parameters
 %type <pNode> function_definition
 %type <pNode> function_param_decl
+%type <pNode> return_statement
+%type <pNode> logical_and_expression
 
 %%
 
@@ -170,8 +173,13 @@ expression:
     ;
 
 assignment_expression:
+      logical_and_expression                                        { $$ = $1; }
+    | postfix_expression assignment_operator logical_and_expression { $$ = new AssignmentNode(pContext, @$, $1, $3); }
+    ;
+
+logical_and_expression:
       equality_expression                                           { $$ = $1; }
-    | postfix_expression assignment_operator equality_expression    { $$ = new AssignmentNode(pContext, @$, $1, $3); }
+    | logical_and_expression AND_OP equality_expression             { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::LogicalAnd); } 
     ;
 
 equality_expression:
@@ -257,6 +265,7 @@ module_param_decl:
 
 function_definition:
       function_prototype compound_statement                         { $$ = $1; dynamic_cast<FunctionDeclaratorNode*>($$)->SetStatementList($2); }
+    | function_prototype LEFT_BRACE return_statement RIGHT_BRACE    { $$ = $1; dynamic_cast<FunctionDeclaratorNode*>($$)->SetStatementList($3); }
     ;
 
 function_prototype:
@@ -268,8 +277,8 @@ function_header_with_parameters:
 	;
 
 function_header:
-      FUNCTION_TOKEN IDENTIFIER LEFT_PAREN                          { $$ = new FunctionDeclaratorNode(pContext, $2, -1); }
-    | FUNCTION_TOKEN IDENTIFIER LT IDENTIFIER GT LEFT_PAREN         { $$ = new FunctionDeclaratorNode(pContext, $2, $4); } 
+      fully_specified_type IDENTIFIER LEFT_PAREN                    { $$ = new FunctionDeclaratorNode(pContext, $1, $2, -1); }
+    | fully_specified_type IDENTIFIER LT IDENTIFIER GT LEFT_PAREN   { $$ = new FunctionDeclaratorNode(pContext, $1, $2, $4); } 
     ;
 
 function_param_decl:
@@ -281,7 +290,8 @@ fully_specified_type:
       UINT32_TOKEN                                                  { $$ = new TypeNode(pContext, @$, TypeClass::Register, 32); }
     | UINT16_TOKEN                                                  { $$ = new TypeNode(pContext, @$, TypeClass::Register, 16); }
     | UINT8_TOKEN                                                   { $$ = new TypeNode(pContext, @$, TypeClass::Register, 8); }
-	| BOOL_TOKEN                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Register, 1); }
+	| VOID_TOKEN                                                    { $$ = new TypeNode(pContext, @$); }
+    | BOOL_TOKEN                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Register, 1); }
 	| IDENTIFIER                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Struct, $1); }
     | UINT_TOKEN LT INTCONSTANT GT                                  { $$ = new TypeNode(pContext, @$, $3); }
     ;
@@ -371,6 +381,9 @@ fn_call_arg:
 jump_statement:
       transition_statement                                          { $$ = $1; }
     ;
+
+return_statement:
+      RETURN_TOKEN expression SEMICOLON                             { $$ = $2; }
 
 transition_statement:
       TRANSITION_TOKEN IDENTIFIER SEMICOLON                         { $$ = new TransitionNode(pContext, $2); }

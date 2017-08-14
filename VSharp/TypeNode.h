@@ -9,6 +9,10 @@ class TypeNode : public ASTNode
 public:
     TypeNode(
         PSLCompilerContext* pContext, 
+        const YYLTYPE &location);
+
+    TypeNode(
+        PSLCompilerContext* pContext, 
         const YYLTYPE &location,
         TypeClass typeClass, 
         int type);

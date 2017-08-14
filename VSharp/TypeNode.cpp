@@ -18,6 +18,16 @@ TypeNode::TypeNode(
 }
 
 TypeNode::TypeNode(
+    PSLCompilerContext *pContext,
+    const YYLTYPE &location) : ASTNode(pContext)
+{
+    _typeClass = TypeClass::Void;
+    _extra = 0;
+    _location = location;
+    _pTypeInfo = nullptr;
+}
+
+TypeNode::TypeNode(
     PSLCompilerContext *pContext, 
     const YYLTYPE &location,
     int bitLength) : ASTNode(pContext)
@@ -59,6 +69,10 @@ TypeInfo *TypeNode::GetTypeInfo()
                     GetContext()->ReportError(_location, sstr.str().c_str());
                 }
             }
+            break;
+
+        case TypeClass::Void:
+            _pTypeInfo = GetContext()->_typeCollection.GetVoidType();
             break;
 
         case TypeClass::Generic:

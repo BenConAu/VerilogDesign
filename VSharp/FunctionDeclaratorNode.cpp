@@ -10,6 +10,20 @@
 #include "ModuleDeclaratorNode.h"
 #include "FunctionCallNode.h"
 
+FunctionDeclaratorNode::FunctionDeclaratorNode(
+    PSLCompilerContext* pContext,
+    ASTNode* pRetType,
+    int symIndex,
+    int genericSym
+    ) : ASTNode(pContext)
+{
+    AddNode(pRetType);
+
+    _symIndex = symIndex;
+    _genericIndex = genericSym;
+    _pCallNode = nullptr;
+}
+
 void FunctionDeclaratorNode::PreVerifyNodeImpl()
 {
     // We need to add this here before the children look for it
@@ -26,9 +40,10 @@ void FunctionDeclaratorNode::VerifyNodeImpl()
 {
     ModuleDeclaratorNode *pModule = GetTypedParent<ModuleDeclaratorNode>();
 
-    for (size_t i = 1; i < GetChildCount(); i++)
+    // First child is return type, last is statement list
+    for (size_t i = 1; i < GetChildCount() - 1; i++)
     {
-        FunctionParameterNode* pParam = dynamic_cast<FunctionParameterNode*>(GetChild(i - 1));
+        FunctionParameterNode* pParam = dynamic_cast<FunctionParameterNode*>(GetChild(i));
         int symIndex = pParam->GetSymbolIndex();
 
         _passedArgs.emplace(std::make_pair(symIndex, i - 1));

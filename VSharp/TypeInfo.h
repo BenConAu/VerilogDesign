@@ -6,6 +6,7 @@ class TypeCollection;
 
 enum class TypeClass
 {
+    Void,
     Struct,
     Array,
     Generic,

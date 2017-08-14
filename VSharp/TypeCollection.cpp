@@ -18,6 +18,11 @@ StructTypeInfo* TypeCollection::GetStructType(int symIndex)
     return nullptr;
 }
 
+VoidTypeInfo* TypeCollection::GetVoidType()
+{
+    return _voidType.get();
+}
+
 RegisterTypeInfo* TypeCollection::GetRegisterType(int bitLength)
 {
     if (_registerTypes.find(bitLength) == _registerTypes.end())

@@ -27,7 +27,7 @@ module MemoryController(
   uint32 savedFirstWord;
   uint32 savedWriteData;
 
-  fn GetPageNumber(
+  void GetPageNumber(
     uint32 rawAddress,
     out uint<20> pageNumber
     )
@@ -35,7 +35,7 @@ module MemoryController(
     pageNumber = rawAddress[31:12];
   }
 
-  fn CalcPTEntryAddress(
+  void CalcPTEntryAddress(
     uint32 rawAddress,
     out uint32 entryAddress
     )
@@ -56,7 +56,7 @@ module MemoryController(
   uint64 ktlb[16];
   uint64 utlb[16];
 
-  fn GetTLBEntry(
+  void GetTLBEntry(
     uint<4> pageNumber,
     out uint64 tlbEntry)
   {
@@ -70,7 +70,7 @@ module MemoryController(
     }
   }
     
-  fn SetTLBEntry(
+  void SetTLBEntry(
     uint<4> pageNumber,
     uint64 newEntry)
   {
@@ -84,42 +84,41 @@ module MemoryController(
     }
   }
 
-  fn GetTLBVirtPage(
+  void GetTLBVirtPage(
     uint64 tlbEntry,
     out uint<20> tlbVirtPage)
   {
     tlbVirtPage = tlbEntry[51:32];
   }
 
-  fn GetTLBPhysPage(
+  void GetTLBPhysPage(
     uint64 tlbEntry,
     out uint<20> tlbPhysPage)
   {
     GetTLBPhysPage = tlbEntry[19:0];
   }
 
-  fn GetTLBValid(
-    uint64 tlbEntry,
-    out bool tlbValid)
+  bool GetTLBValid(
+    uint64 tlbEntry)
   {
-    tlbValid = tlbEntry[63:63];
+    return tlbEntry[63:63];
   }
 
-  fn GetTLBProtected(
+  void GetTLBProtected(
     uint64 tlbEntry,
     out bool tlbProtected)
   {
     tlbProtected = tlbEntry[62:62];
   }
 
-  fn GetPageHash(
+  void GetPageHash(
     uint32 virtAddr,
     out uint<4> pageHash)
   {
     pageHash = virtAddr[13:10];
   }
 
-  fn RequestPhysicalPage(
+  void RequestPhysicalPage(
     uint64 reqTLBEntry,
     uint32 reqVirtAddress,
     bool reqReadReq,
@@ -135,7 +134,7 @@ module MemoryController(
     }
     else
     {
-      if (GetTLBProtected(reqTLBEntry) == 1 && mcExecMode)
+      if (GetTLBProtected(reqTLBEntry) && mcExecMode)
       {
         //$display("Attempting access to protected page from user mode, execMode = %h", mcExecMode);
 
@@ -147,107 +146,103 @@ module MemoryController(
         //$display("Building request from physical page %h and in-page address %h", GetTLBPhysPage(reqTLBEntry), reqVirtAddress[11:0]);
 
         // Translate page using TLB for upper bits
-        phRamAddress[31:12] <= GetTLBPhysPage(reqTLBEntry);
+        phRamAddress[31:12] = GetTLBPhysPage(reqTLBEntry);
 
         // Use lower bits from virtual address in physical address
-        phRamAddress[11:0] <= reqVirtAddress[11:0];
+        phRamAddress[11:0] = reqVirtAddress[11:0];
 
         // Otherwise same as physical lookup
-        phReadReq <= reqReadReq;
-        phWriteReq <= reqWriteReq;
-        phRamOut <= reqWriteData;
-        isRead <= (reqReadReq == 1);
-        state <= `PRamWait1;
-        mcStatus <= `MCWaiting;
+        phReadReq = reqReadReq;
+        phWriteReq = reqWriteReq;
+        phRamOut = reqWriteData;
+        isRead = reqReadReq;
+        mcStatus = `MCWaiting;
+        transition PRamWait1;
       }
     } 
   }
 
-  always @(posedge clk or posedge reset)
+  state initial
   {
-    if (reset == 1)
+    mcStatus = `MCWaiting;
+    isRead = 0;
+  }
+
+  state Ready
+  {
+    if (mcReadReq || mcWriteReq)
     {
-      mcStatus <= `MCWaiting;
-      state <= `Ready;
-      isRead <= 0;
+      if (!mcAddrVirtual)
+      {
+        //$display("Physical access, mcReadReq is %h, addr is %h, ramIn is %h", mcReadReq, mcRamAddress, mcRamIn);
+
+        // Divert to the physical RAM
+        phRamAddress = mcRamAddress;
+        phReadReq = mcReadReq;
+        phWriteReq = mcWriteReq;
+        phRamOut = mcRamIn;
+        isRead = (mcReadReq == 1);
+        state = `PRamWait1;
+        mcStatus = `MCWaiting;
+      }
+      else
+      {
+        // Need to translate - use the lower bits of the virtual page
+        if (GetTLBVirtPage(GetTLBEntry(GetPageHash(mcRamAddress))) == GetPageNumber(mcRamAddress))
+        {
+          //$display(
+            //"Page to translate %h found in TLB entry %h, index %h", 
+            //mcRamAddress, 
+            //GetTLBEntry(GetPageHash(mcRamAddress)), 
+            //GetPageHash(mcRamAddress));
+
+          RequestPhysicalPage(
+            GetTLBEntry(GetPageHash(mcRamAddress)), 
+            mcRamAddress, 
+            mcReadReq, 
+            mcWriteReq, 
+            mcRamIn);
+        }
+        else
+        {
+          //$display("Page for address %h not found in TLB, page = %h, pt + page = %h", mcRamAddress, mcRamAddress[17:10], CalcPTEntryAddress(mcRamAddress));
+
+          // TLB miss - need to lookup in page table. The page table
+          // currently is a single level, and only supports up to 256
+          // pages to keep it easy (8 bit index).
+          phRamAddress = CalcPTEntryAddress(mcRamAddress);
+          phReadReq = 1;
+
+          // Save the address we are looking up or storing at
+          savedVirtAddr = mcRamAddress;
+
+          // Save the address of the first word of the PT entry
+          savedPTReadAddr = CalcPTEntryAddress(mcRamAddress);
+
+          // Save our request parameters
+          savedReadReq = mcReadReq;
+          savedWriteReq = mcWriteReq;
+          savedWriteData = mcRamIn;
+
+          // Wait for the first word to read out
+          state = `VPTWait1;
+          mcStatus = `MCWaiting;
+        }
+
+      }
     }
     else
     {
-      case (state)
-        `Ready: {
-          if (mcReadReq == 1 || mcWriteReq == 1)
-          {
-            if (mcAddrVirtual == 0)
-            {
-              //$display("Physical access, mcReadReq is %h, addr is %h, ramIn is %h", mcReadReq, mcRamAddress, mcRamIn);
-
-              // Divert to the physical RAM
-              phRamAddress <= mcRamAddress;
-              phReadReq <= mcReadReq;
-              phWriteReq <= mcWriteReq;
-              phRamOut <= mcRamIn;
-              isRead <= (mcReadReq == 1);
-              state <= `PRamWait1;
-              mcStatus <= `MCWaiting;
-            }
-            else
-            {
-              // Need to translate - use the lower bits of the virtual page
-              if (GetTLBVirtPage(GetTLBEntry(GetPageHash(mcRamAddress))) == GetPageNumber(mcRamAddress))
-              {
-                //$display(
-                  //"Page to translate %h found in TLB entry %h, index %h", 
-                  //mcRamAddress, 
-                  //GetTLBEntry(GetPageHash(mcRamAddress)), 
-                  //GetPageHash(mcRamAddress));
-
-                RequestPhysicalPage(
-                  GetTLBEntry(GetPageHash(mcRamAddress)), 
-                  mcRamAddress, 
-                  mcReadReq, 
-                  mcWriteReq, 
-                  mcRamIn);
-              }
-              else
-              {
-                //$display("Page for address %h not found in TLB, page = %h, pt + page = %h", mcRamAddress, mcRamAddress[17:10], CalcPTEntryAddress(mcRamAddress));
-
-                // TLB miss - need to lookup in page table. The page table
-                // currently is a single level, and only supports up to 256
-                // pages to keep it easy (8 bit index).
-                phRamAddress <= CalcPTEntryAddress(mcRamAddress);
-                phReadReq <= 1;
-
-                // Save the address we are looking up or storing at
-                savedVirtAddr <= mcRamAddress;
-
-                // Save the address of the first word of the PT entry
-                savedPTReadAddr <= CalcPTEntryAddress(mcRamAddress);
-
-                // Save our request parameters
-                savedReadReq <= mcReadReq;
-                savedWriteReq <= mcWriteReq;
-                savedWriteData <= mcRamIn;
-
-                // Wait for the first word to read out
-                state <= `VPTWait1;
-                mcStatus <= `MCWaiting;
-              }
-
-            }
-          }
-          else
-          {
-            mcStatus <= `MCWaiting;
-          }
-        }
+      mcStatus = `MCWaiting;
+    }
+  }
 
         `PRamWait1: {
           // Need to wait for another clock for this to complete
           //$display("PR wait 1 for %h", phRamAddress);
 
-          mcStatus <= `MCWaiting;
-          state <= `PRamWait2;
+          mcStatus = `MCWaiting;
+          state = `PRamWait2;
         }
 
         `PRamWait2: {
@@ -256,43 +251,43 @@ module MemoryController(
             //$display("Finish physical read value of %h in mc", phRamIn);
 
             // Deliver to the caller now
-            mcRamOut <= phRamIn;
+            mcRamOut = phRamIn;
           }
           else
           {
             //$display("Finish PRWait2 with isRead not set");
           }
 
-          mcStatus <= `MCReady;
-          state <= `Ready;
+          mcStatus = `MCReady;
+          state = `Ready;
         }
 
         `VPTWait1: {
           //$display("Waiting for read of page table");
 
           // Wait for read to complete
-          mcStatus <= `MCWaiting;
-          state <= `VPTWait2;
+          mcStatus = `MCWaiting;
+          state = `VPTWait2;
         }
 
         `VPTWait2: {
           //$display("Waited for read %h from %h of page table 1", phRamIn, savedPTReadAddr);
           
           // Store first half of entry
-          savedFirstWord <= phRamIn;
+          savedFirstWord = phRamIn;
 
           // Now get second half
-          phRamAddress <= savedPTReadAddr + 4;
-          mcStatus <= `MCWaiting;
-          state <= `VPTWait3;
+          phRamAddress = savedPTReadAddr + 4;
+          mcStatus = `MCWaiting;
+          state = `VPTWait3;
         }
 
         `VPTWait3: {
           //$display("Waiting again for read of page table");
 
           // Wait for read to complete
-          mcStatus <= `MCWaiting;
-          state <= `VPTWait4;
+          mcStatus = `MCWaiting;
+          state = `VPTWait4;
         }
 
         `VPTWait4: {
@@ -312,8 +307,8 @@ module MemoryController(
 
         `Error: {
           // Wait a clock for the error to register
-          mcStatus <= `MCWaiting;
-          state <= `Ready;
+          mcStatus = `MCWaiting;
+          state = `Ready;
         }
 
       endcase

@@ -10,16 +10,10 @@ class FunctionDeclaratorNode : public ASTNode
 {
 public:
     FunctionDeclaratorNode(
-        PSLCompilerContext* pContext, 
+        PSLCompilerContext* pContext,
+        ASTNode* pRetType,
         int symIndex,
-        int genericSym
-        ) : 
-            ASTNode(pContext)
-    {
-        _symIndex = symIndex;
-        _genericIndex = genericSym;
-        _pCallNode = nullptr;
-    }
+        int genericSym);
 
     void AddParameter(ASTNode* pNode)
     {

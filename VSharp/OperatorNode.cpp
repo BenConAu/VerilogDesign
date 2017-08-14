@@ -12,6 +12,7 @@ OperatorInfo OperatorNode::_opTable[] = {
     { Operator::NotEqual,    "!=",   ResultTypeMethod::Bool },
     { Operator::LessThan,    "<",    ResultTypeMethod::Bool },
     { Operator::GreaterThan, ">",    ResultTypeMethod::Bool },
+    { Operator::LogicalAnd,  "&&",   ResultTypeMethod::Bool },
 };
 
 void OperatorNode::VerifyNodeImpl()

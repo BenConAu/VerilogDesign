@@ -75,6 +75,7 @@ PSLcc: lex.yy.c \
 	   VariableDeclarationNode.h \
 	   VariableInfo.cpp \
 	   VariableInfo.h \
+	   VoidTypeInfo.h \
 	   VSharpCompilerContext.cpp \
 	   VSharpCompilerContext.h \
 	   WhileStatementNode.cpp \
