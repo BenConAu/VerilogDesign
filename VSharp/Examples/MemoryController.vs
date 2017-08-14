@@ -181,9 +181,9 @@ module MemoryController(
         phReadReq = mcReadReq;
         phWriteReq = mcWriteReq;
         phRamOut = mcRamIn;
-        isRead = (mcReadReq == 1);
-        state = `PRamWait1;
+        isRead = mcReadReq;
         mcStatus = `MCWaiting;
+        transition PRamWait1;
       }
       else
       {
@@ -225,8 +225,8 @@ module MemoryController(
           savedWriteData = mcRamIn;
 
           // Wait for the first word to read out
-          state = `VPTWait1;
           mcStatus = `MCWaiting;
+          transition VPTWait1;
         }
 
       }
@@ -237,81 +237,84 @@ module MemoryController(
     }
   }
 
-        `PRamWait1: {
-          // Need to wait for another clock for this to complete
-          //$display("PR wait 1 for %h", phRamAddress);
+  state PRamWait1
+  {
+    // Need to wait for another clock for this to complete
+    //$display("PR wait 1 for %h", phRamAddress);
 
-          mcStatus = `MCWaiting;
-          state = `PRamWait2;
-        }
-
-        `PRamWait2: {
-          if (isRead == 1)
-          {
-            //$display("Finish physical read value of %h in mc", phRamIn);
-
-            // Deliver to the caller now
-            mcRamOut = phRamIn;
-          }
-          else
-          {
-            //$display("Finish PRWait2 with isRead not set");
-          }
-
-          mcStatus = `MCReady;
-          state = `Ready;
-        }
-
-        `VPTWait1: {
-          //$display("Waiting for read of page table");
-
-          // Wait for read to complete
-          mcStatus = `MCWaiting;
-          state = `VPTWait2;
-        }
-
-        `VPTWait2: {
-          //$display("Waited for read %h from %h of page table 1", phRamIn, savedPTReadAddr);
-          
-          // Store first half of entry
-          savedFirstWord = phRamIn;
-
-          // Now get second half
-          phRamAddress = savedPTReadAddr + 4;
-          mcStatus = `MCWaiting;
-          state = `VPTWait3;
-        }
-
-        `VPTWait3: {
-          //$display("Waiting again for read of page table");
-
-          // Wait for read to complete
-          mcStatus = `MCWaiting;
-          state = `VPTWait4;
-        }
-
-        `VPTWait4: {
-          //$display("Waited for read %h of page table 2, va Addr = %h", phRamIn, savedVirtAddr);
-          //$display("Inserting TLB entry %h", {1'b1, savedFirstWord[30:0], phRamIn});
-
-          // Now we have second half of entry, store it in the TLB
-          SetTLBEntry(GetPageHash(savedVirtAddr), {1'b1, savedFirstWord[30:0], phRamIn});
-
-          RequestPhysicalPage(
-            {1'b1, savedFirstWord[30:0], phRamIn}, 
-            mcRamAddress, 
-            savedReadReq, 
-            savedWriteReq, 
-            savedWriteData);
-        }
-
-        `Error: {
-          // Wait a clock for the error to register
-          mcStatus = `MCWaiting;
-          state = `Ready;
-        }
-
-      endcase
-    }
+    mcStatus = `MCWaiting;
+    transition PRamWait2;
   }
-endmodule
+
+  state PRamWait2
+  {
+    if (isRead)
+    {
+      //$display("Finish physical read value of %h in mc", phRamIn);
+
+      // Deliver to the caller now
+      mcRamOut = phRamIn;
+    }
+    else
+    {
+      //$display("Finish PRWait2 with isRead not set");
+    }
+
+    mcStatus = `MCReady;
+    transition Ready;
+  }
+
+  state VPTWait1
+  {
+    //$display("Waiting for read of page table");
+
+    // Wait for read to complete
+    mcStatus = `MCWaiting;
+    transition VPTWait2;
+  }
+
+  state VPTWait2
+  {
+    //$display("Waited for read %h from %h of page table 1", phRamIn, savedPTReadAddr);
+    
+    // Store first half of entry
+    savedFirstWord = phRamIn;
+
+    // Now get second half
+    phRamAddress = savedPTReadAddr + 4;
+    mcStatus = `MCWaiting;
+    transition VPTWait3;
+  }
+
+  state VPTWait3
+  {
+    //$display("Waiting again for read of page table");
+
+    // Wait for read to complete
+    mcStatus = `MCWaiting;
+    transition VPTWait4;
+  }
+
+  state VPTWait4
+  {
+    //$display("Waited for read %h of page table 2, va Addr = %h", phRamIn, savedVirtAddr);
+    //$display("Inserting TLB entry %h", {1'b1, savedFirstWord[30:0], phRamIn});
+
+    // Now we have second half of entry, store it in the TLB
+    SetTLBEntry(GetPageHash(savedVirtAddr), {1'b1, savedFirstWord[30:0], phRamIn});
+
+    RequestPhysicalPage(
+      {1'b1, savedFirstWord[30:0], phRamIn}, 
+      mcRamAddress, 
+      savedReadReq, 
+      savedWriteReq, 
+      savedWriteData);
+  }
+
+  state Error
+  {
+    // Wait a clock for the error to register
+    mcStatus = `MCWaiting;
+    state = `Ready;
+  }
+}

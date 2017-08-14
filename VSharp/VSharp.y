@@ -38,6 +38,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token INITIAL_TOKEN
 %token RETURN_TOKEN
 %token AND_OP
+%token OR_OP
 
 %token <intVal> INTCONSTANT
 %token <intVal> BOOLCONSTANT
@@ -125,6 +126,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> function_param_decl
 %type <pNode> return_statement
 %type <pNode> logical_and_expression
+%type <pNode> logical_or_expression
 
 %%
 
@@ -211,9 +213,14 @@ logical_and_expression:
     | logical_and_expression AND_OP equality_expression             { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::LogicalAnd); } 
     ;
 
-assignment_expression:
+logical_or_expression:
       logical_and_expression                                        { $$ = $1; }
-    | postfix_expression assignment_operator logical_and_expression { $$ = new AssignmentNode(pContext, @$, $1, $3); }
+    | logical_or_expression OR_OP logical_and_expression            { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::LogicalOr); } 
+    ;
+
+assignment_expression:
+      logical_or_expression                                         { $$ = $1; }
+    | postfix_expression assignment_operator logical_or_expression  { $$ = new AssignmentNode(pContext, @$, $1, $3); }
     ;
 
 assignment_operator:

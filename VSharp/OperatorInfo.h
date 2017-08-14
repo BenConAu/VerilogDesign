@@ -13,6 +13,7 @@ enum class Operator
     GreaterThan,
     Negate,
     LogicalAnd,
+    LogicalOr,
 };
 
 enum class ResultTypeMethod

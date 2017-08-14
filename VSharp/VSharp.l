@@ -42,6 +42,7 @@
 ","                  { return COMMA; }
 "&"                  { return AMPERSAND; }
 "&&"                 { return AND_OP; }
+"||"                 { return OR_OP; }
 "=="                 { return EQUAL_OP; }
 "!="                 { return NOTEQUAL_OP; }
 "out"                { return OUT_TOKEN; }
