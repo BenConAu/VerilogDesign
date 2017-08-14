@@ -172,32 +172,14 @@ expression:
       assignment_expression                                         { $$ = $1; }
     ;
 
-assignment_expression:
-      logical_and_expression                                        { $$ = $1; }
-    | postfix_expression assignment_operator logical_and_expression { $$ = new AssignmentNode(pContext, @$, $1, $3); }
+unary_expression:
+      postfix_expression                                            { $$ = $1; }
+    | MINUS postfix_expression                                      { $$ = new UnaryOperatorNode(pContext, $2, Operator::Negate); }
     ;
 
-logical_and_expression:
-      equality_expression                                           { $$ = $1; }
-    | logical_and_expression AND_OP equality_expression             { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::LogicalAnd); } 
-    ;
-
-equality_expression:
-      relational_expression                                         { $$ = $1; }
-    | equality_expression EQUAL_OP relational_expression            { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::Equal); }
-    | equality_expression NOTEQUAL_OP relational_expression         { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::NotEqual); }
-    ;
-
-relational_expression:
-      shift_expression                                              { $$ = $1; }
-    | relational_expression LT_OP shift_expression                  { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::LessThan); }
-    | relational_expression GT_OP shift_expression                  { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::GreaterThan); }
-    ;
-
-shift_expression:
-      additive_expression                                           { $$ = $1; }
-    | shift_expression SHIFTLEFT additive_expression                { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::ShiftLeft); }
-    | shift_expression SHIFTRIGHT additive_expression               { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::ShiftRight); }
+multiplicative_expression:
+      unary_expression                                              { $$ = $1; }
+    | multiplicative_expression STAR unary_expression               { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::Multiply); }
     ;
 
 additive_expression:
@@ -206,14 +188,32 @@ additive_expression:
     | additive_expression MINUS multiplicative_expression           { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::Subtract); }
     ;
 
-multiplicative_expression:
-      unary_expression                                              { $$ = $1; }
-    | multiplicative_expression STAR unary_expression               { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::Multiply); }
+shift_expression:
+      additive_expression                                           { $$ = $1; }
+    | shift_expression SHIFTLEFT additive_expression                { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::ShiftLeft); }
+    | shift_expression SHIFTRIGHT additive_expression               { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::ShiftRight); }
     ;
 
-unary_expression:
-      postfix_expression                                            { $$ = $1; }
-    | MINUS postfix_expression                                      { $$ = new UnaryOperatorNode(pContext, $2, Operator::Negate); }
+relational_expression:
+      shift_expression                                              { $$ = $1; }
+    | relational_expression LT_OP shift_expression                  { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::LessThan); }
+    | relational_expression GT_OP shift_expression                  { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::GreaterThan); }
+    ;
+
+equality_expression:
+      relational_expression                                         { $$ = $1; }
+    | equality_expression EQUAL_OP relational_expression            { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::Equal); }
+    | equality_expression NOTEQUAL_OP relational_expression         { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::NotEqual); }
+    ;
+
+logical_and_expression:
+      equality_expression                                           { $$ = $1; }
+    | logical_and_expression AND_OP equality_expression             { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::LogicalAnd); } 
+    ;
+
+assignment_expression:
+      logical_and_expression                                        { $$ = $1; }
+    | postfix_expression assignment_operator logical_and_expression { $$ = new AssignmentNode(pContext, @$, $1, $3); }
     ;
 
 assignment_operator:
