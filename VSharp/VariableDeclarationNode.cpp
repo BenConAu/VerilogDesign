@@ -33,12 +33,18 @@ void VariableDeclarationNode::PreVerifyNodeImpl()
     //printf("Adding variable %s\n", GetContext()->_symbols[_symIndex].c_str());
     ModuleDeclaratorNode *pFunc = GetTypedParent<ModuleDeclaratorNode>();
 
+    TypeInfo* pInfo = dynamic_cast<TypeNode *>(GetChild(0))->GetTypeInfo();
+    if (_arraySize != -1)
+    {
+        pInfo = GetContext()->_typeCollection.GetArrayType(pInfo);
+    }
+
     // Add variable to collection and mark first usage
     GetContext()->_symbolTable.AddVariable(
         pFunc,
         _symIndex,
         VariableLocationType::Member,
-        dynamic_cast<TypeNode *>(GetChild(0))->GetTypeInfo());
+        pInfo);
 }
 
 void VariableDeclarationNode::PreProcessNodeImpl()

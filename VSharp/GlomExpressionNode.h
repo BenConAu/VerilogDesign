@@ -15,7 +15,4 @@ class GlomExpressionNode : public ExpressionNode
 
     ExpressionResult *CalculateResult() override;
     const char *GetDebugName() override { return "GlomExpressionNode"; }
-
-  private:
-    YYLTYPE _location;
 };

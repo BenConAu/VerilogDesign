@@ -11,13 +11,12 @@ FieldSelectionNode::FieldSelectionNode(
     const YYLTYPE &location,
     ASTNode *pExpr,
     bool fPointer,
-    int symIndex) : ExpressionNode(pContext)
+    int symIndex) : ExpressionNode(pContext, location)
 {
     AddNode(pExpr);
 
     _fieldSymIndex = symIndex;
     _fPointer = fPointer;
-    _location = location;
 
     _pStructTypeInfo = nullptr;
 }

@@ -19,7 +19,6 @@ class BitSelectionNode : public ExpressionNode
     const char *GetDebugName() override { return "BitSelectionNode"; }
 
   private:
-    YYLTYPE _location;
     int _i1;
     int _i2;
 };

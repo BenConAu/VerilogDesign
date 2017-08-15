@@ -3,14 +3,16 @@
 #include "ASTNode.h"
 #include "TypeInfo.h"
 #include "ExpressionResult.h"
+#include "VSharp.tab.h"
 
 class ExpressionNode : public ASTNode
 {
 public:
-    ExpressionNode(PSLCompilerContext* pContext) : ASTNode(pContext)
+    ExpressionNode(PSLCompilerContext* pContext, const YYLTYPE &location) : ASTNode(pContext)
     {
         _pType = nullptr;
         _pResult = nullptr;
+        _location = location;
     }
 
     TypeInfo* GetTypeInfo();
@@ -23,8 +25,10 @@ public:
 
 protected:
     void SetType(TypeInfo* pInfo);
+    const YYLTYPE& GetLocation() { return _location; }
 
 private:
     ExpressionResult* _pResult;
     TypeInfo* _pType;
+    YYLTYPE _location;    
 };

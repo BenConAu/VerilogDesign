@@ -27,7 +27,4 @@ public:
 private:
   // Symbol of function being called
   int _symIndex;
-
-  // Where the call was made in code
-  YYLTYPE _location;
 };

@@ -4,19 +4,19 @@
 #include "RegisterTypeInfo.h"
 #include <string.h>
 
-ConstantNode::ConstantNode(PSLCompilerContext *pContext, ConstantType t, int v) : ExpressionNode(pContext)
+ConstantNode::ConstantNode(PSLCompilerContext *pContext, const YYLTYPE& location, ConstantType t, int v) : ExpressionNode(pContext, location)
 {
     _intValue = v;
     _type = t;
 }
 
-ConstantNode::ConstantNode(PSLCompilerContext *pContext, float v) : ExpressionNode(pContext)
+ConstantNode::ConstantNode(PSLCompilerContext *pContext, const YYLTYPE& location, float v) : ExpressionNode(pContext, location)
 {
     _floatValue = v;
     _type = Float;
 }
 
-ConstantNode::ConstantNode(PSLCompilerContext *pContext, ConstantType t) : ExpressionNode(pContext)
+ConstantNode::ConstantNode(PSLCompilerContext *pContext, const YYLTYPE& location, ConstantType t) : ExpressionNode(pContext, location)
 {
     _intValue = 0;
     _type = t;

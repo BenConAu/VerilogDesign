@@ -9,6 +9,17 @@
 #include "StateDeclaratorNode.h"
 #include "FunctionDeclaratorNode.h"
 
+ModuleDeclaratorNode::ModuleDeclaratorNode(
+    PSLCompilerContext* pContext, 
+    int symIndex,
+    int genericSym
+    ) : ASTNode(pContext)
+{
+    _symIndex = symIndex;
+    _genericIndex = genericSym;
+    _paramCount = 0;
+}
+
 void ModuleDeclaratorNode::PreVerifyNodeImpl()
 {
     // We need to add this here before the children look for it
@@ -27,14 +38,11 @@ void ModuleDeclaratorNode::PreVerifyNodeImpl()
     ListNode* pModuleChildList = GetTypedChild<ListNode>();
     size_t ListIndex = GetChildCount() - 1;
 
-    // Functions go first
-    MoveListChildren<FunctionDeclaratorNode>(pModuleChildList, GetChildCount());
-
-    // Add the declarations first after the parameters
+    // Variable declarations moved to be before all other things so that
+    // the variable information can be added before any states or functions
+    // try to get at it.
     MoveListChildren<VariableDeclarationNode>(pModuleChildList, GetChildCount());
-
-    // Then add the states after that
-    MoveListChildren<StateDeclaratorNode>(pModuleChildList, GetChildCount());
+    MoveListChildren<ASTNode>(pModuleChildList, GetChildCount());
 
     if (pModuleChildList->GetChildCount() != 0)
     {
@@ -65,7 +73,13 @@ void ModuleDeclaratorNode::PreVerifyNodeImpl()
             {
                 _stateList.push_back(pState);
             }
-        }    
+        }
+
+        ModuleParameterNode* pParam = dynamic_cast<ModuleParameterNode*>(GetChild(i));
+        if (pParam != nullptr)
+        {
+            _paramCount++;
+        }
     }
 }
 
@@ -88,25 +102,28 @@ void ModuleDeclaratorNode::PreProcessNodeImpl()
     GetContext()->OutputLine("clk,");
     GetContext()->OutputLine("reset,");
 
+    bool first = true;
+
     for (size_t i = 0; i < GetChildCount(); i++)
     {
         ModuleParameterNode* pParam = dynamic_cast<ModuleParameterNode*>(GetChild(i));
-
-        if (pParam == nullptr)
+        if (pParam != nullptr)
         {
-            GetContext()->OutputLine(")");
-            GetContext()->DecreaseIndent();
-            break;
+            const char* pszComma = (i != _paramCount - 1) ? "," : "";
+
+            // Only the first can be the first
+            first = false;
+
+            GetContext()->OutputLine(
+                "%s%s", 
+                GetContext()->_symbolTable.GetInfo(pParam->GetSymbolIndex(), this)->GetSymbol(), 
+                pszComma);
         }
 
-        bool last = (dynamic_cast<ModuleParameterNode*>(GetChild(i + 1)) == nullptr);
-        const char* pszComma = last ? "" : ",";
-
-        GetContext()->OutputLine(
-            "%s%s", 
-            GetContext()->_symbolTable.GetInfo(pParam->GetSymbolIndex(), this)->GetSymbol(), 
-            pszComma);
     }
+
+    GetContext()->OutputLine(")");
+    GetContext()->DecreaseIndent();
 
     GetContext()->OutputLine("begin");
     GetContext()->IncreaseIndent();
@@ -134,40 +151,38 @@ void ModuleDeclaratorNode::ProcessNodeImpl()
     bool fParamsDone = false;
     bool fVariablesDone = false;
 
-    // Get all of the parameters first
+    // Do all non-state things first
     for (size_t i = 0; i < GetChildCount(); i++)
     {
         // Figure out what we have here
-        VariableDeclarationNode* pVar = dynamic_cast<VariableDeclarationNode*>(GetChild(i));
         StateDeclaratorNode* pState = dynamic_cast<StateDeclaratorNode*>(GetChild(i));
-
-        if (pVar != nullptr && !fParamsDone)
+        if (pState == nullptr)
         {
-            fParamsDone = true;
-
-            GetContext()->OutputLine("// locals");
+            GetChild(i)->ProcessNode();
         }
+    }
 
-        if (pState != nullptr && !fVariablesDone)
+    // We have a register that we store the current state in
+    GetContext()->OutputLine("reg [7:0] fsmState = 0;");
+
+    // Start the always block
+    GetContext()->OutputLine("always @(posedge clk)");
+    GetContext()->OutputLine("begin");
+    GetContext()->IncreaseIndent();
+
+    // Start the case statement
+    GetContext()->OutputLine("case(fsmState)");
+    GetContext()->OutputLine("begin");
+    GetContext()->IncreaseIndent();
+
+    for (size_t i = 0; i < GetChildCount(); i++)
+    {
+        // Figure out what we have here
+        StateDeclaratorNode* pState = dynamic_cast<StateDeclaratorNode*>(GetChild(i));
+        if (pState != nullptr)
         {
-            // Before we do states we have a preamble
-            fVariablesDone = true;
-
-            // We have a register that we store the current state in
-            GetContext()->OutputLine("reg [7:0] fsmState = 0;");
-
-            // Start the always block
-            GetContext()->OutputLine("always @(posedge clk)");
-            GetContext()->OutputLine("begin");
-            GetContext()->IncreaseIndent();
-
-            // Start the case statement
-            GetContext()->OutputLine("case(fsmState)");
-            GetContext()->OutputLine("begin");
-            GetContext()->IncreaseIndent();
+            GetChild(i)->ProcessNode();
         }
-
-        GetChild(i)->ProcessNode();
     }
 
     // End the case statement

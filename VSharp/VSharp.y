@@ -31,6 +31,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token OUT_TOKEN
 %token STATE_TOKEN
 %token UINT_TOKEN
+%token UINT64_TOKEN
 %token UINT32_TOKEN
 %token UINT16_TOKEN
 %token UINT8_TOKEN
@@ -178,7 +179,7 @@ expression:
 
 unary_expression:
       postfix_expression                                            { $$ = $1; }
-    | MINUS postfix_expression                                      { $$ = new UnaryOperatorNode(pContext, $2, Operator::Negate); }
+    | MINUS postfix_expression                                      { $$ = new UnaryOperatorNode(pContext, @$, $2, Operator::Negate); }
     ;
 
 multiplicative_expression:
@@ -242,8 +243,8 @@ postfix_expression:
 primary_expression:
       variable_identifier                                           { $$ = $1; }
     | glom_expression                                               { $$ = $1; }
-    | INTCONSTANT                                                   { $$ = new ConstantNode(pContext, ConstantNode::Word, $1); }
-    | BOOLCONSTANT                                                  { $$ = new ConstantNode(pContext, ConstantNode::Bool, $1); }
+    | INTCONSTANT                                                   { $$ = new ConstantNode(pContext, @$, ConstantNode::Word, $1); }
+    | BOOLCONSTANT                                                  { $$ = new ConstantNode(pContext, @$, ConstantNode::Bool, $1); }
     ;
 
 glom_expression:
@@ -306,7 +307,8 @@ function_param_decl:
 	;
 
 fully_specified_type:
-      UINT32_TOKEN                                                  { $$ = new TypeNode(pContext, @$, TypeClass::Register, 32); }
+      UINT64_TOKEN                                                  { $$ = new TypeNode(pContext, @$, TypeClass::Register, 64); }
+    | UINT32_TOKEN                                                  { $$ = new TypeNode(pContext, @$, TypeClass::Register, 32); }
     | UINT16_TOKEN                                                  { $$ = new TypeNode(pContext, @$, TypeClass::Register, 16); }
     | UINT8_TOKEN                                                   { $$ = new TypeNode(pContext, @$, TypeClass::Register, 8); }
 	| VOID_TOKEN                                                    { $$ = new TypeNode(pContext, @$); }

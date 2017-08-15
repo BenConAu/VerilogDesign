@@ -13,9 +13,9 @@ public:
     };
 
 public:
-    ConstantNode(PSLCompilerContext* pContext, ConstantType t, int v);
-    ConstantNode(PSLCompilerContext* pContext, float v);
-    ConstantNode(PSLCompilerContext* pContext, ConstantType t);
+    ConstantNode(PSLCompilerContext* pContext, const YYLTYPE& location, ConstantType t, int v);
+    ConstantNode(PSLCompilerContext* pContext, const YYLTYPE& location, float v);
+    ConstantNode(PSLCompilerContext* pContext, const YYLTYPE& location, ConstantType t);
 
     bool IsConstant() const override;
     void VerifyNodeImpl() override;

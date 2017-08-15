@@ -12,12 +12,7 @@ public:
         PSLCompilerContext* pContext, 
         int symIndex,
         int genericSym
-        ) : 
-            ASTNode(pContext)
-    {
-        _symIndex = symIndex;
-        _genericIndex = genericSym;
-    }
+        );
 
     void AddParameter(ASTNode* pNode)
     {
@@ -79,9 +74,8 @@ private:
     // The symbol index of the generic type
     int _genericIndex;
 
-    // Helpful pointers to inside the collection
-    size_t _MemberStart;
-    size_t _StateStart;
+    // Number of parameters
+    size_t _paramCount;
 
     std::vector<StateDeclaratorNode*> _stateList;
 };

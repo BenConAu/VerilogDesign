@@ -41,7 +41,7 @@ void OperatorNode::VerifyNodeImpl()
             }
             else
             {
-                GetContext()->ReportError(_location, "Unknown type for result of binary operation");
+                GetContext()->ReportError(GetLocation(), "Unknown type for result of binary operation");
             }
 
             break;
@@ -63,7 +63,7 @@ ExpressionResult *OperatorNode::CalculateResult()
 
     if (leftResult.get() == nullptr || rightResult.get() == nullptr)
     {
-        GetContext()->ReportError(_location, "Assignment needs a valid expression on each side");
+        GetContext()->ReportError(GetLocation(), "Assignment needs a valid expression on each side");
     }
 
     //leftResult->DebugPrint();

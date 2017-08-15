@@ -17,5 +17,4 @@ public:
 
 private:
     int _symIndex;
-    YYLTYPE _location;
 };

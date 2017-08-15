@@ -48,13 +48,13 @@
 "out"                { return OUT_TOKEN; }
 "state"              { return STATE_TOKEN; }
 "uint"               { return UINT_TOKEN; }
+"uint64"             { return UINT64_TOKEN; }
 "uint32"             { return UINT32_TOKEN; }
 "uint16"             { return UINT16_TOKEN; }
 "uint8"              { return UINT8_TOKEN; }
 "void"               { return VOID_TOKEN; }
 "initial"            { return INITIAL_TOKEN; }
 "bool"               { return BOOL_TOKEN; }
-"void"               { return VOID_TOKEN; }
 "struct"             { return STRUCT_TOKEN; }
 "packbyte"           { return PACKBYTE_TOKEN; }
 "module"             { return MODULE_TOKEN; }

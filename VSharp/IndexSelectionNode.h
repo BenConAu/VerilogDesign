@@ -11,14 +11,9 @@ class IndexSelectionNode : public ExpressionNode
         const YYLTYPE &location,
         ASTNode *pPostFix,
         ASTNode *pIndex);
-
+        
     void VerifyNodeImpl() override;
 
     ExpressionResult *CalculateResult() override;
     const char *GetDebugName() override { return "IndexSelectionNode"; }
-
-  private:
-    YYLTYPE _location;
-    int _fieldSymIndex;
-    bool _fPointer;
 };

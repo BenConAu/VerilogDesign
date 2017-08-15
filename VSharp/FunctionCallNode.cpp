@@ -13,7 +13,7 @@ FunctionCallNode::FunctionCallNode(
     const YYLTYPE &location,
     int symIndex,
     ASTNode *pGenericType,
-    ASTNode *pFirstArg) : ExpressionNode(pContext)
+    ASTNode *pFirstArg) : ExpressionNode(pContext, location)
 {
     AddNode(pGenericType);
 
@@ -23,7 +23,6 @@ FunctionCallNode::FunctionCallNode(
     }
 
     _symIndex = symIndex;
-    _location = location;
 }
 
 void FunctionCallNode::VerifyNodeImpl()

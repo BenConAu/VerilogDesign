@@ -14,7 +14,6 @@ begin
   input wire reset;
   input wire[31:0] in1;
   output reg[31:0] out1;
-  // locals
   reg[31:0] _ExampleRegister;
   reg[15:0] _ExampleWord;
   reg[7:0] _ExampleByte;

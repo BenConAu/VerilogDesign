@@ -4,10 +4,9 @@
 #include "ModuleDeclaratorNode.h"
 #include "FunctionDeclaratorNode.h"
 
-IdentifierNode::IdentifierNode(PSLCompilerContext *pContext, const YYLTYPE &location, int symIndex) : ExpressionNode(pContext)
+IdentifierNode::IdentifierNode(PSLCompilerContext *pContext, const YYLTYPE &location, int symIndex) : ExpressionNode(pContext, location)
 {
     _symIndex = symIndex;
-    _location = location;
 }
 
 void IdentifierNode::VerifyNodeImpl()
@@ -46,7 +45,7 @@ VariableInfo *IdentifierNode::GetVariableInfo()
     {
         char message[256];
         sprintf(message, "Attempting info get of nonexistent var %s", GetContext()->_symbols[_symIndex].c_str());
-        GetContext()->ReportError(_location, message);
+        GetContext()->ReportError(GetLocation(), message);
     }
 
     return pInfo;

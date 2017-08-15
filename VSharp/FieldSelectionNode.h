@@ -23,7 +23,6 @@ class FieldSelectionNode : public ExpressionNode
   private:
     int _fieldSymIndex;
     bool _fPointer;
-    YYLTYPE _location;
 
     // Stored during Verification
     StructTypeInfo *_pStructTypeInfo;

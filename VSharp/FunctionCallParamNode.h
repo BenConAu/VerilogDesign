@@ -6,11 +6,10 @@
 class FunctionCallParamNode : public ExpressionNode
 {
 public:
-    FunctionCallParamNode(PSLCompilerContext* pContext, const YYLTYPE &location, bool fOut, ASTNode* pExpr) : ExpressionNode(pContext)
+    FunctionCallParamNode(PSLCompilerContext* pContext, const YYLTYPE &location, bool fOut, ASTNode* pExpr) : ExpressionNode(pContext, location)
     {
         AddNode(pExpr);
         _fOut = fOut;
-        _location = location;
     }
 
     void VerifyNodeImpl() override;
@@ -19,5 +18,4 @@ public:
 
 private:
     bool _fOut;
-    YYLTYPE _location;
 };

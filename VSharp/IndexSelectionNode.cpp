@@ -9,119 +9,59 @@ IndexSelectionNode::IndexSelectionNode(
     PSLCompilerContext *pContext,
     const YYLTYPE &location,
     ASTNode *pPostFix,
-    ASTNode *pIndex) : ExpressionNode(pContext)
+    ASTNode *pIndex) : ExpressionNode(pContext, location)
 {
     AddNode(pPostFix);
     AddNode(pIndex);
-
-    _location = location;
 }
 
 void IndexSelectionNode::VerifyNodeImpl()
 {
-/*    ExpressionNode *pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));
-    if (pLeft == nullptr)
+    ExpressionNode *pExpr = dynamic_cast<ExpressionNode *>(GetChild(0));
+    if (pExpr == nullptr)
     {
-        GetContext()->ReportError(_location, "Can only index select expressions");
+        GetContext()->ReportError(GetLocation(), "Can only index select expressions");
     }
-
-    // Should verify that the type exists
-    TypeInfo *pTypeInfo = pLeft->GetTypeInfo();
-    //printf("Type in index select verify is %s\n", pTypeInfo->DebugPrint().c_str());
-    PointerTypeInfo *pPointerInfo = dynamic_cast<PointerTypeInfo *>(pTypeInfo);
-    if (pPointerInfo == nullptr)
+    else
     {
-        // Not using a pointer, bad for our health
-        GetContext()->ReportError(_location, "Can only index select a pointer");
-    }
+        // Should verify that the type exists
+        TypeInfo *pTypeInfo = pExpr->GetTypeInfo();
+        RegisterTypeInfo *pRegInfo = dynamic_cast<RegisterTypeInfo*>(pTypeInfo);
 
-    ExpressionNode *pIndex = dynamic_cast<ExpressionNode *>(GetChild(1));
-    if (pIndex == nullptr)
-    {
-        GetContext()->ReportError(_location, "Can only index with an expression");
+        if (pRegInfo == nullptr)
+        {
+            ArrayTypeInfo *pArrayInfo = dynamic_cast<ArrayTypeInfo*>(pTypeInfo);
+            if (pArrayInfo == nullptr)
+            {
+                GetContext()->ReportError(GetLocation(), "Can only index select registers or arrays");                
+            }
+            else
+            {
+                SetType(pArrayInfo->GetBaseType());
+            }
+        }
+        else
+        {
+            // Index a register and you get a single bit
+            SetType(GetContext()->_typeCollection.GetRegisterType(1));
+        }
     }
-
-    TypeInfo *pIndexTypeInfo = pIndex->GetTypeInfo();
-    BasicTypeInfo *pBasicInfo = dynamic_cast<BasicTypeInfo *>(pIndexTypeInfo);
-    if (pBasicInfo == nullptr)
-    {
-        GetContext()->ReportError(_location, "Can only index with a basic type");
-    }
-
-    if (pBasicInfo->GetTypeToken() != WORD_TOKEN)
-    {
-        GetContext()->ReportError(_location, "Can only index with a word");
-    }
-
-    // The type of this expression is the type of the pointer
-    SetType(pPointerInfo->GetBaseType());*/
 }
 
 ExpressionResult *IndexSelectionNode::CalculateResult()
 {
-    // Get the child expression
-/*    ExpressionNode *pChildExpr = dynamic_cast<ExpressionNode *>(GetChild(0));
-    ExpressionNode *pIndexExpr = dynamic_cast<ExpressionNode *>(GetChild(1));
+    ExpressionNode *pExpr = dynamic_cast<ExpressionNode *>(GetChild(0));
+    ExpressionNode *pIndex = dynamic_cast<ExpressionNode *>(GetChild(1));
 
-    // Get the appropriate scope
-    FunctionDeclaratorNode *pScope = GetTypedParent<FunctionDeclaratorNode>();
+    std::unique_ptr<ExpressionResult> exprResult(pExpr->TakeResult());
+    std::unique_ptr<ExpressionResult> indexResult(pIndex->TakeResult());
+    
+    char result[1024];
+    sprintf(
+        result, 
+        "%s[%s]", 
+        exprResult->GetString().c_str(),
+        indexResult->GetString().c_str());
 
-    // Find the result of the child
-    std::unique_ptr<ExpressionResult> childResult(pChildExpr->TakeResult());
-    std::unique_ptr<ExpressionResult> indexResult(pIndexExpr->TakeResult());
-
-    // Get the type out of the child expression
-    TypeInfo *pTypeInfo = pChildExpr->GetTypeInfo();
-    PointerTypeInfo *pPointerInfo = dynamic_cast<PointerTypeInfo *>(pTypeInfo);
-
-    // Make the result object so we can build on it
-    ExpressionResult *pResult = new ExpressionResult(pScope->GetRegCollection());
-
-    // Allocate a register for the first operand
-    //printf("Allocating a register for IndexSelectionNode\n");
-    RegIndex resultIndex = pScope->GetRegCollection()->AllocateRegister();
-
-    // Fill the register with the address
-    GetContext()->OutputMovInstruction(
-        Operand(resultIndex),
-        *childResult.get());
-
-    // Create an operand with this register - it has a base register
-    // with the size of the type being pointed to encoded in it.
-    Operand resultOperand(
-        resultIndex,
-        pPointerInfo,
-        GetContext());        
-
-    // This will be the first part of the expression
-    pResult->AddOperand(resultOperand, true);
-
-    if (indexResult->GetResultType() != ExpressionResultType::Register)
-    {
-        //printf("IndexSelectionNode in not register\n");
-
-        // If we don't have a register for the second operand then allocate it
-        RegIndex indexReg = pScope->GetRegCollection()->AllocateRegister();
-        Operand indexOperand(indexReg);
-
-        // Move whatever we do have into that register
-        GetContext()->OutputMovInstruction(
-            indexOperand,
-            *indexResult.get());
-
-        // And that is our other operand
-        pResult->AddOperand(indexOperand, true);
-    }
-    else
-    {
-        //printf("IndexSelectionNode in register\n");
-
-        // Just reuse what we have
-        pResult->AddOperand(indexResult->GetOperand(0), false);
-    }
-
-    //printf("IndexSelectionNode returning result: %s\n", pResult->DebugPrint().c_str());
-
-    return pResult;*/
-    return nullptr;
+    return new ExpressionResult(result);
 }

@@ -12,12 +12,11 @@ class OperatorNode : public ExpressionNode
       const YYLTYPE &location,
       ASTNode *pLeft, 
       ASTNode *pRight,
-      Operator op) : ExpressionNode(pContext)
+      Operator op) : ExpressionNode(pContext, location)
     {
         AddNode(pLeft);
         AddNode(pRight);
         _op = op;
-        _location = location;
     }
 
     void VerifyNodeImpl() override;
@@ -26,7 +25,6 @@ class OperatorNode : public ExpressionNode
   private:
     Operator _op;
     OperatorInfo _opInfo;
-    YYLTYPE _location;
 
     static OperatorInfo _opTable[];
 };

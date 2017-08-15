@@ -6,11 +6,9 @@
 GlomExpressionNode::GlomExpressionNode(
     PSLCompilerContext *pContext,
     const YYLTYPE &location,
-    ASTNode *pExprList) : ExpressionNode(pContext)
+    ASTNode *pExprList) : ExpressionNode(pContext, location)
 {
     AddNode(pExprList);
-
-    _location = location;
 }
 
 void GlomExpressionNode::VerifyNodeImpl()

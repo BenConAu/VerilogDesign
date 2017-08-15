@@ -1,10 +1,11 @@
 #include "ExpressionNode.h"
+#include "VSharpCompilerContext.h"
 
 TypeInfo *ExpressionNode::GetTypeInfo()
 {
     if (_pType == nullptr)
     {
-        throw "Unset type";
+        GetContext()->ReportError(_location, "Internal compiler error: Unset type on expression");
     }
 
     return _pType;
