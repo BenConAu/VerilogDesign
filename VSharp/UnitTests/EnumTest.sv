@@ -12,7 +12,7 @@ begin
   input wire clk;
   input wire reset;
   input wire[31:0] in1;
-  output reg[31:0] out1;
+  output reg[0:0] out1;
   reg [7:0] fsmState = 0;
   always @(posedge clk)
   begin
@@ -22,7 +22,7 @@ begin
         fsmState <= `__StartState;
       end
       `__StartState: begin
-        out1 <= 0
+        out1 <= 0;
       end
     end
   end

@@ -11,9 +11,10 @@ class RegisterTypeInfo : public TypeInfo
     std::string DebugPrint() override;
     std::string GetTypeName() override;
     bool EqualType(TypeInfo *pOther) override;
-    int GetBitLength() const { return _bitLength; }
+    int GetBitLength() const override { return _bitLength; }
     TypeInfo *MakeSpecificType(TypeInfo *pGenericArgType, TypeCollection *pCollection) override;
-
+    bool IsVerilogRegister() const override { return true; }
+    
   private:
     int _bitLength;
 };

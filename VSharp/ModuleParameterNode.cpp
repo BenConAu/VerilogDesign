@@ -20,10 +20,9 @@ void ModuleParameterNode::VerifyNodeImpl()
     TypeInfo* pTypeInfo = dynamic_cast<TypeNode *>(GetChild(0))->GetTypeInfo();
 
     // Needs to be a register
-    RegisterTypeInfo* pRegInfo = dynamic_cast<RegisterTypeInfo*>(pTypeInfo);
-    if (pRegInfo == nullptr)
+    if (!pTypeInfo->IsVerilogRegister())
     {
-        throw "Parameters to modules need to be registers";
+        GetContext()->ReportError(_location, "Parameters to modules need to be outputting verilog registers");
     }
 
     // Add variable to collection and mark first usage
@@ -43,9 +42,10 @@ void ModuleParameterNode::PreProcessNodeImpl()
     VariableInfo* pInfo = dynamic_cast<VariableInfo*>(GetContext()->_symbolTable.GetInfo(_symIndex, pModule));
     const char* pszModifier = _fOut ? "output reg" : "input wire";
 
-    // Find out the bit width
-    RegisterTypeInfo* pRegInfo = dynamic_cast<RegisterTypeInfo*>(pInfo->GetTypeInfo());
-
-    GetContext()->OutputLine("%s[%d:0] %s;", pszModifier, pRegInfo->GetBitLength() - 1, pInfo->GetSymbol());
+    GetContext()->OutputLine(
+        "%s[%d:0] %s;", 
+        pszModifier, 
+        pInfo->GetTypeInfo()->GetBitLength() - 1, 
+        pInfo->GetSymbol());
 }
 

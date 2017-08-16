@@ -1,5 +1,6 @@
 #include "EnumTypeInfo.h"
 #include "VSharpCompilerContext.h"
+#include <cmath>
 
 EnumTypeInfo::EnumTypeInfo(int symIndex, PSLCompilerContext* pContext)
 {
@@ -52,4 +53,16 @@ bool EnumTypeInfo::IsMember(int sym)
 int EnumTypeInfo::GetValue(int sym)
 {
     return _values[sym];
+}
+
+int EnumTypeInfo::GetBitLength() const
+{
+    if (_values.size() == 1)
+    {
+        return 1;
+    }
+    else
+    {
+        return static_cast<int>(::ceil(::log2(_values.size())));
+    }
 }

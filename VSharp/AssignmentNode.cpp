@@ -46,5 +46,5 @@ void AssignmentNode::PostProcessNodeImpl()
     //leftResult->DebugPrint();
     //rightResult->DebugPrint();
 
-    GetContext()->OutputLine("%s <= %s", leftResult->GetString().c_str(), rightResult->GetString().c_str());
+    GetContext()->OutputLine("%s <= %s;", leftResult->GetString().c_str(), rightResult->GetString().c_str());
 }

@@ -292,8 +292,8 @@ module_header:
     ;
 
 module_param_decl:
-      fully_specified_type IDENTIFIER                               { $$ = new ModuleParameterNode(pContext, $1, $2, false); }
-    | OUT_TOKEN fully_specified_type IDENTIFIER                     { $$ = new ModuleParameterNode(pContext, $2, $3, true); }
+      fully_specified_type IDENTIFIER                               { $$ = new ModuleParameterNode(pContext, @$, $1, $2, false); }
+    | OUT_TOKEN fully_specified_type IDENTIFIER                     { $$ = new ModuleParameterNode(pContext, @$, $2, $3, true); }
 	;
 
 function_definition:
@@ -326,7 +326,7 @@ fully_specified_type:
     | UINT8_TOKEN                                                   { $$ = new TypeNode(pContext, @$, TypeClass::Register, 8); }
 	| VOID_TOKEN                                                    { $$ = new TypeNode(pContext, @$); }
     | BOOL_TOKEN                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Register, 1); }
-	| IDENTIFIER                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Struct, $1); }
+	| IDENTIFIER                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Unknown, $1); }
     | UINT_TOKEN LT INTCONSTANT GT                                  { $$ = new TypeNode(pContext, @$, $3); }
     ;
 

@@ -16,7 +16,9 @@ public:
     int GetSymbolIndex();
     bool EqualType(TypeInfo* pOther) override;
     TypeInfo* MakeSpecificType(TypeInfo* pGenericArgType, TypeCollection* pCollection) override;
-
+    bool IsVerilogRegister() const override { return true; }
+    int GetBitLength() const override;
+    
     bool IsMember(int symIndex);
     int GetValue(int symIndex);
 

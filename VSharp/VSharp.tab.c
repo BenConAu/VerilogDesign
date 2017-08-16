@@ -1968,13 +1968,13 @@ yyreduce:
 
   case 67:
 #line 295 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new ModuleParameterNode(pContext, (yyvsp[-1].pNode), (yyvsp[0].symIndex), false); }
+    { (yyval.pNode) = new ModuleParameterNode(pContext, (yyloc), (yyvsp[-1].pNode), (yyvsp[0].symIndex), false); }
 #line 1973 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 68:
 #line 296 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new ModuleParameterNode(pContext, (yyvsp[-1].pNode), (yyvsp[0].symIndex), true); }
+    { (yyval.pNode) = new ModuleParameterNode(pContext, (yyloc), (yyvsp[-1].pNode), (yyvsp[0].symIndex), true); }
 #line 1979 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
@@ -2070,7 +2070,7 @@ yyreduce:
 
   case 84:
 #line 329 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new TypeNode(pContext, (yyloc), TypeClass::Struct, (yyvsp[0].symIndex)); }
+    { (yyval.pNode) = new TypeNode(pContext, (yyloc), TypeClass::Unknown, (yyvsp[0].symIndex)); }
 #line 2075 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 

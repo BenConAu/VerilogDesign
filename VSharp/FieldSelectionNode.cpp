@@ -42,8 +42,8 @@ void FieldSelectionNode::VerifyNodeImpl()
         GetContext()->ReportError(GetLocation(), "Unknown member of enum");        
     }
 
-    // The type of this expression is the type of the member
-    SetType(GetContext()->_typeCollection.GetRegisterType(32));
+    // The type of this expression is the size of the enum type
+    SetType(pEnumInfo);
 }
 
 ExpressionResult *FieldSelectionNode::CalculateResult()

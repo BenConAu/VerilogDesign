@@ -75,6 +75,20 @@ TypeInfo *TypeNode::GetTypeInfo()
             _pTypeInfo = GetContext()->_typeCollection.GetVoidType();
             break;
 
+        case TypeClass::Unknown:
+        {
+            _pTypeInfo = GetContext()->_typeCollection.GetEnumType(_extra);
+            if (_pTypeInfo == nullptr)
+            {
+                std::stringstream sstr;
+                sstr << "Failed to find enum type with name " << GetContext()->_symbols[_extra];
+                static std::string error = sstr.str();
+
+                GetContext()->ReportError(_location, sstr.str().c_str());
+            }
+            break;
+        }
+
         case TypeClass::Enum:
         case TypeClass::Generic:
         case TypeClass::Array:

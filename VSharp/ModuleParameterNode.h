@@ -1,13 +1,20 @@
 #pragma once
 
 #include "ASTNode.h"
+#include "VSharp.tab.h"
 
 class ModuleParameterNode : public ASTNode
 {
 public:
-    ModuleParameterNode(PSLCompilerContext* pContext, ASTNode* pType, int symIndex, bool fOut) : ASTNode(pContext)
+    ModuleParameterNode(
+        PSLCompilerContext* pContext,
+        const YYLTYPE &location,
+        ASTNode* pType, 
+        int symIndex, 
+        bool fOut) : ASTNode(pContext)
     {
         AddNode(pType);
+        _location = location;
         _symIndex = symIndex;
         _fOut = fOut;
     }
@@ -18,6 +25,7 @@ public:
     int GetSymbolIndex() const { return _symIndex; }
 
 private:
+    YYLTYPE _location;
     int _symIndex;
     bool _fOut;
 };

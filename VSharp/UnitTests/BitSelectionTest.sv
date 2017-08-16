@@ -22,7 +22,7 @@ begin
         fsmState <= `__StartState;
       end
       `__StartState: begin
-        out1 <= in1[19:4]
+        out1 <= in1[19:4];
       end
     end
   end

@@ -5,7 +5,7 @@ enum Foo
 
 module EnumTest(
 	uint<32> in1,
-	out uint<32> out1
+	out Foo out1
 	)
 {
 	state initial
