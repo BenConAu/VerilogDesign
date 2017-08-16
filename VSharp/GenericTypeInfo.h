@@ -14,11 +14,6 @@ public:
         _pScope = pScope;
     }
 
-    unsigned int GetSize() override
-    {
-        throw "Generic member being asked for size is a bug";
-    }
-
     TypeClass GetTypeClass() override
     {
         return TypeClass::Generic;

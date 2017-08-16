@@ -7,7 +7,6 @@ class RegisterTypeInfo : public TypeInfo
 {
   public:
     RegisterTypeInfo(int bitLength);
-    unsigned int GetSize() override;
     TypeClass GetTypeClass() override;
     std::string DebugPrint() override;
     std::string GetTypeName() override;

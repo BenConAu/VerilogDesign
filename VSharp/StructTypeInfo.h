@@ -35,18 +35,6 @@ public:
         return nullptr;
     }
 
-    unsigned int GetSize() override
-    {
-        unsigned int totalSize = 0;
-
-        for (size_t i = 0; i < _members.size(); i++)
-        {
-            totalSize += _members[i]->GetSize();
-        }
-
-        return totalSize;
-    }
-
     unsigned int GetOffset(int fieldSymIndex)
     {
         unsigned int offset = 0;

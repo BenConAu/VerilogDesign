@@ -2,10 +2,15 @@
 #include "VariableInfo.h"
 #include "TypeInfo.h"
 
-// ExpressionResult to represent a constant
 ExpressionResult::ExpressionResult(const std::string& str)
 {
     _result = str;
+    _pStaticInfo = nullptr;
+}
+
+ExpressionResult::ExpressionResult(StaticTypeInfo* pInfo)
+{
+    _pStaticInfo = pInfo;
 }
 
 std::string ExpressionResult::DebugPrint()

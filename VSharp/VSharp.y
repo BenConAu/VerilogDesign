@@ -40,6 +40,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token RETURN_TOKEN
 %token AND_OP
 %token OR_OP
+%token ENUM_TOKEN
 
 %token <intVal> INTCONSTANT
 %token <intVal> BOOLCONSTANT
@@ -130,6 +131,8 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> logical_or_expression
 %type <pNode> glom_expression
 %type <pNode> glom_list
+%type <pNode> enum_definition
+%type <pNode> enum_list
 
 %%
 
@@ -140,8 +143,19 @@ translation_unit:
 
 external_declaration:
       module_definition                                             { $$ = $1; pContext->AddModuleDef($$); }
-	| struct_specifier SEMICOLON                                    { $$ = $1; pContext->AddStructDef($$); }
+    | enum_definition                                               { $$ = $1; pContext->AddTypeDef($$); }
+	| struct_specifier SEMICOLON                                    { $$ = $1; pContext->AddTypeDef($$); }
 	| declaration                                                   { $$ = $1; pContext->AddGlobal($$); }
+    ;
+
+enum_definition:
+      ENUM_TOKEN IDENTIFIER LEFT_BRACE enum_list RIGHT_BRACE        { $$ = $4; dynamic_cast<EnumDefinitionNode*>($$)->SetIdentifier($2); }
+    | ENUM_TOKEN IDENTIFIER LEFT_BRACE enum_list COMMA RIGHT_BRACE  { $$ = $4; dynamic_cast<EnumDefinitionNode*>($$)->SetIdentifier($2); }
+    ;
+
+enum_list:
+      IDENTIFIER                                                    { $$ = new EnumDefinitionNode(pContext, @$, $1); }
+    | enum_list COMMA IDENTIFIER                                    { $$ = $1; dynamic_cast<EnumDefinitionNode*>($$)->AddEnum($3); }
     ;
 
 statement_list:
@@ -236,8 +250,7 @@ postfix_expression:
     | postfix_expression LEFT_BRACKET INTCONSTANT COLON INTCONSTANT RIGHT_BRACKET      
                                                                     { $$ = new BitSelectionNode(pContext, @$, $1, $3, $5); }
     | function_call                                                 { $$ = $1; }
-	| postfix_expression DOT IDENTIFIER								{ $$ = new FieldSelectionNode(pContext, @$, $1, false, $3); }
-	| postfix_expression ARROW IDENTIFIER							{ $$ = new FieldSelectionNode(pContext, @$, $1, true, $3); }
+	| postfix_expression DOT IDENTIFIER								{ $$ = new FieldSelectionNode(pContext, @$, $1, $3); }
     ;
 
 primary_expression:

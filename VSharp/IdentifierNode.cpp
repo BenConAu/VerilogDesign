@@ -3,18 +3,38 @@
 #include "VSharpCompilerContext.h"
 #include "ModuleDeclaratorNode.h"
 #include "FunctionDeclaratorNode.h"
+#include "StaticTypeInfo.h"
 
 IdentifierNode::IdentifierNode(PSLCompilerContext *pContext, const YYLTYPE &location, int symIndex) : ExpressionNode(pContext, location)
 {
     _symIndex = symIndex;
+    _pVarInfo = nullptr;
+    _pTypeInfo = nullptr;
 }
 
 void IdentifierNode::VerifyNodeImpl()
 {
-    // Find the type of the expression
-    VariableInfo *pInfo = GetVariableInfo();
-
-    SetType(pInfo->GetTypeInfo());
+    ModuleDeclaratorNode *pScope = GetTypedParent<ModuleDeclaratorNode>();
+    _pVarInfo = dynamic_cast<VariableInfo *>(GetContext()->_symbolTable.GetInfo(_symIndex, pScope));
+    if (_pVarInfo == nullptr)
+    {
+        _pTypeInfo = GetContext()->_typeCollection.GetEnumType(_symIndex);
+        if (_pTypeInfo == nullptr)
+        {
+            char message[256];
+            sprintf(message, "Unknown variable or type %s", GetContext()->_symbols[_symIndex].c_str());
+            GetContext()->ReportError(GetLocation(), message);    
+        }
+        else
+        {
+            // HACK should store this somewhere else
+            SetType(new StaticTypeInfo(_pTypeInfo));
+        }
+    }
+    else
+    {
+        SetType(_pVarInfo->GetTypeInfo());
+    }
 }
 
 ExpressionResult *IdentifierNode::CalculateResult()
@@ -30,23 +50,20 @@ ExpressionResult *IdentifierNode::CalculateResult()
     }
     else
     {
-        VariableInfo *pInfo = GetVariableInfo();
-        ModuleDeclaratorNode *pScope = GetTypedParent<ModuleDeclaratorNode>();
-
-        return pInfo->CalculateResult(pScope);
+        if (_pVarInfo != nullptr)
+        {
+            ModuleDeclaratorNode *pScope = GetTypedParent<ModuleDeclaratorNode>();
+            
+            return _pVarInfo->CalculateResult(pScope);
+        }
+        else
+        {
+            return new ExpressionResult(dynamic_cast<StaticTypeInfo*>(GetTypeInfo()));
+        }
     }
 }
 
 VariableInfo *IdentifierNode::GetVariableInfo()
 {
-    ModuleDeclaratorNode *pScope = GetTypedParent<ModuleDeclaratorNode>();
-    VariableInfo *pInfo = dynamic_cast<VariableInfo *>(GetContext()->_symbolTable.GetInfo(_symIndex, pScope));
-    if (pInfo == nullptr)
-    {
-        char message[256];
-        sprintf(message, "Attempting info get of nonexistent var %s", GetContext()->_symbols[_symIndex].c_str());
-        GetContext()->ReportError(GetLocation(), message);
-    }
-
-    return pInfo;
+    return _pVarInfo;
 }

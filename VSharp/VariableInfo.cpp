@@ -24,14 +24,3 @@ ExpressionResult *VariableInfo::CalculateResult(ModuleDeclaratorNode *pScope)
 {
     return new ExpressionResult(GetSymbol());
 }
-
-void VariableInfo::ReferenceFrom(ModuleDeclaratorNode *pScope)
-{
-    // This should create things if not already created and no-op otherwise
-    _regIndexMap[pScope]._referenced = true;
-}
-
-const PerFunctionInfo &VariableInfo::GetFunctionInfo(ModuleDeclaratorNode *pScope)
-{
-    return _regIndexMap[pScope];
-}

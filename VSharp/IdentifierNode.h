@@ -17,4 +17,6 @@ public:
 
 private:
     int _symIndex;
+    VariableInfo* _pVarInfo;
+    TypeInfo* _pTypeInfo;
 };

@@ -12,7 +12,6 @@ public:
         //printf("Destroying ArrayTypeInfo\n");
     }
 
-    unsigned int GetSize() override;
     TypeClass GetTypeClass() override;
     std::string DebugPrint() override;
     std::string GetTypeName() override;

@@ -75,8 +75,10 @@ TypeInfo *TypeNode::GetTypeInfo()
             _pTypeInfo = GetContext()->_typeCollection.GetVoidType();
             break;
 
+        case TypeClass::Enum:
         case TypeClass::Generic:
         case TypeClass::Array:
+        case TypeClass::Static:
             throw "Not expected here";
             break;
         }

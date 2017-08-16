@@ -6,12 +6,6 @@ ArrayTypeInfo::ArrayTypeInfo(TypeInfo *pBaseType)
     _pBaseType = pBaseType;
 }
 
-unsigned int ArrayTypeInfo::GetSize()
-{
-    // Somebody asking for the size will always get a pointer size here
-    return 4;
-}
-
 TypeClass ArrayTypeInfo::GetTypeClass()
 {
     return TypeClass::Array;

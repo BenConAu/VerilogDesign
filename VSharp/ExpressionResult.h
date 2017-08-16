@@ -4,7 +4,7 @@
 #include <vector>
 #include <memory>
 
-class TypeInfo;
+class StaticTypeInfo;
 
 // An ExpressionResult stores everything needed when an expression finishes and
 // includes anything that will be freed when the result is no longer needed.
@@ -14,6 +14,7 @@ class TypeInfo;
 struct ExpressionResult
 {
     ExpressionResult(const std::string& str);
+    ExpressionResult(StaticTypeInfo* pInfo);
 
     std::string DebugPrint();
 
@@ -21,4 +22,5 @@ struct ExpressionResult
 
 private:
     std::string _result;
+    StaticTypeInfo* _pStaticInfo;
 };

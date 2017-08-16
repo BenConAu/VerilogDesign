@@ -9,18 +9,6 @@ class TypeInfo;
 class ExpressionResult;
 enum class VariableLocationType;
 
-struct PerFunctionInfo
-{
-    PerFunctionInfo()
-    {
-        _referenced = false;
-        _allocated = false;
-    }
-
-    bool _referenced;
-    bool _allocated;
-};
-
 class VariableInfo : public SymbolInfo
 {
   public:
@@ -35,10 +23,6 @@ class VariableInfo : public SymbolInfo
     VariableLocationType GetLocationType() const { return _locationType; }
     ExpressionResult *CalculateResult(ModuleDeclaratorNode *pScope);
 
-    void ReferenceFrom(ModuleDeclaratorNode *pScope);
-    
-    const PerFunctionInfo& GetFunctionInfo(ModuleDeclaratorNode *pScope);
-
     TypeInfo *GetTypeInfo() { return _pType; }
 
   private:
@@ -47,7 +31,4 @@ class VariableInfo : public SymbolInfo
 
     // C++ type of variable
     TypeInfo *_pType;
-
-    // Register allocated by scope (globals have multiple register locations mapped)
-    std::map<ModuleDeclaratorNode *, PerFunctionInfo> _regIndexMap;
 };

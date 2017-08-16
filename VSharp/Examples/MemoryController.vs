@@ -1,3 +1,8 @@
+enum ControllerStatus
+{
+  Error,
+}
+
 module MemoryController(
   out uint32 mcRamOut,         // [Output] RAM at requested address
   out uint<2> mcStatus,        // [Output] Status of controller (0 means not ready, 1 means ready, 2 means error)
@@ -95,7 +100,7 @@ module MemoryController(
     uint64 tlbEntry,
     out uint<20> tlbPhysPage)
   {
-    GetTLBPhysPage = tlbEntry[19:0];
+    tlbPhysPage = tlbEntry[19:0];
   }
 
   bool GetTLBValid(
@@ -129,7 +134,7 @@ module MemoryController(
     {
       //$display("Address maps to invalid TLB entry %h", reqTLBEntry);
 
-      mcStatus = `MCError;
+      mcStatus = ControllerStatus.Error;
       transition Error;
     }
     else

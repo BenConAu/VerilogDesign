@@ -3,7 +3,7 @@
 #include "ExpressionNode.h"
 #include "VSharp.tab.h"
 
-class StructTypeInfo;
+class StaticTypeInfo;
 
 class FieldSelectionNode : public ExpressionNode
 {
@@ -12,7 +12,6 @@ class FieldSelectionNode : public ExpressionNode
         PSLCompilerContext *pContext,
         const YYLTYPE &location,
         ASTNode *pExpr,
-        bool fPointer,
         int symIndex);
 
     void VerifyNodeImpl() override;
@@ -22,8 +21,7 @@ class FieldSelectionNode : public ExpressionNode
 
   private:
     int _fieldSymIndex;
-    bool _fPointer;
 
     // Stored during Verification
-    StructTypeInfo *_pStructTypeInfo;
+    StaticTypeInfo *_pStaticTypeInfo;
 };

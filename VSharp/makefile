@@ -11,6 +11,10 @@ PSLcc: lex.yy.c \
 	   BitSelectionNode.h \
 	   ConstantNode.cpp \
 	   ConstantNode.h \
+	   EnumDefinitionNode.cpp \
+	   EnumDefinitionNode.h \
+	   EnumTypeInfo.cpp \
+	   EnumTypeInfo.h \
 	   ExpressionNode.cpp \
 	   ExpressionNode.h \
 	   ExpressionResult.cpp \
@@ -91,6 +95,8 @@ PSLcc: lex.yy.c \
 	   AssignmentNode.cpp \
 	   BitSelectionNode.cpp \
 	   ConstantNode.cpp \
+	   EnumDefinitionNode.cpp \
+	   EnumTypeInfo.cpp \
 	   ExpressionNode.cpp \
 	   ExpressionResult.cpp \
 	   FieldSelectionNode.cpp \

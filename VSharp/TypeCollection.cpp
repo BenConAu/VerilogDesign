@@ -76,3 +76,18 @@ void TypeCollection::AddStructType(int symIndex, StructTypeInfo* pInfo)
 {
     _structTypes[symIndex] = std::unique_ptr<StructTypeInfo>(pInfo);
 }
+
+void TypeCollection::AddEnumType(int symIndex, EnumTypeInfo* pInfo)
+{
+    _enumTypes[symIndex] = std::unique_ptr<EnumTypeInfo>(pInfo);
+}
+
+EnumTypeInfo* TypeCollection::GetEnumType(int symIndex)
+{
+    if (_enumTypes.find(symIndex) != _enumTypes.end())
+    {
+        return _enumTypes[symIndex].get();
+    }
+
+    return nullptr;
+}

@@ -48,7 +48,7 @@ int PSLCompilerContext::AddSymbol(const char *pszSymbol)
     return (_symbols.size() - 1);
 }
 
-void PSLCompilerContext::AddStructDef(ASTNode *pNode)
+void PSLCompilerContext::AddTypeDef(ASTNode *pNode)
 {
     auto rootStart = _rootNodes.begin();
 

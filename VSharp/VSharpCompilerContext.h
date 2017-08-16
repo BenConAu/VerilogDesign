@@ -23,7 +23,7 @@ class PSLCompilerContext
     void Parse();
     void SetEntryPoint(FunctionDeclaratorNode *pNode);
 
-    void AddStructDef(ASTNode *pNode);
+    void AddTypeDef(ASTNode *pNode);
     void AddModuleDef(ASTNode *pNode);
     void AddGlobal(ASTNode *pNode);
 

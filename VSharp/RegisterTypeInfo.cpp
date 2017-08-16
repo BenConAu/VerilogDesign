@@ -7,12 +7,6 @@ RegisterTypeInfo::RegisterTypeInfo(int bitLength)
     _bitLength = bitLength;
 }
 
-unsigned int RegisterTypeInfo::GetSize()
-{
-    // All basic types are size 4
-    return 4;
-}
-
 TypeClass RegisterTypeInfo::GetTypeClass()
 {
     return TypeClass::Register;

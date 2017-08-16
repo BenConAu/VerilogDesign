@@ -24,7 +24,7 @@ public:
 
     unsigned int GetSize()
     {
-        if (_dimension == -1)
+/*        if (_dimension == -1)
         {
             return _pType->GetSize();
         }
@@ -32,7 +32,8 @@ public:
         {
             //printf("About to deref type %p\n", _pType);
             return _pType->GetSize() * _dimension;
-        }
+        }*/
+        return -1;
     }
 
 private:

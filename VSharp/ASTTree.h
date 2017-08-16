@@ -2,6 +2,7 @@
 #include "ASTNode.h"
 #include "BitSelectionNode.h"
 #include "ConstantNode.h"
+#include "EnumDefinitionNode.h"
 #include "FieldSelectionNode.h"
 #include "FunctionCallNode.h"
 #include "FunctionDeclaratorNode.h"

@@ -10,13 +10,14 @@ enum class TypeClass
     Struct,
     Array,
     Generic,
-    Register
+    Register,
+    Enum,
+    Static,
 };
 
 class TypeInfo
 {
   public:
-    virtual unsigned int GetSize() = 0;
     virtual TypeClass GetTypeClass() = 0;
     virtual std::string DebugPrint() = 0;
     virtual std::string GetTypeName() = 0;
