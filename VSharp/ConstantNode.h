@@ -9,12 +9,10 @@ public:
     {
         Bool,
         Word,
-        Float,
     };
 
 public:
     ConstantNode(PSLCompilerContext* pContext, const YYLTYPE& location, ConstantType t, int v);
-    ConstantNode(PSLCompilerContext* pContext, const YYLTYPE& location, float v);
     ConstantNode(PSLCompilerContext* pContext, const YYLTYPE& location, ConstantType t);
 
     bool IsConstant() const override;
@@ -27,6 +25,5 @@ private:
 
 private:
     int _intValue;
-    float _floatValue;
     ConstantType _type;
 };

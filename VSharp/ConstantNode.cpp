@@ -10,12 +10,6 @@ ConstantNode::ConstantNode(PSLCompilerContext *pContext, const YYLTYPE& location
     _type = t;
 }
 
-ConstantNode::ConstantNode(PSLCompilerContext *pContext, const YYLTYPE& location, float v) : ExpressionNode(pContext, location)
-{
-    _floatValue = v;
-    _type = Float;
-}
-
 ConstantNode::ConstantNode(PSLCompilerContext *pContext, const YYLTYPE& location, ConstantType t) : ExpressionNode(pContext, location)
 {
     _intValue = 0;
@@ -30,11 +24,6 @@ int ConstantNode::GetInteger()
     case Bool:
         return _intValue;
 
-    case Float:
-        int intValue;
-        ::memcpy(&intValue, &_floatValue, 4);
-        return intValue;
-
     default:
         throw "Not an integer";
     }
@@ -47,8 +36,14 @@ bool ConstantNode::IsConstant() const
 
 void ConstantNode::VerifyNodeImpl()
 {
-    // Constants are 32 bit unless we extend things somehow
-    SetType(GetContext()->_typeCollection.GetRegisterType(32));
+    if (_type == Bool)
+    {
+        SetType(GetContext()->_typeCollection.GetRegisterType(1));
+    }
+    else
+    {
+        SetType(GetContext()->_typeCollection.GetRegisterType(32));
+    }
 }
 
 ExpressionResult *ConstantNode::CalculateResult()
