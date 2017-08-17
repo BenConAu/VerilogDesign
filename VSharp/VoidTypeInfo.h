@@ -6,7 +6,7 @@
 class VoidTypeInfo : public TypeInfo
 {
   public:
-    VoidTypeInfo(int bitLength);
+    VoidTypeInfo() {}
     TypeClass GetTypeClass() override { return TypeClass::Void; }
     std::string DebugPrint() override { return "VoidTypeInfo"; }
     std::string GetTypeName() override { return "void"; }

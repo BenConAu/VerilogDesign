@@ -3,9 +3,11 @@
 #include "VSharp.tab.h"
 #include "GenericTypeInfo.h"
 #include "StructTypeInfo.h"
+#include "VoidTypeInfo.h"
 
 TypeCollection::TypeCollection()
 {
+    _voidType.reset(new VoidTypeInfo());
 }
 
 StructTypeInfo* TypeCollection::GetStructType(int symIndex)

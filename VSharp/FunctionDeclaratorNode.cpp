@@ -78,6 +78,20 @@ void FunctionDeclaratorNode::ProcessNodeImpl()
 
         // Since somebody is expanding a function, actually do the processing
         ASTNode::ProcessNodeImpl();
+
+        ListNode* pListNode = dynamic_cast<ListNode*>(GetChild(GetChildCount() - 1));
+        if (pListNode == nullptr)
+        {
+            // We only have a single child that is an expression. Get the result
+            // from it and save it for the function call to use.
+            ExpressionNode* pExpr = dynamic_cast<ExpressionNode*>(GetChild(GetChildCount() - 1));
+
+            _lastResult.reset(pExpr->TakeResult());
+        }
+        else
+        {
+            _lastResult.reset();
+        }
     }
 }
 

@@ -2,6 +2,7 @@
 
 #include "VSharpCompilerContext.h"
 #include "ASTNode.h"
+#include "TypeNode.h"
 #include <stack>
 
 class FunctionCallNode;
@@ -27,6 +28,9 @@ public:
 
     void SetCall(FunctionCallNode* pCall);
 
+    TypeNode* GetReturnType() { return dynamic_cast<TypeNode*>(GetChild(0)); }
+    ExpressionResult* GetResult() { return _lastResult.get(); }
+
     void PreVerifyNodeImpl() override;
     void VerifyNodeImpl() override;
     void ProcessNodeImpl() override;
@@ -46,4 +50,7 @@ private:
 
     // The call that we are currently expanding
     FunctionCallNode* _pCallNode;
+
+    // The result from the last expansion
+    std::unique_ptr<ExpressionResult> _lastResult;
 };

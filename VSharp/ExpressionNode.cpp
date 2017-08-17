@@ -5,7 +5,8 @@ TypeInfo *ExpressionNode::GetTypeInfo()
 {
     if (_pType == nullptr)
     {
-        GetContext()->ReportError(_location, "Internal compiler error: Unset type on expression");
+        //GetContext()->ReportError(_location, "Internal compiler error: Unset type on expression");
+        //throw "Unset type on expression";
     }
 
     return _pType;

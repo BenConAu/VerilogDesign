@@ -1,25 +1,26 @@
 enum ControllerStatus
 {
   Error,
+  MCWaiting,
 }
 
 module MemoryController(
-  out uint32 mcRamOut,         // [Output] RAM at requested address
-  out uint<2> mcStatus,        // [Output] Status of controller (0 means not ready, 1 means ready, 2 means error)
-  uint32 mcRamAddress,         // [Input] RAM address requested
-  uint32 mcRamIn,              // [Input] RAM to write
-  bool mcReadReq,              // [Input] RAM read request
-  bool mcWriteReq,             // [Input] RAM write request
-  bool mcAddrVirtual,          // [Input] Virtual flag for RAM
-  bool mcExecMode,             // [Input] Execution mode for RAM
-  uint32 phRamIn,              // [Input]  RAM at requested address
-  out uint32 phRamAddress,     // [Output] RAM address requested
-  out uint32 phRamOut,         // [Output] RAM to write
-  out bool phReadReq,          // [Output] RAM read request
-  out bool phWriteReq,         // [Output] RAM write request
-  uint32 kptAddress,           // [Input] Page table address
-  uint32 uptAddress,           // [Input] Page table address
-  out uint32 debug             // [Output] Debug port
+  out uint32 mcRamOut,            // [Output] RAM at requested address
+  out ControllerStatus mcStatus,  // [Output] Status of controller (0 means not ready, 1 means ready, 2 means error)
+  uint32 mcRamAddress,            // [Input] RAM address requested
+  uint32 mcRamIn,                 // [Input] RAM to write
+  bool mcReadReq,                 // [Input] RAM read request
+  bool mcWriteReq,                // [Input] RAM write request
+  bool mcAddrVirtual,             // [Input] Virtual flag for RAM
+  bool mcExecMode,                // [Input] Execution mode for RAM
+  uint32 phRamIn,                 // [Input]  RAM at requested address
+  out uint32 phRamAddress,        // [Output] RAM address requested
+  out uint32 phRamOut,            // [Output] RAM to write
+  out bool phReadReq,             // [Output] RAM read request
+  out bool phWriteReq,            // [Output] RAM write request
+  uint32 kptAddress,              // [Input] Page table address
+  uint32 uptAddress,              // [Input] Page table address
+  out uint32 debug                // [Output] Debug port
   )
 {
   bool isRead;
@@ -96,11 +97,9 @@ module MemoryController(
     tlbVirtPage = tlbEntry[51:32];
   }
 
-  void GetTLBPhysPage(
-    uint64 tlbEntry,
-    out uint<20> tlbPhysPage)
+  uint<20> GetTLBPhysPage(uint64 tlbEntry)
   {
-    tlbPhysPage = tlbEntry[19:0];
+    return tlbEntry[19:0];
   }
 
   bool GetTLBValid(
@@ -143,7 +142,7 @@ module MemoryController(
       {
         //$display("Attempting access to protected page from user mode, execMode = %h", mcExecMode);
 
-        mcStatus = `MCError;
+        mcStatus = ControllerStatus.Error;
         transition Error;
       }
       else
@@ -161,7 +160,7 @@ module MemoryController(
         phWriteReq = reqWriteReq;
         phRamOut = reqWriteData;
         isRead = reqReadReq;
-        mcStatus = `MCWaiting;
+        mcStatus = ControllerStatus.MCWaiting;
         transition PRamWait1;
       }
     } 
@@ -169,7 +168,7 @@ module MemoryController(
 
   state initial
   {
-    mcStatus = `MCWaiting;
+    mcStatus = ControllerStatus.MCWaiting;
     isRead = 0;
   }
 
@@ -187,7 +186,7 @@ module MemoryController(
         phWriteReq = mcWriteReq;
         phRamOut = mcRamIn;
         isRead = mcReadReq;
-        mcStatus = `MCWaiting;
+        mcStatus = ControllerStatus.MCWaiting;
         transition PRamWait1;
       }
       else
@@ -238,7 +237,7 @@ module MemoryController(
     }
     else
     {
-      mcStatus = `MCWaiting;
+      mcStatus = ControllerStatus.MCWaiting;
     }
   }
 

@@ -27,6 +27,8 @@ FunctionCallNode::FunctionCallNode(
 
 void FunctionCallNode::VerifyNodeImpl()
 {
+    TypeNode* pTypeNode = GetDeclarator()->GetReturnType();
+    SetType(pTypeNode->GetTypeInfo());
 }
 
 FunctionDeclaratorNode* FunctionCallNode::GetDeclarator()
@@ -42,7 +44,19 @@ ExpressionResult *FunctionCallNode::CalculateResult()
     GetDeclarator()->ProcessNode();
     GetDeclarator()->SetCall(nullptr);
 
-    return nullptr;
+    if (GetDeclarator()->GetReturnType()->GetTypeInfo()->GetTypeClass() != TypeClass::Void)
+    {
+        printf("Function call getting a result\n");
+
+        // If the function is not void then it returns something
+        return GetDeclarator()->GetResult();        
+    }
+    else
+    {
+        printf("Function call not getting a result\n");
+        
+        return nullptr;
+    }
 }
 
 ModuleInfo *FunctionCallNode::GetModuleInfo()
