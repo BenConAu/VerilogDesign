@@ -21,6 +21,7 @@ public:
   const char *GetDebugName() override { return "FunctionCallNode"; }
 
   ExpressionNode* GetParameter(size_t index) { return dynamic_cast<ExpressionNode*>(GetChild(index + 1)); }
+  size_t GetParameterCount() const { return (GetChildCount() - 1); }
   FunctionDeclaratorNode* GetDeclarator();
   ModuleInfo *GetModuleInfo();
 

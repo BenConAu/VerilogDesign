@@ -27,6 +27,11 @@ FunctionCallNode::FunctionCallNode(
 
 void FunctionCallNode::VerifyNodeImpl()
 {
+    if (GetParameterCount() != GetDeclarator()->GetParameterCount())
+    {
+        GetContext()->ReportError(GetLocation(), "Wrong number of arguments to function");
+    }
+
     TypeNode* pTypeNode = GetDeclarator()->GetReturnType();
     SetType(pTypeNode->GetTypeInfo());
 }
