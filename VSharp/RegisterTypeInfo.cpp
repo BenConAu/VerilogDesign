@@ -5,6 +5,11 @@
 RegisterTypeInfo::RegisterTypeInfo(int bitLength)
 {
     _bitLength = bitLength;
+
+    if (_bitLength > 64)
+    {
+        throw "Gotcha!";
+    }
 }
 
 TypeClass RegisterTypeInfo::GetTypeClass()

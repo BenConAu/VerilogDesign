@@ -30,7 +30,8 @@ public:
 
     TypeNode* GetReturnType() { return dynamic_cast<TypeNode*>(GetChild(0)); }
     ExpressionResult* GetResult() { return _lastResult.get(); }
-
+    size_t GetParameterCount() const { return (GetChildCount() - 2); }
+    
     void PreVerifyNodeImpl() override;
     void VerifyNodeImpl() override;
     void ProcessNodeImpl() override;

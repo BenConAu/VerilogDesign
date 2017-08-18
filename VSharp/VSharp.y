@@ -177,14 +177,14 @@ expression_statement:
 
 selection_statement:
       IF_TOKEN LEFT_PAREN expression RIGHT_PAREN selection_rest_statement 
-                                                                    { $$ = $5; dynamic_cast<IfStatementNode*>($$)->SetStatementList($3); }
+                                                                    { $$ = $5; dynamic_cast<IfStatementNode*>($$)->SetExpression($3); }
     | WHILE_TOKEN LEFT_PAREN expression RIGHT_PAREN compound_statement
                                                                     { $$ = new WhileStatementNode(pContext, $3, $5); }
     ;
 
 selection_rest_statement:
-      compound_statement ELSE_TOKEN compound_statement              { $$ = new IfStatementNode(pContext, $1, $3); }
-    | compound_statement                                            { $$ = new IfStatementNode(pContext, $1, nullptr); }
+      compound_statement ELSE_TOKEN compound_statement              { $$ = new IfStatementNode(pContext, @$, $1, $3); }
+    | compound_statement                                            { $$ = new IfStatementNode(pContext, @$, $1, nullptr); }
     ;
 
 expression:

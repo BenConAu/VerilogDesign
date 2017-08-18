@@ -1692,7 +1692,7 @@ yyreduce:
 
   case 20:
 #line 180 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = (yyvsp[0].pNode); dynamic_cast<IfStatementNode*>((yyval.pNode))->SetStatementList((yyvsp[-2].pNode)); }
+    { (yyval.pNode) = (yyvsp[0].pNode); dynamic_cast<IfStatementNode*>((yyval.pNode))->SetExpression((yyvsp[-2].pNode)); }
 #line 1697 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
@@ -1704,13 +1704,13 @@ yyreduce:
 
   case 22:
 #line 186 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new IfStatementNode(pContext, (yyvsp[-2].pNode), (yyvsp[0].pNode)); }
+    { (yyval.pNode) = new IfStatementNode(pContext, (yyloc), (yyvsp[-2].pNode), (yyvsp[0].pNode)); }
 #line 1709 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 23:
 #line 187 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new IfStatementNode(pContext, (yyvsp[0].pNode), nullptr); }
+    { (yyval.pNode) = new IfStatementNode(pContext, (yyloc), (yyvsp[0].pNode), nullptr); }
 #line 1715 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 

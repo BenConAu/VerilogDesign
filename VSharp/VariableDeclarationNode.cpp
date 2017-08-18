@@ -55,14 +55,15 @@ void VariableDeclarationNode::PreProcessNodeImpl()
     VariableInfo* pInfo = dynamic_cast<VariableInfo*>(GetContext()->_symbolTable.GetInfo(_symIndex, pModule));
 
     // Find out the bit width
-    RegisterTypeInfo* pRegInfo = dynamic_cast<RegisterTypeInfo*>(pInfo->GetTypeInfo());
-
     if (_arraySize == -1)
     {
+        RegisterTypeInfo* pRegInfo = dynamic_cast<RegisterTypeInfo*>(pInfo->GetTypeInfo());
         GetContext()->OutputLine("reg[%d:0] %s;", pRegInfo->GetBitLength() - 1, pInfo->GetSymbol());
     }
     else
     {
+        ArrayTypeInfo* pArrayInfo = dynamic_cast<ArrayTypeInfo*>(pInfo->GetTypeInfo());
+        RegisterTypeInfo* pRegInfo = dynamic_cast<RegisterTypeInfo*>(pArrayInfo->GetBaseType());
         GetContext()->OutputLine("reg[%d:0] %s[%d:0];", pRegInfo->GetBitLength() - 1, pInfo->GetSymbol(), _arraySize - 1);
     }
 }

@@ -2,6 +2,7 @@ enum ControllerStatus
 {
   Error,
   MCWaiting,
+  MCReady,
 }
 
 module MemoryController(
@@ -108,11 +109,10 @@ module MemoryController(
     return tlbEntry[63:63];
   }
 
-  void GetTLBProtected(
-    uint64 tlbEntry,
-    out bool tlbProtected)
+  bool GetTLBProtected(
+    uint64 tlbEntry)
   {
-    tlbProtected = tlbEntry[62:62];
+    return tlbEntry[62:62];
   }
 
   void GetPageHash(
@@ -169,7 +169,7 @@ module MemoryController(
   state initial
   {
     mcStatus = ControllerStatus.MCWaiting;
-    isRead = 0;
+    isRead = false;
   }
 
   state Ready
@@ -214,14 +214,14 @@ module MemoryController(
           // TLB miss - need to lookup in page table. The page table
           // currently is a single level, and only supports up to 256
           // pages to keep it easy (8 bit index).
-          phRamAddress = CalcPTEntryAddress(mcRamAddress);
-          phReadReq = 1;
+          CalcPTEntryAddress(mcRamAddress, out phRamAddress);
+          phReadReq = true;
 
           // Save the address we are looking up or storing at
           savedVirtAddr = mcRamAddress;
 
           // Save the address of the first word of the PT entry
-          savedPTReadAddr = CalcPTEntryAddress(mcRamAddress);
+          CalcPTEntryAddress(mcRamAddress, out savedPTReadAddr);
 
           // Save our request parameters
           savedReadReq = mcReadReq;
@@ -229,7 +229,7 @@ module MemoryController(
           savedWriteData = mcRamIn;
 
           // Wait for the first word to read out
-          mcStatus = `MCWaiting;
+          mcStatus = ControllerStatus.MCWaiting;
           transition VPTWait1;
         }
 
@@ -246,7 +246,7 @@ module MemoryController(
     // Need to wait for another clock for this to complete
     //$display("PR wait 1 for %h", phRamAddress);
 
-    mcStatus = `MCWaiting;
+    mcStatus = ControllerStatus.MCWaiting;
     transition PRamWait2;
   }
 
@@ -264,7 +264,7 @@ module MemoryController(
       //$display("Finish PRWait2 with isRead not set");
     }
 
-    mcStatus = `MCReady;
+    mcStatus = ControllerStatus.MCReady;
     transition Ready;
   }
 
@@ -273,7 +273,7 @@ module MemoryController(
     //$display("Waiting for read of page table");
 
     // Wait for read to complete
-    mcStatus = `MCWaiting;
+    mcStatus = ControllerStatus.MCWaiting;
     transition VPTWait2;
   }
 
@@ -286,7 +286,7 @@ module MemoryController(
 
     // Now get second half
     phRamAddress = savedPTReadAddr + 4;
-    mcStatus = `MCWaiting;
+    mcStatus = ControllerStatus.MCWaiting;
     transition VPTWait3;
   }
 
@@ -295,7 +295,7 @@ module MemoryController(
     //$display("Waiting again for read of page table");
 
     // Wait for read to complete
-    mcStatus = `MCWaiting;
+    mcStatus = ControllerStatus.MCWaiting;
     transition VPTWait4;
   }
 
@@ -318,7 +318,7 @@ module MemoryController(
   state Error
   {
     // Wait a clock for the error to register
-    mcStatus = `MCWaiting;
+    mcStatus = ControllerStatus.MCWaiting;
 
     transition Ready;
   }
