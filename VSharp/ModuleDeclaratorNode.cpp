@@ -122,11 +122,7 @@ void ModuleDeclaratorNode::PreProcessNodeImpl()
 
     }
 
-    GetContext()->OutputLine(")");
-    GetContext()->DecreaseIndent();
-
-    GetContext()->OutputLine("begin");
-    GetContext()->IncreaseIndent();
+    GetContext()->OutputLine(");");
 
     // Define states so they are readable
     GetContext()->OutputLine("// State definitions");
@@ -172,7 +168,6 @@ void ModuleDeclaratorNode::ProcessNodeImpl()
 
     // Start the case statement
     GetContext()->OutputLine("case(fsmState)");
-    GetContext()->OutputLine("begin");
     GetContext()->IncreaseIndent();
 
     for (size_t i = 0; i < GetChildCount(); i++)
@@ -187,7 +182,7 @@ void ModuleDeclaratorNode::ProcessNodeImpl()
 
     // End the case statement
     GetContext()->DecreaseIndent();
-    GetContext()->OutputLine("end");
+    GetContext()->OutputLine("endcase");
 
     // End the always statement
     GetContext()->DecreaseIndent();
@@ -198,5 +193,5 @@ void ModuleDeclaratorNode::PostProcessNodeImpl()
 {
     // End the module
     GetContext()->DecreaseIndent();
-    GetContext()->OutputLine("end");
+    GetContext()->OutputLine("endmodule");
 }

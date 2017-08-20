@@ -3,8 +3,7 @@ module ArrayTest(
   reset,
   in1,
   out1
-  )
-begin
+  );
   // State definitions
   `define __initial 0
   `define __StartState 1
@@ -14,17 +13,23 @@ begin
   input wire[31:0] in1;
   output reg[31:0] out1;
   reg[31:0] arr[7:0];
+  reg[31:0] index;
+  initial
+  begin
+    # 10 index = 1;
+    # 10 index = 2;
+  end
   reg [7:0] fsmState = 0;
   always @(posedge clk)
   begin
     case(fsmState)
-    begin
       `__initial: begin
         fsmState <= `__StartState;
       end
       `__StartState: begin
-        out1 <= arr[0];
+        out1 <= arr[index];
+        index <= index + 1;
       end
-    end
+    endcase
   end
-end
+endmodule

@@ -4,8 +4,7 @@ module EnumTest(
   in1,
   out1,
   out2
-  )
-begin
+  );
   // State definitions
   `define __initial 0
   `define __StartState 1
@@ -19,7 +18,6 @@ begin
   always @(posedge clk)
   begin
     case(fsmState)
-    begin
       `__initial: begin
         fsmState <= `__StartState;
         out1 <= 0;
@@ -29,6 +27,6 @@ begin
         out1 <= 1;
         out2 <= 1;
       end
-    end
+    endcase
   end
-end
+endmodule

@@ -3,19 +3,18 @@
 #include "ExpressionNode.h"
 #include "VSharp.tab.h"
 
-class PackByteNode : public ASTNode
+class DriveListDefinitionNode : public ASTNode
 {
 public:
-  PackByteNode(
+  DriveListDefinitionNode(
       PSLCompilerContext *pContext,
       const YYLTYPE &location,
-      ASTNode *pDest,
-      ASTNode *pSrc,
-      ASTNode *pIndex);
+      ASTNode *pList);
 
   void VerifyNodeImpl() override;
+  void PreProcessNodeImpl() override;
   void PostProcessNodeImpl() override;
-  const char *GetDebugName() override { return "PackByteNode"; }
+  const char *GetDebugName() override { return "DriveListDefinitionNode"; }
 
 private:
   YYLTYPE _location;

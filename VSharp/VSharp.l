@@ -56,7 +56,7 @@
 "initial"            { return INITIAL_TOKEN; }
 "bool"               { return BOOL_TOKEN; }
 "struct"             { return STRUCT_TOKEN; }
-"packbyte"           { return PACKBYTE_TOKEN; }
+"drive"              { return DRIVE_TOKEN; }
 "module"             { return MODULE_TOKEN; }
 "transition"         { return TRANSITION_TOKEN; }
 "return"             { return RETURN_TOKEN; }

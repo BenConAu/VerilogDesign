@@ -1,7 +1,7 @@
 #include "AssignmentNode.h"
 #include "VSharpCompilerContext.h"
 #include "ModuleDeclaratorNode.h"
-#include "../PhaethonObjWriter/ObjWriter.h"
+#include "DriveDefinitionNode.h"
 
 AssignmentNode::AssignmentNode(
     PSLCompilerContext *pContext, 
@@ -31,6 +31,7 @@ void AssignmentNode::VerifyNodeImpl()
 void AssignmentNode::PostProcessNodeImpl()
 {
     ModuleDeclaratorNode *pFunc = GetTypedParent<ModuleDeclaratorNode>();
+    DriveDefinitionNode *pDrive = GetTypedParent<DriveDefinitionNode>();
 
     ExpressionNode *pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));
     ExpressionNode *pRight = dynamic_cast<ExpressionNode *>(GetChild(1));
@@ -46,5 +47,18 @@ void AssignmentNode::PostProcessNodeImpl()
     //leftResult->DebugPrint();
     //rightResult->DebugPrint();
 
-    GetContext()->OutputLine("%s <= %s;", leftResult->GetString().c_str(), rightResult->GetString().c_str());
+    if (pDrive == nullptr)
+    {
+        // Regular NBA somewhere
+        GetContext()->OutputLine("%s <= %s;", leftResult->GetString().c_str(), rightResult->GetString().c_str());
+    }
+    else
+    {
+        // Part of an initial block, get the timing information
+        GetContext()->OutputLine(
+            "# %d %s = %s;", 
+            pDrive->GetDelta(),
+            leftResult->GetString().c_str(), 
+            rightResult->GetString().c_str());
+    }
 }

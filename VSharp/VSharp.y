@@ -41,6 +41,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token AND_OP
 %token OR_OP
 %token ENUM_TOKEN
+%token DRIVE_TOKEN
 
 %token <intVal> INTCONSTANT
 %token <intVal> BOOLCONSTANT
@@ -76,7 +77,6 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token ELSE_TOKEN
 %token WHILE_TOKEN
 %token SIZEOF_TOKEN
-%token PACKBYTE_TOKEN
 %token RSP_TOKEN
 %token <symIndex> IDENTIFIER
 %type <pNode> variable_identifier
@@ -104,7 +104,6 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> external_declaration
 %type <pNode> module_param_decl
 %type <pNode> module_header_with_parameters
-%type <pNode> packbyte_statement
 %type <pNode> function_call_header
 %type <pNode> function_call_header_no_param
 %type <pNode> function_call
@@ -133,6 +132,9 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> glom_list
 %type <pNode> enum_definition
 %type <pNode> enum_list
+%type <pNode> drive_list_definition
+%type <pNode> drive_statement_list
+%type <pNode> drive_definition
 
 %%
 
@@ -168,7 +170,6 @@ statement:
     | selection_statement                                           { $$ = $1; }
     | declaration_statement                                         { $$ = $1; }
     | jump_statement                                                { $$ = $1; }
-    | packbyte_statement                                            { $$ = $1; }
     ;
 
 expression_statement:
@@ -364,6 +365,20 @@ module_member:
       module_state                                                  { $$ = $1; }
     | declaration_statement                                         { $$ = $1; }
     | function_definition                                           { $$ = $1; }
+    | drive_list_definition                                         { $$ = $1; }
+    ;
+
+drive_list_definition:
+      DRIVE_TOKEN LEFT_BRACE drive_statement_list RIGHT_BRACE       { $$ = new DriveListDefinitionNode(pContext, @$, $3); }
+    ;
+
+drive_statement_list:
+      drive_definition                                              { $$ = new ListNode(pContext, $1); }
+    | drive_statement_list drive_definition                         { $$ = $1; $$->AddNode($2); }
+    ;
+
+drive_definition:
+      INTCONSTANT COLON assignment_expression SEMICOLON             { $$ = new DriveDefinitionNode(pContext, @$, $1, $3); }
     ;
 
 module_state:
@@ -421,11 +436,6 @@ return_statement:
 
 transition_statement:
       TRANSITION_TOKEN IDENTIFIER SEMICOLON                         { $$ = new TransitionNode(pContext, $2); }
-    ;
-
-packbyte_statement:
-      PACKBYTE_TOKEN LEFT_PAREN expression COMMA expression COMMA expression RIGHT_PAREN SEMICOLON
-                                                                    { $$ = new PackByteNode(pContext, @$, $3, $5, $7); }
     ;
 
 %%

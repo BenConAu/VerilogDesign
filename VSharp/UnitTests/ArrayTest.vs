@@ -4,6 +4,13 @@ module ArrayTest(
 	)
 {
 	uint32 arr[8];
+	uint32 index;
+
+	drive
+	{
+		10: index = 1;
+		10: index = 2;
+	}
 
 	state initial
 	{
@@ -12,6 +19,7 @@ module ArrayTest(
 
 	state StartState
 	{
-		out1 = arr[0];
+		out1 = arr[index];
+		index = index + 1;
 	}
 }

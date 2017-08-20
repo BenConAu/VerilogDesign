@@ -11,6 +11,10 @@ PSLcc: lex.yy.c \
 	   BitSelectionNode.h \
 	   ConstantNode.cpp \
 	   ConstantNode.h \
+	   DriveDefinitionNode.cpp \
+	   DriveDefinitionNode.h \
+	   DriveListDefinitionNode.cpp \
+	   DriveListDefinitionNode.h \
 	   EnumDefinitionNode.cpp \
 	   EnumDefinitionNode.h \
 	   EnumTypeInfo.cpp \
@@ -48,8 +52,6 @@ PSLcc: lex.yy.c \
 	   ModuleParameterNode.h \
 	   OperatorNode.cpp \
 	   OperatorNode.h \
-	   PackByteNode.cpp \
-	   PackByteNode.h \
 	   PSLCompiler.cpp \
 	   RegisterTypeInfo.cpp \
 	   RegisterTypeInfo.h \
@@ -95,6 +97,8 @@ PSLcc: lex.yy.c \
 	   AssignmentNode.cpp \
 	   BitSelectionNode.cpp \
 	   ConstantNode.cpp \
+	   DriveDefinitionNode.cpp \
+	   DriveListDefinitionNode.cpp \
 	   EnumDefinitionNode.cpp \
 	   EnumTypeInfo.cpp \
 	   ExpressionNode.cpp \
@@ -113,7 +117,6 @@ PSLcc: lex.yy.c \
 	   ModuleDeclaratorNode.cpp \
 	   ModuleParameterNode.cpp \
 	   OperatorNode.cpp \
-	   PackByteNode.cpp \
 	   PSLCompiler.cpp \
 	   StateInfo.cpp \
 	   TransitionNode.cpp \
