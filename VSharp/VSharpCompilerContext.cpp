@@ -143,3 +143,25 @@ void PSLCompilerContext::OutputString(const char *pszLabel)
         _writers[i]->OutputString(pszLabel);
     }
 }
+
+void PSLCompilerContext::OutputLine(
+    const char* pszLine
+    )
+{
+    BeginLine();
+    OutputString(pszLine);
+    EndLine();
+}
+
+void PSLCompilerContext::BeginLine()
+{
+    for (int i = 0; i < _outputIndent; i++)
+    {
+        OutputString("  ");
+    }
+}
+
+void PSLCompilerContext::EndLine()
+{
+    OutputString("\n");
+}

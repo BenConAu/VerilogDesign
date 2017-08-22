@@ -14,6 +14,9 @@
 %option bison-bridge
 %option noyywrap
 %option yylineno
+%option stack
+
+%x STRING_LITERAL
 
 %%
 "//".*"\n"           ;
@@ -70,5 +73,11 @@
 "0x"[0-9A-Fa-f]+     { yylval->intVal = strtol(yytext, nullptr, 16); return INTCONSTANT; }
 "0b"[0-1]+           { yylval->intVal = strtol(yytext, nullptr, 2); return INTCONSTANT; }
 [A-Za-z_][A-Za-z0-9_]* { yylval->symIndex = yyextra->AddSymbol(yytext); return IDENTIFIER; }
+"\""                 { yy_push_state(STRING_LITERAL, yyscanner); yyextra->StartString(); }
 .                    ;
+
+<STRING_LITERAL>"\"" { yy_pop_state(yyscanner); return STRINGLITERAL; }
+<STRING_LITERAL>"\n" { yyextra->ReportError(*yylloc, "String literal cannot span lines"); }
+<STRING_LITERAL>.    { yyextra->AppendString(yytext); }
+
 %%

@@ -17,14 +17,16 @@ void FunctionCallParamNode::VerifyNodeImpl()
             throw "Unknown identifier used as out param in function";
         }
     }
-
-    FunctionCallNode* pCall = GetTypedParent<FunctionCallNode>();
-    FunctionDeclaratorNode* pDeclNode = pCall->GetDeclarator();
-    
-    // TODO: Make a mapping from the variable here to the one in the function definition
 }
 
 ExpressionResult *FunctionCallParamNode::CalculateResult()
 {
-    return dynamic_cast<ExpressionNode*>(GetChild(0))->CalculateResult();
+    if (_literal.length() == 0)
+    {
+        return dynamic_cast<ExpressionNode*>(GetChild(0))->CalculateResult();        
+    }
+    else
+    {
+        return new ExpressionResult("\"" + _literal + "\"");
+    }
 }

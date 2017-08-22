@@ -24,6 +24,7 @@ module ArrayTest(
   begin
     case(fsmState)
       `__initial: begin
+        $monitor("%h", out1);
         fsmState <= `__StartState;
       end
       `__StartState: begin

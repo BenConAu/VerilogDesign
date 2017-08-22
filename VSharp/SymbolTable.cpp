@@ -14,6 +14,13 @@ SymbolTable::SymbolTable(PSLCompilerContext *pContext)
 
 void SymbolTable::AddBuiltin()
 {
+    FunctionInfo *pNewInfo = new FunctionInfo(
+        _pContext, 
+        _pContext->AddSymbol("__monitor"),
+        _pContext->_typeCollection.GetVoidType(),
+        -1,
+        "$monitor");
+    _symbols.emplace(std::make_pair(pNewInfo->GetSymbolIndex(), std::unique_ptr<SymbolInfo>(pNewInfo)));
 }
 
 VariableInfo *SymbolTable::AddVariable(

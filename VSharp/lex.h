@@ -219,6 +219,7 @@ void yyfree (void * ,yyscan_t yyscanner );
 
 #ifdef YY_HEADER_EXPORT_START_CONDITIONS
 #define INITIAL 0
+#define STRING_LITERAL 1
 
 #endif
 
@@ -336,9 +337,9 @@ extern int yylex \
 #undef YY_DECL
 #endif
 
-#line 74 "VSharp.l"
+#line 83 "VSharp.l"
 
 
-#line 343 "lex.h"
+#line 344 "lex.h"
 #undef yyIN_HEADER
 #endif /* yyHEADER_H */

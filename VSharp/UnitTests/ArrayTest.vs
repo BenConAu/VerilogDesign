@@ -14,6 +14,8 @@ module ArrayTest(
 
 	state initial
 	{
+		__monitor("%h", out1);
+
 		transition StartState;
 	}
 

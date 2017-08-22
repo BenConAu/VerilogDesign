@@ -32,17 +32,7 @@ class PSLCompilerContext
 
     void OutputLine(
         const char* pszLine
-        )
-    {
-        for (int i = 0; i < _outputIndent; i++)
-        {
-            OutputString("  ");
-        }
-        
-        OutputString(pszLine);
-        OutputString("\n");
-    }
-
+        );
 
     template<typename... PT> 
     void OutputLine(
@@ -51,16 +41,12 @@ class PSLCompilerContext
         )
     {
         char line[512];
-
-        for (int i = 0; i < _outputIndent; i++)
-        {
-            OutputString("  ");
-        }
-        
         sprintf(line, pszLine, params...);
-        OutputString(line);
-        OutputString("\n");
+        OutputLine(line);
     }
+
+    void BeginLine();
+    void EndLine();
 
     void IncreaseIndent() { _outputIndent++; }
     void DecreaseIndent() { _outputIndent--; }
@@ -86,6 +72,10 @@ class PSLCompilerContext
         throw std::string(errorText);
     }
 
+    void StartString() { _currentString = ""; }
+    void AppendString(char* pszText) { _currentString.push_back(pszText[0]); }
+    const std::string GetLastString() { return _currentString; }
+
   private:
     std::vector<std::unique_ptr<ASTNode>> _rootNodes;
     std::vector<std::unique_ptr<VerilogWriter>> _writers;
@@ -95,4 +85,7 @@ class PSLCompilerContext
 
     // Verification stuff
     FunctionDeclaratorNode *_pEntryPoint;
+
+    // Current string
+    std::string _currentString;
 };

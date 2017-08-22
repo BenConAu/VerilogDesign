@@ -45,6 +45,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 
 %token <intVal> INTCONSTANT
 %token <intVal> BOOLCONSTANT
+%token STRINGLITERAL
 %token AT
 %token SEMICOLON
 %token COLON
@@ -425,6 +426,7 @@ function_call_header:
 fn_call_arg:
       assignment_expression                                         { $$ = new FunctionCallParamNode(pContext, @$, false, $1); }
     | OUT_TOKEN variable_identifier                                 { $$ = new FunctionCallParamNode(pContext, @$, true, $2); }
+    | STRINGLITERAL                                                 { $$ = new FunctionCallParamNode(pContext, @$); }
     ;
 
 jump_statement:

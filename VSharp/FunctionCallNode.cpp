@@ -27,44 +27,68 @@ FunctionCallNode::FunctionCallNode(
 
 void FunctionCallNode::VerifyNodeImpl()
 {
-    if (GetParameterCount() != GetDeclarator()->GetParameterCount())
+    if (GetFunctionInfo() == nullptr)
+    {
+        GetContext()->ReportError(GetLocation(), "Unknown function");
+    }
+
+    if (GetFunctionInfo()->GetParameterCount() != -1 && GetParameterCount() != GetFunctionInfo()->GetParameterCount())
     {
         GetContext()->ReportError(GetLocation(), "Wrong number of arguments to function");
     }
 
-    TypeNode* pTypeNode = GetDeclarator()->GetReturnType();
-    SetType(pTypeNode->GetTypeInfo());
+    SetType(GetFunctionInfo()->GetReturnType());
 }
 
-FunctionDeclaratorNode* FunctionCallNode::GetDeclarator()
+FunctionInfo* FunctionCallNode::GetFunctionInfo()
 {
     ModuleDeclaratorNode *pModule = GetTypedParent<ModuleDeclaratorNode>();
-    FunctionInfo* pInfo = dynamic_cast<FunctionInfo*>(GetContext()->_symbolTable.GetInfo(_symIndex, pModule));
-    return pInfo->GetFunctionDeclarator();
+    return dynamic_cast<FunctionInfo*>(GetContext()->_symbolTable.GetInfo(_symIndex, pModule));
 }
 
 ExpressionResult *FunctionCallNode::CalculateResult()
 {
-    GetDeclarator()->SetCall(this);
-    GetDeclarator()->ProcessNode();
-    GetDeclarator()->SetCall(nullptr);
-
-    if (GetDeclarator()->GetReturnType()->GetTypeInfo()->GetTypeClass() != TypeClass::Void)
+    FunctionDeclaratorNode* pFuncDecl = GetFunctionInfo()->GetFunctionDeclarator();
+    if (pFuncDecl != nullptr)
     {
-        printf("Function call getting a result\n");
-
-        // If the function is not void then it returns something
-        return GetDeclarator()->GetResult();        
+        pFuncDecl->SetCall(this);
+        pFuncDecl->ProcessNode();
+        pFuncDecl->SetCall(nullptr);
+    
+        if (GetFunctionInfo()->GetReturnType()->GetTypeClass() != TypeClass::Void)
+        {
+            //printf("Function call getting a result\n");
+    
+            // If the function is not void then it returns something
+            return pFuncDecl->GetResult();        
+        }
+        else
+        {
+            //printf("Function call not getting a result\n");
+            
+            return nullptr;
+        }
     }
     else
     {
-        printf("Function call not getting a result\n");
-        
+        GetContext()->BeginLine();
+        GetContext()->OutputString(GetFunctionInfo()->GetVerilogName().c_str());
+        GetContext()->OutputString("(");
+
+        for (size_t i = 0; i < GetParameterCount(); i++)
+        {
+            ExpressionNode* pParam = GetParameter(i);
+            std::unique_ptr<ExpressionResult> paramResult(pParam->TakeResult());
+            
+            GetContext()->OutputString(paramResult->GetString().c_str());
+            if (i != GetParameterCount() - 1)
+            {
+                GetContext()->OutputString(", ");
+            }
+        }
+
+        GetContext()->OutputString(");");
+        GetContext()->EndLine();
         return nullptr;
     }
-}
-
-ModuleInfo *FunctionCallNode::GetModuleInfo()
-{
-    return dynamic_cast<ModuleInfo *>(GetContext()->_symbolTable.GetInfo(_symIndex, nullptr));
 }
