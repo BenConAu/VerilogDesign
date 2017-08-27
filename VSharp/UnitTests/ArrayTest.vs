@@ -11,6 +11,7 @@ module ArrayTest(
 	{
 		10: index = 1;
 		10: index = 2;
+		100: __finish;
 	}
 
 	state initial
@@ -28,6 +29,10 @@ module ArrayTest(
 	state StartState
 	{
 		out1 = arr[index];
-		index = index + 1;
+
+		if (index .< 3)
+		{
+			index = index + 1;
+		}
 	}
 }

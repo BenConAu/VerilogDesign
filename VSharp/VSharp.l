@@ -68,6 +68,7 @@
 "while"              { return WHILE_TOKEN; }
 "else"               { return ELSE_TOKEN; }
 "enum"               { return ENUM_TOKEN; }
+"__finish"           { return FINISH_TOKEN; }
 "true"               { yylval->intVal = 1; return BOOLCONSTANT; }
 "false"              { yylval->intVal = 0; return BOOLCONSTANT; }
 [0-9]+               { yylval->intVal = atoi(yytext); return INTCONSTANT; }

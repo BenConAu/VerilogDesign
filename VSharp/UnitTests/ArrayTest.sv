@@ -17,6 +17,7 @@ module ArrayTest(
   begin
     # 10 index = 1;
     # 10 index = 2;
+    # 100 $finish;
   end
   reg [7:0] fsmState = 0;
   always @(posedge clk)
@@ -33,7 +34,10 @@ module ArrayTest(
       end
       `__StartState: begin
         out1 <= arr[index];
-        index <= index + 1;
+        if (index < 3)
+        begin
+          index <= index + 1;
+        end
       end
     endcase
   end

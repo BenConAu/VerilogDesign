@@ -13,6 +13,7 @@ public:
       ASTNode *pExpr);
 
   void VerifyNodeImpl() override;
+  void PostProcessNodeImpl() override;
   const char *GetDebugName() override { return "DriveDefinitionNode"; }
 
   int GetDelta() const { return _delta; }

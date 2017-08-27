@@ -20,3 +20,15 @@ DriveDefinitionNode::DriveDefinitionNode(
 void DriveDefinitionNode::VerifyNodeImpl()
 {
 }
+
+void DriveDefinitionNode::PostProcessNodeImpl()
+{
+    // If there was a null child this indicates a finish
+    if (GetChild(0) == nullptr)
+    {
+        // Part of an initial block, get the timing information
+        GetContext()->OutputLine(
+            "# %d $finish;", 
+            GetDelta());
+    }
+}

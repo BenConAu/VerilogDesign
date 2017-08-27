@@ -43,6 +43,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token ENUM_TOKEN
 %token DRIVE_TOKEN
 %token CLOCK_TOKEN
+%token FINISH_TOKEN
 
 %token <intVal> INTCONSTANT
 %token <intVal> BOOLCONSTANT
@@ -79,7 +80,6 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token ELSE_TOKEN
 %token WHILE_TOKEN
 %token SIZEOF_TOKEN
-%token RSP_TOKEN
 %token <symIndex> IDENTIFIER
 %type <pNode> variable_identifier
 %type <pNode> primary_expression
@@ -382,6 +382,7 @@ drive_statement_list:
 
 drive_definition:
       INTCONSTANT COLON assignment_expression SEMICOLON             { $$ = new DriveDefinitionNode(pContext, @$, $1, $3); }
+    | INTCONSTANT COLON FINISH_TOKEN SEMICOLON                      { $$ = new DriveDefinitionNode(pContext, @$, $1, nullptr); }
     ;
 
 module_state:
