@@ -58,7 +58,15 @@ void VariableDeclarationNode::PreProcessNodeImpl()
     if (_arraySize == -1)
     {
         RegisterTypeInfo* pRegInfo = dynamic_cast<RegisterTypeInfo*>(pInfo->GetTypeInfo());
-        GetContext()->OutputLine("reg[%d:0] %s;", pRegInfo->GetBitLength() - 1, pInfo->GetSymbol());
+        if (pRegInfo != nullptr)
+        {
+            GetContext()->OutputLine("reg[%d:0] %s;", pRegInfo->GetBitLength() - 1, pInfo->GetSymbol());
+        }
+        else
+        {
+            ClockTypeInfo* pClockInfo = dynamic_cast<ClockTypeInfo*>(pInfo->GetTypeInfo());
+            GetContext()->OutputLine("reg clk = 0; always #5 clk = !clk;");
+        }
     }
     else
     {

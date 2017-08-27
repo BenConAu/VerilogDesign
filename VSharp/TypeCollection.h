@@ -9,6 +9,7 @@
 #include "GenericTypeInfo.h"
 #include "VoidTypeInfo.h"
 #include "EnumTypeInfo.h"
+#include "ClockTypeInfo.h"
 
 class ModuleDeclaratorNode;
 
@@ -22,6 +23,7 @@ public:
     ArrayTypeInfo* GetArrayType(TypeInfo* pBaseType);
     GenericTypeInfo* GetGenericType(int symIndex, ModuleDeclaratorNode* pScope);
     VoidTypeInfo* GetVoidType();
+    ClockTypeInfo* GetClockType();
 
     void AddStructType(int symIndex, StructTypeInfo* pInfo);
     void AddEnumType(int symIndex, EnumTypeInfo* pInfo);
@@ -34,4 +36,5 @@ private:
     std::map<TypeInfo*, std::unique_ptr<ArrayTypeInfo> > _arrayTypes;
     std::vector<std::unique_ptr<GenericTypeInfo> > _genericTypes;
     std::unique_ptr<VoidTypeInfo> _voidType;
+    std::unique_ptr<ClockTypeInfo> _clockType;
 };

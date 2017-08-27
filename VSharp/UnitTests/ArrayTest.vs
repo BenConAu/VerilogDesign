@@ -3,7 +3,8 @@ module ArrayTest(
 	out uint32 out1
 	)
 {
-	uint32 arr[8];
+	clock clk;
+	uint32 arr[4];
 	uint32 index;
 
 	drive
@@ -16,6 +17,11 @@ module ArrayTest(
 	{
 		__monitor("%h", out1);
 
+		out1 = 0;
+		arr[0] = 1;
+		arr[1] = 3;
+		arr[2] = 5;
+		arr[3] = 7;
 		transition StartState;
 	}
 

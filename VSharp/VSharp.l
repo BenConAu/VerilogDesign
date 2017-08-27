@@ -56,6 +56,7 @@
 "uint16"             { return UINT16_TOKEN; }
 "uint8"              { return UINT8_TOKEN; }
 "void"               { return VOID_TOKEN; }
+"clock"              { return CLOCK_TOKEN; }
 "initial"            { return INITIAL_TOKEN; }
 "bool"               { return BOOL_TOKEN; }
 "struct"             { return STRUCT_TOKEN; }

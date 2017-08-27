@@ -99,7 +99,6 @@ void ModuleDeclaratorNode::PreProcessNodeImpl()
     GetContext()->OutputLine("module %s(", pInfo->GetSymbol());
     GetContext()->IncreaseIndent();
 
-    GetContext()->OutputLine("clk,");
     GetContext()->OutputLine("reset,");
 
     bool first = true;
@@ -138,7 +137,6 @@ void ModuleDeclaratorNode::PreProcessNodeImpl()
 
     // All modules have a reset and a clock
     GetContext()->OutputLine("// inputs / outputs");
-    GetContext()->OutputLine("input wire clk;");
     GetContext()->OutputLine("input wire reset;");
 }
 

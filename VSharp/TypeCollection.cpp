@@ -8,6 +8,7 @@
 TypeCollection::TypeCollection()
 {
     _voidType.reset(new VoidTypeInfo());
+    _clockType.reset(new ClockTypeInfo());
 }
 
 StructTypeInfo* TypeCollection::GetStructType(int symIndex)
@@ -23,6 +24,11 @@ StructTypeInfo* TypeCollection::GetStructType(int symIndex)
 VoidTypeInfo* TypeCollection::GetVoidType()
 {
     return _voidType.get();
+}
+
+ClockTypeInfo* TypeCollection::GetClockType()
+{
+    return _clockType.get();
 }
 
 RegisterTypeInfo* TypeCollection::GetRegisterType(int bitLength)

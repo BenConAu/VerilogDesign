@@ -19,9 +19,10 @@ TypeNode::TypeNode(
 
 TypeNode::TypeNode(
     PSLCompilerContext *pContext,
-    const YYLTYPE &location) : ASTNode(pContext)
+    const YYLTYPE &location,
+    TypeClass typeClass) : ASTNode(pContext)
 {
-    _typeClass = TypeClass::Void;
+    _typeClass = typeClass;
     _extra = 0;
     _location = location;
     _pTypeInfo = nullptr;
@@ -73,6 +74,10 @@ TypeInfo *TypeNode::GetTypeInfo()
 
         case TypeClass::Void:
             _pTypeInfo = GetContext()->_typeCollection.GetVoidType();
+            break;
+
+        case TypeClass::Clock:
+            _pTypeInfo = GetContext()->_typeCollection.GetClockType();
             break;
 
         case TypeClass::Unknown:

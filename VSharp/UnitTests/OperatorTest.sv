@@ -1,5 +1,4 @@
 module OperatorTest(
-  clk,
   reset,
   in1,
   out1
@@ -8,7 +7,6 @@ module OperatorTest(
   `define __initial 0
   `define __StartState 1
   // inputs / outputs
-  input wire clk;
   input wire reset;
   input wire[31:0] in1;
   output reg[31:0] out1;

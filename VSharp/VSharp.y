@@ -42,6 +42,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token OR_OP
 %token ENUM_TOKEN
 %token DRIVE_TOKEN
+%token CLOCK_TOKEN
 
 %token <intVal> INTCONSTANT
 %token <intVal> BOOLCONSTANT
@@ -326,7 +327,8 @@ fully_specified_type:
     | UINT32_TOKEN                                                  { $$ = new TypeNode(pContext, @$, TypeClass::Register, 32); }
     | UINT16_TOKEN                                                  { $$ = new TypeNode(pContext, @$, TypeClass::Register, 16); }
     | UINT8_TOKEN                                                   { $$ = new TypeNode(pContext, @$, TypeClass::Register, 8); }
-	| VOID_TOKEN                                                    { $$ = new TypeNode(pContext, @$); }
+	| VOID_TOKEN                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Void); }
+    | CLOCK_TOKEN                                                   { $$ = new TypeNode(pContext, @$, TypeClass::Clock); }
     | BOOL_TOKEN                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Register, 1); }
 	| IDENTIFIER                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Unknown, $1); }
     | UINT_TOKEN LT INTCONSTANT GT                                  { $$ = new TypeNode(pContext, @$, $3); }
