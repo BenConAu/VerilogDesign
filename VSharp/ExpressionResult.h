@@ -18,7 +18,7 @@ struct ExpressionResult
 
     std::string DebugPrint();
 
-    const std::string& GetString() const { return _result; }
+    const std::string& GetString() const;
 
 private:
     std::string _result;

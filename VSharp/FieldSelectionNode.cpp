@@ -16,6 +16,8 @@ FieldSelectionNode::FieldSelectionNode(
 
     _fieldSymIndex = symIndex;
     _pStaticTypeInfo = nullptr;
+
+    //printf("Field symbol index for %p is %d\n", this, _fieldSymIndex);
 }
 
 void FieldSelectionNode::VerifyNodeImpl()
@@ -51,10 +53,12 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
     // Get the child expression
     ExpressionNode *pChildExpr = dynamic_cast<ExpressionNode *>(GetChild(0));
 
-    // Find the result of the child
+    // Find the result of the child - we don't use it, which is probably problematic eventually
     std::unique_ptr<ExpressionResult> childResult(pChildExpr->TakeResult());
 
     EnumTypeInfo* pEnumInfo = dynamic_cast<EnumTypeInfo*>(_pStaticTypeInfo->GetTypeInfo());
+
+    //printf("Field selection for %p with index %d\n", this, _fieldSymIndex);
     int value = pEnumInfo->GetValue(_fieldSymIndex);
 
     char result[1024];

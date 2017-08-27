@@ -10,6 +10,8 @@ EnumTypeInfo::EnumTypeInfo(int symIndex, PSLCompilerContext* pContext)
 
 void EnumTypeInfo::AddMember(int symIndex)
 {
+    //printf("Adding member, size is now %d\n", (int)_values.size());
+
     _values[symIndex] = _values.size();
 }
 
@@ -52,6 +54,8 @@ bool EnumTypeInfo::IsMember(int sym)
 
 int EnumTypeInfo::GetValue(int sym)
 {
+    //printf("Getting value %d for symbol %s\n", _values[sym], _pContext->_symbols[sym].c_str());
+
     return _values[sym];
 }
 

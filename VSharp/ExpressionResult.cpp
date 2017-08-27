@@ -10,7 +10,19 @@ ExpressionResult::ExpressionResult(const std::string& str)
 
 ExpressionResult::ExpressionResult(StaticTypeInfo* pInfo)
 {
+    //printf("Creating expression result from static type info\n");
+
     _pStaticInfo = pInfo;
+}
+
+const std::string& ExpressionResult::GetString() const 
+{ 
+    if (_pStaticInfo != nullptr)
+    {
+        printf("Oops!\n");
+    }
+
+    return _result; 
 }
 
 std::string ExpressionResult::DebugPrint()

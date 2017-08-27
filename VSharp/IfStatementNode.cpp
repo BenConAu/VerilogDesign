@@ -72,7 +72,7 @@ void IfStatementNode::ProcessNodeImpl()
         GetContext()->OutputLine("begin");
         GetContext()->IncreaseIndent();
     
-        pTrue->ProcessNode();
+        pFalse->ProcessNode();
     
         GetContext()->DecreaseIndent();
         GetContext()->OutputLine("end");
