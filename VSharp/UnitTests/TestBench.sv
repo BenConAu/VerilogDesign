@@ -9,6 +9,14 @@ module test;
   reg clk = 0;
   always #5 clk = !clk;
 
+  drive
+  {
+    0: reset = 1;
+    0: data = 1;
+    0: writeEnable = true;
+    0: readEnable = false;
+  }
+
   initial begin
     # 0 reset = 1;
     # 0 data = 'h1;
