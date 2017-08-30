@@ -69,11 +69,12 @@
 "else"               { return ELSE_TOKEN; }
 "enum"               { return ENUM_TOKEN; }
 "__finish"           { return FINISH_TOKEN; }
-"true"               { yylval->intVal = 1; return BOOLCONSTANT; }
-"false"              { yylval->intVal = 0; return BOOLCONSTANT; }
-[0-9]+               { yylval->intVal = atoi(yytext); return INTCONSTANT; }
-"0x"[0-9A-Fa-f]+     { yylval->intVal = strtol(yytext, nullptr, 16); return INTCONSTANT; }
-"0b"[0-1]+           { yylval->intVal = strtol(yytext, nullptr, 2); return INTCONSTANT; }
+"true"               { yylval->constVal = { 1, 1 }; return BOOLCONSTANT; }
+"false"              { yylval->constVal = { 0, 1 }; return BOOLCONSTANT; }
+[0-9]+               { yylval->constVal = { static_cast<unsigned int>(atoi(yytext)), 32 }; return INTCONSTANT; }
+[0-9]+"u"[0-9]+      { yylval->constVal = UIntConstant(yytext); return INTCONSTANT; }
+"0x"[0-9A-Fa-f]+     { yylval->constVal = { static_cast<unsigned int>(strtol(yytext, nullptr, 16)), 32 }; return INTCONSTANT; }
+"0b"[0-1]+           { yylval->constVal = { static_cast<unsigned int>(strtol(yytext, nullptr, 2)), 32 }; return INTCONSTANT; }
 [A-Za-z_][A-Za-z0-9_]* { yylval->symIndex = yyextra->AddSymbol(yytext); return IDENTIFIER; }
 "\""                 { yy_push_state(STRING_LITERAL, yyscanner); yyextra->StartString(); }
 .                    ;

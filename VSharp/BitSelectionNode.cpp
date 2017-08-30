@@ -9,13 +9,13 @@ BitSelectionNode::BitSelectionNode(
     PSLCompilerContext *pContext,
     const YYLTYPE &location,
     ASTNode *pPostFix,
-    int i1,
-    int i2) : ExpressionNode(pContext, location)
+    const UIntConstant &i1,
+    const UIntConstant &i2) : ExpressionNode(pContext, location)
 {
     AddNode(pPostFix);
 
-    _i1 = i1;
-    _i2 = i2;
+    _i1 = i1._value;
+    _i2 = i2._value;
 }
 
 void BitSelectionNode::VerifyNodeImpl()

@@ -8,11 +8,11 @@
 DriveDefinitionNode::DriveDefinitionNode(
     PSLCompilerContext *pContext,
     const YYLTYPE &location,
-    int delta,
+    const UIntConstant &delta,
     ASTNode *pExpr) : ASTNode(pContext)
 {
     _location = location;
-    _delta = delta;
+    _delta = delta._value;
 
     AddNode(pExpr);
 }
@@ -28,7 +28,7 @@ void DriveDefinitionNode::PostProcessNodeImpl()
     {
         // Part of an initial block, get the timing information
         GetContext()->OutputLine(
-            "# %d $finish;", 
+            "# %u $finish;", 
             GetDelta());
     }
 }

@@ -5,15 +5,7 @@
 class ConstantNode : public ExpressionNode
 {
 public:
-    enum ConstantType
-    {
-        Bool,
-        Word,
-    };
-
-public:
-    ConstantNode(PSLCompilerContext* pContext, const YYLTYPE& location, ConstantType t, int v);
-    ConstantNode(PSLCompilerContext* pContext, const YYLTYPE& location, ConstantType t);
+    ConstantNode(PSLCompilerContext* pContext, const YYLTYPE& location, const UIntConstant&);
 
     bool IsConstant() const override;
     void VerifyNodeImpl() override;
@@ -21,9 +13,8 @@ public:
     const char* GetDebugName() override { return "ConstantNode"; }
 
 private:
-    int GetInteger();
+    unsigned int GetUInt();
 
 private:
-    int _intValue;
-    ConstantType _type;
+    UIntConstant _value;
 };

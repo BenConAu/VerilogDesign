@@ -19,8 +19,14 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %lex-param {void* scanner}
 %parse-param {PSLCompilerContext* pContext}
 
-%union {
-    int intVal;
+%code requires 
+{
+#include "UIntConstant.h"
+}
+
+%union 
+{
+    UIntConstant constVal;
     int symIndex;
     ASTNode* pNode;
 }
@@ -45,8 +51,8 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token CLOCK_TOKEN
 %token FINISH_TOKEN
 
-%token <intVal> INTCONSTANT
-%token <intVal> BOOLCONSTANT
+%token <constVal> INTCONSTANT
+%token <constVal> BOOLCONSTANT
 %token STRINGLITERAL
 %token AT
 %token SEMICOLON
@@ -148,7 +154,7 @@ translation_unit:
 external_declaration:
       module_definition                                             { $$ = $1; pContext->AddModuleDef($$); }
     | enum_definition                                               { $$ = $1; pContext->AddTypeDef($$); }
-	| struct_specifier SEMICOLON                                    { $$ = $1; pContext->AddTypeDef($$); }
+	| struct_specifier                                              { $$ = $1; pContext->AddTypeDef($$); }
 	| declaration                                                   { $$ = $1; pContext->AddGlobal($$); }
     ;
 
@@ -259,8 +265,8 @@ postfix_expression:
 primary_expression:
       variable_identifier                                           { $$ = $1; }
     | glom_expression                                               { $$ = $1; }
-    | INTCONSTANT                                                   { $$ = new ConstantNode(pContext, @$, ConstantNode::Word, $1); }
-    | BOOLCONSTANT                                                  { $$ = new ConstantNode(pContext, @$, ConstantNode::Bool, $1); }
+    | INTCONSTANT                                                   { $$ = new ConstantNode(pContext, @$, $1); }
+    | BOOLCONSTANT                                                  { $$ = new ConstantNode(pContext, @$, $1); }
     ;
 
 glom_expression:
@@ -345,7 +351,7 @@ struct_declaration_list:
     ;
 
 struct_declaration:
-      fully_specified_type IDENTIFIER SEMICOLON						{ $$ = new StructDeclarationNode(pContext, $1, $2, -1); }
+      fully_specified_type IDENTIFIER SEMICOLON						{ $$ = new StructDeclarationNode(pContext, $1, $2); }
     | fully_specified_type IDENTIFIER LEFT_BRACKET INTCONSTANT RIGHT_BRACKET SEMICOLON
                                                                     { $$ = new StructDeclarationNode(pContext, $1, $2, $4); }
     ;
@@ -395,10 +401,10 @@ init_declarator_list:
     ;
 
 single_declaration:
-      fully_specified_type IDENTIFIER                               { $$ = new VariableDeclarationNode(pContext, @$, $1, $2, -1, nullptr); }
+      fully_specified_type IDENTIFIER                               { $$ = new VariableDeclarationNode(pContext, @$, $1, $2, nullptr); }
     | fully_specified_type IDENTIFIER LEFT_BRACKET INTCONSTANT RIGHT_BRACKET
                                                                     { $$ = new VariableDeclarationNode(pContext, @$, $1, $2, $4, nullptr); }
-    | fully_specified_type IDENTIFIER EQUAL expression              { $$ = new VariableDeclarationNode(pContext, @$, $1, $2, -1, $4); }
+    | fully_specified_type IDENTIFIER EQUAL expression              { $$ = new VariableDeclarationNode(pContext, @$, $1, $2, $4); }
     ;
 
 declaration_statement:

@@ -39,6 +39,12 @@
 #if YYDEBUG
 extern int yydebug;
 #endif
+/* "%code requires" blocks.  */
+#line 23 "VSharp.y" /* yacc.c:1915  */
+
+#include "UIntConstant.h"
+
+#line 48 "VSharp.tab.h" /* yacc.c:1915  */
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
@@ -106,13 +112,13 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 22 "VSharp.y" /* yacc.c:1915  */
+#line 28 "VSharp.y" /* yacc.c:1915  */
 
-    int intVal;
+    UIntConstant constVal;
     int symIndex;
     ASTNode* pNode;
 
-#line 116 "VSharp.tab.h" /* yacc.c:1915  */
+#line 122 "VSharp.tab.h" /* yacc.c:1915  */
 };
 
 typedef union YYSTYPE YYSTYPE;

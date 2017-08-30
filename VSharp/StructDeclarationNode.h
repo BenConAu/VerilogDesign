@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ASTNode.h"
+#include "UIntConstant.h"
 
 class PSLCompilerContext;
 class TypeInfo;
@@ -13,7 +14,12 @@ public:
         PSLCompilerContext* pContext, 
         ASTNode* pTypeNode, 
         int symId, 
-        int dimension);
+        const UIntConstant &dimension);
+
+    StructDeclarationNode(
+        PSLCompilerContext* pContext, 
+        ASTNode* pTypeNode, 
+        int symId);
 
     TypeInfo* GetTypeInfo(); // Returns the type on the node, not the type the member eventually gets
     int GetDimension() const { return _dimension; }

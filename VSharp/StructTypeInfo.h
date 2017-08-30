@@ -35,22 +35,8 @@ public:
         return nullptr;
     }
 
-    unsigned int GetOffset(int fieldSymIndex)
-    {
-        unsigned int offset = 0;
-
-        for (size_t i = 0; i < _members.size(); i++)
-        {
-            if (_members[i]->GetSymbolIndex() == fieldSymIndex)
-            {
-                return offset;
-            }
-
-            offset += _members[i]->GetSize();
-        }
-
-        throw "Unknown member";
-    }
+    unsigned int GetBaseLocation(int fieldSymIndex);
+    int GetBitLength() const override;
 
     TypeClass GetTypeClass() override
     {

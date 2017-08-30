@@ -22,3 +22,32 @@ std::string StructTypeInfo::GetTypeName()
 {
     return _pContext->_symbols[_symIndex];
 }
+
+unsigned int StructTypeInfo::GetBaseLocation(int fieldSymIndex)
+{
+    unsigned int offset = 0;
+
+    for (int i = (int)_members.size() - 1; i >= 0; i--)
+    {
+        if (_members[i]->GetSymbolIndex() == fieldSymIndex)
+        {
+            return offset;
+        }
+
+        offset += _members[i]->GetBitLength();
+    }
+
+    throw "Unknown member";
+}
+
+int StructTypeInfo::GetBitLength() const
+{
+    int size = 0;
+
+    for (size_t i = 0; i < _members.size(); i++)
+    {
+        size += _members[i]->GetBitLength();
+    }
+
+    return size;
+}

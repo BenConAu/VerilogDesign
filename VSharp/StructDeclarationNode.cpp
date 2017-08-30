@@ -7,12 +7,23 @@ StructDeclarationNode::StructDeclarationNode(
     PSLCompilerContext* pContext, 
     ASTNode* pTypeNode, 
     int symId,
-    int dimension
+    const UIntConstant& dimension
     ) : ASTNode(pContext)
 {
     AddNode(pTypeNode);
     _symIndex = symId;
-    _dimension = dimension;
+    _dimension = dimension._value;
+}
+
+StructDeclarationNode::StructDeclarationNode(
+    PSLCompilerContext* pContext, 
+    ASTNode* pTypeNode, 
+    int symId
+    ) : ASTNode(pContext)
+{
+    AddNode(pTypeNode);
+    _symIndex = symId;
+    _dimension = -1;
 }
 
 TypeInfo* StructDeclarationNode::GetTypeInfo()

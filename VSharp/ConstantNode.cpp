@@ -4,29 +4,17 @@
 #include "RegisterTypeInfo.h"
 #include <string.h>
 
-ConstantNode::ConstantNode(PSLCompilerContext *pContext, const YYLTYPE& location, ConstantType t, int v) : ExpressionNode(pContext, location)
+ConstantNode::ConstantNode(
+    PSLCompilerContext *pContext, 
+    const YYLTYPE& location, 
+    const UIntConstant& v) : ExpressionNode(pContext, location)
 {
-    _intValue = v;
-    _type = t;
+    _value = v;
 }
 
-ConstantNode::ConstantNode(PSLCompilerContext *pContext, const YYLTYPE& location, ConstantType t) : ExpressionNode(pContext, location)
+unsigned int ConstantNode::GetUInt()
 {
-    _intValue = 0;
-    _type = t;
-}
-
-int ConstantNode::GetInteger()
-{
-    switch (_type)
-    {
-    case Word:
-    case Bool:
-        return _intValue;
-
-    default:
-        throw "Not an integer";
-    }
+    return _value._value;
 }
 
 bool ConstantNode::IsConstant() const 
@@ -36,19 +24,12 @@ bool ConstantNode::IsConstant() const
 
 void ConstantNode::VerifyNodeImpl()
 {
-    if (_type == Bool)
-    {
-        SetType(GetContext()->_typeCollection.GetRegisterType(1));
-    }
-    else
-    {
-        SetType(GetContext()->_typeCollection.GetRegisterType(32));
-    }
+    SetType(GetContext()->_typeCollection.GetRegisterType(_value._bitLength));
 }
 
 ExpressionResult *ConstantNode::CalculateResult()
 {
     char result[100];
-    sprintf(result, "%d", GetInteger());
+    sprintf(result, "%u", GetUInt());
     return new ExpressionResult(result);
 }

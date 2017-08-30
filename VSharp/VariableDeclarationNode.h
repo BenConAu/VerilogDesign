@@ -8,12 +8,19 @@ class VariableDeclarationNode : public ASTNode
 {
 public:
   VariableDeclarationNode(
-      PSLCompilerContext *pContext,
-      const YYLTYPE &location,
-      ASTNode *pType,
-      int symIndex,
-      int arraySize,
-      ASTNode *pInitExpr);
+    PSLCompilerContext *pContext,
+    const YYLTYPE &location,
+    ASTNode *pType,
+    int symIndex,
+    const UIntConstant &arraySize,
+    ASTNode *pInitExpr);
+
+  VariableDeclarationNode(
+    PSLCompilerContext *pContext,
+    const YYLTYPE &location,
+    ASTNode *pType,
+    int symIndex,
+    ASTNode *pInitExpr);
 
   void PreVerifyNodeImpl() override;
   void PreProcessNodeImpl() override;

@@ -9,16 +9,16 @@ public:
   DriveDefinitionNode(
       PSLCompilerContext *pContext,
       const YYLTYPE &location,
-      int delta,
+      const UIntConstant &delta,
       ASTNode *pExpr);
 
   void VerifyNodeImpl() override;
   void PostProcessNodeImpl() override;
   const char *GetDebugName() override { return "DriveDefinitionNode"; }
 
-  int GetDelta() const { return _delta; }
+  unsigned int GetDelta() const { return _delta; }
 
 private:
   YYLTYPE _location;
-  int _delta;
+  unsigned int _delta;
 };

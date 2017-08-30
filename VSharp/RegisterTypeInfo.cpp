@@ -39,7 +39,7 @@ bool RegisterTypeInfo::EqualType(TypeInfo *pOther)
     }
 
     RegisterTypeInfo *pOtherBasic = dynamic_cast<RegisterTypeInfo *>(pOther);
-    if (_bitLength != pOtherBasic->GetBitLength())
+    if (_bitLength < pOtherBasic->GetBitLength())
     {
         return false;
     }

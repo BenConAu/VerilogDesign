@@ -4,6 +4,7 @@
 #include "VSharp.tab.h"
 
 class StaticTypeInfo;
+class StructTypeInfo;
 
 class FieldSelectionNode : public ExpressionNode
 {
@@ -24,4 +25,5 @@ class FieldSelectionNode : public ExpressionNode
 
     // Stored during Verification
     StaticTypeInfo *_pStaticTypeInfo;
+    StructTypeInfo *_pStructTypeInfo;
 };

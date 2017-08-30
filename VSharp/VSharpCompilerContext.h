@@ -3,6 +3,7 @@
 #include "SymbolTable.h"
 #include "TypeCollection.h"
 #include "ASTNode.h"
+#include "UIntConstant.h"
 #include "VSharp.tab.h"
 #include "ExpressionResult.h"
 #include "VerilogWriter.h"

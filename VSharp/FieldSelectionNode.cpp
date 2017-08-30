@@ -34,18 +34,31 @@ void FieldSelectionNode::VerifyNodeImpl()
     _pStaticTypeInfo = dynamic_cast<StaticTypeInfo*>(pTypeInfo);
     if (_pStaticTypeInfo == nullptr)
     {
-        // Not using a structure, bad for our health
-        GetContext()->ReportError(GetLocation(), "Can only field select static types right now");
-    }
+        _pStructTypeInfo = dynamic_cast<StructTypeInfo*>(pTypeInfo);
+        if (_pStructTypeInfo == nullptr)
+        {
+            GetContext()->ReportError(GetLocation(), "Type or identifier not found");
+        }
 
-    EnumTypeInfo* pEnumInfo = dynamic_cast<EnumTypeInfo*>(_pStaticTypeInfo->GetTypeInfo());
-    if (!pEnumInfo->IsMember(_fieldSymIndex))
+        StructMember* pMember = _pStructTypeInfo->GetMember(_fieldSymIndex);        
+        if (pMember == nullptr)
+        {
+            GetContext()->ReportError(GetLocation(), "Unknown member of struct");
+        }
+
+        SetType(pMember->GetType());
+    }
+    else
     {
-        GetContext()->ReportError(GetLocation(), "Unknown member of enum");        
-    }
+        EnumTypeInfo* pEnumInfo = dynamic_cast<EnumTypeInfo*>(_pStaticTypeInfo->GetTypeInfo());
+        if (!pEnumInfo->IsMember(_fieldSymIndex))
+        {
+            GetContext()->ReportError(GetLocation(), "Unknown member of enum");        
+        }
 
-    // The type of this expression is the size of the enum type
-    SetType(pEnumInfo);
+        // The type of this expression is the size of the enum type
+        SetType(pEnumInfo);
+    }
 }
 
 ExpressionResult *FieldSelectionNode::CalculateResult()
@@ -56,16 +69,38 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
     // Find the result of the child - we don't use it, which is probably problematic eventually
     std::unique_ptr<ExpressionResult> childResult(pChildExpr->TakeResult());
 
-    EnumTypeInfo* pEnumInfo = dynamic_cast<EnumTypeInfo*>(_pStaticTypeInfo->GetTypeInfo());
+    if (_pStaticTypeInfo != nullptr)
+    {
+        EnumTypeInfo* pEnumInfo = dynamic_cast<EnumTypeInfo*>(_pStaticTypeInfo->GetTypeInfo());
+        
+        //printf("Field selection for %p with index %d\n", this, _fieldSymIndex);
+        int value = pEnumInfo->GetValue(_fieldSymIndex);
+    
+        char result[1024];
+        sprintf(
+            result, 
+            "%d", 
+            value);
+    
+        return new ExpressionResult(result);
+    }
+    else
+    {
+        IdentifierNode* pIdentNode = dynamic_cast<IdentifierNode*>(GetChild(0));
+        StructMember* pMember = _pStructTypeInfo->GetMember(_fieldSymIndex);
 
-    //printf("Field selection for %p with index %d\n", this, _fieldSymIndex);
-    int value = pEnumInfo->GetValue(_fieldSymIndex);
+        unsigned int base = _pStructTypeInfo->GetBaseLocation(_fieldSymIndex);
+        unsigned int size = pMember->GetBitLength();
 
-    char result[1024];
-    sprintf(
-        result, 
-        "%d", 
-        value);
+        char result[1024];
+        sprintf(
+            result,
+            "%s[%u:%u]",
+            childResult->GetString().c_str(),
+            base + size - 1,
+            base);
 
-    return new ExpressionResult(result);
+        return new ExpressionResult(result);
+    }
+
 }

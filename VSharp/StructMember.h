@@ -22,18 +22,17 @@ public:
         return _pType;
     }
 
-    unsigned int GetSize()
+    unsigned int GetBitLength()
     {
-/*        if (_dimension == -1)
+        if (_dimension == -1)
         {
-            return _pType->GetSize();
+            return _pType->GetBitLength();
         }
         else
         {
             //printf("About to deref type %p\n", _pType);
-            return _pType->GetSize() * _dimension;
-        }*/
-        return -1;
+            return _pType->GetBitLength() * _dimension;
+        }
     }
 
 private:

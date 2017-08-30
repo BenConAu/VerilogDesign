@@ -10,8 +10,8 @@ class BitSelectionNode : public ExpressionNode
         PSLCompilerContext *pContext,
         const YYLTYPE &location,
         ASTNode *pPostFix,
-        int i1,
-        int i2);
+        const UIntConstant &i1,
+        const UIntConstant &i2);
 
     void VerifyNodeImpl() override;
 

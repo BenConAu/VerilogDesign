@@ -10,23 +10,18 @@ public:
     TypeNode(
         PSLCompilerContext* pContext, 
         const YYLTYPE &location,
-        TypeClass typeClass);
-        
-    TypeNode(
-        PSLCompilerContext* pContext, 
-        const YYLTYPE &location,
         TypeClass typeClass, 
         int type);
 
     TypeNode(
-        PSLCompilerContext *pContext, 
+        PSLCompilerContext* pContext, 
         const YYLTYPE &location,
-        ASTNode* pNode);
-    
+        TypeClass typeClass);
+        
     TypeNode(
         PSLCompilerContext *pContext, 
         const YYLTYPE &location,
-        int bitLength);
+        const UIntConstant &bitLength);
 
     TypeInfo* GetTypeInfo();
     void VerifyNodeImpl() override;

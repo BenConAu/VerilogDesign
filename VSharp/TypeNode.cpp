@@ -31,10 +31,10 @@ TypeNode::TypeNode(
 TypeNode::TypeNode(
     PSLCompilerContext *pContext, 
     const YYLTYPE &location,
-    int bitLength) : ASTNode(pContext)
+    const UIntConstant &bitLength) : ASTNode(pContext)
 {
     _typeClass = TypeClass::Register;
-    _extra = bitLength;
+    _extra = bitLength._value;
     _location = location;
     _pTypeInfo = nullptr;
 }
@@ -52,26 +52,6 @@ TypeInfo *TypeNode::GetTypeInfo()
             _pTypeInfo = GetContext()->_typeCollection.GetRegisterType(_extra);
             break;
 
-        case TypeClass::Struct:
-            _pTypeInfo = GetContext()->_typeCollection.GetStructType(_extra);
-
-            if (_pTypeInfo == nullptr)
-            {
-                // It was a good guess - perhaps it was a generic?
-                _pTypeInfo = GetContext()->_typeCollection.GetGenericType(_extra, pScope);
-                _typeClass = TypeClass::Generic;
-
-                if (_pTypeInfo == nullptr)
-                {
-                    std::stringstream sstr;
-                    sstr << "Failed to find struct or generic type with name " << GetContext()->_symbols[_extra];
-                    static std::string error = sstr.str();
-
-                    GetContext()->ReportError(_location, sstr.str().c_str());
-                }
-            }
-            break;
-
         case TypeClass::Void:
             _pTypeInfo = GetContext()->_typeCollection.GetVoidType();
             break;
@@ -85,12 +65,36 @@ TypeInfo *TypeNode::GetTypeInfo()
             _pTypeInfo = GetContext()->_typeCollection.GetEnumType(_extra);
             if (_pTypeInfo == nullptr)
             {
-                std::stringstream sstr;
-                sstr << "Failed to find enum type with name " << GetContext()->_symbols[_extra];
-                static std::string error = sstr.str();
-
-                GetContext()->ReportError(_location, sstr.str().c_str());
+                _pTypeInfo = GetContext()->_typeCollection.GetStructType(_extra);
+                if (_pTypeInfo == nullptr)
+                {
+                    // It was a good guess - perhaps it was a generic?
+                    _pTypeInfo = GetContext()->_typeCollection.GetGenericType(_extra, pScope);
+                    _typeClass = TypeClass::Generic;
+    
+                    if (_pTypeInfo == nullptr)
+                    {
+                        std::stringstream sstr;
+                        sstr << "Failed to find struct, enum, or generic type with name " << GetContext()->_symbols[_extra];
+                        static std::string error = sstr.str();
+    
+                        GetContext()->ReportError(_location, sstr.str().c_str());
+                    }
+                    else
+                    {
+                        _typeClass = TypeClass::Generic;
+                    }
+                }
+                else
+                {
+                    _typeClass = TypeClass::Struct;
+                }
             }
+            else
+            {
+                _typeClass = TypeClass::Enum;
+            }
+
             break;
         }
 
@@ -98,6 +102,7 @@ TypeInfo *TypeNode::GetTypeInfo()
         case TypeClass::Generic:
         case TypeClass::Array:
         case TypeClass::Static:
+        case TypeClass::Struct:
             throw "Not expected here";
             break;
         }

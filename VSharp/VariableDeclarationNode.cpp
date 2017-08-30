@@ -11,7 +11,7 @@ VariableDeclarationNode::VariableDeclarationNode(
     const YYLTYPE &location,
     ASTNode *pType,
     int symIndex,
-    int arraySize,
+    const UIntConstant& arraySize,
     ASTNode *pInitExpr) : ASTNode(pContext)
 {
     AddNode(pType);
@@ -25,7 +25,28 @@ VariableDeclarationNode::VariableDeclarationNode(
     }
 
     _symIndex = symIndex;
-    _arraySize = arraySize;
+    _arraySize = arraySize._value;
+}
+
+VariableDeclarationNode::VariableDeclarationNode(
+    PSLCompilerContext *pContext,
+    const YYLTYPE &location,
+    ASTNode *pType,
+    int symIndex,
+    ASTNode *pInitExpr) : ASTNode(pContext)
+{
+    AddNode(pType);
+
+    if (pInitExpr != nullptr)
+    {
+        IdentifierNode *pLeft = new IdentifierNode(pContext, location, symIndex);
+        AssignmentNode *pAssignment = new AssignmentNode(pContext, location, pLeft, pInitExpr);
+
+        AddNode(pAssignment);
+    }
+
+    _symIndex = symIndex;
+    _arraySize = -1;
 }
 
 void VariableDeclarationNode::PreVerifyNodeImpl()
@@ -65,7 +86,22 @@ void VariableDeclarationNode::PreProcessNodeImpl()
         else
         {
             ClockTypeInfo* pClockInfo = dynamic_cast<ClockTypeInfo*>(pInfo->GetTypeInfo());
-            GetContext()->OutputLine("reg clk = 0; always #5 clk = !clk;");
+            if (pClockInfo != nullptr)
+            {
+                GetContext()->OutputLine("reg %s = 0; always #5 %s = !%s;", pInfo->GetSymbol(), pInfo->GetSymbol(), pInfo->GetSymbol());
+            }
+            else
+            {
+                StructTypeInfo* pStructInfo = dynamic_cast<StructTypeInfo*>(pInfo->GetTypeInfo());
+                if (pStructInfo != nullptr)
+                {
+                    GetContext()->OutputLine("reg[%d:0] %s;", pStructInfo->GetBitLength() - 1, pInfo->GetSymbol());                    
+                }
+                else
+                {
+                    throw "Bad type, fix verify";
+                }
+            }
         }
     }
     else
