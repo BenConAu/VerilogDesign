@@ -24,7 +24,6 @@ public:
     TypeInfo* GetTypeInfo(); // Returns the type on the node, not the type the member eventually gets
     int GetDimension() const { return _dimension; }
     int GetName() { return _symIndex; }
-    void PreProcessNodeImpl() override;
     void VerifyNodeImpl() override;
     const char* GetDebugName() override { return "StructDeclarationNode"; }
 

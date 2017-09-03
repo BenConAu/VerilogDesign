@@ -19,12 +19,13 @@ void DriveListDefinitionNode::VerifyNodeImpl()
 {
 }
 
-void DriveListDefinitionNode::PreProcessNodeImpl()
+bool DriveListDefinitionNode::PreProcessNodeImpl()
 {
     GetContext()->OutputLine("initial");
     GetContext()->OutputLine("begin");
     GetContext()->IncreaseIndent();
-    
+
+    return true;
 }
 
 void DriveListDefinitionNode::PostProcessNodeImpl()

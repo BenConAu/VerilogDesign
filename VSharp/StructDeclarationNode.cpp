@@ -32,10 +32,6 @@ TypeInfo* StructDeclarationNode::GetTypeInfo()
     return pTypeNode->GetTypeInfo();
 }
 
-void StructDeclarationNode::PreProcessNodeImpl()
-{
-}
-
 void StructDeclarationNode::VerifyNodeImpl()
 {
 }

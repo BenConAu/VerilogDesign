@@ -3,7 +3,7 @@
 #include "ModuleDeclaratorNode.h"
 #include "StateInfo.h"
 
-void TransitionNode::PreProcessNodeImpl()
+void TransitionNode::PostProcessNodeImpl()
 {
     // What module are we transitioning in
     ModuleDeclaratorNode *pFunc = GetTypedParent<ModuleDeclaratorNode>();

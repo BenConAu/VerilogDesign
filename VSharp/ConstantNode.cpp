@@ -12,6 +12,11 @@ ConstantNode::ConstantNode(
     _value = v;
 }
 
+ASTNode* ConstantNode::DuplicateNodeImpl()
+{
+    return new ConstantNode(GetContext(), GetLocation(), _value);
+}
+
 unsigned int ConstantNode::GetUInt()
 {
     return _value._value;

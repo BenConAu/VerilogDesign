@@ -22,6 +22,7 @@ FunctionDeclaratorNode::FunctionDeclaratorNode(
     _symIndex = symIndex;
     _genericIndex = genericSym;
     _pCallNode = nullptr;
+    _pAssignmentNode = nullptr;
 }
 
 void FunctionDeclaratorNode::PreVerifyNodeImpl()
@@ -57,7 +58,7 @@ void FunctionDeclaratorNode::VerifyNodeImpl()
         );
 }
 
-ExpressionResult* FunctionDeclaratorNode::ResultFromSymbol(int symIndex)
+ASTNode* FunctionDeclaratorNode::DuplicateIdentifier(int symIndex)
 {
     //printf("Result from symbol\n");
 
@@ -65,9 +66,33 @@ ExpressionResult* FunctionDeclaratorNode::ResultFromSymbol(int symIndex)
     size_t pIndex = _passedArgs[symIndex];
 
     // What was passed for that in the current call?
-    ExpressionNode* pParamExpr = _pCallNode->GetParameter(pIndex);
+    FunctionCallParamNode* pParamNode = _pCallNode->GetParameter(pIndex);
 
-    return pParamExpr->CalculateResult();
+    // Duplicate that instead of the parameter
+    return pParamNode->DuplicateNode();
+}
+
+ASTNode* FunctionDeclaratorNode::ExpandFunction(FunctionCallNode* pCall, AssignmentNode* pAssignment)
+{
+    // Remember the call that we are expanding, but don't allow recursion
+    if (_pCallNode != nullptr)
+    {
+        throw "Recursion not allowed with function calls";
+    }
+
+    _pCallNode = pCall;
+    _pAssignmentNode = pAssignment;
+
+    // Get the statement list for the function
+    ListNode* pListNode = dynamic_cast<ListNode*>(GetChild(GetChildCount() - 1));
+
+    // Duplicate the list with appropriate replacements
+    ASTNode* pExpanded = pListNode->DuplicateNode();
+
+    _pCallNode = nullptr;
+    _pAssignmentNode = nullptr;
+
+    return pExpanded;
 }
 
 void FunctionDeclaratorNode::ProcessNodeImpl()
@@ -93,14 +118,4 @@ void FunctionDeclaratorNode::ProcessNodeImpl()
             _lastResult.reset();
         }
     }
-}
-
-void FunctionDeclaratorNode::SetCall(FunctionCallNode* pCall) 
-{ 
-    if (pCall != nullptr && _pCallNode != nullptr)
-    {
-        throw "Recursion not allowed with function calls";
-    }
-
-    _pCallNode = pCall; 
 }

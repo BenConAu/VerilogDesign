@@ -26,7 +26,7 @@ public:
 
     void PreVerifyNodeImpl() override;
     void VerifyNodeImpl() override;
-    void PreProcessNodeImpl() override;
+    bool PreProcessNodeImpl() override;
     void ProcessNodeImpl() override;
     void PostProcessNodeImpl() override;
     const char* GetDebugName() override { return "ModuleDeclaratorNode"; }

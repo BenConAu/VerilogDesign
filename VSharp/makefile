@@ -55,6 +55,8 @@ PSLcc: lex.yy.c \
 	   PSLCompiler.cpp \
 	   RegisterTypeInfo.cpp \
 	   RegisterTypeInfo.h \
+	   ReturnNode.cpp \
+	   ReturnNode.h \
 	   StateInfo.cpp \
 	   StateInfo.h \
 	   TransitionNode.cpp \
@@ -118,6 +120,7 @@ PSLcc: lex.yy.c \
 	   ModuleParameterNode.cpp \
 	   OperatorNode.cpp \
 	   PSLCompiler.cpp \
+	   ReturnNode.cpp \
 	   StateInfo.cpp \
 	   TransitionNode.cpp \
 	   RegisterTypeInfo.cpp \

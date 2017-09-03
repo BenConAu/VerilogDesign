@@ -13,7 +13,6 @@ public:
     }
 
     void VerifyNodeImpl() override;
-    void PreProcessNodeImpl() override;
     const char* GetDebugName() override { return "FunctionParameterNode"; }
     int GetSymbolIndex() const { return _symIndex; }
 

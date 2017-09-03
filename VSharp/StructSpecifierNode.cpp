@@ -14,10 +14,6 @@ void StructSpecifierNode::SetName(int symIndex)
     _symIndex = symIndex;
 }
 
-void StructSpecifierNode::PreProcessNodeImpl()
-{
-}
-
 void StructSpecifierNode::VerifyNodeImpl()
 {
     // TODO: Struct cannot be declared twice

@@ -10,12 +10,9 @@ EnumDefinitionNode::EnumDefinitionNode(
     int firstEnum) : ASTNode(pContext)
 {
     _symIndex = -1;
+    _location = location;
 
     _enums.push_back(firstEnum);
-}
-
-void EnumDefinitionNode::PreProcessNodeImpl()
-{
 }
 
 void EnumDefinitionNode::VerifyNodeImpl()
@@ -28,3 +25,4 @@ void EnumDefinitionNode::VerifyNodeImpl()
         pNewType->AddMember(_enums[i]);
     }
 }
+

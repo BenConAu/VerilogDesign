@@ -6,6 +6,7 @@
 #include <stack>
 
 class FunctionCallNode;
+class AssignmentNode;
 
 class FunctionDeclaratorNode : public ASTNode
 {
@@ -26,8 +27,6 @@ public:
         AddNode(pList);
     }
 
-    void SetCall(FunctionCallNode* pCall);
-
     TypeNode* GetReturnType() { return dynamic_cast<TypeNode*>(GetChild(0)); }
     ExpressionResult* GetResult() { return _lastResult.get(); }
     size_t GetParameterCount() const { return (GetChildCount() - 2); }
@@ -36,9 +35,13 @@ public:
     void VerifyNodeImpl() override;
     void ProcessNodeImpl() override;
     const char* GetDebugName() override { return "FunctionDeclaratorNode"; }
+    const char* GetFunctionName() { return GetContext()->_symbols[_symIndex].c_str(); }
 
-    ExpressionResult* ResultFromSymbol(int symIndex);
-
+    ASTNode* DuplicateIdentifier(int symIndex);
+    ASTNode* ExpandFunction(FunctionCallNode* pCall, AssignmentNode* pAssignment);
+    AssignmentNode* GetAssignmentNode() { return _pAssignmentNode; }
+    FunctionCallNode* GetCallNode() { return _pCallNode; }
+    
 private:
     // The symbol index of the function identifier
     int _symIndex;
@@ -49,8 +52,9 @@ private:
     // Arguments
     std::map<int, size_t> _passedArgs;
 
-    // The call that we are currently expanding
+    // The call that we are currently expanding and the expression that spawned it
     FunctionCallNode* _pCallNode;
+    AssignmentNode* _pAssignmentNode;
 
     // The result from the last expansion
     std::unique_ptr<ExpressionResult> _lastResult;

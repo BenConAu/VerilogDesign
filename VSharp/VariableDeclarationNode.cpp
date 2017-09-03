@@ -68,7 +68,7 @@ void VariableDeclarationNode::PreVerifyNodeImpl()
         pInfo);
 }
 
-void VariableDeclarationNode::PreProcessNodeImpl()
+void VariableDeclarationNode::PostProcessNodeImpl()
 {
     ModuleDeclaratorNode *pModule = GetTypedParent<ModuleDeclaratorNode>();
 

@@ -26,7 +26,7 @@ void StateDeclaratorNode::VerifyNodeImpl()
         );    
 }
 
-void StateDeclaratorNode::PreProcessNodeImpl()
+bool StateDeclaratorNode::PreProcessNodeImpl()
 {
     ModuleDeclaratorNode *pFunc = GetTypedParent<ModuleDeclaratorNode>();
 
@@ -42,6 +42,8 @@ void StateDeclaratorNode::PreProcessNodeImpl()
     }
 
     GetContext()->IncreaseIndent();
+
+    return true;
 }
 
 void StateDeclaratorNode::PostProcessNodeImpl()

@@ -5,6 +5,11 @@
 #include "VariableInfo.h"
 #include "FunctionCallNode.h"
 
+ASTNode* FunctionCallParamNode::DuplicateNodeImpl()
+{
+    return new FunctionCallParamNode(GetContext(), GetLocation(), _fOut, _literal);
+}
+
 void FunctionCallParamNode::VerifyNodeImpl()
 {
     if (_fOut)

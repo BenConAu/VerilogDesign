@@ -12,6 +12,39 @@ IdentifierNode::IdentifierNode(PSLCompilerContext *pContext, const YYLTYPE &loca
     _pTypeInfo = nullptr;
 }
 
+IdentifierNode::IdentifierNode(
+    PSLCompilerContext *pContext, 
+    const YYLTYPE &location, 
+    int symIndex, 
+    VariableInfo* pVarInfo,
+    TypeInfo* pTypeInfo) : ExpressionNode(pContext, location)
+{
+    _symIndex = symIndex;
+    _pVarInfo = pVarInfo;
+    _pTypeInfo = pTypeInfo;
+}
+
+ASTNode* IdentifierNode::DuplicateNodeImpl()
+{
+    printf("Duplicating identifier %s\n", GetIdentifierName());
+
+    // Are we in a function?
+    FunctionDeclaratorNode *pFuncDecl = GetTypedParent<FunctionDeclaratorNode>();
+    if (pFuncDecl != nullptr)
+    {
+        return pFuncDecl->DuplicateIdentifier(_symIndex);
+    }
+    else
+    {
+        return new IdentifierNode(GetContext(), GetLocation(), _symIndex, _pVarInfo, _pTypeInfo);
+    }
+}
+
+const char* IdentifierNode::GetIdentifierName()
+{
+    return GetContext()->_symbols[_symIndex].c_str();
+}
+
 void IdentifierNode::VerifyNodeImpl()
 {
     ModuleDeclaratorNode *pScope = GetTypedParent<ModuleDeclaratorNode>();
@@ -22,7 +55,7 @@ void IdentifierNode::VerifyNodeImpl()
         if (_pTypeInfo == nullptr)
         {
             char message[256];
-            sprintf(message, "Unknown variable or type %s", GetContext()->_symbols[_symIndex].c_str());
+            sprintf(message, "Unknown variable or type %s", GetIdentifierName());
             GetContext()->ReportError(GetLocation(), message);    
         }
         else
@@ -39,27 +72,15 @@ void IdentifierNode::VerifyNodeImpl()
 
 ExpressionResult *IdentifierNode::CalculateResult()
 {
-    // Are we in a function?
-    FunctionDeclaratorNode *pFuncDecl = GetTypedParent<FunctionDeclaratorNode>();
-    if (pFuncDecl != nullptr)
+    if (_pVarInfo != nullptr)
     {
-        // The function knows how to make the actual result that we want - 
-        // pass the symbol index that was used to define the function and ask it
-        // to make the result.
-        return pFuncDecl->ResultFromSymbol(_symIndex);
+        ModuleDeclaratorNode *pScope = GetTypedParent<ModuleDeclaratorNode>();
+        
+        return _pVarInfo->CalculateResult(pScope);
     }
     else
     {
-        if (_pVarInfo != nullptr)
-        {
-            ModuleDeclaratorNode *pScope = GetTypedParent<ModuleDeclaratorNode>();
-            
-            return _pVarInfo->CalculateResult(pScope);
-        }
-        else
-        {
-            return new ExpressionResult(dynamic_cast<StaticTypeInfo*>(GetTypeInfo()));
-        }
+        return new ExpressionResult(dynamic_cast<StaticTypeInfo*>(GetTypeInfo()));
     }
 }
 

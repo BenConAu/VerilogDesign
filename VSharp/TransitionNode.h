@@ -17,7 +17,7 @@ class TransitionNode : public ASTNode
     {
     }
 
-    void PreProcessNodeImpl() override;
+    void PostProcessNodeImpl() override;
 
     const char *GetDebugName() override { return "TransitionNode"; }
 

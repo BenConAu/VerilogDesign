@@ -11,8 +11,9 @@ class ListNode : public ASTNode
         }
     }
 
-    void VerifyNodeImpl() override
+    ASTNode* DuplicateNodeImpl() override
     {
+        return new ListNode(GetContext(), nullptr);
     }
 
     const char *GetDebugName() override { return "ListNode"; }

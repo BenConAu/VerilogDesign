@@ -51,14 +51,15 @@ void ASTNode::ProcessNode()
     //printf("Begin processing %s node %p\n", GetDebugName(), this);
     _pContext->_indent++;
 
-    // Processing before children are done
-    PreProcessNodeImpl();
-
-    // Actual processing
-    ProcessNodeImpl();
-
-    // Processing after children are done
-    PostProcessNodeImpl();
+    // Processing before children are done - return true to continue
+    if (PreProcessNodeImpl())
+    {
+        // Actual processing
+        ProcessNodeImpl();
+    
+        // Processing after children are done
+        PostProcessNodeImpl();
+    }
 
     _pContext->_indent--;
     //_pContext->PrintIndent();
@@ -95,4 +96,29 @@ void ASTNode::InsertChild(size_t index, ASTNode* pChild)
 {
     _children.emplace(_children.begin() + index, pChild);
     pChild->_pParent = this;
+}
+
+ASTNode* ASTNode::DuplicateNode()
+{
+    printf("Duplicating node %s\n", GetDebugName());
+
+    ASTNode* pCopy = DuplicateNodeImpl();
+    for (size_t i = 0; i < GetChildCount(); i++)
+    {
+        if (GetChild(i) != nullptr)
+        {
+            pCopy->AddNode(GetChild(i)->DuplicateNode());            
+        }
+        else
+        {
+            pCopy->AddNode(nullptr);
+        }
+    }
+
+    return pCopy;
+}
+
+ASTNode* ASTNode::DuplicateNodeImpl()
+{
+    throw "Internal compiler error - unimplemented node duplicator";
 }

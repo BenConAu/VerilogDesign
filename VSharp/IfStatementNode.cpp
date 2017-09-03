@@ -17,6 +17,18 @@ IfStatementNode::IfStatementNode(PSLCompilerContext *pContext, YYLTYPE location,
     AddNode(pFalse);
 }
 
+IfStatementNode::IfStatementNode(PSLCompilerContext *pContext, YYLTYPE location) : ASTNode(pContext)
+{
+    s_instanceCount++;
+    _instance = s_instanceCount;
+    _location = location;
+}
+
+ASTNode* IfStatementNode::DuplicateNodeImpl()
+{
+    return new IfStatementNode(GetContext(), _location);
+}
+
 void IfStatementNode::VerifyNodeImpl()
 {
     ExpressionNode *pTest = dynamic_cast<ExpressionNode *>(GetChild(2));

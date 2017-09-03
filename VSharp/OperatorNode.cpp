@@ -16,6 +16,11 @@ OperatorInfo OperatorNode::_opTable[] = {
     { Operator::LogicalOr,   "||",   ResultTypeMethod::Bool },
 };
 
+ASTNode* OperatorNode::DuplicateNodeImpl()
+{
+    return new OperatorNode(GetContext(), GetLocation(), _op, _opInfo);
+}
+
 void OperatorNode::VerifyNodeImpl()
 {
     // The inputs to the multiply must be expressions themselves. Ideally this part

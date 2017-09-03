@@ -117,7 +117,6 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> function_call
 %type <pNode> fn_call_arg
 %type <pNode> transition_statement
-%type <pNode> jump_statement
 %type <pNode> selection_statement
 %type <pNode> selection_rest_statement
 %type <pNode> equality_expression
@@ -177,7 +176,8 @@ statement:
       expression_statement                                          { $$ = $1; }
     | selection_statement                                           { $$ = $1; }
     | declaration_statement                                         { $$ = $1; }
-    | jump_statement                                                { $$ = $1; }
+    | transition_statement                                          { $$ = $1; }
+    | return_statement                                              { $$ = $1; }
     ;
 
 expression_statement:
@@ -307,7 +307,6 @@ module_param_decl:
 
 function_definition:
       function_prototype compound_statement                         { $$ = $1; dynamic_cast<FunctionDeclaratorNode*>($$)->SetStatementList($2); }
-    | function_prototype LEFT_BRACE return_statement RIGHT_BRACE    { $$ = $1; dynamic_cast<FunctionDeclaratorNode*>($$)->SetStatementList($3); }
     ;
 
 function_prototype:
@@ -438,12 +437,8 @@ fn_call_arg:
     | STRINGLITERAL                                                 { $$ = new FunctionCallParamNode(pContext, @$); }
     ;
 
-jump_statement:
-      transition_statement                                          { $$ = $1; }
-    ;
-
 return_statement:
-      RETURN_TOKEN expression SEMICOLON                             { $$ = $2; }
+      RETURN_TOKEN expression SEMICOLON                             { $$ = new ReturnNode(pContext, @$, $2); }
 
 transition_statement:
       TRANSITION_TOKEN IDENTIFIER SEMICOLON                         { $$ = new TransitionNode(pContext, $2); }

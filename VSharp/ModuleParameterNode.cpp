@@ -34,7 +34,7 @@ void ModuleParameterNode::VerifyNodeImpl()
         );
 }
 
-void ModuleParameterNode::PreProcessNodeImpl()
+void ModuleParameterNode::PostProcessNodeImpl()
 {
     ModuleDeclaratorNode *pModule = GetTypedParent<ModuleDeclaratorNode>();
 

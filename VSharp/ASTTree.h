@@ -18,6 +18,7 @@
 #include "ModuleDeclaratorNode.h"
 #include "ModuleParameterNode.h"
 #include "OperatorNode.h"
+#include "ReturnNode.h"
 #include "StateDeclaratorNode.h"
 #include "StructDeclarationNode.h"
 #include "StructSpecifierNode.h"

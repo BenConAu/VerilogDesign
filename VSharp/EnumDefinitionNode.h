@@ -18,11 +18,11 @@ public:
     void SetIdentifier(int symIndex) { _symIndex = symIndex; }
     void AddEnum(int symIndex) { _enums.push_back(symIndex); }
     int GetSymbolIndex() { return _symIndex; }
-    void PreProcessNodeImpl() override;
     void VerifyNodeImpl() override;
     const char* GetDebugName() override { return "EnumDefinitionNode"; }
 
 private:
     int _symIndex;
+    YYLTYPE _location;
     std::vector<int> _enums;
 };

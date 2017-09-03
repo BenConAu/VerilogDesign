@@ -19,13 +19,6 @@ void FunctionParameterNode::VerifyNodeImpl()
 
     TypeInfo* pTypeInfo = dynamic_cast<TypeNode *>(GetChild(0))->GetTypeInfo();
 
-    // Needs to be a register
-    RegisterTypeInfo* pRegInfo = dynamic_cast<RegisterTypeInfo*>(pTypeInfo);
-    if (pRegInfo == nullptr)
-    {
-        throw "Parameters to modules need to be registers";
-    }
-
     // Add variable to collection and mark first usage
     VariableInfo *pParamInfo = GetContext()->_symbolTable.AddVariable(
         pModule,
@@ -33,9 +26,5 @@ void FunctionParameterNode::VerifyNodeImpl()
         location,
         pTypeInfo
         );
-}
-
-void FunctionParameterNode::PreProcessNodeImpl()
-{
 }
 

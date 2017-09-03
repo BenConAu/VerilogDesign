@@ -19,9 +19,21 @@ public:
         _literal = pContext->GetLastString();
     }
 
+    FunctionCallParamNode(
+        PSLCompilerContext* pContext, 
+        const YYLTYPE &location,
+        bool fOut,
+        const std::string& literal
+        ) : ExpressionNode(pContext, location)
+    {
+        _fOut = fOut;
+        _literal = literal;
+    }
+
     void VerifyNodeImpl() override;
     const char* GetDebugName() override { return "FunctionCallParamNode"; }
     ExpressionResult* CalculateResult() override;
+    ASTNode* DuplicateNodeImpl() override;
 
 private:
     bool _fOut;

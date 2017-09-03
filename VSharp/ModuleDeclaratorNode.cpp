@@ -92,7 +92,7 @@ void ModuleDeclaratorNode::VerifyNodeImpl()
         );
 }
 
-void ModuleDeclaratorNode::PreProcessNodeImpl()
+bool ModuleDeclaratorNode::PreProcessNodeImpl()
 {
     // Spit out the preamble
     ModuleInfo* pInfo = dynamic_cast<ModuleInfo*>(GetContext()->_symbolTable.GetInfo(_symIndex, nullptr));
@@ -138,6 +138,8 @@ void ModuleDeclaratorNode::PreProcessNodeImpl()
     // All modules have a reset and a clock
     GetContext()->OutputLine("// inputs / outputs");
     GetContext()->OutputLine("input wire reset;");
+
+    return true;
 }
 
 void ModuleDeclaratorNode::ProcessNodeImpl()

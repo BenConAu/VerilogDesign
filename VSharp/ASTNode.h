@@ -17,6 +17,10 @@ public:
         _pParent = nullptr;
     }
 
+    virtual ~ASTNode()
+    {
+    }
+
     void AddNode(ASTNode* pNode);
     void ProcessNode();
 
@@ -63,12 +67,14 @@ public:
     }
 
     virtual bool IsConstant() const { return false; }
-    virtual const char* GetDebugName() { return "NoDebugName"; }
+    virtual const char* GetDebugName() = 0;
     virtual void PreVerifyNodeImpl() {}
     virtual void VerifyNodeImpl() {}
-    virtual void PreProcessNodeImpl() {}
+    virtual bool PreProcessNodeImpl() { return true; }
     virtual void ProcessNodeImpl();
     virtual void PostProcessNodeImpl() {}
+    virtual ASTNode* DuplicateNode();
+    virtual ASTNode* DuplicateNodeImpl();
 
     size_t GetChildCount() const { return _children.size(); }
     ASTNode* GetChild(size_t i) { return _children[i].get(); }

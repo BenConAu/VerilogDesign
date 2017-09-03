@@ -12,7 +12,7 @@ public:
       ASTNode *pList);
 
   void VerifyNodeImpl() override;
-  void PreProcessNodeImpl() override;
+  bool PreProcessNodeImpl() override;
   void PostProcessNodeImpl() override;
   const char *GetDebugName() override { return "DriveListDefinitionNode"; }
 

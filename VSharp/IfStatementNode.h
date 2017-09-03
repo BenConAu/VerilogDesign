@@ -7,8 +7,10 @@ class IfStatementNode : public ASTNode
 {
 public:
   IfStatementNode(PSLCompilerContext *pContext, YYLTYPE location, ASTNode *pLeft, ASTNode *pRight);
+  IfStatementNode(PSLCompilerContext *pContext, YYLTYPE location);
   void VerifyNodeImpl() override;
   void ProcessNodeImpl() override;
+  ASTNode* DuplicateNodeImpl() override;
 
   void SetExpression(ASTNode *pList)
   {
