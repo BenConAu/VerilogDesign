@@ -14,7 +14,7 @@ ASTNode* ReturnNode::DuplicateNodeImpl()
     // Set the mapping that calls to the function are replaced with the child of this return
     pAssignmentNode->SetCallReplacement(pFuncDecl->GetCallNode(), GetChild(0));
 
-    printf("Duplicating return node %p, with function %s\n", this, pFuncDecl->GetFunctionName());
+    //printf("Duplicating return node %p, with function %s\n", this, pFuncDecl->GetFunctionName());
     
         // Replace the return statement with a duplicate of this assignment - function
     // calls in this duplication will be replaced with a duplicate of what was

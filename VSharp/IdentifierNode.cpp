@@ -26,7 +26,7 @@ IdentifierNode::IdentifierNode(
 
 ASTNode* IdentifierNode::DuplicateNodeImpl()
 {
-    printf("Duplicating identifier %s\n", GetIdentifierName());
+    //printf("Duplicating identifier %s\n", GetIdentifierName());
 
     // Are we in a function?
     FunctionDeclaratorNode *pFuncDecl = GetTypedParent<FunctionDeclaratorNode>();

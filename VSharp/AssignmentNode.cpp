@@ -41,7 +41,7 @@ bool AssignmentNode::PreProcessNodeImpl()
     ExpressionNode *pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));
     ExpressionNode *pRight = dynamic_cast<ExpressionNode *>(GetChild(1));
 
-    printf("Processing assignment node\n");
+    //printf("Processing assignment node\n");
 
     // We expand functions during pre-process so that we don't process until expansion is complete
     FunctionCallNode* pFunctionCallNode = pRight->GetFirstFunctionCall();

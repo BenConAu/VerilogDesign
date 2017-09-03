@@ -44,21 +44,21 @@ ASTNode* FunctionCallNode::DuplicateNode()
         pAssignmentNode = GetTypedParent<AssignmentNode>();
     }
 
-    printf("Comparing %p and %p for function calls\n", this, pAssignmentNode->GetCallNode());
+    //printf("Comparing %p and %p for function calls\n", this, pAssignmentNode->GetCallNode());
 
     if (this == pAssignmentNode->GetCallNode())
     {
-        printf(
+        /*printf(
             "Duplicating function call %s by replacing with node %s\n", 
             GetFunctionName(), 
-            pAssignmentNode->GetReplacementNode()->GetDebugName());
+            pAssignmentNode->GetReplacementNode()->GetDebugName());*/
 
         // Replace the call with the expression we were given from the return statement
         return pAssignmentNode->GetReplacementNode()->DuplicateNode();
     }
     else
     {
-        printf("Duplicating function call %s, but not the one being expanded\n", GetFunctionName());
+        //printf("Duplicating function call %s, but not the one being expanded\n", GetFunctionName());
 
         return ASTNode::DuplicateNode();
     }    
@@ -116,7 +116,7 @@ ASTNode* FunctionCallNode::ExpandFunction(AssignmentNode* pOwningExpression)
         GetContext()->ReportError(GetLocation(), "Internal compiler error - function calls that return values cannot be builtin functions");
     }
 
-    printf("Expanding function %s\n", GetContext()->_symbols[_symIndex].c_str());
+    //printf("Expanding function %s\n", GetContext()->_symbols[_symIndex].c_str());
     return pFuncDecl->ExpandFunction(this, pOwningExpression);
 }
 

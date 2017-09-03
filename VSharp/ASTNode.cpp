@@ -100,7 +100,7 @@ void ASTNode::InsertChild(size_t index, ASTNode* pChild)
 
 ASTNode* ASTNode::DuplicateNode()
 {
-    printf("Duplicating node %s\n", GetDebugName());
+    //printf("Duplicating node %s\n", GetDebugName());
 
     ASTNode* pCopy = DuplicateNodeImpl();
     for (size_t i = 0; i < GetChildCount(); i++)
