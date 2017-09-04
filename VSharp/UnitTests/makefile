@@ -3,8 +3,7 @@ all: *.sv *.vvpo *.result
 %.sv : %.vs ../VSharpC
 	../VSharpC $<
 
-%.vvpo : %.sv
-	iverilog -o $@ $<
+%.result : %.sv ../VSharpC
+	iverilog -o temp.vvpo $<
+	vvp temp.vvpo > $@
 
-%.result : %.vvpo
-	vvp $< > $@
