@@ -10,19 +10,15 @@ class FunctionCallNode;
 class ExpressionNode : public ASTNode
 {
 public:
-    ExpressionNode(PSLCompilerContext* pContext, const YYLTYPE &location) : ASTNode(pContext)
-    {
-        _pType = nullptr;
-        _pResult = nullptr;
-        _location = location;
-    }
+    ExpressionNode(PSLCompilerContext* pContext, const YYLTYPE &location);
 
     TypeInfo* GetTypeInfo();
     void PostProcessNodeImpl() override;
+    void DumpNodeImpl() override;
 
-    ExpressionResult* TakeResult() { ExpressionResult* pRet = _pResult; _pResult = nullptr; return pRet; }
+    ExpressionResult* TakeResult();
+    
     virtual ExpressionResult* CalculateResult() = 0;
-    FunctionCallNode* GetFirstFunctionCall();
 
     static bool EqualType(ASTNode* pA, ASTNode* pB);
 
@@ -31,10 +27,9 @@ protected:
     const YYLTYPE& GetLocation() { return _location; }
 
 private:
-    static FunctionCallNode* GetFunctionCall(ASTNode* pNode);
-
-private:
     ExpressionResult* _pResult;
     TypeInfo* _pType;
-    YYLTYPE _location;    
+    YYLTYPE _location;
+    bool _fResultCalculated;
+    bool _fResultTaken;
 };

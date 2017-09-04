@@ -58,6 +58,9 @@ void OperatorNode::VerifyNodeImpl()
 
 ExpressionResult *OperatorNode::CalculateResult()
 {
+    printf("Operation on node %p between two expressions\n", this);
+    GetContext()->DumpTree();
+
     ModuleDeclaratorNode *pFunc = GetTypedParent<ModuleDeclaratorNode>();
 
     ExpressionNode *pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));
@@ -66,13 +69,14 @@ ExpressionResult *OperatorNode::CalculateResult()
     std::unique_ptr<ExpressionResult> leftResult(pLeft->TakeResult());
     std::unique_ptr<ExpressionResult> rightResult(pRight->TakeResult());
 
+    printf("Left = %s\n", leftResult != nullptr ? leftResult->DebugPrint().c_str() : "null result!");
+    printf("Right = %s\n", leftResult != nullptr ? rightResult->DebugPrint().c_str() : "null result!");
+
     if (leftResult.get() == nullptr || rightResult.get() == nullptr)
     {
-        GetContext()->ReportError(GetLocation(), "Assignment needs a valid expression on each side");
+        //GetContext()->ReportError(GetLocation(), "Operator needs a valid expression on each side");
+        return new ExpressionResult("OperatorNull");
     }
-
-    //leftResult->DebugPrint();
-    //rightResult->DebugPrint();
 
     char result[1024];
     sprintf(

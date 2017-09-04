@@ -1,9 +1,9 @@
 #pragma once
 
-#include "ASTNode.h"
+#include "StatementNode.h"
 #include "VSharp.tab.h"
 
-class IfStatementNode : public ASTNode
+class IfStatementNode : public StatementNode
 {
 public:
   IfStatementNode(PSLCompilerContext *pContext, YYLTYPE location, ASTNode *pLeft, ASTNode *pRight);
@@ -18,10 +18,4 @@ public:
   }
 
   const char *GetDebugName() override { return "IfStatementNode"; }
-
-private:
-  static int s_instanceCount;
-
-  int _instance;
-  YYLTYPE _location;
 };

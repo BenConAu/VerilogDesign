@@ -28,7 +28,9 @@ ExpressionResult *FunctionCallParamNode::CalculateResult()
 {
     if (_literal.length() == 0)
     {
-        return dynamic_cast<ExpressionNode*>(GetChild(0))->CalculateResult();        
+        ExpressionNode *pChild = dynamic_cast<ExpressionNode *>(GetChild(0));
+        
+        return pChild->TakeResult();
     }
     else
     {

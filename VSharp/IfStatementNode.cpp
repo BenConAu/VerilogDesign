@@ -5,28 +5,19 @@
 #include "ListNode.h"
 #include "../PhaethonObjWriter/ObjWriter.h"
 
-int IfStatementNode::s_instanceCount = 0;
-
-IfStatementNode::IfStatementNode(PSLCompilerContext *pContext, YYLTYPE location, ASTNode *pTrue, ASTNode *pFalse) : ASTNode(pContext)
+IfStatementNode::IfStatementNode(PSLCompilerContext *pContext, YYLTYPE location, ASTNode *pTrue, ASTNode *pFalse) : StatementNode(pContext, location)
 {
-    s_instanceCount++;
-    _instance = s_instanceCount;
-    _location = location;
-
     AddNode(pTrue);
     AddNode(pFalse);
 }
 
-IfStatementNode::IfStatementNode(PSLCompilerContext *pContext, YYLTYPE location) : ASTNode(pContext)
+IfStatementNode::IfStatementNode(PSLCompilerContext *pContext, YYLTYPE location) : StatementNode(pContext, location)
 {
-    s_instanceCount++;
-    _instance = s_instanceCount;
-    _location = location;
 }
 
 ASTNode* IfStatementNode::DuplicateNodeImpl()
 {
-    return new IfStatementNode(GetContext(), _location);
+    return new IfStatementNode(GetContext(), GetLocation());
 }
 
 void IfStatementNode::VerifyNodeImpl()
@@ -41,7 +32,7 @@ void IfStatementNode::VerifyNodeImpl()
             "If statement needs boolean but has %s", 
             pTest->GetTypeInfo()->GetTypeName().c_str());
 
-        GetContext()->ReportError(_location, result);
+        GetContext()->ReportError(GetLocation(), result);
     }
 }
 
@@ -59,7 +50,7 @@ void IfStatementNode::ProcessNodeImpl()
     std::unique_ptr<ExpressionResult> testResult(pTest->TakeResult());
     if (testResult.get() == nullptr)
     {
-        GetContext()->ReportError(_location, "No valid expression inside if statement");
+        GetContext()->ReportError(GetLocation(), "No valid expression inside if statement");
     }
 
     char result[1024];

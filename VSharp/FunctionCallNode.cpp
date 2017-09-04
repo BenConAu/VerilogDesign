@@ -6,7 +6,7 @@
 #include "TypeNode.h"
 #include "FunctionInfo.h"
 #include "FunctionDeclaratorNode.h"
-#include "AssignmentNode.h"
+#include "StatementNode.h"
 #include "VSharp.tab.h"
 
 FunctionCallNode::FunctionCallNode(
@@ -34,31 +34,41 @@ FunctionCallNode::FunctionCallNode(
     _symIndex = symIndex;
 }
 
+void FunctionCallNode::DumpNodeImpl()
+{
+    printf(
+        "%s node %p :\t%s\n", 
+        GetDebugName(),
+        this,
+        GetFunctionName()
+    );    
+}
+
 ASTNode* FunctionCallNode::DuplicateNode()
 {
     // Find the assignment node that initiated the duplication - it might
     // not be the first one up the tree.
-    AssignmentNode* pAssignmentNode = GetTypedParent<AssignmentNode>(); 
-    while (pAssignmentNode->GetCallNode() == nullptr)
+    printf("Starting function call node duplication of %s\n", GetFunctionName());
+    GetContext()->DumpTree();
+    StatementNode* pStatementNode = GetTypedParent<StatementNode>(); 
+    while (pStatementNode != nullptr && pStatementNode->GetCallNode() == nullptr)
     {
-        pAssignmentNode = GetTypedParent<AssignmentNode>();
+        pStatementNode = pStatementNode->GetTypedParent<StatementNode>();
     }
 
-    //printf("Comparing %p and %p for function calls\n", this, pAssignmentNode->GetCallNode());
-
-    if (this == pAssignmentNode->GetCallNode())
+    if (pStatementNode != nullptr && this == pStatementNode->GetCallNode())
     {
-        /*printf(
+        printf(
             "Duplicating function call %s by replacing with node %s\n", 
             GetFunctionName(), 
-            pAssignmentNode->GetReplacementNode()->GetDebugName());*/
+            pStatementNode->GetReplacementNode()->GetDebugName());
 
         // Replace the call with the expression we were given from the return statement
-        return pAssignmentNode->GetReplacementNode()->DuplicateNode();
+        return pStatementNode->GetReplacementNode()->DuplicateNode();
     }
     else
     {
-        //printf("Duplicating function call %s, but not the one being expanded\n", GetFunctionName());
+        printf("Duplicating function call %s, but not the one being expanded\n", GetFunctionName());
 
         return ASTNode::DuplicateNode();
     }    
@@ -103,7 +113,7 @@ FunctionInfo* FunctionCallNode::GetFunctionInfo()
     return dynamic_cast<FunctionInfo*>(GetContext()->_symbolTable.GetInfo(_symIndex, pModule));
 }
 
-ASTNode* FunctionCallNode::ExpandFunction(AssignmentNode* pOwningExpression)
+ASTNode* FunctionCallNode::ExpandFunction(StatementNode* pOwningStatement)
 {
     // We have been given the expression that this function call is inside of,
     // and we will now construct a statement list that represents the work
@@ -116,8 +126,8 @@ ASTNode* FunctionCallNode::ExpandFunction(AssignmentNode* pOwningExpression)
         GetContext()->ReportError(GetLocation(), "Internal compiler error - function calls that return values cannot be builtin functions");
     }
 
-    //printf("Expanding function %s\n", GetContext()->_symbols[_symIndex].c_str());
-    return pFuncDecl->ExpandFunction(this, pOwningExpression);
+    printf("Expanding function %s\n", GetContext()->_symbols[_symIndex].c_str());
+    return pFuncDecl->ExpandFunction(this, pOwningStatement);
 }
 
 ExpressionResult *FunctionCallNode::CalculateResult()
@@ -125,7 +135,7 @@ ExpressionResult *FunctionCallNode::CalculateResult()
     FunctionDeclaratorNode* pFuncDecl = GetFunctionInfo()->GetFunctionDeclarator();
     if (pFuncDecl != nullptr)
     {
-        printf("Old implementation of function call removed\n");
+        printf("Unexpected function call to %s\n", GetFunctionName());
         return nullptr;
     }
     else

@@ -59,6 +59,8 @@ PSLcc: lex.yy.c \
 	   ReturnNode.h \
 	   StateInfo.cpp \
 	   StateInfo.h \
+	   StatementNode.cpp \
+	   StatementNode.h\
 	   TransitionNode.cpp \
 	   TransitionNode.h \
 	   ListNode.h \
@@ -88,8 +90,6 @@ PSLcc: lex.yy.c \
 	   VoidTypeInfo.h \
 	   VSharpCompilerContext.cpp \
 	   VSharpCompilerContext.h \
-	   WhileStatementNode.cpp \
-	   WhileStatementNode.h \
 	   StateDeclaratorNode.cpp \
 	   StateDeclaratorNode.h
 	clang++ -std=c++14 -Wno-deprecated-register -g lex.yy.c \
@@ -124,6 +124,8 @@ PSLcc: lex.yy.c \
 	   StateInfo.cpp \
 	   TransitionNode.cpp \
 	   RegisterTypeInfo.cpp \
+	   StateDeclaratorNode.cpp \
+	   StatementNode.cpp \
 	   StructDeclarationNode.cpp \
 	   StructSpecifierNode.cpp \
 	   StructTypeInfo.cpp \
@@ -135,9 +137,7 @@ PSLcc: lex.yy.c \
 	   UnaryOperatorNode.cpp \
 	   VariableDeclarationNode.cpp \
 	   VariableInfo.cpp \
-	   VSharpCompilerContext.cpp \
-	   StateDeclaratorNode.cpp \
-	   WhileStatementNode.cpp -o VSharpC
+	   VSharpCompilerContext.cpp -o VSharpC
 
 lex.yy.c: VSharp.l
 	flex --header-file=lex.h VSharp.l

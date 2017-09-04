@@ -22,7 +22,7 @@ FunctionDeclaratorNode::FunctionDeclaratorNode(
     _symIndex = symIndex;
     _genericIndex = genericSym;
     _pCallNode = nullptr;
-    _pAssignmentNode = nullptr;
+    _pStatementNode = nullptr;
 }
 
 void FunctionDeclaratorNode::PreVerifyNodeImpl()
@@ -72,7 +72,7 @@ ASTNode* FunctionDeclaratorNode::DuplicateIdentifier(int symIndex)
     return pParamNode->DuplicateNode();
 }
 
-ASTNode* FunctionDeclaratorNode::ExpandFunction(FunctionCallNode* pCall, AssignmentNode* pAssignment)
+ASTNode* FunctionDeclaratorNode::ExpandFunction(FunctionCallNode* pCall, StatementNode* pStatement)
 {
     // Remember the call that we are expanding, but don't allow recursion
     if (_pCallNode != nullptr)
@@ -81,7 +81,7 @@ ASTNode* FunctionDeclaratorNode::ExpandFunction(FunctionCallNode* pCall, Assignm
     }
 
     _pCallNode = pCall;
-    _pAssignmentNode = pAssignment;
+    _pStatementNode = pStatement;
 
     // Get the statement list for the function
     ListNode* pListNode = dynamic_cast<ListNode*>(GetChild(GetChildCount() - 1));
@@ -90,7 +90,7 @@ ASTNode* FunctionDeclaratorNode::ExpandFunction(FunctionCallNode* pCall, Assignm
     ASTNode* pExpanded = pListNode->DuplicateNode();
 
     _pCallNode = nullptr;
-    _pAssignmentNode = nullptr;
+    _pStatementNode = nullptr;
 
     return pExpanded;
 }

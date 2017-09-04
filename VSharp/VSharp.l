@@ -65,7 +65,6 @@
 "transition"         { return TRANSITION_TOKEN; }
 "return"             { return RETURN_TOKEN; }
 "if"                 { return IF_TOKEN; }
-"while"              { return WHILE_TOKEN; }
 "else"               { return ELSE_TOKEN; }
 "enum"               { return ENUM_TOKEN; }
 "__finish"           { return FINISH_TOKEN; }

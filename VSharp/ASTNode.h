@@ -86,7 +86,9 @@ public:
     int GetChildIndex(ASTNode* pNode);
 
     PSLCompilerContext* GetContext() { return _pContext; }
-
+    void DumpNode();    
+    virtual void DumpNodeImpl();
+    
 private:
     PSLCompilerContext* _pContext;
     ASTNode* _pParent;

@@ -2,25 +2,21 @@
 #include "VSharpCompilerContext.h"
 #include "ModuleDeclaratorNode.h"
 #include "DriveDefinitionNode.h"
-#include "FunctionCallNode.h"
 
 AssignmentNode::AssignmentNode(
     PSLCompilerContext *pContext, 
     const YYLTYPE &location, 
     ASTNode *pLeft, 
-    ASTNode *pRight) : ASTNode(pContext)
+    ASTNode *pRight) : StatementNode(pContext, location)
 {
-    _location = location;
-
     AddNode(pLeft);
     AddNode(pRight);
 }
 
 AssignmentNode::AssignmentNode(
     PSLCompilerContext *pContext, 
-    const YYLTYPE &location) : ASTNode(pContext)
+    const YYLTYPE &location) : StatementNode(pContext, location)
 {
-    _location = location;
 }
 
 void AssignmentNode::VerifyNodeImpl()
@@ -32,48 +28,13 @@ void AssignmentNode::VerifyNodeImpl()
     {
         printf("Type %s and type %s are not equal\n", pLeft->GetTypeInfo()->DebugPrint().c_str(), pRight->GetTypeInfo()->DebugPrint().c_str());
 
-        GetContext()->ReportError(_location, "Assignment must have equal types on each side");
+        GetContext()->ReportError(GetLocation(), "Assignment must have equal types on each side");
     }
-}
-
-bool AssignmentNode::PreProcessNodeImpl()
-{
-    ExpressionNode *pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));
-    ExpressionNode *pRight = dynamic_cast<ExpressionNode *>(GetChild(1));
-
-    //printf("Processing assignment node\n");
-
-    // We expand functions during pre-process so that we don't process until expansion is complete
-    FunctionCallNode* pFunctionCallNode = pRight->GetFirstFunctionCall();
-    if (pFunctionCallNode != nullptr)
-    {
-        // Create the tree that will replace the expression
-        ASTNode* pReplacement = pFunctionCallNode->ExpandFunction(this);
-
-        // Insert the node after this one
-        GetParent()->InsertChild(GetParent()->GetChildIndex(this) + 1, pReplacement);
-        
-        // Mark this node as replaced so that it won't do anything further
-        return false;
-    }
-
-    return true;
-}
-
-void AssignmentNode::SetCallReplacement(FunctionCallNode* pCallNode, ASTNode* pReplacement)
-{
-    if (pCallNode != nullptr && _pCallNode != nullptr)
-    {
-        throw "Assignment node should only be expanding with a single replacement at a time";
-    }
-
-    _pCallNode = pCallNode;
-    _pReplacement = pReplacement;
 }
 
 ASTNode* AssignmentNode::DuplicateNodeImpl()
 {
-    return new AssignmentNode(GetContext(), _location);
+    return new AssignmentNode(GetContext(), GetLocation());
 }
 
 void AssignmentNode::PostProcessNodeImpl()
@@ -87,13 +48,14 @@ void AssignmentNode::PostProcessNodeImpl()
     std::unique_ptr<ExpressionResult> leftResult(pLeft->TakeResult());
     std::unique_ptr<ExpressionResult> rightResult(pRight->TakeResult());
 
+    //printf("Assignment between these two expressions\n");
+    //printf("Left = %s\n", leftResult->DebugPrint().c_str());
+    //printf("Right = %s\n", rightResult->DebugPrint().c_str());
+
     if (leftResult.get() == nullptr || rightResult.get() == nullptr)
     {
-        GetContext()->ReportError(_location, "Assignment needs a valid expression on each side");
+        GetContext()->ReportError(GetLocation(), "Assignment needs a valid expression on each side");
     }
-
-    //leftResult->DebugPrint();
-    //rightResult->DebugPrint();
 
     if (pDrive == nullptr)
     {

@@ -6,7 +6,7 @@
 #include <stack>
 
 class FunctionCallNode;
-class AssignmentNode;
+class StatementNode;
 
 class FunctionDeclaratorNode : public ASTNode
 {
@@ -38,8 +38,8 @@ public:
     const char* GetFunctionName() { return GetContext()->_symbols[_symIndex].c_str(); }
 
     ASTNode* DuplicateIdentifier(int symIndex);
-    ASTNode* ExpandFunction(FunctionCallNode* pCall, AssignmentNode* pAssignment);
-    AssignmentNode* GetAssignmentNode() { return _pAssignmentNode; }
+    ASTNode* ExpandFunction(FunctionCallNode* pCall, StatementNode* pStatement);
+    StatementNode* GetStatementNode() { return _pStatementNode; }
     FunctionCallNode* GetCallNode() { return _pCallNode; }
     
 private:
@@ -54,7 +54,7 @@ private:
 
     // The call that we are currently expanding and the expression that spawned it
     FunctionCallNode* _pCallNode;
-    AssignmentNode* _pAssignmentNode;
+    StatementNode* _pStatementNode;
 
     // The result from the last expansion
     std::unique_ptr<ExpressionResult> _lastResult;

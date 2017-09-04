@@ -89,7 +89,8 @@ void PSLCompilerContext::Parse()
         _rootNodes[i]->VerifyNode();
     }
 
-    //printf("Doing Process pass\n");
+    printf("Doing Process pass\n");
+    DumpTree();
 
     // Process the tree
     for (size_t i = 0; i < _rootNodes.size(); i++)
@@ -164,4 +165,13 @@ void PSLCompilerContext::BeginLine()
 void PSLCompilerContext::EndLine()
 {
     OutputString("\n");
+}
+
+void PSLCompilerContext::DumpTree()
+{
+    printf("Dumping tree\n");
+    for (size_t i = 0; i < _rootNodes.size(); i++)
+    {
+        _rootNodes[i]->DumpNode();
+    }    
 }

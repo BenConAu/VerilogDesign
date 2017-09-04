@@ -7,7 +7,7 @@
 class ModuleInfo;
 class FunctionDeclaratorNode;
 class FunctionInfo;
-class AssignmentNode;
+class StatementNode;
 
 class FunctionCallNode : public ExpressionNode
 {
@@ -29,11 +29,12 @@ public:
   const char *GetDebugName() override { return "FunctionCallNode"; }
   ASTNode* DuplicateNode() override;
   ASTNode* DuplicateNodeImpl() override;
-  const char *GetFunctionName();
+  void DumpNodeImpl() override;
 
+  const char *GetFunctionName();
   FunctionCallParamNode* GetParameter(size_t index) { return dynamic_cast<FunctionCallParamNode*>(GetChild(index + 1)); }
   size_t GetParameterCount() const { return (GetChildCount() - 1); }
-  ASTNode* ExpandFunction(AssignmentNode* pOwningExpression);
+  ASTNode* ExpandFunction(StatementNode* pOwningStatement);
   
 private:
   FunctionInfo* GetFunctionInfo();

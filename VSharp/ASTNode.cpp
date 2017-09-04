@@ -1,6 +1,28 @@
 #include "ASTNode.h"
 #include "VSharpCompilerContext.h"
 
+void ASTNode::DumpNodeImpl()
+{
+    printf("%s node %p\n", GetDebugName(), this);    
+}
+
+void ASTNode::DumpNode()
+{
+    _pContext->PrintIndent();
+    DumpNodeImpl();
+    _pContext->_indent++;
+    
+    for (size_t i = 0; i < _children.size(); i++)
+    {
+        if (_children[i] != nullptr)
+        {
+            _children[i]->DumpNode();
+        }
+    }
+
+    _pContext->_indent--;
+}
+
 void ASTNode::VerifyNode()
 {
     //_pContext->PrintIndent();

@@ -101,9 +101,8 @@ extern int yydebug;
     RIGHT_BRACKET = 305,
     IF_TOKEN = 306,
     ELSE_TOKEN = 307,
-    WHILE_TOKEN = 308,
-    SIZEOF_TOKEN = 309,
-    IDENTIFIER = 310
+    SIZEOF_TOKEN = 308,
+    IDENTIFIER = 309
   };
 #endif
 
@@ -118,7 +117,7 @@ union YYSTYPE
     int symIndex;
     ASTNode* pNode;
 
-#line 122 "VSharp.tab.h" /* yacc.c:1915  */
+#line 121 "VSharp.tab.h" /* yacc.c:1915  */
 };
 
 typedef union YYSTYPE YYSTYPE;

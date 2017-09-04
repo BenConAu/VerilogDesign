@@ -77,6 +77,8 @@ class PSLCompilerContext
     void AppendString(char* pszText) { _currentString.push_back(pszText[0]); }
     const std::string GetLastString() { return _currentString; }
 
+    void DumpTree();
+
   private:
     std::vector<std::unique_ptr<ASTNode>> _rootNodes;
     std::vector<std::unique_ptr<VerilogWriter>> _writers;

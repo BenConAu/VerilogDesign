@@ -2,6 +2,15 @@
 #include "VSharpCompilerContext.h"
 #include "FunctionCallNode.h"
 
+ExpressionNode::ExpressionNode(PSLCompilerContext* pContext, const YYLTYPE &location) : ASTNode(pContext)
+{
+    _pType = nullptr;
+    _pResult = nullptr;
+    _location = location;
+    _fResultCalculated = false;
+    _fResultTaken = false;
+}
+
 TypeInfo *ExpressionNode::GetTypeInfo()
 {
     if (_pType == nullptr)
@@ -27,6 +36,7 @@ void ExpressionNode::PostProcessNodeImpl()
 {
     // Calculate our result using the result of the children
     _pResult = CalculateResult();
+    _fResultCalculated = true;
 }
 
 bool ExpressionNode::EqualType(ASTNode *pA, ASTNode *pB)
@@ -40,30 +50,35 @@ bool ExpressionNode::EqualType(ASTNode *pA, ASTNode *pB)
     return pLeftType->EqualType(pRightType);
 }
 
-FunctionCallNode* ExpressionNode::GetFunctionCall(ASTNode* pNode)
+void ExpressionNode::DumpNodeImpl()
 {
-    // Do we have a child that is a function call?
-    FunctionCallNode* pCallNode = dynamic_cast<FunctionCallNode*>(pNode);
-    if (pCallNode != nullptr)
-    {
-        return pCallNode;
-    }
-
-    for (size_t i = 0; i < pNode->GetChildCount(); i++)
-    {
-        // Do we have a child that is a function call?
-        pCallNode = GetFunctionCall(pNode->GetChild(i));
-        if (pCallNode != nullptr)
-        {
-            return pCallNode;
-        }
-    }
-
-    //printf("GetFunctionCall failed on all children and this node is not a function call\n");
-    return nullptr;
+    printf(
+        "%s node %p :\t%s :\t%s\n", 
+        GetDebugName(),
+        this,
+        _fResultCalculated ? "Calculated" : "Uncalculated",
+        _fResultTaken ? "ResultTaken" : "ResultNotTaken"
+    );    
 }
 
-FunctionCallNode* ExpressionNode::GetFirstFunctionCall()
+ExpressionResult* ExpressionNode::TakeResult() 
 {
-    return GetFunctionCall(this);
+    if (!_fResultTaken)
+    {
+        if (_fResultCalculated)
+        {
+            ExpressionResult* pRet = _pResult; 
+            _pResult = nullptr;
+            _fResultTaken = true;
+            return pRet; 
+        }
+        else
+        {
+            throw "Trying to take result when not done";
+        }
+    }
+    else
+    {
+        throw "Result already taken";
+    }
 }

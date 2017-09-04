@@ -84,7 +84,6 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token RIGHT_BRACKET
 %token IF_TOKEN
 %token ELSE_TOKEN
-%token WHILE_TOKEN
 %token SIZEOF_TOKEN
 %token <symIndex> IDENTIFIER
 %type <pNode> variable_identifier
@@ -187,8 +186,6 @@ expression_statement:
 selection_statement:
       IF_TOKEN LEFT_PAREN expression RIGHT_PAREN selection_rest_statement 
                                                                     { $$ = $5; dynamic_cast<IfStatementNode*>($$)->SetExpression($3); }
-    | WHILE_TOKEN LEFT_PAREN expression RIGHT_PAREN compound_statement
-                                                                    { $$ = new WhileStatementNode(pContext, $3, $5); }
     ;
 
 selection_rest_statement:
