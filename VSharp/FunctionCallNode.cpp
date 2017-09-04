@@ -46,10 +46,10 @@ void FunctionCallNode::DumpNodeImpl()
 
 ASTNode* FunctionCallNode::DuplicateNode()
 {
-    // Find the assignment node that initiated the duplication - it might
+    // Find the statement that initiated the duplication - it might
     // not be the first one up the tree.
-    printf("Starting function call node duplication of %s\n", GetFunctionName());
-    GetContext()->DumpTree();
+    //printf("Starting function call node duplication of %s %p\n", GetFunctionName(), this);
+    //GetContext()->DumpTree();
     StatementNode* pStatementNode = GetTypedParent<StatementNode>(); 
     while (pStatementNode != nullptr && pStatementNode->GetCallNode() == nullptr)
     {
@@ -58,17 +58,17 @@ ASTNode* FunctionCallNode::DuplicateNode()
 
     if (pStatementNode != nullptr && this == pStatementNode->GetCallNode())
     {
-        printf(
-            "Duplicating function call %s by replacing with node %s\n", 
-            GetFunctionName(), 
-            pStatementNode->GetReplacementNode()->GetDebugName());
+        //printf(
+            //"Duplicating function call %s by replacing with node %s\n", 
+            //GetFunctionName(), 
+            //pStatementNode->GetReplacementNode()->GetDebugName());
 
         // Replace the call with the expression we were given from the return statement
         return pStatementNode->GetReplacementNode()->DuplicateNode();
     }
     else
     {
-        printf("Duplicating function call %s, but not the one being expanded\n", GetFunctionName());
+        //printf("Duplicating function call %s, but not the one being expanded\n", GetFunctionName());
 
         return ASTNode::DuplicateNode();
     }    
@@ -126,7 +126,7 @@ ASTNode* FunctionCallNode::ExpandFunction(StatementNode* pOwningStatement)
         GetContext()->ReportError(GetLocation(), "Internal compiler error - function calls that return values cannot be builtin functions");
     }
 
-    printf("Expanding function %s\n", GetContext()->_symbols[_symIndex].c_str());
+    //printf("Expanding function %s\n", GetContext()->_symbols[_symIndex].c_str());
     return pFuncDecl->ExpandFunction(this, pOwningStatement);
 }
 

@@ -24,20 +24,27 @@ bool StatementNode::PreProcessNodeImpl()
     FunctionCallNode* pFunctionCallNode = GetFirstFunctionCall();
     if (pFunctionCallNode != nullptr)
     {
-        // Create the tree that will replace the expression
-        ASTNode* pReplacement = pFunctionCallNode->ExpandFunction(this);
-
-        printf("Created replacement node for function call\n");
-        pReplacement->DumpNode();
-
-        // Insert the node after this one
-        GetParent()->InsertChild(GetParent()->GetChildIndex(this) + 1, pReplacement);
-
-        printf("Attached replacement node\n");
-        GetParent()->DumpNode();
-        
-        // Mark this node as replaced so that it won't do anything further
-        return false;
+        // Check that this statement is the actual owning statement
+        StatementNode* pOwningStatement = pFunctionCallNode->GetTypedParent<StatementNode>();
+        if (pOwningStatement == this)
+        {
+            //printf("Found function call %p in statement %p\n", pFunctionCallNode, this);
+            
+            // Create the tree that will replace the expression
+            ASTNode* pReplacement = pFunctionCallNode->ExpandFunction(this);
+    
+            //printf("Created replacement node for function call %p\n", pFunctionCallNode);
+            //pReplacement->DumpNode();
+    
+            // Insert the node after this one
+            GetParent()->InsertChild(GetParent()->GetChildIndex(this) + 1, pReplacement);
+    
+            //printf("Attached replacement node\n");
+            //GetParent()->DumpNode();
+            
+            // Mark this node as replaced so that it won't do anything further
+            return false;
+        }
     }
 
     _fProcessed = true;

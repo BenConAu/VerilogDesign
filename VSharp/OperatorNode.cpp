@@ -58,8 +58,8 @@ void OperatorNode::VerifyNodeImpl()
 
 ExpressionResult *OperatorNode::CalculateResult()
 {
-    printf("Operation on node %p between two expressions\n", this);
-    GetContext()->DumpTree();
+    //printf("Operation on node %p between two expressions\n", this);
+    //GetContext()->DumpTree();
 
     ModuleDeclaratorNode *pFunc = GetTypedParent<ModuleDeclaratorNode>();
 
@@ -69,8 +69,8 @@ ExpressionResult *OperatorNode::CalculateResult()
     std::unique_ptr<ExpressionResult> leftResult(pLeft->TakeResult());
     std::unique_ptr<ExpressionResult> rightResult(pRight->TakeResult());
 
-    printf("Left = %s\n", leftResult != nullptr ? leftResult->DebugPrint().c_str() : "null result!");
-    printf("Right = %s\n", leftResult != nullptr ? rightResult->DebugPrint().c_str() : "null result!");
+    //printf("Left = %s\n", leftResult != nullptr ? leftResult->DebugPrint().c_str() : "null result!");
+    //printf("Right = %s\n", leftResult != nullptr ? rightResult->DebugPrint().c_str() : "null result!");
 
     if (leftResult.get() == nullptr || rightResult.get() == nullptr)
     {
