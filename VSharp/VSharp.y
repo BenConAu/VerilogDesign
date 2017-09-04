@@ -180,7 +180,7 @@ statement:
     ;
 
 expression_statement:
-      expression SEMICOLON                                          { $$ = $1; }
+      expression SEMICOLON                                          { $$ = new ExpressionStatementNode(pContext, @$, $1); }
     ;
 
 selection_statement:

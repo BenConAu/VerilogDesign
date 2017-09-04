@@ -1689,7 +1689,7 @@ yyreduce:
 
   case 19:
 #line 183 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = (yyvsp[-1].pNode); }
+    { (yyval.pNode) = new ExpressionStatementNode(pContext, (yyloc), (yyvsp[-1].pNode)); }
 #line 1694 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 

@@ -35,8 +35,6 @@ public:
   FunctionCallParamNode* GetParameter(size_t index) { return dynamic_cast<FunctionCallParamNode*>(GetChild(index + 1)); }
   size_t GetParameterCount() const { return (GetChildCount() - 1); }
   ASTNode* ExpandFunction(StatementNode* pOwningStatement);
-  
-private:
   FunctionInfo* GetFunctionInfo();
   
 private:

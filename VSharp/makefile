@@ -23,6 +23,8 @@ PSLcc: lex.yy.c \
 	   ExpressionNode.h \
 	   ExpressionResult.cpp \
 	   ExpressionResult.h \
+	   ExpressionStatementNode.cpp \
+	   ExpressionStatementNode.h \
 	   FieldSelectionNode.cpp \
 	   FieldSelectionNode.h \
 	   FunctionCallNode.h \
@@ -105,6 +107,7 @@ PSLcc: lex.yy.c \
 	   EnumTypeInfo.cpp \
 	   ExpressionNode.cpp \
 	   ExpressionResult.cpp \
+	   ExpressionStatementNode.cpp \
 	   FieldSelectionNode.cpp \
    	   FunctionCallNode.cpp \
 	   FunctionCallParamNode.cpp \

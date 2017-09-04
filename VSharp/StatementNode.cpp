@@ -1,6 +1,7 @@
 #include "StatementNode.h"
 #include "VSharpCompilerContext.h"
 #include "FunctionCallNode.h"
+#include "FunctionInfo.h"
 
 StatementNode::StatementNode(PSLCompilerContext* pContext, const YYLTYPE &location) : ASTNode(pContext)
 {
@@ -24,27 +25,34 @@ bool StatementNode::PreProcessNodeImpl()
     FunctionCallNode* pFunctionCallNode = GetFirstFunctionCall();
     if (pFunctionCallNode != nullptr)
     {
-        // Check that this statement is the actual owning statement
-        StatementNode* pOwningStatement = pFunctionCallNode->GetTypedParent<StatementNode>();
-        if (pOwningStatement == this)
+        // No declarator means that it is not a function that we defined, so we cannot expand it either
+        FunctionDeclaratorNode* pDeclarator = pFunctionCallNode->GetFunctionInfo()->GetFunctionDeclarator();
+        if (pDeclarator != nullptr)
         {
-            //printf("Found function call %p in statement %p\n", pFunctionCallNode, this);
-            
-            // Create the tree that will replace the expression
-            ASTNode* pReplacement = pFunctionCallNode->ExpandFunction(this);
-    
-            //printf("Created replacement node for function call %p\n", pFunctionCallNode);
-            //pReplacement->DumpNode();
-    
-            // Insert the node after this one
-            GetParent()->InsertChild(GetParent()->GetChildIndex(this) + 1, pReplacement);
-    
-            //printf("Attached replacement node\n");
-            //GetParent()->DumpNode();
-            
-            // Mark this node as replaced so that it won't do anything further
-            return false;
-        }
+            //printf("Found function call %p inside statement %p\n", pFunctionCallNode, this);
+
+            // Check that this statement is the actual owning statement
+            StatementNode* pOwningStatement = pFunctionCallNode->GetTypedParent<StatementNode>();
+            if (pOwningStatement == this)
+            {
+                //printf("Function call %p is owned by statement %p\n", pFunctionCallNode, this);
+                
+                // Create the tree that will replace the expression
+                ASTNode* pReplacement = pFunctionCallNode->ExpandFunction(this);
+        
+                //printf("Created replacement node for function call %p\n", pFunctionCallNode);
+                //pReplacement->DumpNode();
+        
+                // Insert the node after this one
+                GetParent()->InsertChild(GetParent()->GetChildIndex(this) + 1, pReplacement);
+        
+                //printf("Attached replacement node\n");
+                //GetParent()->DumpNode();
+                
+                // Mark this node as replaced so that it won't do anything further
+                return false;
+            }
+        }        
     }
 
     _fProcessed = true;

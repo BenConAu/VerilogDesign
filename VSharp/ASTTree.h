@@ -5,6 +5,7 @@
 #include "DriveDefinitionNode.h"
 #include "DriveListDefinitionNode.h"
 #include "EnumDefinitionNode.h"
+#include "ExpressionStatementNode.h"
 #include "FieldSelectionNode.h"
 #include "FunctionCallNode.h"
 #include "FunctionDeclaratorNode.h"
