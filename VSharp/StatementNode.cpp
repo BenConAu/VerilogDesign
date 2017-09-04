@@ -58,6 +58,11 @@ void StatementNode::SetCallReplacement(FunctionCallNode* pCallNode, ASTNode* pRe
 
 FunctionCallNode* StatementNode::GetFunctionCall(ASTNode* pNode)
 {
+    if (pNode == nullptr)
+    {
+        return nullptr;
+    }
+
     // Do we have a child that is a function call?
     FunctionCallNode* pCallNode = dynamic_cast<FunctionCallNode*>(pNode);
     if (pCallNode != nullptr)
