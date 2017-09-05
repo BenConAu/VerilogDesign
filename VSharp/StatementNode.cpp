@@ -7,6 +7,8 @@ StatementNode::StatementNode(PSLCompilerContext* pContext, const YYLTYPE &locati
 {
     _location = location;
     _fProcessed = false;
+    _pCallNode = nullptr;
+    _pReplacement = nullptr;
 }
 
 void StatementNode::DumpNodeImpl()
@@ -66,6 +68,7 @@ void StatementNode::SetCallReplacement(FunctionCallNode* pCallNode, ASTNode* pRe
 {
     if (pCallNode != nullptr && _pCallNode != nullptr)
     {
+        printf("Callnode is %p and replacementnode is %p\n", _pCallNode, _pReplacement);
         throw "Statement node should only be expanding with a single replacement at a time";
     }
 

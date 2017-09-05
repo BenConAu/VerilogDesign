@@ -5,6 +5,14 @@ enum ControllerStatus
   MCReady,
 }
 
+struct TLBEntry
+{
+  bool IsValid;
+  bool IsProtected;
+  uint<20> VirtualPage;
+  uint<20> PhysicalPage;
+}
+
 module MemoryController(
   out uint32 mcRamOut,            // [Output] RAM at requested address
   out ControllerStatus mcStatus,  // [Output] Status of controller (0 means not ready, 1 means ready, 2 means error)
@@ -34,12 +42,9 @@ module MemoryController(
   uint32 savedFirstWord;
   uint32 savedWriteData;
 
-  void GetPageNumber(
-    uint32 rawAddress,
-    out uint<20> pageNumber
-    )
+  uint<20> GetPageNumber(uint32 rawAddress)
   {
-    pageNumber = rawAddress[31:12];
+    return rawAddress[31:12];
   }
 
   void CalcPTEntryAddress(
@@ -60,26 +65,24 @@ module MemoryController(
   }
 
   // The TLB
-  uint64 ktlb[16];
-  uint64 utlb[16];
+  TLBEntry ktlb[16];
+  TLBEntry utlb[16];
 
-  void GetTLBEntry(
-    uint<4> pageNumber,
-    out uint64 tlbEntry)
+  TLBEntry GetTLBEntry(uint<4> pageNumber)
   {
     if (!mcExecMode)
     {
-      tlbEntry = ktlb[pageNumber];
+      return ktlb[pageNumber];
     }
     else
     {
-      tlbEntry = utlb[pageNumber];
+      return utlb[pageNumber];
     }
   }
     
   void SetTLBEntry(
     uint<4> pageNumber,
-    uint64 newEntry)
+    TLBEntry newEntry)
   {
     if (!mcExecMode)
     {
@@ -91,45 +94,20 @@ module MemoryController(
     }
   }
 
-  void GetTLBVirtPage(
-    uint64 tlbEntry,
-    out uint<20> tlbVirtPage)
+  uint<4> GetPageHash(
+    uint32 virtAddr)
   {
-    tlbVirtPage = tlbEntry[51:32];
-  }
-
-  uint<20> GetTLBPhysPage(uint64 tlbEntry)
-  {
-    return tlbEntry[19:0];
-  }
-
-  bool GetTLBValid(
-    uint64 tlbEntry)
-  {
-    return tlbEntry[63:63];
-  }
-
-  bool GetTLBProtected(
-    uint64 tlbEntry)
-  {
-    return tlbEntry[62:62];
-  }
-
-  void GetPageHash(
-    uint32 virtAddr,
-    out uint<4> pageHash)
-  {
-    pageHash = virtAddr[13:10];
+    return virtAddr[13:10];
   }
 
   void RequestPhysicalPage(
-    uint64 reqTLBEntry,
+    TLBEntry reqTLBEntry,
     uint32 reqVirtAddress,
     bool reqReadReq,
     bool reqWriteReq,
     uint32 reqWriteData)
   {
-    if (!GetTLBValid(reqTLBEntry))
+    if (!reqTLBEntry.IsValid)
     {
       //$display("Address maps to invalid TLB entry %h", reqTLBEntry);
 
@@ -138,7 +116,7 @@ module MemoryController(
     }
     else
     {
-      if (GetTLBProtected(reqTLBEntry) && mcExecMode)
+      if (reqTLBEntry.IsProtected && mcExecMode)
       {
         //$display("Attempting access to protected page from user mode, execMode = %h", mcExecMode);
 
@@ -150,7 +128,7 @@ module MemoryController(
         //$display("Building request from physical page %h and in-page address %h", GetTLBPhysPage(reqTLBEntry), reqVirtAddress[11:0]);
 
         // Translate page using TLB for upper bits
-        phRamAddress[31:12] = GetTLBPhysPage(reqTLBEntry);
+        phRamAddress[31:12] = reqTLBEntry.PhysicalPage;
 
         // Use lower bits from virtual address in physical address
         phRamAddress[11:0] = reqVirtAddress[11:0];
@@ -192,7 +170,7 @@ module MemoryController(
       else
       {
         // Need to translate - use the lower bits of the virtual page
-        if (GetTLBVirtPage(GetTLBEntry(GetPageHash(mcRamAddress))) == GetPageNumber(mcRamAddress))
+        if (GetTLBEntry(GetPageHash(mcRamAddress)).VirtualPage == GetPageNumber(mcRamAddress))
         {
           //$display(
             //"Page to translate %h found in TLB entry %h, index %h", 

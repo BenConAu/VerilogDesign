@@ -11,8 +11,13 @@ class GlomExpressionNode : public ExpressionNode
         const YYLTYPE &location,
         ASTNode *pExprList);
 
-    void VerifyNodeImpl() override;
+    GlomExpressionNode(
+        PSLCompilerContext *pContext,
+        const YYLTYPE &location);
 
+    void VerifyNodeImpl() override;
+    ASTNode* DuplicateNodeImpl() override;
+    
     ExpressionResult *CalculateResult() override;
     const char *GetDebugName() override { return "GlomExpressionNode"; }
 };

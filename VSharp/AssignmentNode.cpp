@@ -54,6 +54,8 @@ void AssignmentNode::PostProcessNodeImpl()
 
     if (leftResult.get() == nullptr || rightResult.get() == nullptr)
     {
+        printf("Assignment on node %p between two expressions\n", this);
+        GetContext()->DumpTree();
         GetContext()->ReportError(GetLocation(), "Assignment needs a valid expression on each side");
     }
 
