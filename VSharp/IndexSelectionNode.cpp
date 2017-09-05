@@ -15,6 +15,17 @@ IndexSelectionNode::IndexSelectionNode(
     AddNode(pIndex);
 }
 
+IndexSelectionNode::IndexSelectionNode(
+    PSLCompilerContext *pContext,
+    const YYLTYPE &location) : ExpressionNode(pContext, location)
+{
+}
+
+ASTNode* IndexSelectionNode::DuplicateNodeImpl()
+{
+    return new IndexSelectionNode(GetContext(), GetLocation());
+}
+
 void IndexSelectionNode::VerifyNodeImpl()
 {
     ExpressionNode *pExpr = dynamic_cast<ExpressionNode *>(GetChild(0));

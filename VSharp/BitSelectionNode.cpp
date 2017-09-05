@@ -18,6 +18,21 @@ BitSelectionNode::BitSelectionNode(
     _i2 = i2._value;
 }
 
+BitSelectionNode::BitSelectionNode(
+    PSLCompilerContext *pContext,
+    const YYLTYPE &location,
+    int i1,
+    int i2) : ExpressionNode(pContext, location)
+{
+    _i1 = i1;
+    _i2 = i2;
+}
+
+ASTNode* BitSelectionNode::DuplicateNodeImpl()
+{
+    return new BitSelectionNode(GetContext(), GetLocation(), _i1, _i2);
+}
+
 void BitSelectionNode::VerifyNodeImpl()
 {
     // Must be a uint type

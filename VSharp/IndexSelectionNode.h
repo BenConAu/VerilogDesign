@@ -11,9 +11,14 @@ class IndexSelectionNode : public ExpressionNode
         const YYLTYPE &location,
         ASTNode *pPostFix,
         ASTNode *pIndex);
-        
-    void VerifyNodeImpl() override;
 
+    IndexSelectionNode(
+        PSLCompilerContext *pContext,
+        const YYLTYPE &location);
+    
+    void VerifyNodeImpl() override;
+    ASTNode* DuplicateNodeImpl() override;
+    
     ExpressionResult *CalculateResult() override;
     const char *GetDebugName() override { return "IndexSelectionNode"; }
 };

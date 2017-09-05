@@ -13,8 +13,15 @@ class BitSelectionNode : public ExpressionNode
         const UIntConstant &i1,
         const UIntConstant &i2);
 
+    BitSelectionNode(
+      PSLCompilerContext *pContext,
+      const YYLTYPE &location,
+      int i1,
+      int i2);
+  
     void VerifyNodeImpl() override;
-
+    ASTNode* DuplicateNodeImpl() override;
+    
     ExpressionResult *CalculateResult() override;
     const char *GetDebugName() override { return "BitSelectionNode"; }
 
