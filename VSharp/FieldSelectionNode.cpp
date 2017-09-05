@@ -20,6 +20,23 @@ FieldSelectionNode::FieldSelectionNode(
     //printf("Field symbol index for %p is %d\n", this, _fieldSymIndex);
 }
 
+FieldSelectionNode::FieldSelectionNode(
+    PSLCompilerContext *pContext,
+    const YYLTYPE &location,
+    int symIndex,
+    StaticTypeInfo *pStaticTypeInfo,
+    StructTypeInfo *pStructTypeInfo) : ExpressionNode(pContext, location)
+{
+    _fieldSymIndex = symIndex;
+    _pStaticTypeInfo = pStaticTypeInfo;
+    _pStructTypeInfo = pStructTypeInfo;
+}
+
+ASTNode* FieldSelectionNode::DuplicateNodeImpl()
+{
+    return new FieldSelectionNode(GetContext(), GetLocation(), _fieldSymIndex, _pStaticTypeInfo, _pStructTypeInfo);
+}
+
 void FieldSelectionNode::VerifyNodeImpl()
 {
     ExpressionNode *pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));
@@ -86,6 +103,11 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
     }
     else
     {
+        if (childResult.get() == nullptr)
+        {
+            printf("Child expression %p returned null result to parent %p\n", pChildExpr, this);
+        }
+
         IdentifierNode* pIdentNode = dynamic_cast<IdentifierNode*>(GetChild(0));
         StructMember* pMember = _pStructTypeInfo->GetMember(_fieldSymIndex);
 

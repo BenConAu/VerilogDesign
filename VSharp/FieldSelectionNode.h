@@ -15,11 +15,19 @@ class FieldSelectionNode : public ExpressionNode
         ASTNode *pExpr,
         int symIndex);
 
+    FieldSelectionNode(
+        PSLCompilerContext *pContext,
+        const YYLTYPE &location,
+        int symIndex,
+        StaticTypeInfo *pStaticTypeInfo,
+        StructTypeInfo *pStructTypeInfo);
+              
     void VerifyNodeImpl() override;
 
     ExpressionResult *CalculateResult() override;
     const char *GetDebugName() override { return "FieldSelectionNode"; }
-
+    ASTNode* DuplicateNodeImpl() override;
+    
   private:
     int _fieldSymIndex;
 

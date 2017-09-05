@@ -22,8 +22,9 @@ protected:
     const YYLTYPE& GetLocation() { return _location; }
 
 private:
-    static FunctionCallNode* GetFunctionCall(ASTNode* pNode);
-
+    FunctionCallNode* GetFunctionCall(ASTNode* pNode);
+    bool IsReplaceableFunctionCall(ASTNode* pNode);
+    
 private:
     YYLTYPE _location;
     bool _fProcessed;

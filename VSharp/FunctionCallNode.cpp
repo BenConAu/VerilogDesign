@@ -135,7 +135,8 @@ ExpressionResult *FunctionCallNode::CalculateResult()
     FunctionDeclaratorNode* pFuncDecl = GetFunctionInfo()->GetFunctionDeclarator();
     if (pFuncDecl != nullptr)
     {
-        printf("Unexpected function call to %s\n", GetFunctionName());
+        printf("Unexpected function call %p named %s\n", this, GetFunctionName());
+        //GetContext()->DumpTree();
         return nullptr;
     }
     else

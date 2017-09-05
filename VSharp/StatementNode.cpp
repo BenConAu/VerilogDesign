@@ -21,6 +21,8 @@ void StatementNode::DumpNodeImpl()
 
 bool StatementNode::PreProcessNodeImpl()
 {
+    //printf("PreProcess for %p : %s\n", this, GetDebugName());
+    
     // We expand functions during pre-process so that we don't process until expansion is complete
     FunctionCallNode* pFunctionCallNode = GetFirstFunctionCall();
     if (pFunctionCallNode != nullptr)
@@ -71,6 +73,32 @@ void StatementNode::SetCallReplacement(FunctionCallNode* pCallNode, ASTNode* pRe
     _pReplacement = pReplacement;
 }
 
+bool StatementNode::IsReplaceableFunctionCall(ASTNode* pNode)
+{
+    // Needs to be a function call
+    FunctionCallNode* pFunctionCallNode = dynamic_cast<FunctionCallNode*>(pNode);
+    if (pFunctionCallNode == nullptr)
+    {
+        return false;
+    }
+
+    // Needs to have a declarator for us to expand it
+    FunctionDeclaratorNode* pDeclarator = pFunctionCallNode->GetFunctionInfo()->GetFunctionDeclarator();
+    if (pDeclarator == nullptr)
+    {
+        return false;
+    }
+
+    // Check that this statement is the actual owning statement
+    StatementNode* pOwningStatement = pFunctionCallNode->GetTypedParent<StatementNode>();
+    if (pOwningStatement == this)
+    {
+        return true;
+    }
+
+    return false;
+}
+
 FunctionCallNode* StatementNode::GetFunctionCall(ASTNode* pNode)
 {
     if (pNode == nullptr)
@@ -78,17 +106,15 @@ FunctionCallNode* StatementNode::GetFunctionCall(ASTNode* pNode)
         return nullptr;
     }
 
-    // Do we have a child that is a function call?
-    FunctionCallNode* pCallNode = dynamic_cast<FunctionCallNode*>(pNode);
-    if (pCallNode != nullptr)
+    if (IsReplaceableFunctionCall(pNode))
     {
-        return pCallNode;
+        return dynamic_cast<FunctionCallNode*>(pNode);
     }
 
     for (size_t i = 0; i < pNode->GetChildCount(); i++)
     {
         // Do we have a child that is a function call?
-        pCallNode = GetFunctionCall(pNode->GetChild(i));
+        FunctionCallNode* pCallNode = GetFunctionCall(pNode->GetChild(i));
         if (pCallNode != nullptr)
         {
             return pCallNode;
