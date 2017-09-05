@@ -3,6 +3,7 @@
 #include <string>
 
 class TypeCollection;
+class VariableInfo;
 
 enum class TypeClass
 {
@@ -27,6 +28,7 @@ class TypeInfo
     virtual TypeInfo* MakeSpecificType(TypeInfo* pGenericArgType, TypeCollection* pCollection) = 0;
     virtual bool IsVerilogRegister() const { return false; }
     virtual int GetBitLength() const { throw "Not a Verilog register type"; }
+    virtual std::string GetDeclaration(VariableInfo* pInfo) = 0;
 
     static bool IsFloat(TypeInfo *);
     static bool IsNonFloat(TypeInfo *);

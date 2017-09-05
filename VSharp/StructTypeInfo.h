@@ -65,7 +65,9 @@ public:
     {
         // Structs cannot currently have generic arguments
         return this;
-    }    
+    }
+
+    std::string GetDeclaration(VariableInfo* pInfo) override;
 
 private:
     int _symIndex;

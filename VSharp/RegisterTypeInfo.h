@@ -14,6 +14,7 @@ class RegisterTypeInfo : public TypeInfo
     int GetBitLength() const override { return _bitLength; }
     TypeInfo *MakeSpecificType(TypeInfo *pGenericArgType, TypeCollection *pCollection) override;
     bool IsVerilogRegister() const override { return true; }
+    std::string GetDeclaration(VariableInfo* pInfo) override;
     
   private:
     int _bitLength;

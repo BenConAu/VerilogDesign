@@ -71,6 +71,8 @@ public:
         return pGenericArgType;
     }
 
+    std::string GetDeclaration(VariableInfo*) override { throw "Wat"; }
+    
 private:
     int _symIndex;
     ModuleDeclaratorNode* _pScope;

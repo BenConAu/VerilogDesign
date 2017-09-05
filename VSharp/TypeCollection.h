@@ -20,7 +20,7 @@ public:
     EnumTypeInfo* GetEnumType(int symIndex);
     StructTypeInfo* GetStructType(int symIndex);
     RegisterTypeInfo* GetRegisterType(int bitLength);
-    ArrayTypeInfo* GetArrayType(TypeInfo* pBaseType);
+    ArrayTypeInfo* GetArrayType(TypeInfo* pBaseType, int arraySize);
     GenericTypeInfo* GetGenericType(int symIndex, ModuleDeclaratorNode* pScope);
     VoidTypeInfo* GetVoidType();
     ClockTypeInfo* GetClockType();

@@ -41,7 +41,7 @@ RegisterTypeInfo* TypeCollection::GetRegisterType(int bitLength)
     return _registerTypes[bitLength].get();
 }
 
-ArrayTypeInfo* TypeCollection::GetArrayType(TypeInfo* pBaseType)
+ArrayTypeInfo* TypeCollection::GetArrayType(TypeInfo* pBaseType, int arraySize)
 {
     if (pBaseType == nullptr)
     {
@@ -50,7 +50,7 @@ ArrayTypeInfo* TypeCollection::GetArrayType(TypeInfo* pBaseType)
 
     if (_arrayTypes.find(pBaseType) == _arrayTypes.end())
     {
-        _arrayTypes[pBaseType] = std::unique_ptr<ArrayTypeInfo>(new ArrayTypeInfo(pBaseType));
+        _arrayTypes[pBaseType] = std::unique_ptr<ArrayTypeInfo>(new ArrayTypeInfo(pBaseType, arraySize));
     }
 
     return _arrayTypes[pBaseType].get();

@@ -1,9 +1,10 @@
 #include "ArrayTypeInfo.h"
 #include "TypeCollection.h"
 
-ArrayTypeInfo::ArrayTypeInfo(TypeInfo *pBaseType)
+ArrayTypeInfo::ArrayTypeInfo(TypeInfo *pBaseType, int arraySize)
 {
     _pBaseType = pBaseType;
+    _arraySize = arraySize;
 }
 
 TypeClass ArrayTypeInfo::GetTypeClass()
@@ -44,10 +45,17 @@ bool ArrayTypeInfo::EqualType(TypeInfo *pOther)
 
 TypeInfo *ArrayTypeInfo::MakeSpecificType(TypeInfo *pGenericArgType, TypeCollection *pCollection)
 {
-    return pCollection->GetArrayType(_pBaseType->MakeSpecificType(pGenericArgType, pCollection));
+    return pCollection->GetArrayType(_pBaseType->MakeSpecificType(pGenericArgType, pCollection), _arraySize);
 }
 
 std::string ArrayTypeInfo::GetTypeName()
 {
     throw "Should not be asking for type name of array";
+}
+
+std::string ArrayTypeInfo::GetDeclaration(VariableInfo* pInfo)
+{
+    char buffer[1024];
+    sprintf(buffer, "%s[%d:0]", GetBaseType()->GetDeclaration(pInfo).c_str(), _arraySize - 1);
+    return buffer;
 }

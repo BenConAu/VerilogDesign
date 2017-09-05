@@ -6,7 +6,7 @@
 class ArrayTypeInfo : public TypeInfo
 {
 public:
-    ArrayTypeInfo(TypeInfo* pBaseType);
+    ArrayTypeInfo(TypeInfo* pBaseType, int arraySize);
     ~ArrayTypeInfo()
     {
         //printf("Destroying ArrayTypeInfo\n");
@@ -17,9 +17,11 @@ public:
     std::string GetTypeName() override;
     bool EqualType(TypeInfo* pOther) override;
     TypeInfo* MakeSpecificType(TypeInfo* pGenericArgType, TypeCollection* pCollection) override;
-
+    std::string GetDeclaration(VariableInfo* pInfo) override;
+    
     TypeInfo* GetBaseType();
 
 private:
     TypeInfo* _pBaseType;  // Type being pointed to
+    int _arraySize;
 };

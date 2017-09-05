@@ -1,5 +1,6 @@
 #include "StructTypeInfo.h"
 #include "VSharpCompilerContext.h"
+#include "VariableInfo.h"
 
 void StructTypeInfo::AddMember(
     PSLCompilerContext *pContext,
@@ -12,7 +13,7 @@ void StructTypeInfo::AddMember(
     if (dimension != -1)
     {
         // If the dimension is provided, then the type is of a pointer
-        pMemberType = pContext->_typeCollection.GetArrayType(pType);
+        pMemberType = pContext->_typeCollection.GetArrayType(pType, dimension);
     }
 
     _members.push_back(std::unique_ptr<StructMember>(new StructMember(symIndex, pMemberType, dimension)));
@@ -50,4 +51,11 @@ int StructTypeInfo::GetBitLength() const
     }
 
     return size;
+}
+
+std::string StructTypeInfo::GetDeclaration(VariableInfo* pInfo)
+{
+    char buffer[1024];
+    sprintf(buffer, "reg[%d:0] %s", GetBitLength() - 1, pInfo->GetSymbol());
+    return buffer;
 }

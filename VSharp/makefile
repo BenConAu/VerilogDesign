@@ -9,6 +9,8 @@ PSLcc: lex.yy.c \
 	   AssignmentNode.h \
 	   BitSelectionNode.cpp \
 	   BitSelectionNode.h \
+	   ClockTypeInfo.cpp \
+	   ClockTypeInfo.h \
 	   ConstantNode.cpp \
 	   ConstantNode.h \
 	   DriveDefinitionNode.cpp \
@@ -100,6 +102,7 @@ PSLcc: lex.yy.c \
 	   ASTNode.cpp \
 	   AssignmentNode.cpp \
 	   BitSelectionNode.cpp \
+	   ClockTypeInfo.cpp \
 	   ConstantNode.cpp \
 	   DriveDefinitionNode.cpp \
 	   DriveListDefinitionNode.cpp \

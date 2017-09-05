@@ -1,5 +1,6 @@
 #include "RegisterTypeInfo.h"
 #include "VSharpCompilerContext.h"
+#include "VariableInfo.h"
 #include "VSharp.tab.h"
 
 RegisterTypeInfo::RegisterTypeInfo(int bitLength)
@@ -51,4 +52,11 @@ TypeInfo *RegisterTypeInfo::MakeSpecificType(TypeInfo *pGenericArgType, TypeColl
 {
     // Basic types cannot have generic arguments
     return this;
+}
+
+std::string RegisterTypeInfo::GetDeclaration(VariableInfo* pInfo)
+{
+    char buffer[1024];
+    sprintf(buffer, "reg[%d:0] %s", GetBitLength() - 1, pInfo->GetSymbol());
+    return buffer;
 }

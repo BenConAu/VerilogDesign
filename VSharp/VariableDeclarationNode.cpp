@@ -26,6 +26,7 @@ VariableDeclarationNode::VariableDeclarationNode(
 
     _symIndex = symIndex;
     _arraySize = arraySize._value;
+    _location = location;
 }
 
 VariableDeclarationNode::VariableDeclarationNode(
@@ -47,6 +48,7 @@ VariableDeclarationNode::VariableDeclarationNode(
 
     _symIndex = symIndex;
     _arraySize = -1;
+    _location = location;
 }
 
 void VariableDeclarationNode::PreVerifyNodeImpl()
@@ -57,7 +59,7 @@ void VariableDeclarationNode::PreVerifyNodeImpl()
     TypeInfo* pInfo = dynamic_cast<TypeNode *>(GetChild(0))->GetTypeInfo();
     if (_arraySize != -1)
     {
-        pInfo = GetContext()->_typeCollection.GetArrayType(pInfo);
+        pInfo = GetContext()->_typeCollection.GetArrayType(pInfo, _arraySize);
     }
 
     // Add variable to collection and mark first usage
@@ -75,39 +77,9 @@ void VariableDeclarationNode::PostProcessNodeImpl()
     // Spit out the preamble
     VariableInfo* pInfo = dynamic_cast<VariableInfo*>(GetContext()->_symbolTable.GetInfo(_symIndex, pModule));
 
-    // Find out the bit width
-    if (_arraySize == -1)
-    {
-        RegisterTypeInfo* pRegInfo = dynamic_cast<RegisterTypeInfo*>(pInfo->GetTypeInfo());
-        if (pRegInfo != nullptr)
-        {
-            GetContext()->OutputLine("reg[%d:0] %s;", pRegInfo->GetBitLength() - 1, pInfo->GetSymbol());
-        }
-        else
-        {
-            ClockTypeInfo* pClockInfo = dynamic_cast<ClockTypeInfo*>(pInfo->GetTypeInfo());
-            if (pClockInfo != nullptr)
-            {
-                GetContext()->OutputLine("reg %s = 0; always #5 %s = !%s;", pInfo->GetSymbol(), pInfo->GetSymbol(), pInfo->GetSymbol());
-            }
-            else
-            {
-                StructTypeInfo* pStructInfo = dynamic_cast<StructTypeInfo*>(pInfo->GetTypeInfo());
-                if (pStructInfo != nullptr)
-                {
-                    GetContext()->OutputLine("reg[%d:0] %s;", pStructInfo->GetBitLength() - 1, pInfo->GetSymbol());                    
-                }
-                else
-                {
-                    throw "Bad type, fix verify";
-                }
-            }
-        }
-    }
-    else
-    {
-        ArrayTypeInfo* pArrayInfo = dynamic_cast<ArrayTypeInfo*>(pInfo->GetTypeInfo());
-        RegisterTypeInfo* pRegInfo = dynamic_cast<RegisterTypeInfo*>(pArrayInfo->GetBaseType());
-        GetContext()->OutputLine("reg[%d:0] %s[%d:0];", pRegInfo->GetBitLength() - 1, pInfo->GetSymbol(), _arraySize - 1);
-    }
+    // Each type should know how to make a declaration
+    std::string decl = pInfo->GetTypeInfo()->GetDeclaration(pInfo);
+
+    // This node owns putting the semicolon on it
+    GetContext()->OutputLine("%s;", decl.c_str());    
 }

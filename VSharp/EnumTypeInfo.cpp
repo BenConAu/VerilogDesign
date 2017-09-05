@@ -1,5 +1,6 @@
 #include "EnumTypeInfo.h"
 #include "VSharpCompilerContext.h"
+#include "VariableInfo.h"
 #include <cmath>
 
 EnumTypeInfo::EnumTypeInfo(int symIndex, PSLCompilerContext* pContext)
@@ -69,4 +70,11 @@ int EnumTypeInfo::GetBitLength() const
     {
         return static_cast<int>(::ceil(::log2(_values.size())));
     }
+}
+
+std::string EnumTypeInfo::GetDeclaration(VariableInfo* pInfo)
+{
+    char buffer[1024];
+    sprintf(buffer, "reg[%d:0] %s", GetBitLength() - 1, pInfo->GetSymbol());
+    return buffer;
 }
