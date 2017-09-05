@@ -37,7 +37,8 @@ public:
     const char* GetDebugName() override { return "FunctionDeclaratorNode"; }
     const char* GetFunctionName() { return GetContext()->_symbols[_symIndex].c_str(); }
 
-    ASTNode* DuplicateIdentifier(int symIndex);
+    bool IsParameter(int symIndex);
+    ASTNode* DuplicateParameterIdentifier(int symIndex);
     ASTNode* ExpandFunction(FunctionCallNode* pCall, StatementNode* pStatement);
     StatementNode* GetStatementNode() { return _pStatementNode; }
     FunctionCallNode* GetCallNode() { return _pCallNode; }

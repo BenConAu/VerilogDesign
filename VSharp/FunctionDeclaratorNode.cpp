@@ -58,9 +58,26 @@ void FunctionDeclaratorNode::VerifyNodeImpl()
         );
 }
 
-ASTNode* FunctionDeclaratorNode::DuplicateIdentifier(int symIndex)
+bool FunctionDeclaratorNode::IsParameter(int symIndex)
+{
+    if (_passedArgs.count(symIndex) == 0)
+    {
+        // We don't know what this is
+        return false;
+    }
+
+    return true;
+}
+
+
+ASTNode* FunctionDeclaratorNode::DuplicateParameterIdentifier(int symIndex)
 {
     //printf("Result from symbol\n");
+
+    if (!IsParameter(symIndex))
+    {
+        throw "Non-paramter symbol index given";
+    }
 
     // Which parameter did this refer to?
     size_t pIndex = _passedArgs[symIndex];

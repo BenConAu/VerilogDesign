@@ -30,9 +30,9 @@ ASTNode* IdentifierNode::DuplicateNodeImpl()
 
     // Are we in a function?
     FunctionDeclaratorNode *pFuncDecl = GetTypedParent<FunctionDeclaratorNode>();
-    if (pFuncDecl != nullptr)
+    if (pFuncDecl != nullptr && pFuncDecl->IsParameter(_symIndex))
     {
-        return pFuncDecl->DuplicateIdentifier(_symIndex);
+        return pFuncDecl->DuplicateParameterIdentifier(_symIndex);
     }
     else
     {
