@@ -5,6 +5,7 @@
 ExpressionResult::ExpressionResult(const std::string& str)
 {
     _result = str;
+    _IsConstant = false;
     _pStaticInfo = nullptr;
     _pConstructorCall = nullptr;
 }
@@ -12,7 +13,7 @@ ExpressionResult::ExpressionResult(const std::string& str)
 ExpressionResult::ExpressionResult(StaticTypeInfo* pInfo)
 {
     //printf("Creating expression result from static type info\n");
-
+    _IsConstant = false;
     _pStaticInfo = pInfo;
     _pConstructorCall = nullptr;
 }
@@ -20,7 +21,18 @@ ExpressionResult::ExpressionResult(StaticTypeInfo* pInfo)
 ExpressionResult::ExpressionResult(const std::string& str, FunctionCallNode* pNode)
 {
     _result = str;
+    _IsConstant = false;
+    _pStaticInfo = nullptr;
     _pConstructorCall = pNode;
+}
+
+ExpressionResult::ExpressionResult(const std::string& str, bool constantValue)
+{
+    _result = str;
+    _IsConstant = true;
+    _ConstantValue = constantValue;
+    _pStaticInfo = nullptr;
+    _pConstructorCall = nullptr;
 }
 
 const std::string& ExpressionResult::GetString() const 

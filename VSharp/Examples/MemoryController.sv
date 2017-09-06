@@ -84,638 +84,316 @@ module MemoryController(
               begin
                 if (ktlb[mcRamAddress[13:10]][39:20] == mcRamAddress[31:12] && ktlb[mcRamAddress[13:10]][63:63])
                 begin
-                  if (1)
+                  if (mcExecMode)
                   begin
-                    if (mcExecMode)
+                    if (ktlb[mcRamAddress[13:10]][63:63])
                     begin
-                      if (ktlb[mcRamAddress[13:10]][63:63])
-                      begin
-                        mcStatus <= 0;
-                        fsmState <= `__Error;
-                      end
-                      else
-                      begin
-                        if (mcExecMode)
-                        begin
-                          if (ktlb[mcRamAddress[13:10]][62:62] && mcExecMode)
-                          begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
-                          end
-                          else
-                          begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
-                          end
-                        end
-                        else
-                        begin
-                          if (utlb[mcRamAddress[13:10]][62:62] && mcExecMode)
-                          begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
-                          end
-                          else
-                          begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
-                          end
-                        end
-                      end
+                      mcStatus <= 0;
+                      fsmState <= `__Error;
                     end
                     else
                     begin
-                      if (utlb[mcRamAddress[13:10]][63:63])
+                      if (mcExecMode)
                       begin
-                        mcStatus <= 0;
-                        fsmState <= `__Error;
-                      end
-                      else
-                      begin
-                        if (mcExecMode)
+                        if (ktlb[mcRamAddress[13:10]][62:62] && mcExecMode)
                         begin
-                          if (ktlb[mcRamAddress[13:10]][62:62] && mcExecMode)
-                          begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
-                          end
-                          else
-                          begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
-                          end
+                          mcStatus <= 0;
+                          fsmState <= `__Error;
                         end
                         else
                         begin
-                          if (utlb[mcRamAddress[13:10]][62:62] && mcExecMode)
+                          if (mcExecMode)
                           begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
+                            phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
                           end
                           else
                           begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
+                            phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
                           end
+                          phRamAddress[11:0] <= mcRamAddress[11:0];
+                          phReadReq <= mcReadReq;
+                          phWriteReq <= mcWriteReq;
+                          phRamOut <= mcRamIn;
+                          isRead <= mcReadReq;
+                          mcStatus <= 1;
+                          fsmState <= `__PRamWait1;
+                        end
+                      end
+                      else
+                      begin
+                        if (utlb[mcRamAddress[13:10]][62:62] && mcExecMode)
+                        begin
+                          mcStatus <= 0;
+                          fsmState <= `__Error;
+                        end
+                        else
+                        begin
+                          if (mcExecMode)
+                          begin
+                            phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
+                          end
+                          else
+                          begin
+                            phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
+                          end
+                          phRamAddress[11:0] <= mcRamAddress[11:0];
+                          phReadReq <= mcReadReq;
+                          phWriteReq <= mcWriteReq;
+                          phRamOut <= mcRamIn;
+                          isRead <= mcReadReq;
+                          mcStatus <= 1;
+                          fsmState <= `__PRamWait1;
                         end
                       end
                     end
                   end
                   else
                   begin
-                    if (mcExecMode)
+                    if (utlb[mcRamAddress[13:10]][63:63])
                     begin
-                      phRamAddress <= kptAddress + mcRamAddress[17:12] * 8;
+                      mcStatus <= 0;
+                      fsmState <= `__Error;
                     end
                     else
                     begin
-                      phRamAddress <= uptAddress + mcRamAddress[17:12] * 8;
+                      if (mcExecMode)
+                      begin
+                        if (ktlb[mcRamAddress[13:10]][62:62] && mcExecMode)
+                        begin
+                          mcStatus <= 0;
+                          fsmState <= `__Error;
+                        end
+                        else
+                        begin
+                          if (mcExecMode)
+                          begin
+                            phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
+                          end
+                          else
+                          begin
+                            phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
+                          end
+                          phRamAddress[11:0] <= mcRamAddress[11:0];
+                          phReadReq <= mcReadReq;
+                          phWriteReq <= mcWriteReq;
+                          phRamOut <= mcRamIn;
+                          isRead <= mcReadReq;
+                          mcStatus <= 1;
+                          fsmState <= `__PRamWait1;
+                        end
+                      end
+                      else
+                      begin
+                        if (utlb[mcRamAddress[13:10]][62:62] && mcExecMode)
+                        begin
+                          mcStatus <= 0;
+                          fsmState <= `__Error;
+                        end
+                        else
+                        begin
+                          if (mcExecMode)
+                          begin
+                            phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
+                          end
+                          else
+                          begin
+                            phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
+                          end
+                          phRamAddress[11:0] <= mcRamAddress[11:0];
+                          phReadReq <= mcReadReq;
+                          phWriteReq <= mcWriteReq;
+                          phRamOut <= mcRamIn;
+                          isRead <= mcReadReq;
+                          mcStatus <= 1;
+                          fsmState <= `__PRamWait1;
+                        end
+                      end
                     end
-                    phReadReq <= 1;
-                    savedVirtAddr <= mcRamAddress;
-                    if (mcExecMode)
-                    begin
-                      savedPTReadAddr <= kptAddress + mcRamAddress[17:12] * 8;
-                    end
-                    else
-                    begin
-                      savedPTReadAddr <= uptAddress + mcRamAddress[17:12] * 8;
-                    end
-                    savedReadReq <= mcReadReq;
-                    savedWriteReq <= mcWriteReq;
-                    savedWriteData <= mcRamIn;
-                    mcStatus <= 1;
-                    fsmState <= `__VPTWait1;
                   end
                 end
                 else
                 begin
-                  if (0)
+                  if (mcExecMode)
                   begin
-                    if (mcExecMode)
-                    begin
-                      if (ktlb[mcRamAddress[13:10]][63:63])
-                      begin
-                        mcStatus <= 0;
-                        fsmState <= `__Error;
-                      end
-                      else
-                      begin
-                        if (mcExecMode)
-                        begin
-                          if (ktlb[mcRamAddress[13:10]][62:62] && mcExecMode)
-                          begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
-                          end
-                          else
-                          begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
-                          end
-                        end
-                        else
-                        begin
-                          if (utlb[mcRamAddress[13:10]][62:62] && mcExecMode)
-                          begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
-                          end
-                          else
-                          begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
-                          end
-                        end
-                      end
-                    end
-                    else
-                    begin
-                      if (utlb[mcRamAddress[13:10]][63:63])
-                      begin
-                        mcStatus <= 0;
-                        fsmState <= `__Error;
-                      end
-                      else
-                      begin
-                        if (mcExecMode)
-                        begin
-                          if (ktlb[mcRamAddress[13:10]][62:62] && mcExecMode)
-                          begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
-                          end
-                          else
-                          begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
-                          end
-                        end
-                        else
-                        begin
-                          if (utlb[mcRamAddress[13:10]][62:62] && mcExecMode)
-                          begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
-                          end
-                          else
-                          begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
-                          end
-                        end
-                      end
-                    end
+                    phRamAddress <= kptAddress + mcRamAddress[17:12] * 8;
                   end
                   else
                   begin
-                    if (mcExecMode)
-                    begin
-                      phRamAddress <= kptAddress + mcRamAddress[17:12] * 8;
-                    end
-                    else
-                    begin
-                      phRamAddress <= uptAddress + mcRamAddress[17:12] * 8;
-                    end
-                    phReadReq <= 1;
-                    savedVirtAddr <= mcRamAddress;
-                    if (mcExecMode)
-                    begin
-                      savedPTReadAddr <= kptAddress + mcRamAddress[17:12] * 8;
-                    end
-                    else
-                    begin
-                      savedPTReadAddr <= uptAddress + mcRamAddress[17:12] * 8;
-                    end
-                    savedReadReq <= mcReadReq;
-                    savedWriteReq <= mcWriteReq;
-                    savedWriteData <= mcRamIn;
-                    mcStatus <= 1;
-                    fsmState <= `__VPTWait1;
+                    phRamAddress <= uptAddress + mcRamAddress[17:12] * 8;
                   end
+                  phReadReq <= 1;
+                  savedVirtAddr <= mcRamAddress;
+                  if (mcExecMode)
+                  begin
+                    savedPTReadAddr <= kptAddress + mcRamAddress[17:12] * 8;
+                  end
+                  else
+                  begin
+                    savedPTReadAddr <= uptAddress + mcRamAddress[17:12] * 8;
+                  end
+                  savedReadReq <= mcReadReq;
+                  savedWriteReq <= mcWriteReq;
+                  savedWriteData <= mcRamIn;
+                  mcStatus <= 1;
+                  fsmState <= `__VPTWait1;
                 end
               end
               else
               begin
                 if (ktlb[mcRamAddress[13:10]][39:20] == mcRamAddress[31:12] && utlb[mcRamAddress[13:10]][63:63])
                 begin
-                  if (1)
+                  if (mcExecMode)
                   begin
-                    if (mcExecMode)
+                    if (ktlb[mcRamAddress[13:10]][63:63])
                     begin
-                      if (ktlb[mcRamAddress[13:10]][63:63])
-                      begin
-                        mcStatus <= 0;
-                        fsmState <= `__Error;
-                      end
-                      else
-                      begin
-                        if (mcExecMode)
-                        begin
-                          if (ktlb[mcRamAddress[13:10]][62:62] && mcExecMode)
-                          begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
-                          end
-                          else
-                          begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
-                          end
-                        end
-                        else
-                        begin
-                          if (utlb[mcRamAddress[13:10]][62:62] && mcExecMode)
-                          begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
-                          end
-                          else
-                          begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
-                          end
-                        end
-                      end
+                      mcStatus <= 0;
+                      fsmState <= `__Error;
                     end
                     else
                     begin
-                      if (utlb[mcRamAddress[13:10]][63:63])
+                      if (mcExecMode)
                       begin
-                        mcStatus <= 0;
-                        fsmState <= `__Error;
-                      end
-                      else
-                      begin
-                        if (mcExecMode)
+                        if (ktlb[mcRamAddress[13:10]][62:62] && mcExecMode)
                         begin
-                          if (ktlb[mcRamAddress[13:10]][62:62] && mcExecMode)
-                          begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
-                          end
-                          else
-                          begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
-                          end
+                          mcStatus <= 0;
+                          fsmState <= `__Error;
                         end
                         else
                         begin
-                          if (utlb[mcRamAddress[13:10]][62:62] && mcExecMode)
+                          if (mcExecMode)
                           begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
+                            phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
                           end
                           else
                           begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
+                            phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
                           end
+                          phRamAddress[11:0] <= mcRamAddress[11:0];
+                          phReadReq <= mcReadReq;
+                          phWriteReq <= mcWriteReq;
+                          phRamOut <= mcRamIn;
+                          isRead <= mcReadReq;
+                          mcStatus <= 1;
+                          fsmState <= `__PRamWait1;
+                        end
+                      end
+                      else
+                      begin
+                        if (utlb[mcRamAddress[13:10]][62:62] && mcExecMode)
+                        begin
+                          mcStatus <= 0;
+                          fsmState <= `__Error;
+                        end
+                        else
+                        begin
+                          if (mcExecMode)
+                          begin
+                            phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
+                          end
+                          else
+                          begin
+                            phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
+                          end
+                          phRamAddress[11:0] <= mcRamAddress[11:0];
+                          phReadReq <= mcReadReq;
+                          phWriteReq <= mcWriteReq;
+                          phRamOut <= mcRamIn;
+                          isRead <= mcReadReq;
+                          mcStatus <= 1;
+                          fsmState <= `__PRamWait1;
                         end
                       end
                     end
                   end
                   else
                   begin
-                    if (mcExecMode)
+                    if (utlb[mcRamAddress[13:10]][63:63])
                     begin
-                      phRamAddress <= kptAddress + mcRamAddress[17:12] * 8;
+                      mcStatus <= 0;
+                      fsmState <= `__Error;
                     end
                     else
                     begin
-                      phRamAddress <= uptAddress + mcRamAddress[17:12] * 8;
+                      if (mcExecMode)
+                      begin
+                        if (ktlb[mcRamAddress[13:10]][62:62] && mcExecMode)
+                        begin
+                          mcStatus <= 0;
+                          fsmState <= `__Error;
+                        end
+                        else
+                        begin
+                          if (mcExecMode)
+                          begin
+                            phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
+                          end
+                          else
+                          begin
+                            phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
+                          end
+                          phRamAddress[11:0] <= mcRamAddress[11:0];
+                          phReadReq <= mcReadReq;
+                          phWriteReq <= mcWriteReq;
+                          phRamOut <= mcRamIn;
+                          isRead <= mcReadReq;
+                          mcStatus <= 1;
+                          fsmState <= `__PRamWait1;
+                        end
+                      end
+                      else
+                      begin
+                        if (utlb[mcRamAddress[13:10]][62:62] && mcExecMode)
+                        begin
+                          mcStatus <= 0;
+                          fsmState <= `__Error;
+                        end
+                        else
+                        begin
+                          if (mcExecMode)
+                          begin
+                            phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
+                          end
+                          else
+                          begin
+                            phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
+                          end
+                          phRamAddress[11:0] <= mcRamAddress[11:0];
+                          phReadReq <= mcReadReq;
+                          phWriteReq <= mcWriteReq;
+                          phRamOut <= mcRamIn;
+                          isRead <= mcReadReq;
+                          mcStatus <= 1;
+                          fsmState <= `__PRamWait1;
+                        end
+                      end
                     end
-                    phReadReq <= 1;
-                    savedVirtAddr <= mcRamAddress;
-                    if (mcExecMode)
-                    begin
-                      savedPTReadAddr <= kptAddress + mcRamAddress[17:12] * 8;
-                    end
-                    else
-                    begin
-                      savedPTReadAddr <= uptAddress + mcRamAddress[17:12] * 8;
-                    end
-                    savedReadReq <= mcReadReq;
-                    savedWriteReq <= mcWriteReq;
-                    savedWriteData <= mcRamIn;
-                    mcStatus <= 1;
-                    fsmState <= `__VPTWait1;
                   end
                 end
                 else
                 begin
-                  if (0)
+                  if (mcExecMode)
                   begin
-                    if (mcExecMode)
-                    begin
-                      if (ktlb[mcRamAddress[13:10]][63:63])
-                      begin
-                        mcStatus <= 0;
-                        fsmState <= `__Error;
-                      end
-                      else
-                      begin
-                        if (mcExecMode)
-                        begin
-                          if (ktlb[mcRamAddress[13:10]][62:62] && mcExecMode)
-                          begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
-                          end
-                          else
-                          begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
-                          end
-                        end
-                        else
-                        begin
-                          if (utlb[mcRamAddress[13:10]][62:62] && mcExecMode)
-                          begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
-                          end
-                          else
-                          begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
-                          end
-                        end
-                      end
-                    end
-                    else
-                    begin
-                      if (utlb[mcRamAddress[13:10]][63:63])
-                      begin
-                        mcStatus <= 0;
-                        fsmState <= `__Error;
-                      end
-                      else
-                      begin
-                        if (mcExecMode)
-                        begin
-                          if (ktlb[mcRamAddress[13:10]][62:62] && mcExecMode)
-                          begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
-                          end
-                          else
-                          begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
-                          end
-                        end
-                        else
-                        begin
-                          if (utlb[mcRamAddress[13:10]][62:62] && mcExecMode)
-                          begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
-                          end
-                          else
-                          begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
-                          end
-                        end
-                      end
-                    end
+                    phRamAddress <= kptAddress + mcRamAddress[17:12] * 8;
                   end
                   else
                   begin
-                    if (mcExecMode)
-                    begin
-                      phRamAddress <= kptAddress + mcRamAddress[17:12] * 8;
-                    end
-                    else
-                    begin
-                      phRamAddress <= uptAddress + mcRamAddress[17:12] * 8;
-                    end
-                    phReadReq <= 1;
-                    savedVirtAddr <= mcRamAddress;
-                    if (mcExecMode)
-                    begin
-                      savedPTReadAddr <= kptAddress + mcRamAddress[17:12] * 8;
-                    end
-                    else
-                    begin
-                      savedPTReadAddr <= uptAddress + mcRamAddress[17:12] * 8;
-                    end
-                    savedReadReq <= mcReadReq;
-                    savedWriteReq <= mcWriteReq;
-                    savedWriteData <= mcRamIn;
-                    mcStatus <= 1;
-                    fsmState <= `__VPTWait1;
+                    phRamAddress <= uptAddress + mcRamAddress[17:12] * 8;
                   end
+                  phReadReq <= 1;
+                  savedVirtAddr <= mcRamAddress;
+                  if (mcExecMode)
+                  begin
+                    savedPTReadAddr <= kptAddress + mcRamAddress[17:12] * 8;
+                  end
+                  else
+                  begin
+                    savedPTReadAddr <= uptAddress + mcRamAddress[17:12] * 8;
+                  end
+                  savedReadReq <= mcReadReq;
+                  savedWriteReq <= mcWriteReq;
+                  savedWriteData <= mcRamIn;
+                  mcStatus <= 1;
+                  fsmState <= `__VPTWait1;
                 end
               end
             end
@@ -725,638 +403,316 @@ module MemoryController(
               begin
                 if (utlb[mcRamAddress[13:10]][39:20] == mcRamAddress[31:12] && ktlb[mcRamAddress[13:10]][63:63])
                 begin
-                  if (1)
+                  if (mcExecMode)
                   begin
-                    if (mcExecMode)
+                    if (ktlb[mcRamAddress[13:10]][63:63])
                     begin
-                      if (ktlb[mcRamAddress[13:10]][63:63])
-                      begin
-                        mcStatus <= 0;
-                        fsmState <= `__Error;
-                      end
-                      else
-                      begin
-                        if (mcExecMode)
-                        begin
-                          if (ktlb[mcRamAddress[13:10]][62:62] && mcExecMode)
-                          begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
-                          end
-                          else
-                          begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
-                          end
-                        end
-                        else
-                        begin
-                          if (utlb[mcRamAddress[13:10]][62:62] && mcExecMode)
-                          begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
-                          end
-                          else
-                          begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
-                          end
-                        end
-                      end
+                      mcStatus <= 0;
+                      fsmState <= `__Error;
                     end
                     else
                     begin
-                      if (utlb[mcRamAddress[13:10]][63:63])
+                      if (mcExecMode)
                       begin
-                        mcStatus <= 0;
-                        fsmState <= `__Error;
-                      end
-                      else
-                      begin
-                        if (mcExecMode)
+                        if (ktlb[mcRamAddress[13:10]][62:62] && mcExecMode)
                         begin
-                          if (ktlb[mcRamAddress[13:10]][62:62] && mcExecMode)
-                          begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
-                          end
-                          else
-                          begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
-                          end
+                          mcStatus <= 0;
+                          fsmState <= `__Error;
                         end
                         else
                         begin
-                          if (utlb[mcRamAddress[13:10]][62:62] && mcExecMode)
+                          if (mcExecMode)
                           begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
+                            phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
                           end
                           else
                           begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
+                            phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
                           end
+                          phRamAddress[11:0] <= mcRamAddress[11:0];
+                          phReadReq <= mcReadReq;
+                          phWriteReq <= mcWriteReq;
+                          phRamOut <= mcRamIn;
+                          isRead <= mcReadReq;
+                          mcStatus <= 1;
+                          fsmState <= `__PRamWait1;
+                        end
+                      end
+                      else
+                      begin
+                        if (utlb[mcRamAddress[13:10]][62:62] && mcExecMode)
+                        begin
+                          mcStatus <= 0;
+                          fsmState <= `__Error;
+                        end
+                        else
+                        begin
+                          if (mcExecMode)
+                          begin
+                            phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
+                          end
+                          else
+                          begin
+                            phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
+                          end
+                          phRamAddress[11:0] <= mcRamAddress[11:0];
+                          phReadReq <= mcReadReq;
+                          phWriteReq <= mcWriteReq;
+                          phRamOut <= mcRamIn;
+                          isRead <= mcReadReq;
+                          mcStatus <= 1;
+                          fsmState <= `__PRamWait1;
                         end
                       end
                     end
                   end
                   else
                   begin
-                    if (mcExecMode)
+                    if (utlb[mcRamAddress[13:10]][63:63])
                     begin
-                      phRamAddress <= kptAddress + mcRamAddress[17:12] * 8;
+                      mcStatus <= 0;
+                      fsmState <= `__Error;
                     end
                     else
                     begin
-                      phRamAddress <= uptAddress + mcRamAddress[17:12] * 8;
+                      if (mcExecMode)
+                      begin
+                        if (ktlb[mcRamAddress[13:10]][62:62] && mcExecMode)
+                        begin
+                          mcStatus <= 0;
+                          fsmState <= `__Error;
+                        end
+                        else
+                        begin
+                          if (mcExecMode)
+                          begin
+                            phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
+                          end
+                          else
+                          begin
+                            phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
+                          end
+                          phRamAddress[11:0] <= mcRamAddress[11:0];
+                          phReadReq <= mcReadReq;
+                          phWriteReq <= mcWriteReq;
+                          phRamOut <= mcRamIn;
+                          isRead <= mcReadReq;
+                          mcStatus <= 1;
+                          fsmState <= `__PRamWait1;
+                        end
+                      end
+                      else
+                      begin
+                        if (utlb[mcRamAddress[13:10]][62:62] && mcExecMode)
+                        begin
+                          mcStatus <= 0;
+                          fsmState <= `__Error;
+                        end
+                        else
+                        begin
+                          if (mcExecMode)
+                          begin
+                            phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
+                          end
+                          else
+                          begin
+                            phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
+                          end
+                          phRamAddress[11:0] <= mcRamAddress[11:0];
+                          phReadReq <= mcReadReq;
+                          phWriteReq <= mcWriteReq;
+                          phRamOut <= mcRamIn;
+                          isRead <= mcReadReq;
+                          mcStatus <= 1;
+                          fsmState <= `__PRamWait1;
+                        end
+                      end
                     end
-                    phReadReq <= 1;
-                    savedVirtAddr <= mcRamAddress;
-                    if (mcExecMode)
-                    begin
-                      savedPTReadAddr <= kptAddress + mcRamAddress[17:12] * 8;
-                    end
-                    else
-                    begin
-                      savedPTReadAddr <= uptAddress + mcRamAddress[17:12] * 8;
-                    end
-                    savedReadReq <= mcReadReq;
-                    savedWriteReq <= mcWriteReq;
-                    savedWriteData <= mcRamIn;
-                    mcStatus <= 1;
-                    fsmState <= `__VPTWait1;
                   end
                 end
                 else
                 begin
-                  if (0)
+                  if (mcExecMode)
                   begin
-                    if (mcExecMode)
-                    begin
-                      if (ktlb[mcRamAddress[13:10]][63:63])
-                      begin
-                        mcStatus <= 0;
-                        fsmState <= `__Error;
-                      end
-                      else
-                      begin
-                        if (mcExecMode)
-                        begin
-                          if (ktlb[mcRamAddress[13:10]][62:62] && mcExecMode)
-                          begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
-                          end
-                          else
-                          begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
-                          end
-                        end
-                        else
-                        begin
-                          if (utlb[mcRamAddress[13:10]][62:62] && mcExecMode)
-                          begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
-                          end
-                          else
-                          begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
-                          end
-                        end
-                      end
-                    end
-                    else
-                    begin
-                      if (utlb[mcRamAddress[13:10]][63:63])
-                      begin
-                        mcStatus <= 0;
-                        fsmState <= `__Error;
-                      end
-                      else
-                      begin
-                        if (mcExecMode)
-                        begin
-                          if (ktlb[mcRamAddress[13:10]][62:62] && mcExecMode)
-                          begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
-                          end
-                          else
-                          begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
-                          end
-                        end
-                        else
-                        begin
-                          if (utlb[mcRamAddress[13:10]][62:62] && mcExecMode)
-                          begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
-                          end
-                          else
-                          begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
-                          end
-                        end
-                      end
-                    end
+                    phRamAddress <= kptAddress + mcRamAddress[17:12] * 8;
                   end
                   else
                   begin
-                    if (mcExecMode)
-                    begin
-                      phRamAddress <= kptAddress + mcRamAddress[17:12] * 8;
-                    end
-                    else
-                    begin
-                      phRamAddress <= uptAddress + mcRamAddress[17:12] * 8;
-                    end
-                    phReadReq <= 1;
-                    savedVirtAddr <= mcRamAddress;
-                    if (mcExecMode)
-                    begin
-                      savedPTReadAddr <= kptAddress + mcRamAddress[17:12] * 8;
-                    end
-                    else
-                    begin
-                      savedPTReadAddr <= uptAddress + mcRamAddress[17:12] * 8;
-                    end
-                    savedReadReq <= mcReadReq;
-                    savedWriteReq <= mcWriteReq;
-                    savedWriteData <= mcRamIn;
-                    mcStatus <= 1;
-                    fsmState <= `__VPTWait1;
+                    phRamAddress <= uptAddress + mcRamAddress[17:12] * 8;
                   end
+                  phReadReq <= 1;
+                  savedVirtAddr <= mcRamAddress;
+                  if (mcExecMode)
+                  begin
+                    savedPTReadAddr <= kptAddress + mcRamAddress[17:12] * 8;
+                  end
+                  else
+                  begin
+                    savedPTReadAddr <= uptAddress + mcRamAddress[17:12] * 8;
+                  end
+                  savedReadReq <= mcReadReq;
+                  savedWriteReq <= mcWriteReq;
+                  savedWriteData <= mcRamIn;
+                  mcStatus <= 1;
+                  fsmState <= `__VPTWait1;
                 end
               end
               else
               begin
                 if (utlb[mcRamAddress[13:10]][39:20] == mcRamAddress[31:12] && utlb[mcRamAddress[13:10]][63:63])
                 begin
-                  if (1)
+                  if (mcExecMode)
                   begin
-                    if (mcExecMode)
+                    if (ktlb[mcRamAddress[13:10]][63:63])
                     begin
-                      if (ktlb[mcRamAddress[13:10]][63:63])
-                      begin
-                        mcStatus <= 0;
-                        fsmState <= `__Error;
-                      end
-                      else
-                      begin
-                        if (mcExecMode)
-                        begin
-                          if (ktlb[mcRamAddress[13:10]][62:62] && mcExecMode)
-                          begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
-                          end
-                          else
-                          begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
-                          end
-                        end
-                        else
-                        begin
-                          if (utlb[mcRamAddress[13:10]][62:62] && mcExecMode)
-                          begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
-                          end
-                          else
-                          begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
-                          end
-                        end
-                      end
+                      mcStatus <= 0;
+                      fsmState <= `__Error;
                     end
                     else
                     begin
-                      if (utlb[mcRamAddress[13:10]][63:63])
+                      if (mcExecMode)
                       begin
-                        mcStatus <= 0;
-                        fsmState <= `__Error;
-                      end
-                      else
-                      begin
-                        if (mcExecMode)
+                        if (ktlb[mcRamAddress[13:10]][62:62] && mcExecMode)
                         begin
-                          if (ktlb[mcRamAddress[13:10]][62:62] && mcExecMode)
-                          begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
-                          end
-                          else
-                          begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
-                          end
+                          mcStatus <= 0;
+                          fsmState <= `__Error;
                         end
                         else
                         begin
-                          if (utlb[mcRamAddress[13:10]][62:62] && mcExecMode)
+                          if (mcExecMode)
                           begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
+                            phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
                           end
                           else
                           begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
+                            phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
                           end
+                          phRamAddress[11:0] <= mcRamAddress[11:0];
+                          phReadReq <= mcReadReq;
+                          phWriteReq <= mcWriteReq;
+                          phRamOut <= mcRamIn;
+                          isRead <= mcReadReq;
+                          mcStatus <= 1;
+                          fsmState <= `__PRamWait1;
+                        end
+                      end
+                      else
+                      begin
+                        if (utlb[mcRamAddress[13:10]][62:62] && mcExecMode)
+                        begin
+                          mcStatus <= 0;
+                          fsmState <= `__Error;
+                        end
+                        else
+                        begin
+                          if (mcExecMode)
+                          begin
+                            phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
+                          end
+                          else
+                          begin
+                            phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
+                          end
+                          phRamAddress[11:0] <= mcRamAddress[11:0];
+                          phReadReq <= mcReadReq;
+                          phWriteReq <= mcWriteReq;
+                          phRamOut <= mcRamIn;
+                          isRead <= mcReadReq;
+                          mcStatus <= 1;
+                          fsmState <= `__PRamWait1;
                         end
                       end
                     end
                   end
                   else
                   begin
-                    if (mcExecMode)
+                    if (utlb[mcRamAddress[13:10]][63:63])
                     begin
-                      phRamAddress <= kptAddress + mcRamAddress[17:12] * 8;
+                      mcStatus <= 0;
+                      fsmState <= `__Error;
                     end
                     else
                     begin
-                      phRamAddress <= uptAddress + mcRamAddress[17:12] * 8;
+                      if (mcExecMode)
+                      begin
+                        if (ktlb[mcRamAddress[13:10]][62:62] && mcExecMode)
+                        begin
+                          mcStatus <= 0;
+                          fsmState <= `__Error;
+                        end
+                        else
+                        begin
+                          if (mcExecMode)
+                          begin
+                            phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
+                          end
+                          else
+                          begin
+                            phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
+                          end
+                          phRamAddress[11:0] <= mcRamAddress[11:0];
+                          phReadReq <= mcReadReq;
+                          phWriteReq <= mcWriteReq;
+                          phRamOut <= mcRamIn;
+                          isRead <= mcReadReq;
+                          mcStatus <= 1;
+                          fsmState <= `__PRamWait1;
+                        end
+                      end
+                      else
+                      begin
+                        if (utlb[mcRamAddress[13:10]][62:62] && mcExecMode)
+                        begin
+                          mcStatus <= 0;
+                          fsmState <= `__Error;
+                        end
+                        else
+                        begin
+                          if (mcExecMode)
+                          begin
+                            phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
+                          end
+                          else
+                          begin
+                            phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
+                          end
+                          phRamAddress[11:0] <= mcRamAddress[11:0];
+                          phReadReq <= mcReadReq;
+                          phWriteReq <= mcWriteReq;
+                          phRamOut <= mcRamIn;
+                          isRead <= mcReadReq;
+                          mcStatus <= 1;
+                          fsmState <= `__PRamWait1;
+                        end
+                      end
                     end
-                    phReadReq <= 1;
-                    savedVirtAddr <= mcRamAddress;
-                    if (mcExecMode)
-                    begin
-                      savedPTReadAddr <= kptAddress + mcRamAddress[17:12] * 8;
-                    end
-                    else
-                    begin
-                      savedPTReadAddr <= uptAddress + mcRamAddress[17:12] * 8;
-                    end
-                    savedReadReq <= mcReadReq;
-                    savedWriteReq <= mcWriteReq;
-                    savedWriteData <= mcRamIn;
-                    mcStatus <= 1;
-                    fsmState <= `__VPTWait1;
                   end
                 end
                 else
                 begin
-                  if (0)
+                  if (mcExecMode)
                   begin
-                    if (mcExecMode)
-                    begin
-                      if (ktlb[mcRamAddress[13:10]][63:63])
-                      begin
-                        mcStatus <= 0;
-                        fsmState <= `__Error;
-                      end
-                      else
-                      begin
-                        if (mcExecMode)
-                        begin
-                          if (ktlb[mcRamAddress[13:10]][62:62] && mcExecMode)
-                          begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
-                          end
-                          else
-                          begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
-                          end
-                        end
-                        else
-                        begin
-                          if (utlb[mcRamAddress[13:10]][62:62] && mcExecMode)
-                          begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
-                          end
-                          else
-                          begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
-                          end
-                        end
-                      end
-                    end
-                    else
-                    begin
-                      if (utlb[mcRamAddress[13:10]][63:63])
-                      begin
-                        mcStatus <= 0;
-                        fsmState <= `__Error;
-                      end
-                      else
-                      begin
-                        if (mcExecMode)
-                        begin
-                          if (ktlb[mcRamAddress[13:10]][62:62] && mcExecMode)
-                          begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
-                          end
-                          else
-                          begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
-                          end
-                        end
-                        else
-                        begin
-                          if (utlb[mcRamAddress[13:10]][62:62] && mcExecMode)
-                          begin
-                            mcStatus <= 0;
-                            fsmState <= `__Error;
-                          end
-                          else
-                          begin
-                            if (mcExecMode)
-                            begin
-                              phRamAddress[31:12] <= ktlb[mcRamAddress[13:10]][19:0];
-                            end
-                            else
-                            begin
-                              phRamAddress[31:12] <= utlb[mcRamAddress[13:10]][19:0];
-                            end
-                            phRamAddress[11:0] <= mcRamAddress[11:0];
-                            phReadReq <= mcReadReq;
-                            phWriteReq <= mcWriteReq;
-                            phRamOut <= mcRamIn;
-                            isRead <= mcReadReq;
-                            mcStatus <= 1;
-                            fsmState <= `__PRamWait1;
-                          end
-                        end
-                      end
-                    end
+                    phRamAddress <= kptAddress + mcRamAddress[17:12] * 8;
                   end
                   else
                   begin
-                    if (mcExecMode)
-                    begin
-                      phRamAddress <= kptAddress + mcRamAddress[17:12] * 8;
-                    end
-                    else
-                    begin
-                      phRamAddress <= uptAddress + mcRamAddress[17:12] * 8;
-                    end
-                    phReadReq <= 1;
-                    savedVirtAddr <= mcRamAddress;
-                    if (mcExecMode)
-                    begin
-                      savedPTReadAddr <= kptAddress + mcRamAddress[17:12] * 8;
-                    end
-                    else
-                    begin
-                      savedPTReadAddr <= uptAddress + mcRamAddress[17:12] * 8;
-                    end
-                    savedReadReq <= mcReadReq;
-                    savedWriteReq <= mcWriteReq;
-                    savedWriteData <= mcRamIn;
-                    mcStatus <= 1;
-                    fsmState <= `__VPTWait1;
+                    phRamAddress <= uptAddress + mcRamAddress[17:12] * 8;
                   end
+                  phReadReq <= 1;
+                  savedVirtAddr <= mcRamAddress;
+                  if (mcExecMode)
+                  begin
+                    savedPTReadAddr <= kptAddress + mcRamAddress[17:12] * 8;
+                  end
+                  else
+                  begin
+                    savedPTReadAddr <= uptAddress + mcRamAddress[17:12] * 8;
+                  end
+                  savedReadReq <= mcReadReq;
+                  savedWriteReq <= mcWriteReq;
+                  savedWriteData <= mcRamIn;
+                  mcStatus <= 1;
+                  fsmState <= `__VPTWait1;
                 end
               end
             end

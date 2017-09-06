@@ -36,5 +36,13 @@ ExpressionResult *ConstantNode::CalculateResult()
 {
     char result[100];
     sprintf(result, "%u", GetUInt());
-    return new ExpressionResult(result);
+
+    if (_value._bitLength == 1)
+    {
+        return new ExpressionResult(result, (_value._value == 1));
+    }
+    else
+    {
+        return new ExpressionResult(result);
+    }
 }

@@ -53,32 +53,48 @@ void IfStatementNode::ProcessNodeImpl()
         GetContext()->ReportError(GetLocation(), "No valid expression inside if statement");
     }
 
-    char result[1024];
-    sprintf(
-        result, 
-        "if (%s)", 
-        testResult->GetString().c_str());
-
-    GetContext()->OutputLine(result);
-    
-    GetContext()->OutputLine("begin");
-    GetContext()->IncreaseIndent();
-
-    pTrue->ProcessNode();
-
-    GetContext()->DecreaseIndent();
-    GetContext()->OutputLine("end");
-
-    if (pFalse != nullptr)
+    if (testResult->IsConstant())
     {
-        GetContext()->OutputLine("else");
+        if (testResult->GetConstantValue())
+        {
+            pTrue->ProcessNode();            
+        }
+        else
+        {
+            if (pFalse != nullptr)
+            {
+                pFalse->ProcessNode();
+            }
+        }
+    }
+    else
+    {
+        char result[1024];
+        sprintf(
+            result, 
+            "if (%s)", 
+            testResult->GetString().c_str());
+
+        GetContext()->OutputLine(result);
+        
         GetContext()->OutputLine("begin");
         GetContext()->IncreaseIndent();
-    
-        pFalse->ProcessNode();
-    
+
+        pTrue->ProcessNode();
+
         GetContext()->DecreaseIndent();
         GetContext()->OutputLine("end");
-            
+
+        if (pFalse != nullptr)
+        {
+            GetContext()->OutputLine("else");
+            GetContext()->OutputLine("begin");
+            GetContext()->IncreaseIndent();
+        
+            pFalse->ProcessNode();
+        
+            GetContext()->DecreaseIndent();
+            GetContext()->OutputLine("end");
+        }
     }
 }

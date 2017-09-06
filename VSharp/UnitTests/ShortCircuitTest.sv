@@ -26,25 +26,11 @@ module ShortCircuit(
       `__StartState: begin
         if (val == 4)
         begin
-          if (1)
-          begin
-            out1 <= 25;
-          end
-          else
-          begin
-            out1 <= 15;
-          end
+          out1 <= 25;
         end
         else
         begin
-          if (0)
-          begin
-            out1 <= 25;
-          end
-          else
-          begin
-            out1 <= 15;
-          end
+          out1 <= 15;
         end
       end
     endcase
