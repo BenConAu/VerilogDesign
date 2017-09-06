@@ -15,7 +15,7 @@ class ReturnNode : public ASTNode
         _location = location;
     }
 
-    ASTNode* DuplicateNodeImpl() override;
+    ASTNode* DuplicateNode() override;
     const char* GetDebugName() override { return "ReturnNode"; }
     
   private:

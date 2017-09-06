@@ -3,7 +3,7 @@
 #include "StatementNode.h"
 #include "VSharp.tab.h"
 
-ASTNode* ReturnNode::DuplicateNodeImpl()
+ASTNode* ReturnNode::DuplicateNode()
 {
     // Find out what function declared this return statement
     FunctionDeclaratorNode *pFuncDecl = GetTypedParent<FunctionDeclaratorNode>();

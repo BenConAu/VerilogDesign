@@ -27,7 +27,7 @@ const std::string& ExpressionResult::GetString() const
 { 
     if (_pStaticInfo != nullptr)
     {
-        printf("Oops!\n");
+        throw "Oops!\n";
     }
 
     return _result; 
