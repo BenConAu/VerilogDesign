@@ -244,10 +244,13 @@ ExpressionResult *FunctionCallNode::CalculateResult()
                 }
         
                 resultString.append(paramResult->GetString());
+                _parameterResults.push_back(paramResult->GetString());
             }
         
             resultString.append(" }");               
-            return new ExpressionResult(resultString);
+
+            // Make a magical expression result that can come back here and extract stuff if need be
+            return new ExpressionResult(resultString, this);
         }
 
         case FunctionType::Defined:
@@ -255,4 +258,17 @@ ExpressionResult *FunctionCallNode::CalculateResult()
             //GetContext()->DumpTree();
             return nullptr;
     }
+}
+
+ExpressionResult* FunctionCallNode::CreateMemberResult(int fieldSymIndex)
+{
+    StructTypeInfo* pStructInfo = GetContext()->_typeCollection.GetStructType(_symIndex);            
+    
+    size_t memberIndex;
+    if (!pStructInfo->GetMemberIndex(fieldSymIndex, &memberIndex))
+    {
+        throw "That is not a member";
+    }
+    
+    return new ExpressionResult(_parameterResults[memberIndex]);
 }

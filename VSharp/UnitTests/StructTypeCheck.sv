@@ -24,7 +24,7 @@ module BitSelectionTest(
         fsmState <= `__StartState;
       end
       `__StartState: begin
-        out1 <= { bogus }[31:0];
+        out1 <= bogus;
       end
     endcase
   end

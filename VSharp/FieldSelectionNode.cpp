@@ -5,6 +5,7 @@
 #include "ModuleDeclaratorNode.h"
 #include "VSharpCompilerContext.h"
 #include "IdentifierNode.h"
+#include "FunctionCallNode.h"
 
 FieldSelectionNode::FieldSelectionNode(
     PSLCompilerContext *pContext,
@@ -111,18 +112,25 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
         IdentifierNode* pIdentNode = dynamic_cast<IdentifierNode*>(GetChild(0));
         StructMember* pMember = _pStructTypeInfo->GetMemberBySymbol(_fieldSymIndex);
 
-        unsigned int base = _pStructTypeInfo->GetBaseLocation(_fieldSymIndex);
-        unsigned int size = pMember->GetBitLength();
-
-        char result[1024];
-        sprintf(
-            result,
-            "%s[%u:%u]",
-            childResult->GetString().c_str(),
-            base + size - 1,
-            base);
-
-        return new ExpressionResult(result);
+        if (childResult->GetConstructorNode() == nullptr)
+        {
+            unsigned int base = _pStructTypeInfo->GetBaseLocation(_fieldSymIndex);
+            unsigned int size = pMember->GetBitLength();
+    
+            char result[1024];
+            sprintf(
+                result,
+                "%s[%u:%u]",
+                childResult->GetString().c_str(),
+                base + size - 1,
+                base);
+    
+            return new ExpressionResult(result);
+        }
+        else
+        {
+            // Somebody *just* constructed a struct, so pull it back out of there
+            return childResult->GetConstructorNode()->CreateMemberResult(_fieldSymIndex);
+        }
     }
-
 }

@@ -44,6 +44,7 @@ public:
   size_t GetParameterCount() const { return (GetChildCount() - 1); }
   ASTNode* ExpandFunction(StatementNode* pOwningStatement);
   FunctionInfo* GetFunctionInfo();
+  ExpressionResult* CreateMemberResult(int fieldSymIndex);
   
 private:
   // Symbol of function being called
@@ -51,4 +52,7 @@ private:
 
   // Type of function being valled
   FunctionType _functionType;
+
+  // Parameter results
+  std::vector<std::string> _parameterResults;
 };

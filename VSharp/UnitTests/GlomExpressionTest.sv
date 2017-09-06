@@ -7,7 +7,7 @@ module GlomTest(
   `define __StartState 1
   // inputs / outputs
   input wire reset;
-  output reg[31:0] out1;
+  output reg[7:0] out1;
   reg clk = 0; always #5 clk = !clk;
   reg[31:0] val;
   initial

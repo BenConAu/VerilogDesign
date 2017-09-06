@@ -29,12 +29,11 @@ public:
 
     StructMember* GetMemberBySymbol(int symIndex)
     {
-        for (size_t i = 0; i < _members.size(); i++)
+        size_t index;
+
+        if (GetMemberIndex(symIndex, &index))
         {
-            if (_members[i]->GetSymbolIndex() == symIndex)
-            {
-                return _members[i].get();
-            }
+            return _members[index].get();
         }
 
         return nullptr;
@@ -43,6 +42,20 @@ public:
     StructMember* GetMemberByIndex(size_t i)
     {
         return _members[i].get();
+    }
+
+    bool GetMemberIndex(int symIndex, size_t* pIndex)
+    {
+        for (size_t i = 0; i < _members.size(); i++)
+        {
+            if (_members[i]->GetSymbolIndex() == symIndex)
+            {
+                (*pIndex) = i;
+                return true;
+            }
+        }
+
+        return false;
     }
 
     unsigned int GetBaseLocation(int fieldSymIndex);

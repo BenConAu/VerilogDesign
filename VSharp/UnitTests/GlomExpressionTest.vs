@@ -1,5 +1,5 @@
 module GlomTest(
-	out uint32 out1
+	out uint8 out1
 	)
 {
 	clock clk;
