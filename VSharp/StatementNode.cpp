@@ -85,8 +85,15 @@ bool StatementNode::IsReplaceableFunctionCall(ASTNode* pNode)
         return false;
     }
 
+    // Needs to have function info
+    FunctionInfo* pFunctionInfo = pFunctionCallNode->GetFunctionInfo();
+    if (pFunctionInfo == nullptr)
+    {
+        return false;
+    }
+
     // Needs to have a declarator for us to expand it
-    FunctionDeclaratorNode* pDeclarator = pFunctionCallNode->GetFunctionInfo()->GetFunctionDeclarator();
+    FunctionDeclaratorNode* pDeclarator = pFunctionInfo->GetFunctionDeclarator();
     if (pDeclarator == nullptr)
     {
         return false;

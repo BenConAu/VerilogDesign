@@ -17,7 +17,7 @@ public:
         return _symIndex;
     }
 
-    TypeInfo* GetType()
+    TypeInfo* GetTypeInfo()
     {
         return _pType;
     }

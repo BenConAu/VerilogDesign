@@ -24,14 +24,17 @@ FunctionCallNode::FunctionCallNode(
     }
 
     _symIndex = symIndex;
+    _functionType = FunctionType::Defined; // Until we learn otherwise
 }
 
 FunctionCallNode::FunctionCallNode(
     PSLCompilerContext *pContext,
     const YYLTYPE &location,
-    int symIndex) : ExpressionNode(pContext, location)
+    int symIndex,
+    FunctionType type) : ExpressionNode(pContext, location)
 {
     _symIndex = symIndex;
+    _functionType = type;
 }
 
 void FunctionCallNode::DumpNodeImpl()
@@ -76,7 +79,7 @@ ASTNode* FunctionCallNode::DuplicateNode()
 
 ASTNode* FunctionCallNode::DuplicateNodeImpl()
 {
-    return new FunctionCallNode(GetContext(), GetLocation(), _symIndex);
+    return new FunctionCallNode(GetContext(), GetLocation(), _symIndex, _functionType);
 }
 
 const char* FunctionCallNode::GetFunctionName()
@@ -88,23 +91,93 @@ void FunctionCallNode::VerifyNodeImpl()
 {
     if (GetFunctionInfo() == nullptr)
     {
-        GetContext()->ReportError(GetLocation(), "Unknown function");
-    }
+        // If there is no function info, then it could be a constructor of a struct
+        StructTypeInfo* pStructInfo = GetContext()->_typeCollection.GetStructType(_symIndex);
+        if (pStructInfo == nullptr)
+        {
+            char message[256];
+            sprintf(
+                message, 
+                "Unknown function or struct type %s", 
+                GetFunctionName());
+            GetContext()->ReportError(GetLocation(), message);
+        }
 
-    if (GetFunctionInfo()->GetParameterCount() != -1 && GetParameterCount() != GetFunctionInfo()->GetParameterCount())
+        _functionType = FunctionType::Constructor;
+
+        if (GetParameterCount() != pStructInfo->GetMemberCount())
+        {
+            char message[256];
+            sprintf(
+                message, 
+                "Expected %lu arguments but got %lu arguments to constructor for %s",
+                pStructInfo->GetMemberCount(),
+                GetParameterCount(),
+                GetFunctionName());
+
+            GetContext()->ReportError(GetLocation(), message);    
+        }
+
+        for (size_t i = 0; i < GetParameterCount(); i++)
+        {
+            FunctionCallParamNode* pCallParam = GetParameter(i);
+            StructMember* pMember = pStructInfo->GetMemberByIndex(i);
+
+            ExpressionNode* pParamExpr = pCallParam->GetParamExpr();
+            if (!pParamExpr->GetTypeInfo()->EqualType(pMember->GetTypeInfo()))
+            {
+                GetContext()->ReportError(GetLocation(), "Mismatch in param type");
+            }
+        }
+
+        SetType(pStructInfo);
+    }
+    else
     {
-        char message[256];
-        sprintf(
-            message, 
-            "Expected %lu arguments but got %lu arguments to function %s",
-            GetFunctionInfo()->GetParameterCount(),
-            GetParameterCount(),
-            GetFunctionName());
+        if (GetFunctionInfo()->GetParameterCount() == -1)
+        {
+            // Builtin functions have no parameters to key off right now
+            _functionType = FunctionType::BuiltIn;
+        }
+        else
+        {
+            _functionType = FunctionType::Defined;
 
-        GetContext()->ReportError(GetLocation(), message);    
+            if (GetParameterCount() != GetFunctionInfo()->GetParameterCount())
+            {
+                char message[256];
+                sprintf(
+                    message, 
+                    "Expected %lu arguments but got %lu arguments to function %s",
+                    GetFunctionInfo()->GetParameterCount(),
+                    GetParameterCount(),
+                    GetFunctionName());
+    
+                GetContext()->ReportError(GetLocation(), message);    
+            }
+    
+            for (size_t i = 0; i < GetParameterCount(); i++)
+            {
+                FunctionDeclaratorNode* pFuncDecl = GetFunctionInfo()->GetFunctionDeclarator();
+                FunctionCallParamNode* pCallParam = GetParameter(i);
+                FunctionParameterNode* pDefParam = pFuncDecl->GetParameter(i);
+    
+                // Out params need to be passed correctly
+                if (pCallParam->IsOutParam() != pDefParam->IsOutParam())
+                {
+                    GetContext()->ReportError(GetLocation(), "Mismatch in param in / out definition");
+                }
+    
+                ExpressionNode* pParamExpr = pCallParam->GetParamExpr();
+                if (!pParamExpr->GetTypeInfo()->EqualType(pDefParam->GetTypeNode()->GetTypeInfo()))
+                {
+                    GetContext()->ReportError(GetLocation(), "Mismatch in param type");
+                }
+            }
+        }
+
+        SetType(GetFunctionInfo()->GetReturnType());
     }
-
-    SetType(GetFunctionInfo()->GetReturnType());
 }
 
 FunctionInfo* FunctionCallNode::GetFunctionInfo()
@@ -132,33 +205,54 @@ ASTNode* FunctionCallNode::ExpandFunction(StatementNode* pOwningStatement)
 
 ExpressionResult *FunctionCallNode::CalculateResult()
 {
-    FunctionDeclaratorNode* pFuncDecl = GetFunctionInfo()->GetFunctionDeclarator();
-    if (pFuncDecl != nullptr)
+    switch(_functionType)
     {
-        printf("Unexpected function call %p named %s\n", this, GetFunctionName());
-        //GetContext()->DumpTree();
-        return nullptr;
-    }
-    else
-    {
-        GetContext()->BeginLine();
-        GetContext()->OutputString(GetFunctionInfo()->GetVerilogName().c_str());
-        GetContext()->OutputString("(");
+        case FunctionType::BuiltIn:
+            GetContext()->BeginLine();
+            GetContext()->OutputString(GetFunctionInfo()->GetVerilogName().c_str());
+            GetContext()->OutputString("(");
 
-        for (size_t i = 0; i < GetParameterCount(); i++)
-        {
-            ExpressionNode* pParam = GetParameter(i);
-            std::unique_ptr<ExpressionResult> paramResult(pParam->TakeResult());
-            
-            GetContext()->OutputString(paramResult->GetString().c_str());
-            if (i != GetParameterCount() - 1)
+            for (size_t i = 0; i < GetParameterCount(); i++)
             {
-                GetContext()->OutputString(", ");
+                ExpressionNode* pParam = GetParameter(i);
+                std::unique_ptr<ExpressionResult> paramResult(pParam->TakeResult());
+                
+                GetContext()->OutputString(paramResult->GetString().c_str());
+                if (i != GetParameterCount() - 1)
+                {
+                    GetContext()->OutputString(", ");
+                }
             }
+
+            GetContext()->OutputString(");");
+            GetContext()->EndLine();
+            return nullptr;
+
+        case FunctionType::Constructor:
+        {
+            StructTypeInfo* pStructInfo = GetContext()->_typeCollection.GetStructType(_symIndex);            
+            std::string resultString = "{ ";
+            
+            for (size_t i = 0; i < GetParameterCount(); i++)
+            {
+                ExpressionNode* pParam = GetParameter(i);
+                std::unique_ptr<ExpressionResult> paramResult(pParam->TakeResult());
+                
+                if (i != 0)
+                {
+                    resultString.append(", ");
+                }
+        
+                resultString.append(paramResult->GetString());
+            }
+        
+            resultString.append(" }");               
+            return new ExpressionResult(resultString);
         }
 
-        GetContext()->OutputString(");");
-        GetContext()->EndLine();
-        return nullptr;
+        case FunctionType::Defined:
+            printf("Unexpected function call %p named %s\n", this, GetFunctionName());
+            //GetContext()->DumpTree();
+            return nullptr;
     }
 }

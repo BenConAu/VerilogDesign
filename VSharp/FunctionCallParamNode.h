@@ -35,6 +35,9 @@ public:
     ExpressionResult* CalculateResult() override;
     ASTNode* DuplicateNodeImpl() override;
 
+    int IsOutParam() const { return _fOut; }
+    ExpressionNode* GetParamExpr() { return dynamic_cast<ExpressionNode*>(GetChild(0)); }
+
 private:
     bool _fOut;
     std::string _literal;

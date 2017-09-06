@@ -22,7 +22,12 @@ public:
         TypeInfo* pType, 
         int dimension);
 
-    StructMember* GetMember(int symIndex)
+    size_t GetMemberCount() const
+    {
+        return _members.size();
+    }
+
+    StructMember* GetMemberBySymbol(int symIndex)
     {
         for (size_t i = 0; i < _members.size(); i++)
         {
@@ -33,6 +38,11 @@ public:
         }
 
         return nullptr;
+    }
+
+    StructMember* GetMemberByIndex(size_t i)
+    {
+        return _members[i].get();
     }
 
     unsigned int GetBaseLocation(int fieldSymIndex);

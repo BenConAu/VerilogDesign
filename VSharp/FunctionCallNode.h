@@ -9,6 +9,13 @@ class FunctionDeclaratorNode;
 class FunctionInfo;
 class StatementNode;
 
+enum class FunctionType
+{
+  BuiltIn,      // __* functions that are built into the language
+  Defined,      // Functions defined in V#
+  Constructor,  // Constructors of structs
+};
+
 class FunctionCallNode : public ExpressionNode
 {
 public:
@@ -22,7 +29,8 @@ public:
   FunctionCallNode(
       PSLCompilerContext *pContext,
       const YYLTYPE &location,
-      int symIndex);
+      int symIndex,
+      FunctionType type);
 
   void VerifyNodeImpl() override;
   ExpressionResult *CalculateResult() override;
@@ -40,4 +48,7 @@ public:
 private:
   // Symbol of function being called
   int _symIndex;
+
+  // Type of function being valled
+  FunctionType _functionType;
 };

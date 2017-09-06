@@ -57,13 +57,13 @@ void FieldSelectionNode::VerifyNodeImpl()
             GetContext()->ReportError(GetLocation(), "Type or identifier not found");
         }
 
-        StructMember* pMember = _pStructTypeInfo->GetMember(_fieldSymIndex);        
+        StructMember* pMember = _pStructTypeInfo->GetMemberBySymbol(_fieldSymIndex);        
         if (pMember == nullptr)
         {
             GetContext()->ReportError(GetLocation(), "Unknown member of struct");
         }
 
-        SetType(pMember->GetType());
+        SetType(pMember->GetTypeInfo());
     }
     else
     {
@@ -109,7 +109,7 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
         }
 
         IdentifierNode* pIdentNode = dynamic_cast<IdentifierNode*>(GetChild(0));
-        StructMember* pMember = _pStructTypeInfo->GetMember(_fieldSymIndex);
+        StructMember* pMember = _pStructTypeInfo->GetMemberBySymbol(_fieldSymIndex);
 
         unsigned int base = _pStructTypeInfo->GetBaseLocation(_fieldSymIndex);
         unsigned int size = pMember->GetBitLength();

@@ -7,7 +7,7 @@ RegisterTypeInfo::RegisterTypeInfo(int bitLength)
 {
     _bitLength = bitLength;
 
-    if (_bitLength > 64)
+    if (_bitLength > 128)
     {
         throw "Gotcha!";
     }
@@ -40,7 +40,7 @@ bool RegisterTypeInfo::EqualType(TypeInfo *pOther)
     }
 
     RegisterTypeInfo *pOtherBasic = dynamic_cast<RegisterTypeInfo *>(pOther);
-    if (_bitLength < pOtherBasic->GetBitLength())
+    if (_bitLength != pOtherBasic->GetBitLength())
     {
         return false;
     }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ASTNode.h"
+#include "TypeNode.h"
 
 class FunctionParameterNode : public ASTNode
 {
@@ -15,6 +16,8 @@ public:
     void VerifyNodeImpl() override;
     const char* GetDebugName() override { return "FunctionParameterNode"; }
     int GetSymbolIndex() const { return _symIndex; }
+    bool IsOutParam() const { return _fOut; }
+    TypeNode* GetTypeNode() { return dynamic_cast<TypeNode*>(GetChild(0)); }
 
 private:
     int _symIndex;
