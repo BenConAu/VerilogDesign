@@ -9,6 +9,7 @@ struct TLBEntry
 {
   bool IsValid;
   bool IsProtected;
+  uint<22> Unused;
   uint<20> VirtualPage;
   uint<20> PhysicalPage;
 }
@@ -32,6 +33,7 @@ module MemoryController(
   out uint32 debug                // [Output] Debug port
   )
 {
+  clock clk;
   bool isRead;
 
   // Stuff saved when TLB misses
@@ -42,44 +44,80 @@ module MemoryController(
   uint32 savedFirstWord;
   uint32 savedWriteData;
 
+  TLBEntry TLBEntryFromWords(uint32 upperWord, uint32 lowerWord)
+  {
+    return TLBEntry(
+      upperWord[31:31],
+      upperWord[30:30],
+      upperWord[29:8],
+      { upperWord[7:0], lowerWord[31:20] },
+      lowerWord[19:0]
+      );
+  }
+
+  // Get the page number for an address - since we have 4k
+  // pages this just lops off the appropriate number of bits
   uint<20> GetPageNumber(uint32 rawAddress)
   {
     return rawAddress[31:12];
   }
 
-  void CalcPTEntryAddress(
-    uint32 rawAddress,
-    out uint32 entryAddress
-    )
+  // This function converts a virtual address to the table
+  // entry. This should be more complicated than it is.
+  uint<4> GetPageHash(uint32 virtAddr)
+  {
+    return virtAddr[13:10];
+  }
+
+  // The TLBs - we have one for kernel mode and one for user mode
+  TLBEntry ktlb[16];
+  TLBEntry utlb[16];
+
+  // Query for a TLB entry from an address
+  TLBEntry GetTLBEntryFromAddress(uint32 address)
+  {
+    if (!mcExecMode)
+    {
+      return ktlb[GetPageHash(address)];
+    }
+    else
+    {
+      return utlb[GetPageHash(address)];
+    }
+  }
+  
+  // Query for the validity of the TLB at an address. The valid bit needs
+  // to be set, and the virtual page number has to match.
+  bool IsTLBValidForAddress(uint32 virtualAddress)
+  {
+    if (GetTLBEntryFromAddress(virtualAddress).VirtualPage == GetPageNumber(virtualAddress) && 
+        GetTLBEntryFromAddress(virtualAddress).IsValid)
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  // The page tables are stored in ram, and their addresses are stored
+  // in registers. So given an address, we can determine the physical
+  // address of the page table entry.
+  uint32 CalcPTEntryAddress(uint32 rawAddress)
   {
     //$display("Calculating table entry address with tables at %h, %h", kptAddress, uptAddress);
     
     if (!mcExecMode)
     {
-      entryAddress = kptAddress + rawAddress[17:12] * 8;
+      return kptAddress + rawAddress[17:12] * 8;
     }
     else
     {
-      entryAddress = uptAddress + rawAddress[17:12] * 8;
+      return uptAddress + rawAddress[17:12] * 8;
     }
   }
 
-  // The TLB
-  TLBEntry ktlb[16];
-  TLBEntry utlb[16];
-
-  TLBEntry GetTLBEntry(uint<4> pageNumber)
-  {
-    if (!mcExecMode)
-    {
-      return ktlb[pageNumber];
-    }
-    else
-    {
-      return utlb[pageNumber];
-    }
-  }
-    
   void SetTLBEntry(
     uint<4> pageNumber,
     TLBEntry newEntry)
@@ -92,12 +130,6 @@ module MemoryController(
     {
       utlb[pageNumber] = newEntry;
     }
-  }
-
-  uint<4> GetPageHash(
-    uint32 virtAddr)
-  {
-    return virtAddr[13:10];
   }
 
   void RequestPhysicalPage(
@@ -158,7 +190,7 @@ module MemoryController(
       {
         //$display("Physical access, mcReadReq is %h, addr is %h, ramIn is %h", mcReadReq, mcRamAddress, mcRamIn);
 
-        // Divert to the physical RAM
+        // This is a request for a physical address, so pass the request directly
         phRamAddress = mcRamAddress;
         phReadReq = mcReadReq;
         phWriteReq = mcWriteReq;
@@ -169,8 +201,10 @@ module MemoryController(
       }
       else
       {
-        // Need to translate - use the lower bits of the virtual page
-        if (GetTLBEntry(GetPageHash(mcRamAddress)).VirtualPage == GetPageNumber(mcRamAddress))
+        // This is a request for a virtual address - see if the TLB entry for this address
+        // is a valid one and if so, request the page pointed to by the TLB. If the TLB
+        // misses, populate it first and then try again.
+        if (IsTLBValidForAddress(mcRamAddress))
         {
           //$display(
             //"Page to translate %h found in TLB entry %h, index %h", 
@@ -179,8 +213,8 @@ module MemoryController(
             //GetPageHash(mcRamAddress));
 
           RequestPhysicalPage(
-            GetTLBEntry(GetPageHash(mcRamAddress)), 
-            mcRamAddress, 
+            GetTLBEntryFromAddress(mcRamAddress), 
+            mcRamAddress,
             mcReadReq, 
             mcWriteReq, 
             mcRamIn);
@@ -192,14 +226,14 @@ module MemoryController(
           // TLB miss - need to lookup in page table. The page table
           // currently is a single level, and only supports up to 256
           // pages to keep it easy (8 bit index).
-          CalcPTEntryAddress(mcRamAddress, out phRamAddress);
+          phRamAddress = CalcPTEntryAddress(mcRamAddress);
           phReadReq = true;
 
           // Save the address we are looking up or storing at
           savedVirtAddr = mcRamAddress;
 
           // Save the address of the first word of the PT entry
-          CalcPTEntryAddress(mcRamAddress, out savedPTReadAddr);
+          savedPTReadAddr = CalcPTEntryAddress(mcRamAddress);
 
           // Save our request parameters
           savedReadReq = mcReadReq;
@@ -283,10 +317,12 @@ module MemoryController(
     //$display("Inserting TLB entry %h", {1'b1, savedFirstWord[30:0], phRamIn});
 
     // Now we have second half of entry, store it in the TLB
-    SetTLBEntry(GetPageHash(savedVirtAddr), {0b1, savedFirstWord[30:0], phRamIn});
+    SetTLBEntry(
+      GetPageHash(savedVirtAddr), 
+      TLBEntryFromWords(savedFirstWord, phRamIn));
 
     RequestPhysicalPage(
-      {0b1, savedFirstWord[30:0], phRamIn}, 
+      TLBEntryFromWords(savedFirstWord, phRamIn), 
       mcRamAddress, 
       savedReadReq, 
       savedWriteReq, 
