@@ -121,48 +121,50 @@ module MemoryController(
     return ptAddress + GetPageNumber(rawAddress) * 8;
   }
 
-  void RequestPhysicalPage(
+  void RequestPhysicalAddress(
+    bool IsReadRequest,
+    bool IsWriteRequest,
+    uint32 PhysicalAddr,
+    uint32 WriteData
+    )
+  {
+      phRamAddress = PhysicalAddr;
+      phReadReq = IsReadRequest;
+      phWriteReq = IsWriteRequest;
+      phRamOut = WriteData;
+      isRead = IsReadRequest;
+
+      mcStatus = ControllerStatus.MCWaiting;
+      transition PRamWait1;    
+  }
+
+  // Given an address and a TLB entry that is known to map to it, attempt
+  // to create the appropriate physical RAM request.
+  void TranslateVirtualRequest(
     TLBEntry reqTLBEntry,
     uint32 reqVirtAddress,
     bool reqReadReq,
     bool reqWriteReq,
     uint32 reqWriteData)
   {
-    if (!reqTLBEntry.IsValid)
+    if (reqTLBEntry.IsProtected && mcExecMode)
     {
-      //$display("Address maps to invalid TLB entry %h", reqTLBEntry);
+      //$display("Attempting access to protected page from user mode, execMode = %h", mcExecMode);
 
       mcStatus = ControllerStatus.Error;
       transition Error;
     }
     else
     {
-      if (reqTLBEntry.IsProtected && mcExecMode)
-      {
-        //$display("Attempting access to protected page from user mode, execMode = %h", mcExecMode);
+      //$display("Building request from physical page %h and in-page address %h", GetTLBPhysPage(reqTLBEntry), reqVirtAddress[11:0]);
 
-        mcStatus = ControllerStatus.Error;
-        transition Error;
-      }
-      else
-      {
-        //$display("Building request from physical page %h and in-page address %h", GetTLBPhysPage(reqTLBEntry), reqVirtAddress[11:0]);
-
-        // Translate page using TLB for upper bits
-        phRamAddress[31:12] = reqTLBEntry.PhysicalPage;
-
-        // Use lower bits from virtual address in physical address
-        phRamAddress[11:0] = reqVirtAddress[11:0];
-
-        // Otherwise same as physical lookup
-        phReadReq = reqReadReq;
-        phWriteReq = reqWriteReq;
-        phRamOut = reqWriteData;
-        isRead = reqReadReq;
-        mcStatus = ControllerStatus.MCWaiting;
-        transition PRamWait1;
-      }
-    } 
+      // Translate page using TLB for upper bits and virtual address for lower bits
+      RequestPhysicalAddress(
+        reqReadReq,
+        reqWriteReq,
+        { reqTLBEntry.PhysicalPage, reqVirtAddress[11:0] },
+        reqWriteData);
+    }
   }
 
   state initial
@@ -180,13 +182,11 @@ module MemoryController(
         //$display("Physical access, mcReadReq is %h, addr is %h, ramIn is %h", mcReadReq, mcRamAddress, mcRamIn);
 
         // This is a request for a physical address, so pass the request directly
-        phRamAddress = mcRamAddress;
-        phReadReq = mcReadReq;
-        phWriteReq = mcWriteReq;
-        phRamOut = mcRamIn;
-        isRead = mcReadReq;
-        mcStatus = ControllerStatus.MCWaiting;
-        transition PRamWait1;
+        RequestPhysicalAddress(
+          mcReadReq,
+          mcWriteReq,
+          mcRamAddress,
+          mcRamIn);
       }
       else
       {
@@ -201,7 +201,7 @@ module MemoryController(
             //GetTLBEntry(GetPageHash(mcRamAddress)), 
             //GetPageHash(mcRamAddress));
 
-          RequestPhysicalPage(
+          TranslateVirtualRequest(
             GetTLBEntryFromAddress(mcRamAddress), 
             mcRamAddress,
             mcReadReq, 
@@ -233,7 +233,6 @@ module MemoryController(
           mcStatus = ControllerStatus.MCWaiting;
           transition VPTWait1;
         }
-
       }
     }
     else
@@ -310,7 +309,7 @@ module MemoryController(
       GetPageHash(savedVirtAddr), 
       TLBEntryFromWords(savedFirstWord, phRamIn));
 
-    RequestPhysicalPage(
+    TranslateVirtualRequest(
       TLBEntryFromWords(savedFirstWord, phRamIn), 
       mcRamAddress, 
       savedReadReq, 
