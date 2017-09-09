@@ -35,6 +35,24 @@ ExpressionResult::ExpressionResult(const std::string& str, bool constantValue)
     _pConstructorCall = nullptr;
 }
 
+ExpressionResult::ExpressionResult(FieldSelectResult* pRes)
+{
+    _FieldSelect.reset(pRes);
+
+    char result[1024];
+    sprintf(
+        result,
+        "%s[%u:%u]",
+        _FieldSelect->_structResult.c_str(),
+        _FieldSelect->_i1,
+        _FieldSelect->_i2);
+
+    _result = result;
+    _IsConstant = false;
+    _pStaticInfo = nullptr;
+    _pConstructorCall = nullptr;
+}
+
 const std::string& ExpressionResult::GetString() const 
 { 
     if (_pStaticInfo != nullptr)
