@@ -14,6 +14,7 @@ enum class Operator
     Negate,
     LogicalAnd,
     LogicalOr,
+    BitwiseXor,
 };
 
 enum class ResultTypeMethod

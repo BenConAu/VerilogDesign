@@ -7,11 +7,11 @@ enum ControllerStatus
 
 struct TLBEntry
 {
-  bool IsValid;
-  bool IsProtected;
-  uint<22> Unused;
-  uint<20> VirtualPage;
-  uint<20> PhysicalPage;
+  bool IsValid;           // If this entry is valid or not
+  bool IsProtected;       // If this page is ptotected 
+  uint<22> Unused;        // To make it 64 bits
+  uint<20> VirtualPage;   // Page number in process space
+  uint<20> PhysicalPage;  // Page number in physical RAM
 }
 
 module MemoryController(
@@ -28,8 +28,7 @@ module MemoryController(
   out uint32 phRamOut,            // [Output] RAM to write
   out bool phReadReq,             // [Output] RAM read request
   out bool phWriteReq,            // [Output] RAM write request
-  uint32 kptAddress,              // [Input] Page table address
-  uint32 uptAddress,              // [Input] Page table address
+  uint32 ptAddress,               // [Input] Page table address
   out uint32 debug                // [Output] Debug port
   )
 {
@@ -44,6 +43,7 @@ module MemoryController(
   uint32 savedFirstWord;
   uint32 savedWriteData;
 
+  // Construct a TLB entry from two memory words that have been read
   TLBEntry TLBEntryFromWords(uint32 upperWord, uint32 lowerWord)
   {
     return TLBEntry(
@@ -63,29 +63,35 @@ module MemoryController(
   }
 
   // This function converts a virtual address to the table
-  // entry. This should be more complicated than it is.
-  uint<4> GetPageHash(uint32 virtAddr)
+  // entry index. Currently using XOR to glom the address
+  // together. 
+  uint<6> GetPageHash(uint32 virtAddr)
   {
-    return virtAddr[13:10];
+    return 
+      { 0b1010, virtAddr[31:30]} ^ 
+      virtAddr[29:24] ^ 
+      virtAddr[23:18] ^ 
+      virtAddr[17:12] ^ 
+      virtAddr[11:6] ^ 
+      virtAddr[5:0];
   }
 
   // The TLBs - we have one for kernel mode and one for user mode
-  TLBEntry ktlb[16];
-  TLBEntry utlb[16];
+  TLBEntry tlbEntries[64];
 
   // Query for a TLB entry from an address
   TLBEntry GetTLBEntryFromAddress(uint32 address)
   {
-    if (!mcExecMode)
-    {
-      return ktlb[GetPageHash(address)];
-    }
-    else
-    {
-      return utlb[GetPageHash(address)];
-    }
+    return tlbEntries[GetPageHash(address)];
   }
   
+  void SetTLBEntry(
+    uint<6> pageNumber,
+    TLBEntry newEntry)
+  {
+      tlbEntries[pageNumber] = newEntry;
+  }
+
   // Query for the validity of the TLB at an address. The valid bit needs
   // to be set, and the virtual page number has to match.
   bool IsTLBValidForAddress(uint32 virtualAddress)
@@ -104,32 +110,15 @@ module MemoryController(
   // The page tables are stored in ram, and their addresses are stored
   // in registers. So given an address, we can determine the physical
   // address of the page table entry.
+  //
+  // Since we only have a single level of page table, virtual addresses
+  // have to be 20 bits or they will not map properly here. Currently
+  // we have nothing to alert about this, but this is needed. TODO.
   uint32 CalcPTEntryAddress(uint32 rawAddress)
   {
     //$display("Calculating table entry address with tables at %h, %h", kptAddress, uptAddress);
     
-    if (!mcExecMode)
-    {
-      return kptAddress + rawAddress[17:12] * 8;
-    }
-    else
-    {
-      return uptAddress + rawAddress[17:12] * 8;
-    }
-  }
-
-  void SetTLBEntry(
-    uint<4> pageNumber,
-    TLBEntry newEntry)
-  {
-    if (!mcExecMode)
-    {
-      ktlb[pageNumber] = newEntry;
-    }
-    else
-    {
-      utlb[pageNumber] = newEntry;
-    }
+    return ptAddress + GetPageNumber(rawAddress) * 8;
   }
 
   void RequestPhysicalPage(

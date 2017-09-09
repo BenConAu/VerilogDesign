@@ -126,6 +126,17 @@ void FunctionCallNode::VerifyNodeImpl()
             ExpressionNode* pParamExpr = pCallParam->GetParamExpr();
             if (!pParamExpr->GetTypeInfo()->EqualType(pMember->GetTypeInfo()))
             {
+                char message[256];
+                sprintf(
+                    message, 
+                    "Expected type %s for argument %lu but got type %s",
+                    pMember->GetTypeInfo()->GetTypeName().c_str(),
+                    i,
+                    pParamExpr->GetTypeInfo()->GetTypeName().c_str());
+    
+                GetContext()->ReportError(GetLocation(), message);    
+    
+
                 GetContext()->ReportError(GetLocation(), "Mismatch in param type");
             }
         }

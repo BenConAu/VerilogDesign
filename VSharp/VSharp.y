@@ -72,6 +72,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token ARROW
 %token DOT
 %token COMMA
+%token HAT
 %token AMPERSAND
 %token EQUAL_OP
 %token NOTEQUAL_OP
@@ -134,6 +135,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> return_statement
 %type <pNode> logical_and_expression
 %type <pNode> logical_or_expression
+%type <pNode> exclusive_or_expression
 %type <pNode> glom_expression
 %type <pNode> glom_list
 %type <pNode> enum_definition
@@ -231,9 +233,14 @@ equality_expression:
     | equality_expression NOTEQUAL_OP relational_expression         { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::NotEqual); }
     ;
 
-logical_and_expression:
+exclusive_or_expression:
       equality_expression                                           { $$ = $1; }
-    | logical_and_expression AND_OP equality_expression             { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::LogicalAnd); } 
+    | exclusive_or_expression HAT equality_expression               { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::BitwiseXor); }
+    ;
+
+logical_and_expression:
+      exclusive_or_expression                                       { $$ = $1; }
+    | logical_and_expression AND_OP exclusive_or_expression         { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::LogicalAnd); } 
     ;
 
 logical_or_expression:

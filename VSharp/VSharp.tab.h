@@ -89,20 +89,21 @@ extern int yydebug;
     ARROW = 293,
     DOT = 294,
     COMMA = 295,
-    AMPERSAND = 296,
-    EQUAL_OP = 297,
-    NOTEQUAL_OP = 298,
-    BOOL_TOKEN = 299,
-    STRUCT_TOKEN = 300,
-    TRANSITION_TOKEN = 301,
-    LEFT_BRACE = 302,
-    RIGHT_BRACE = 303,
-    LEFT_BRACKET = 304,
-    RIGHT_BRACKET = 305,
-    IF_TOKEN = 306,
-    ELSE_TOKEN = 307,
-    SIZEOF_TOKEN = 308,
-    IDENTIFIER = 309
+    HAT = 296,
+    AMPERSAND = 297,
+    EQUAL_OP = 298,
+    NOTEQUAL_OP = 299,
+    BOOL_TOKEN = 300,
+    STRUCT_TOKEN = 301,
+    TRANSITION_TOKEN = 302,
+    LEFT_BRACE = 303,
+    RIGHT_BRACE = 304,
+    LEFT_BRACKET = 305,
+    RIGHT_BRACKET = 306,
+    IF_TOKEN = 307,
+    ELSE_TOKEN = 308,
+    SIZEOF_TOKEN = 309,
+    IDENTIFIER = 310
   };
 #endif
 
@@ -117,7 +118,7 @@ union YYSTYPE
     int symIndex;
     ASTNode* pNode;
 
-#line 121 "VSharp.tab.h" /* yacc.c:1915  */
+#line 122 "VSharp.tab.h" /* yacc.c:1915  */
 };
 
 typedef union YYSTYPE YYSTYPE;

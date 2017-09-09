@@ -8,6 +8,7 @@ OperatorInfo OperatorNode::_opTable[] = {
     { Operator::Subtract,    "-",    ResultTypeMethod::Both },
     { Operator::ShiftLeft,   "<<",   ResultTypeMethod::Both },
     { Operator::ShiftRight,  ">>",   ResultTypeMethod::Both },
+    { Operator::BitwiseXor,  "^",    ResultTypeMethod::Both },
     { Operator::Equal,       "==",   ResultTypeMethod::Bool },
     { Operator::NotEqual,    "!=",   ResultTypeMethod::Bool },
     { Operator::LessThan,    "<",    ResultTypeMethod::Bool },
