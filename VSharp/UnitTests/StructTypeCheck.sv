@@ -20,7 +20,7 @@ module BitSelectionTest(
     case(fsmState)
       `__initial: begin
         $monitor("out1 = %h", out1);
-        bogus <= 123;
+        bogus <= 32'd123;
         fsmState <= `__StartState;
       end
       `__StartState: begin

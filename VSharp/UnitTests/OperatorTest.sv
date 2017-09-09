@@ -21,15 +21,15 @@ module OperatorTest(
     case(fsmState)
       `__initial: begin
         $monitor("a = %h and b = %h and out1 = %h", a, b, out1);
-        a <= 0;
-        b <= 1;
-        out1 <= 0;
+        a <= 32'd0;
+        b <= 32'd1;
+        out1 <= 32'd0;
         fsmState <= `__StartState;
       end
       `__StartState: begin
-        if (a == 0 && b == 1)
+        if (a == 32'd0 && b == 32'd1)
         begin
-          out1 <= 1;
+          out1 <= 32'd1;
         end
       end
     endcase

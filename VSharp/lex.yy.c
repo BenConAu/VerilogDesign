@@ -1189,12 +1189,12 @@ YY_RULE_SETUP
 case 55:
 YY_RULE_SETUP
 #line 76 "VSharp.l"
-{ yylval->constVal = { static_cast<unsigned int>(strtol(yytext, nullptr, 16)), 32 }; return INTCONSTANT; }
+{ yylval->constVal = { static_cast<unsigned int>(strtol(yytext + 2, nullptr, 16)), 32 }; return INTCONSTANT; }
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
 #line 77 "VSharp.l"
-{ yylval->constVal = { static_cast<unsigned int>(strtol(yytext, nullptr, 2)), 32 }; return INTCONSTANT; }
+{ yylval->constVal = { static_cast<unsigned int>(strtol(yytext + 2, nullptr, 2)), static_cast<unsigned int>(strlen(yytext) - 2) }; return INTCONSTANT; }
 	YY_BREAK
 case 57:
 YY_RULE_SETUP

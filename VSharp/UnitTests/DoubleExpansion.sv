@@ -19,30 +19,30 @@ module DoubleExpansionTest(
     case(fsmState)
       `__initial: begin
         $monitor("out1 = %h", out1);
-        out1 <= 0;
+        out1 <= 32'd0;
         fsmState <= `__StartState;
       end
       `__StartState: begin
-        if (10 == 0)
+        if (32'd10 == 32'd0)
         begin
-          if (20 == 100)
+          if (32'd20 == 32'd100)
           begin
-            out1 <= 1 + 1 + 50;
+            out1 <= 32'd1 + 32'd1 + 32'd50;
           end
           else
           begin
-            out1 <= 1 + 1 + 5;
+            out1 <= 32'd1 + 32'd1 + 32'd5;
           end
         end
         else
         begin
-          if (20 == 100)
+          if (32'd20 == 32'd100)
           begin
-            out1 <= 1 + 2 + 50;
+            out1 <= 32'd1 + 32'd2 + 32'd50;
           end
           else
           begin
-            out1 <= 1 + 2 + 5;
+            out1 <= 32'd1 + 32'd2 + 32'd5;
           end
         end
       end

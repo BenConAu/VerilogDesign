@@ -15,4 +15,6 @@ public:
     bool EqualType(TypeInfo* pOther) override { throw "Wat"; }
     TypeInfo* MakeSpecificType(TypeInfo* pGenericArgType, TypeCollection* pCollection) override { throw "Wat"; }
     std::string GetDeclaration(VariableInfo* pInfo) override;
+    bool IsVerilogRegister() const override { return true; }
+    virtual int GetBitLength() const override { return 1; }    
 };

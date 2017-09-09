@@ -23,23 +23,23 @@ module DoubleExpansionTest(
     case(fsmState)
       `__initial: begin
         $monitor("out1 = %h, out2 = %h, out3 = %h", out1, out2, out3);
-        out1 <= 10;
-        out2 <= 20;
-        out3 <= 30;
+        out1 <= 32'd10;
+        out2 <= 32'd20;
+        out3 <= 32'd30;
         fsmState <= `__StartState;
       end
       `__StartState: begin
-        if (10 == 0)
+        if (32'd10 == 32'd0)
         begin
-          out1 <= 1;
-          out2 <= 3;
-          out3 <= 1;
+          out1 <= 32'd1;
+          out2 <= 32'd3;
+          out3 <= 32'd1;
         end
         else
         begin
-          out1 <= 2;
-          out2 <= 5;
-          out3 <= 7;
+          out1 <= 32'd2;
+          out2 <= 32'd5;
+          out3 <= 32'd7;
         end
       end
     endcase

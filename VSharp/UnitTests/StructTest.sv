@@ -21,10 +21,10 @@ module StructTest(
     case(fsmState)
       `__initial: begin
         $monitor("%h", out1);
-        test[40:40] <= 0;
-        test[39:8] <= 100;
-        test[7:0] <= 10;
-        out1 <= 0;
+        test[40:40] <= 1'b0;
+        test[39:8] <= 32'd100;
+        test[7:0] <= 8'd10;
+        out1 <= 32'd0;
         fsmState <= `__StartState;
       end
       `__StartState: begin
@@ -32,7 +32,7 @@ module StructTest(
         fsmState <= `__EndState;
       end
       `__EndState: begin
-        out1 <= 200;
+        out1 <= 32'd200;
       end
     endcase
   end

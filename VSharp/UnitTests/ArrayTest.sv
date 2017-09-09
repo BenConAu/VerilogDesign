@@ -15,8 +15,8 @@ module ArrayTest(
   reg[31:0] index;
   initial
   begin
-    # 10 index = 1;
-    # 10 index = 2;
+    # 10 index = 32'd1;
+    # 10 index = 32'd2;
     # 100 $finish;
   end
   reg [7:0] fsmState = 0;
@@ -25,18 +25,18 @@ module ArrayTest(
     case(fsmState)
       `__initial: begin
         $monitor("%h", out1);
-        out1 <= 0;
-        arr[0] <= 1;
-        arr[1] <= 3;
-        arr[2] <= 5;
-        arr[3] <= 7;
+        out1 <= 32'd0;
+        arr[32'd0] <= 32'd1;
+        arr[32'd1] <= 32'd3;
+        arr[32'd2] <= 32'd5;
+        arr[32'd3] <= 32'd7;
         fsmState <= `__StartState;
       end
       `__StartState: begin
         out1 <= arr[index];
-        if (index < 3)
+        if (index < 32'd3)
         begin
-          index <= index + 1;
+          index <= index + 32'd1;
         end
       end
     endcase

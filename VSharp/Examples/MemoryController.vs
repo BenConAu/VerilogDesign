@@ -22,6 +22,7 @@ struct MemoryRequest
 }
 
 module MemoryController(
+  clock clk,                      // [Input] The clock driving the controller
   out uint32 mcRamOut,            // [Output] RAM at requested address
   out ControllerStatus mcStatus,  // [Output] Status of controller (0 means not ready, 1 means ready, 2 means error)
   uint32 mcRamAddress,            // [Input] RAM address requested
@@ -39,11 +40,10 @@ module MemoryController(
   out uint32 debug                // [Output] Debug port
   )
 {
-  clock clk;
-  bool isRead;
+  // Details of the last request
+  MemoryRequest savedRequest;
 
   // Stuff saved when TLB misses
-  MemoryRequest savedRequest;
   uint32 savedPTReadAddr;
   uint32 savedFirstWord;
 
@@ -125,29 +125,26 @@ module MemoryController(
     return ptAddress + GetPageNumber(rawAddress) * 8;
   }
 
-  void RequestPhysicalAddress(
-    bool IsReadRequest,
-    uint32 PhysicalAddr,
-    uint32 WriteData
-    )
+  void RequestPhysicalAddress(MemoryRequest request)
   {
-      phRamAddress = PhysicalAddr;
-      phReadReq = IsReadRequest;
-      phWriteReq = !IsReadRequest;
-      phRamOut = WriteData;
-      isRead = IsReadRequest;
+    // Send the parameters to the physical ram   
+    phRamAddress = request.Address;
+    phReadReq = request.IsRead;
+    phWriteReq = !request.IsRead;
+    phRamOut = request.WriteData;
 
-      mcStatus = ControllerStatus.MCWaiting;
-      transition PRamWait1;    
+    // Save the request details
+    savedRequest = request;
+
+    mcStatus = ControllerStatus.MCWaiting;
+    transition PRamWait1;    
   }
 
   // Given an address and a TLB entry that is known to map to it, attempt
   // to create the appropriate physical RAM request.
   void TranslateVirtualRequest(
     TLBEntry reqTLBEntry,
-    uint32 reqVirtAddress,
-    bool IsRead,
-    uint32 reqWriteData)
+    MemoryRequest request)
   {
     if (reqTLBEntry.IsProtected && mcExecMode)
     {
@@ -162,16 +159,16 @@ module MemoryController(
 
       // Translate page using TLB for upper bits and virtual address for lower bits
       RequestPhysicalAddress(
-        IsRead,
-        { reqTLBEntry.PhysicalPage, reqVirtAddress[11:0] },
-        reqWriteData);
+        MemoryRequest(
+          request.IsRead,
+          { reqTLBEntry.PhysicalPage, request.Address[11:0] },
+          request.WriteData));
     }
   }
 
   state initial
   {
     mcStatus = ControllerStatus.MCWaiting;
-    isRead = false;
   }
 
   state Ready
@@ -184,9 +181,10 @@ module MemoryController(
 
         // This is a request for a physical address, so pass the request directly
         RequestPhysicalAddress(
-          mcReadReq,
-          mcRamAddress,
-          mcRamIn);
+          MemoryRequest(
+            mcReadReq,
+            mcRamAddress,
+            mcRamIn));
       }
       else
       {
@@ -202,10 +200,11 @@ module MemoryController(
             //GetPageHash(mcRamAddress));
 
           TranslateVirtualRequest(
-            GetTLBEntryFromAddress(mcRamAddress), 
-            mcRamAddress,
-            mcReadReq, 
-            mcRamIn);
+            GetTLBEntryFromAddress(mcRamAddress),
+            MemoryRequest( 
+              mcReadReq,
+              mcRamAddress,
+              mcRamIn));
         }
         else
         {
@@ -248,7 +247,7 @@ module MemoryController(
 
   state PRamWait2
   {
-    if (isRead)
+    if (savedRequest.IsRead)
     {
       //$display("Finish physical read value of %h in mc", phRamIn);
 
@@ -306,10 +305,8 @@ module MemoryController(
       TLBEntryFromWords(savedFirstWord, phRamIn));
 
     TranslateVirtualRequest(
-      TLBEntryFromWords(savedFirstWord, phRamIn), 
-      mcRamAddress, 
-      savedRequest.IsRead, 
-      savedRequest.WriteData);
+      TLBEntryFromWords(savedFirstWord, phRamIn),
+      savedRequest);
   }
 
   state Error

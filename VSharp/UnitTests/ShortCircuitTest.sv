@@ -20,17 +20,17 @@ module ShortCircuit(
     case(fsmState)
       `__initial: begin
         $monitor("val = %h, out1 = %h", val, out1);
-        val <= 291;
+        val <= 32'd291;
         fsmState <= `__StartState;
       end
       `__StartState: begin
-        if (val == 4)
+        if (val == 32'd4)
         begin
-          out1 <= 25;
+          out1 <= 32'd25;
         end
         else
         begin
-          out1 <= 15;
+          out1 <= 32'd15;
         end
       end
     endcase

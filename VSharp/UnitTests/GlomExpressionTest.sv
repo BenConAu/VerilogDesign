@@ -20,7 +20,7 @@ module GlomTest(
     case(fsmState)
       `__initial: begin
         $monitor("val = %h, out1 = %h", val, out1);
-        val <= 305419896;
+        val <= 32'd305419896;
         fsmState <= `__StartState;
       end
       `__StartState: begin

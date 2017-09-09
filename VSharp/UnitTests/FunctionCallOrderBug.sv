@@ -18,7 +18,7 @@ module MemoryController(
   begin
     case(fsmState)
       `__initial: begin
-        if (p1[31:0] == 0)
+        if (p1[31:0] == 32'd0)
         begin
           $monitor("Member = %h", p1[31:0]);
         end
