@@ -27,8 +27,14 @@ module ModuleInstantiate(
 
 	state initial
 	{
-		__monitor("var1 = %h", var1);
+		__monitor("var1 = %h, var2 = %h", var1, var2);
 
 		var1 = 123u8;
+
+		transition EndState;
+	}
+
+	state EndState
+	{
 	}
 }
