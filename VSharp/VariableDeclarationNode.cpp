@@ -15,14 +15,7 @@ VariableDeclarationNode::VariableDeclarationNode(
     ASTNode *pInitExpr) : ASTNode(pContext)
 {
     AddNode(pType);
-
-    if (pInitExpr != nullptr)
-    {
-        IdentifierNode *pLeft = new IdentifierNode(pContext, location, symIndex);
-        AssignmentNode *pAssignment = new AssignmentNode(pContext, location, pLeft, pInitExpr);
-
-        AddNode(pAssignment);
-    }
+    AddNode(pInitExpr);
 
     _symIndex = symIndex;
     _arraySize = arraySize._value;
@@ -37,11 +30,7 @@ VariableDeclarationNode::VariableDeclarationNode(
     ASTNode *pInitExpr) : ASTNode(pContext)
 {
     AddNode(pType);
-
-    if (pInitExpr != nullptr)
-    {
-        AddNode(pInitExpr);
-    }
+    AddNode(pInitExpr);
 
     _symIndex = symIndex;
     _arraySize = -1;
@@ -64,6 +53,7 @@ void VariableDeclarationNode::PreVerifyNodeImpl()
         pFunc,
         _symIndex,
         VariableLocationType::Member,
+        GetTypeNode()->IsWire() ? TypeModifier::Wire : TypeModifier::None,
         pInfo);
 }
 
@@ -73,9 +63,10 @@ void VariableDeclarationNode::PostProcessNodeImpl()
 
     // Spit out the preamble
     VariableInfo* pInfo = dynamic_cast<VariableInfo*>(GetContext()->_symbolTable.GetInfo(_symIndex, pModule));
+    ExpressionNode* pInitExpr = dynamic_cast<ExpressionNode*>(GetChild(1));
 
     // Each type should know how to make a declaration
-    std::string decl = pInfo->GetTypeInfo()->GetDeclaration(pInfo);
+    std::string decl = pInfo->GetTypeInfo()->GetDeclaration(pInfo, pInitExpr);
 
     // This node owns putting the semicolon on it
     GetContext()->OutputLine("%s;", decl.c_str());    

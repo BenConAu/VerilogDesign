@@ -1,5 +1,4 @@
 module OperatorTest(
-  reset,
   out1
   );
   // State definitions

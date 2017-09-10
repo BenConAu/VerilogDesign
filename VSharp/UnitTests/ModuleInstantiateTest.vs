@@ -1,12 +1,12 @@
 module LittleModule(
 	clock clk,
-	uint8 input,
-	out uint16 output
+	uint8 mIn,
+	out uint16 mOut
 	)
 {
 	state initial
 	{
-		output = { input, input };
+		mOut = { mIn, mIn };
 	}
 }
 
@@ -16,7 +16,7 @@ module ModuleInstantiate(
 {
 	clock clk;
 	uint8 var1;
-	uint16 var2;
+	wire uint16 var2;
 
 	LittleModule m1 = LittleModule(clk, var1, out var2);
 

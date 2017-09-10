@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 #include "SymbolInfo.h"
+#include "TypeModifier.h"
 
 class PSLCompilerContext;
 class VariableInfo;
@@ -25,6 +26,7 @@ class SymbolTable
         ModuleDefinitionNode *pScope,
         int symIndex,
         VariableLocationType location,
+        TypeModifier modifier,
         TypeInfo *pTypeInfo);
 
     FunctionInfo *AddFunction(

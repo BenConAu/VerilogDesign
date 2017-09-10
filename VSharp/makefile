@@ -83,6 +83,7 @@ PSLcc: lex.yy.c \
 	   TypeCollection.h \
 	   TypeInfo.cpp \
 	   TypeInfo.h \
+	   TypeModifier.h \
 	   TypeNode.cpp \
 	   TypeNode.h \
 	   UnaryOperatorNode.cpp \

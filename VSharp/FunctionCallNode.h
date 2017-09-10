@@ -34,6 +34,7 @@ public:
       int symIndex,
       FunctionType type);
 
+  // Overrides
   void VerifyNodeImpl() override;
   ExpressionResult *CalculateResult() override;
   const char *GetDebugName() override { return "FunctionCallNode"; }
@@ -41,13 +42,19 @@ public:
   ASTNode* DuplicateNodeImpl() override;
   void DumpNodeImpl() override;
 
-  const char *GetFunctionName();
+  // Parameter management and other properties
   FunctionCallParamNode* GetParameter(size_t index) { return dynamic_cast<FunctionCallParamNode*>(GetChild(index + 1)); }
   size_t GetParameterCount() const;
+  const char *GetFunctionName();
+
+  // Function expansion
   ASTNode* ExpandFunction(StatementNode* pOwningStatement);
   FunctionInfo* GetFunctionInfo();
   ModuleTypeInfo* GetModuleTypeInfo();
   ExpressionResult* CreateMemberResult(int fieldSymIndex);
+
+  // Helpers
+  void AppendParameterList(std::string& str);
   
 private:
   // Symbol of function being called

@@ -17,7 +17,7 @@ public:
     std::string GetTypeName() override { return "StaticTypeInfo"; }
     bool EqualType(TypeInfo* pOther) override { throw "Wat"; }
     TypeInfo* MakeSpecificType(TypeInfo* pGenericArgType, TypeCollection* pCollection) override { throw "Wat"; }
-    std::string GetDeclaration(VariableInfo*) override { throw "Wat"; }
+    std::string GetDeclaration(VariableInfo*, ExpressionNode* pInitExpr) override { throw "Wat"; }
     
     TypeInfo* GetTypeInfo() { return _pTypeInfo; }
 

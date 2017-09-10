@@ -1,5 +1,4 @@
 module BitSelectionTest(
-  reset,
   out1
   );
   // State definitions

@@ -1,5 +1,4 @@
 module EnumTest(
-  reset,
   in1,
   out1
   );

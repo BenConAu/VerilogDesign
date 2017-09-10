@@ -1,5 +1,4 @@
 module ShortCircuit(
-  reset,
   out1
   );
   // State definitions

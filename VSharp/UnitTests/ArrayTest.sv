@@ -1,5 +1,4 @@
 module ArrayTest(
-  reset,
   in1,
   out1
   );

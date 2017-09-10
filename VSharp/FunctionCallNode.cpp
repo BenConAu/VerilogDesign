@@ -365,66 +365,33 @@ ExpressionResult *FunctionCallNode::CalculateResult()
             throw "Unexpected unknown function type during processing";
 
         case FunctionType::ModuleDecl:
-            /*GetContext()->BeginLine();
-            GetContext()->OutputString(GetFunctionInfo()->GetVerilogName().c_str());
-            GetContext()->OutputString("(");
+        {
+            std::string resultString = "(";
+            AppendParameterList(resultString);
+            resultString.append(")");               
 
-            for (size_t i = 0; i < GetParameterCount(); i++)
-            {
-                ExpressionNode* pParam = GetParameter(i);
-                std::unique_ptr<ExpressionResult> paramResult(pParam->TakeResult());
-                
-                GetContext()->OutputString(paramResult->GetString().c_str());
-                if (i != GetParameterCount() - 1)
-                {
-                    GetContext()->OutputString(", ");
-                }
-            }
-
-            GetContext()->OutputString(");");
-            GetContext()->EndLine();*/
-            return nullptr;
+            // Make a magical expression result that can come back here and extract stuff if need be
+            return new ExpressionResult(resultString, this);
+        }
 
         case FunctionType::BuiltIn:
+        {
             GetContext()->BeginLine();
             GetContext()->OutputString(GetFunctionInfo()->GetVerilogName().c_str());
-            GetContext()->OutputString("(");
 
-            for (size_t i = 0; i < GetParameterCount(); i++)
-            {
-                ExpressionNode* pParam = GetParameter(i);
-                std::unique_ptr<ExpressionResult> paramResult(pParam->TakeResult());
-                
-                GetContext()->OutputString(paramResult->GetString().c_str());
-                if (i != GetParameterCount() - 1)
-                {
-                    GetContext()->OutputString(", ");
-                }
-            }
+            std::string resultString = "(";
+            AppendParameterList(resultString);
+            resultString.append(");");
 
-            GetContext()->OutputString(");");
+            GetContext()->OutputString(resultString.c_str());
             GetContext()->EndLine();
             return nullptr;
+        }
 
         case FunctionType::Constructor:
         {
-            StructTypeInfo* pStructInfo = GetContext()->_typeCollection.GetStructType(_symIndex);            
             std::string resultString = "{ ";
-            
-            for (size_t i = 0; i < GetParameterCount(); i++)
-            {
-                ExpressionNode* pParam = GetParameter(i);
-                std::unique_ptr<ExpressionResult> paramResult(pParam->TakeResult());
-                
-                if (i != 0)
-                {
-                    resultString.append(", ");
-                }
-        
-                resultString.append(paramResult->GetString());
-                _parameterResults.push_back(paramResult->GetString());
-            }
-        
+            AppendParameterList(resultString);
             resultString.append(" }");               
 
             // Make a magical expression result that can come back here and extract stuff if need be
@@ -454,4 +421,21 @@ ExpressionResult* FunctionCallNode::CreateMemberResult(int fieldSymIndex)
 size_t FunctionCallNode::GetParameterCount() const 
 { 
     return (GetChildCount() - 1); 
+}
+
+void FunctionCallNode::AppendParameterList(std::string& str)
+{
+    for (size_t i = 0; i < GetParameterCount(); i++)
+    {
+        ExpressionNode* pParam = GetParameter(i);
+        std::unique_ptr<ExpressionResult> paramResult(pParam->TakeResult());
+        
+        if (i != 0)
+        {
+            str.append(", ");
+        }
+
+        str.append(paramResult->GetString());
+        _parameterResults.push_back(paramResult->GetString());
+    }
 }

@@ -1,5 +1,4 @@
 module StructTest(
-  reset,
   out1
   );
   // State definitions

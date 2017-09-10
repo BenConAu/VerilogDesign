@@ -71,7 +71,7 @@ public:
         return pGenericArgType;
     }
 
-    std::string GetDeclaration(VariableInfo*) override { throw "Wat"; }
+    std::string GetDeclaration(VariableInfo*, ExpressionNode* pInitExpr) override { throw "Wat"; }
     
 private:
     int _symIndex;

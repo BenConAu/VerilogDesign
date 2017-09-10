@@ -95,7 +95,7 @@ bool ModuleDefinitionNode::PreProcessNodeImpl()
     GetContext()->OutputLine("module %s(", GetContext()->_symbols[_symIndex].c_str());
     GetContext()->IncreaseIndent();
 
-    GetContext()->OutputLine("reset,");
+//    GetContext()->OutputLine("reset,");
 
     bool first = true;
 

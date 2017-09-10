@@ -1,5 +1,4 @@
 module DoubleExpansionTest(
-  reset,
   out1,
   out2,
   out3

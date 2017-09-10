@@ -26,6 +26,7 @@ VariableInfo *SymbolTable::AddVariable(
     ModuleDefinitionNode *pScope,
     int symIndex,
     VariableLocationType location,
+    TypeModifier modifier,
     TypeInfo *pTypeInfo)
 {
     for (auto iter = _symbols.lower_bound(symIndex); iter != _symbols.upper_bound(symIndex); iter++)
@@ -37,7 +38,7 @@ VariableInfo *SymbolTable::AddVariable(
         }
     }
 
-    VariableInfo *pNewInfo = new VariableInfo(_pContext, pScope, symIndex, location, pTypeInfo);
+    VariableInfo *pNewInfo = new VariableInfo(_pContext, pScope, symIndex, location, modifier, pTypeInfo);
     _symbols.emplace(std::make_pair(symIndex, std::unique_ptr<SymbolInfo>(pNewInfo)));
     return pNewInfo;
 }

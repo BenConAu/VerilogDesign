@@ -54,9 +54,20 @@ TypeInfo *RegisterTypeInfo::MakeSpecificType(TypeInfo *pGenericArgType, TypeColl
     return this;
 }
 
-std::string RegisterTypeInfo::GetDeclaration(VariableInfo* pInfo)
+std::string RegisterTypeInfo::GetDeclaration(VariableInfo* pInfo, ExpressionNode* pInitExpr)
 {
+    if (pInitExpr != nullptr)
+    {
+        throw "RegisterTypeInfo does not yet support init expressions";
+    }
+
     char buffer[1024];
-    sprintf(buffer, "reg[%d:0] %s", GetBitLength() - 1, pInfo->GetSymbol());
+    sprintf(
+        buffer, 
+        "%s[%d:0] %s",
+        (pInfo->GetModifier() == TypeModifier::Wire) ? "wire" : "reg",
+        GetBitLength() - 1, 
+        pInfo->GetSymbol());
+
     return buffer;
 }

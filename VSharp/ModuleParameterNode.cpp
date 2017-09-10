@@ -30,6 +30,7 @@ void ModuleParameterNode::VerifyNodeImpl()
         pModule,
         _symIndex,
         location,
+        TypeModifier::None,
         pTypeInfo
         );
 }

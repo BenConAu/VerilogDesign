@@ -53,8 +53,13 @@ int StructTypeInfo::GetBitLength() const
     return size;
 }
 
-std::string StructTypeInfo::GetDeclaration(VariableInfo* pInfo)
+std::string StructTypeInfo::GetDeclaration(VariableInfo* pInfo, ExpressionNode* pInitExpr)
 {
+    if (pInitExpr != nullptr)
+    {
+        throw "StructTypeInfo does not support init expressions yet";
+    }
+
     char buffer[1024];
     sprintf(buffer, "reg[%d:0] %s", GetBitLength() - 1, pInfo->GetSymbol());
     return buffer;

@@ -18,7 +18,7 @@ public:
     TypeInfo* MakeSpecificType(TypeInfo* pGenericArgType, TypeCollection* pCollection) override;
     bool IsVerilogRegister() const override { return true; }
     int GetBitLength() const override;
-    std::string GetDeclaration(VariableInfo* pInfo) override;
+    std::string GetDeclaration(VariableInfo* pInfo, ExpressionNode* pInitExpr) override;
     
     bool IsMember(int symIndex);
     int GetValue(int symIndex);

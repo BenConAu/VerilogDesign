@@ -72,8 +72,13 @@ int EnumTypeInfo::GetBitLength() const
     }
 }
 
-std::string EnumTypeInfo::GetDeclaration(VariableInfo* pInfo)
+std::string EnumTypeInfo::GetDeclaration(VariableInfo* pInfo, ExpressionNode* pInitExpr)
 {
+    if (pInitExpr != nullptr)
+    {
+        throw "Enum types don't support init expressions";
+    }
+
     char buffer[1024];
     sprintf(buffer, "reg[%d:0] %s", GetBitLength() - 1, pInfo->GetSymbol());
     return buffer;

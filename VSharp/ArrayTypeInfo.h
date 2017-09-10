@@ -17,7 +17,7 @@ public:
     std::string GetTypeName() override;
     bool EqualType(TypeInfo* pOther) override;
     TypeInfo* MakeSpecificType(TypeInfo* pGenericArgType, TypeCollection* pCollection) override;
-    std::string GetDeclaration(VariableInfo* pInfo) override;
+    std::string GetDeclaration(VariableInfo* pInfo, ExpressionNode* pInitExpr) override;
     
     TypeInfo* GetBaseType();
 

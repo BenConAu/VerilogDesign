@@ -1,5 +1,4 @@
 module MemoryController(
-  reset,
   in1
   );
   // State definitions

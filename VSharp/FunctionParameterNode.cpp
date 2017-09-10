@@ -24,6 +24,7 @@ void FunctionParameterNode::VerifyNodeImpl()
         pModule,
         _symIndex,
         location,
+        TypeModifier::None,
         pTypeInfo
         );
 }

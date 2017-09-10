@@ -1,28 +1,26 @@
 module LittleModule(
-  reset,
   clk,
-  input,
-  output
+  mIn,
+  mOut
   );
   // State definitions
   `define __initial 0
   // inputs / outputs
   input wire reset;
   input wire[0:0] clk;
-  input wire[7:0] input;
-  output reg[15:0] output;
+  input wire[7:0] mIn;
+  output reg[15:0] mOut;
   reg [7:0] fsmState = 0;
   always @(posedge clk)
   begin
     case(fsmState)
       `__initial: begin
-        output <= { input, input };
+        mOut <= { mIn, mIn };
       end
     endcase
   end
 endmodule
 module ModuleInstantiate(
-  reset,
   out1
   );
   // State definitions
@@ -32,8 +30,8 @@ module ModuleInstantiate(
   output reg[15:0] out1;
   reg clk = 0; always #5 clk = !clk;
   reg[7:0] var1;
-  reg[15:0] var2;
-  m1;
+  wire[15:0] var2;
+  LittleModule m1(clk, var1, var2);
   initial
   begin
     # 100 $finish;

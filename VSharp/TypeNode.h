@@ -28,6 +28,7 @@ public:
     const char* GetDebugName() override { return "TypeNode"; }
     void SetModifier(int modifier);
     TypeClass GetTypeClass() const { return _typeClass; }
+    bool IsWire() const { return _IsWire; }
 
 private:
     TypeClass _typeClass;

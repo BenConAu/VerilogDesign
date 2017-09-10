@@ -46,7 +46,7 @@ public:
         return this;
     }
 
-    std::string GetDeclaration(VariableInfo* pInfo) override;
+    std::string GetDeclaration(VariableInfo* pInfo, ExpressionNode* pInitExpr) override;
 
     ModuleDefinitionNode* GetModuleDefinition() { return _pModuleDef; }
     size_t GetParameterCount();

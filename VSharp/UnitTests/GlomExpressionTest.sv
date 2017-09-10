@@ -1,5 +1,4 @@
 module GlomTest(
-  reset,
   out1
   );
   // State definitions
