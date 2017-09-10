@@ -11,13 +11,15 @@ class StructDeclarationNode : public ASTNode
 {
 public:
     StructDeclarationNode(
-        PSLCompilerContext* pContext, 
+        PSLCompilerContext* pContext,
+        const YYLTYPE &location,
         ASTNode* pTypeNode, 
         int symId, 
         const UIntConstant &dimension);
 
     StructDeclarationNode(
-        PSLCompilerContext* pContext, 
+        PSLCompilerContext* pContext,
+        const YYLTYPE &location, 
         ASTNode* pTypeNode, 
         int symId);
 

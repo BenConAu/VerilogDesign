@@ -8,16 +8,11 @@ class ReturnNode : public ASTNode
     ReturnNode(
       PSLCompilerContext *pContext, 
       const YYLTYPE &location, 
-      ASTNode *pChild) : ASTNode(pContext)
+      ASTNode *pChild) : ASTNode(pContext, location)
     {
         AddNode(pChild);
-
-        _location = location;
     }
 
     ASTNode* DuplicateNode() override;
     const char* GetDebugName() override { return "ReturnNode"; }
-    
-  private:
-    YYLTYPE _location;
 };

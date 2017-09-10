@@ -3,9 +3,8 @@
 #include "FunctionCallNode.h"
 #include "FunctionInfo.h"
 
-StatementNode::StatementNode(PSLCompilerContext* pContext, const YYLTYPE &location) : ASTNode(pContext)
+StatementNode::StatementNode(PSLCompilerContext* pContext, const YYLTYPE &location) : ASTNode(pContext, location)
 {
-    _location = location;
     _fProcessed = false;
     _pCallNode = nullptr;
     _pReplacement = nullptr;

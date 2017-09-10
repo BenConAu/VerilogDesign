@@ -2,7 +2,6 @@
 
 #include "ASTNode.h"
 #include "TypeNode.h"
-#include "VSharp.tab.h"
 
 class ModuleParameterNode : public ASTNode
 {
@@ -12,10 +11,9 @@ public:
         const YYLTYPE &location,
         ASTNode* pType, 
         int symIndex, 
-        bool fOut) : ASTNode(pContext)
+        bool fOut) : ASTNode(pContext, location)
     {
         AddNode(pType);
-        _location = location;
         _symIndex = symIndex;
         _fOut = fOut;
     }
@@ -28,7 +26,6 @@ public:
     TypeNode* GetTypeNode() { return dynamic_cast<TypeNode*>(GetChild(0)); }
     
 private:
-    YYLTYPE _location;
     int _symIndex;
     bool _fOut;
 };

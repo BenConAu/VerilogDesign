@@ -5,15 +5,17 @@
 #include <string>
 #include <deque>
 #include <map>
+#include "VSharp.tab.h"
 
 class PSLCompilerContext;
 
 class ASTNode
 {
 public:
-    ASTNode(PSLCompilerContext* pContext)
+    ASTNode(PSLCompilerContext* pContext, const YYLTYPE &location)
     {
         _pContext = pContext;
+        _location = location;
         _pParent = nullptr;
     }
 
@@ -88,9 +90,13 @@ public:
     PSLCompilerContext* GetContext() { return _pContext; }
     void DumpNode();    
     virtual void DumpNodeImpl();
+
+protected:
+    const YYLTYPE& GetLocation() { return _location; }    
     
 private:
     PSLCompilerContext* _pContext;
+    YYLTYPE _location;    
     ASTNode* _pParent;
     std::vector<std::unique_ptr<ASTNode> > _children;
 };

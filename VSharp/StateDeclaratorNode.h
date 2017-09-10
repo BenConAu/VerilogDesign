@@ -21,5 +21,4 @@ public:
 
 private:
   int _identifier;
-  YYLTYPE _location;
 };

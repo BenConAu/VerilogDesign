@@ -24,12 +24,10 @@ public:
 
 protected:
     void SetType(TypeInfo* pInfo);
-    const YYLTYPE& GetLocation() { return _location; }
 
 private:
     ExpressionResult* _pResult;
     TypeInfo* _pType;
-    YYLTYPE _location;
     bool _fResultCalculated;
     bool _fResultTaken;
 };

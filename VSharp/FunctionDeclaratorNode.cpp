@@ -11,10 +11,11 @@
 
 FunctionDeclaratorNode::FunctionDeclaratorNode(
     PSLCompilerContext* pContext,
+    const YYLTYPE &location,
     ASTNode* pRetType,
     int symIndex,
     int genericSym
-    ) : ASTNode(pContext)
+    ) : ASTNode(pContext, location)
 {
     AddNode(pRetType);
 

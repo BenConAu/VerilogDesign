@@ -7,9 +7,8 @@ StateDeclaratorNode::StateDeclaratorNode(
     PSLCompilerContext *pContext,
     const YYLTYPE &location,
     int ident,
-    ASTNode *pStatementList) : ASTNode(pContext)
+    ASTNode *pStatementList) : ASTNode(pContext, location)
 {
-    _location = location;
     _identifier = ident;
 
     AddNode(pStatementList);

@@ -18,15 +18,11 @@ public:
     ASTNode* GetReplacementNode() { return _pReplacement; }
     FunctionCallNode* GetFirstFunctionCall();
     
-protected:
-    const YYLTYPE& GetLocation() { return _location; }
-
 private:
     FunctionCallNode* GetFunctionCall(ASTNode* pNode);
     bool IsReplaceableFunctionCall(ASTNode* pNode);
     
 private:
-    YYLTYPE _location;
     bool _fProcessed;
     FunctionCallNode* _pCallNode;   // When duplicating, the call node to replace
     ASTNode* _pReplacement;         // When duplicating, the thing to replace with

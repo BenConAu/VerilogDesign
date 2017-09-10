@@ -74,6 +74,11 @@ void PSLCompilerContext::AddModuleDef(ASTNode *pNode)
     _rootNodes.push_back(std::unique_ptr<ASTNode>(pNode));
 }
 
+void PSLCompilerContext::AddImport(ASTNode *pNode)
+{
+    _rootNodes.push_front(std::unique_ptr<ASTNode>(pNode));
+}
+
 void PSLCompilerContext::Parse()
 {
     //printf("Doing Bison parse\n");

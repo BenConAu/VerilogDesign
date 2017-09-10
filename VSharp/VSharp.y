@@ -22,6 +22,9 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %code requires 
 {
 #include "UIntConstant.h"
+
+class ASTNode;
+class PSLCompilerContext;
 }
 
 %union 
@@ -85,7 +88,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token RIGHT_BRACKET
 %token IF_TOKEN
 %token ELSE_TOKEN
-%token SIZEOF_TOKEN
+%token IMPORT_TOKEN
 %token WIRE_TOKEN
 %token <symIndex> IDENTIFIER
 %type <pNode> variable_identifier
@@ -145,6 +148,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> drive_statement_list
 %type <pNode> drive_definition
 %type <pNode> type_name_specifier
+%type <pNode> import_statement
 
 %%
 
@@ -155,10 +159,14 @@ translation_unit:
 
 external_declaration:
       module_definition                                             { $$ = $1; pContext->AddModuleDef($$); }
+    | import_statement                                              { $$ = $1; pContext->AddImport($$); }
     | enum_definition                                               { $$ = $1; pContext->AddTypeDef($$); }
 	| struct_specifier                                              { $$ = $1; pContext->AddTypeDef($$); }
 	| declaration                                                   { $$ = $1; pContext->AddGlobal($$); }
     ;
+
+import_statement:
+      IMPORT_TOKEN STRINGLITERAL SEMICOLON                          { $$ = new ImportStatementNode(pContext, @$); }
 
 enum_definition:
       ENUM_TOKEN IDENTIFIER LEFT_BRACE enum_list RIGHT_BRACE        { $$ = $4; dynamic_cast<EnumDefinitionNode*>($$)->SetIdentifier($2); }
@@ -171,7 +179,7 @@ enum_list:
     ;
 
 statement_list:
-      statement                                                     { $$ = new ListNode(pContext, $1); }
+      statement                                                     { $$ = new ListNode(pContext, @$, $1); }
     | statement_list statement                                      { $$ = $1; $$->AddNode($2); }
     ;
 
@@ -280,7 +288,7 @@ glom_expression:
     ;
 
 glom_list:
-      postfix_expression                                            { $$ = new ListNode(pContext, $1); }
+      postfix_expression                                            { $$ = new ListNode(pContext, @$, $1); }
     | glom_list COMMA postfix_expression                            { $$ = $1; dynamic_cast<ListNode*>($$)->AddNode($3); }
     ;
 
@@ -303,8 +311,8 @@ module_header_with_parameters:
 	;
 
 module_header:
-      MODULE_TOKEN IDENTIFIER LEFT_PAREN                            { $$ = new ModuleDefinitionNode(pContext, $2, -1); }
-    | MODULE_TOKEN IDENTIFIER LT IDENTIFIER GT LEFT_PAREN           { $$ = new ModuleDefinitionNode(pContext, $2, $4); } 
+      MODULE_TOKEN IDENTIFIER LEFT_PAREN                            { $$ = new ModuleDefinitionNode(pContext, @$, $2, -1); }
+    | MODULE_TOKEN IDENTIFIER LT IDENTIFIER GT LEFT_PAREN           { $$ = new ModuleDefinitionNode(pContext, @$, $2, $4); } 
     ;
 
 module_param_decl:
@@ -325,13 +333,13 @@ function_header_with_parameters:
 	;
 
 function_header:
-      fully_specified_type IDENTIFIER LEFT_PAREN                    { $$ = new FunctionDeclaratorNode(pContext, $1, $2, -1); }
-    | fully_specified_type IDENTIFIER LT IDENTIFIER GT LEFT_PAREN   { $$ = new FunctionDeclaratorNode(pContext, $1, $2, $4); } 
+      fully_specified_type IDENTIFIER LEFT_PAREN                    { $$ = new FunctionDeclaratorNode(pContext, @$, $1, $2, -1); }
+    | fully_specified_type IDENTIFIER LT IDENTIFIER GT LEFT_PAREN   { $$ = new FunctionDeclaratorNode(pContext, @$, $1, $2, $4); } 
     ;
 
 function_param_decl:
-      fully_specified_type IDENTIFIER                               { $$ = new FunctionParameterNode(pContext, $1, $2, false); }
-    | OUT_TOKEN fully_specified_type IDENTIFIER                     { $$ = new FunctionParameterNode(pContext, $2, $3, true); }
+      fully_specified_type IDENTIFIER                               { $$ = new FunctionParameterNode(pContext, @$, $1, $2, false); }
+    | OUT_TOKEN fully_specified_type IDENTIFIER                     { $$ = new FunctionParameterNode(pContext, @$, $2, $3, true); }
 	;
 
 type_name_specifier:
@@ -357,14 +365,14 @@ struct_specifier:
     ;
 
 struct_declaration_list:
-      struct_declaration											{ $$ = new StructSpecifierNode(pContext, $1); }
+      struct_declaration											{ $$ = new StructSpecifierNode(pContext, @$, $1); }
     | struct_declaration_list struct_declaration					{ $$ = $1; $$->AddNode($2); }
     ;
 
 struct_declaration:
-      fully_specified_type IDENTIFIER SEMICOLON						{ $$ = new StructDeclarationNode(pContext, $1, $2); }
+      fully_specified_type IDENTIFIER SEMICOLON						{ $$ = new StructDeclarationNode(pContext, @$, $1, $2); }
     | fully_specified_type IDENTIFIER LEFT_BRACKET INTCONSTANT RIGHT_BRACKET SEMICOLON
-                                                                    { $$ = new StructDeclarationNode(pContext, $1, $2, $4); }
+                                                                    { $$ = new StructDeclarationNode(pContext, @$, $1, $2, $4); }
     ;
 
 module_definition:
@@ -372,12 +380,12 @@ module_definition:
     ;
 
 module_states:
-      LEFT_BRACE RIGHT_BRACE                                        { $$ = new ListNode(pContext, nullptr); }
+      LEFT_BRACE RIGHT_BRACE                                        { $$ = new ListNode(pContext, @$, nullptr); }
     | LEFT_BRACE state_list RIGHT_BRACE                             { $$ = $2; }
     ;
 
 state_list:
-      module_member                                                 { $$ = new ListNode(pContext, $1); }
+      module_member                                                 { $$ = new ListNode(pContext, @$, $1); }
     | state_list module_member                                      { $$ = $1; $$->AddNode($2); }
     ;
 
@@ -393,7 +401,7 @@ drive_list_definition:
     ;
 
 drive_statement_list:
-      drive_definition                                              { $$ = new ListNode(pContext, $1); }
+      drive_definition                                              { $$ = new ListNode(pContext, @$, $1); }
     | drive_statement_list drive_definition                         { $$ = $1; $$->AddNode($2); }
     ;
 
@@ -423,7 +431,7 @@ declaration_statement:
     ;
 
 compound_statement:
-      LEFT_BRACE RIGHT_BRACE                                        { $$ = new ListNode(pContext, nullptr); }
+      LEFT_BRACE RIGHT_BRACE                                        { $$ = new ListNode(pContext, @$, nullptr); }
     | LEFT_BRACE statement_list RIGHT_BRACE                         { $$ = $2; }
     ;
 
@@ -453,7 +461,7 @@ return_statement:
       RETURN_TOKEN expression SEMICOLON                             { $$ = new ReturnNode(pContext, @$, $2); }
 
 transition_statement:
-      TRANSITION_TOKEN IDENTIFIER SEMICOLON                         { $$ = new TransitionNode(pContext, $2); }
+      TRANSITION_TOKEN IDENTIFIER SEMICOLON                         { $$ = new TransitionNode(pContext, @$, $2); }
     ;
 
 %%

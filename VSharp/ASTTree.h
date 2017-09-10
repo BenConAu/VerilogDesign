@@ -14,6 +14,7 @@
 #include "GlomExpressionNode.h"
 #include "IdentifierNode.h"
 #include "IfStatementNode.h"
+#include "ImportStatementNode.h"
 #include "IndexSelectionNode.h"
 #include "ListNode.h"
 #include "ModuleDefinitionNode.h"

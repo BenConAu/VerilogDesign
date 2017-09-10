@@ -4,7 +4,7 @@
 #include "StructTypeInfo.h"
 #include "VSharpCompilerContext.h"
 
-StructSpecifierNode::StructSpecifierNode(PSLCompilerContext* pContext, ASTNode* pTypeNode) : ASTNode(pContext)
+StructSpecifierNode::StructSpecifierNode(PSLCompilerContext* pContext, const YYLTYPE &location, ASTNode* pTypeNode) : ASTNode(pContext, location)
 {
     AddNode(pTypeNode);
 }

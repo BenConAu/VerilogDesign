@@ -44,7 +44,10 @@ extern int yydebug;
 
 #include "UIntConstant.h"
 
-#line 48 "VSharp.tab.h" /* yacc.c:1915  */
+class ASTNode;
+class PSLCompilerContext;
+
+#line 51 "VSharp.tab.h" /* yacc.c:1915  */
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
@@ -102,7 +105,7 @@ extern int yydebug;
     RIGHT_BRACKET = 306,
     IF_TOKEN = 307,
     ELSE_TOKEN = 308,
-    SIZEOF_TOKEN = 309,
+    IMPORT_TOKEN = 309,
     WIRE_TOKEN = 310,
     IDENTIFIER = 311
   };
@@ -113,13 +116,13 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 28 "VSharp.y" /* yacc.c:1915  */
+#line 31 "VSharp.y" /* yacc.c:1915  */
 
     UIntConstant constVal;
     int symIndex;
     ASTNode* pNode;
 
-#line 123 "VSharp.tab.h" /* yacc.c:1915  */
+#line 126 "VSharp.tab.h" /* yacc.c:1915  */
 };
 
 typedef union YYSTYPE YYSTYPE;

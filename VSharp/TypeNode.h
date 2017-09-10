@@ -33,7 +33,6 @@ public:
 private:
     TypeClass _typeClass;
     int _extra;
-    YYLTYPE _location;
     bool _IsWire;
 
     TypeInfo* _pTypeInfo;

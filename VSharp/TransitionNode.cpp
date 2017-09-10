@@ -17,5 +17,5 @@ void TransitionNode::PostProcessNodeImpl()
 
 ASTNode* TransitionNode::DuplicateNodeImpl()
 {
-    return new TransitionNode(GetContext(), _symIndex);
+    return new TransitionNode(GetContext(), GetLocation(), _symIndex);
 }

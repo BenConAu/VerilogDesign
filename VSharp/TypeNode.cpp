@@ -9,11 +9,10 @@ TypeNode::TypeNode(
     PSLCompilerContext *pContext,
     const YYLTYPE &location,
     TypeClass typeClass,
-    int type) : ASTNode(pContext)
+    int type) : ASTNode(pContext, location)
 {
     _typeClass = typeClass;
     _extra = type;
-    _location = location;
     _pTypeInfo = nullptr;
     _IsWire = false;
 }
@@ -21,11 +20,10 @@ TypeNode::TypeNode(
 TypeNode::TypeNode(
     PSLCompilerContext *pContext,
     const YYLTYPE &location,
-    TypeClass typeClass) : ASTNode(pContext)
+    TypeClass typeClass) : ASTNode(pContext, location)
 {
     _typeClass = typeClass;
     _extra = 0;
-    _location = location;
     _pTypeInfo = nullptr;
     _IsWire = false;
 }
@@ -33,11 +31,10 @@ TypeNode::TypeNode(
 TypeNode::TypeNode(
     PSLCompilerContext *pContext, 
     const YYLTYPE &location,
-    const UIntConstant &bitLength) : ASTNode(pContext)
+    const UIntConstant &bitLength) : ASTNode(pContext, location)
 {
     _typeClass = TypeClass::Register;
     _extra = bitLength._value;
-    _location = location;
     _pTypeInfo = nullptr;
     _IsWire = false;
 }
@@ -91,7 +88,7 @@ TypeInfo *TypeNode::GetTypeInfo()
                             sstr << "Failed to find struct, enum, or generic type with name " << GetContext()->_symbols[_extra];
                             static std::string error = sstr.str();
         
-                            GetContext()->ReportError(_location, sstr.str().c_str());    
+                            GetContext()->ReportError(GetLocation(), sstr.str().c_str());    
                         }
                         else
                         {

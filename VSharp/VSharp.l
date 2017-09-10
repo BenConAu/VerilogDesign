@@ -65,6 +65,7 @@
 "module"             { return MODULE_TOKEN; }
 "transition"         { return TRANSITION_TOKEN; }
 "return"             { return RETURN_TOKEN; }
+"import"             { return IMPORT_TOKEN; }
 "if"                 { return IF_TOKEN; }
 "else"               { return ELSE_TOKEN; }
 "enum"               { return ENUM_TOKEN; }

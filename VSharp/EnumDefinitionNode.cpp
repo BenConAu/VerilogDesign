@@ -7,10 +7,9 @@
 EnumDefinitionNode::EnumDefinitionNode(
     PSLCompilerContext* pContext, 
     const YYLTYPE &location,
-    int firstEnum) : ASTNode(pContext)
+    int firstEnum) : ASTNode(pContext, location)
 {
     _symIndex = -1;
-    _location = location;
 
     _enums.push_back(firstEnum);
 }

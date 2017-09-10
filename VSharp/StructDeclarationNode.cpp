@@ -4,11 +4,12 @@
 #include "TypeNode.h"
 
 StructDeclarationNode::StructDeclarationNode(
-    PSLCompilerContext* pContext, 
+    PSLCompilerContext* pContext,
+    const YYLTYPE &location,
     ASTNode* pTypeNode, 
     int symId,
     const UIntConstant& dimension
-    ) : ASTNode(pContext)
+    ) : ASTNode(pContext, location)
 {
     AddNode(pTypeNode);
     _symIndex = symId;
@@ -17,9 +18,10 @@ StructDeclarationNode::StructDeclarationNode(
 
 StructDeclarationNode::StructDeclarationNode(
     PSLCompilerContext* pContext, 
+    const YYLTYPE &location,
     ASTNode* pTypeNode, 
     int symId
-    ) : ASTNode(pContext)
+    ) : ASTNode(pContext, location)
 {
     AddNode(pTypeNode);
     _symIndex = symId;

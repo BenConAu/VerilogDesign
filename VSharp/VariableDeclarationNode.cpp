@@ -12,14 +12,13 @@ VariableDeclarationNode::VariableDeclarationNode(
     ASTNode *pType,
     int symIndex,
     const UIntConstant& arraySize,
-    ASTNode *pInitExpr) : ASTNode(pContext)
+    ASTNode *pInitExpr) : ASTNode(pContext, location)
 {
     AddNode(pType);
     AddNode(pInitExpr);
 
     _symIndex = symIndex;
     _arraySize = arraySize._value;
-    _location = location;
 }
 
 VariableDeclarationNode::VariableDeclarationNode(
@@ -27,14 +26,13 @@ VariableDeclarationNode::VariableDeclarationNode(
     const YYLTYPE &location,
     ASTNode *pType,
     int symIndex,
-    ASTNode *pInitExpr) : ASTNode(pContext)
+    ASTNode *pInitExpr) : ASTNode(pContext, location)
 {
     AddNode(pType);
     AddNode(pInitExpr);
 
     _symIndex = symIndex;
     _arraySize = -1;
-    _location = location;
 }
 
 void VariableDeclarationNode::PreVerifyNodeImpl()

@@ -23,6 +23,5 @@ public:
 
 private:
     int _symIndex;
-    YYLTYPE _location;
     std::vector<int> _enums;
 };

@@ -11,6 +11,7 @@ class ModuleDefinitionNode : public ASTNode
 public:
     ModuleDefinitionNode(
         PSLCompilerContext* pContext, 
+        const YYLTYPE &location,
         int symIndex,
         int genericSym
         );

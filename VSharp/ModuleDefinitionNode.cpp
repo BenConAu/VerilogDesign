@@ -11,9 +11,10 @@
 
 ModuleDefinitionNode::ModuleDefinitionNode(
     PSLCompilerContext* pContext, 
+    const YYLTYPE &location,
     int symIndex,
     int genericSym
-    ) : ASTNode(pContext)
+    ) : ASTNode(pContext, location)
 {
     _symIndex = symIndex;
     _genericIndex = genericSym;

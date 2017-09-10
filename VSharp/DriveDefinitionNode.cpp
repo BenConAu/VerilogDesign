@@ -9,9 +9,8 @@ DriveDefinitionNode::DriveDefinitionNode(
     PSLCompilerContext *pContext,
     const YYLTYPE &location,
     const UIntConstant &delta,
-    ASTNode *pExpr) : ASTNode(pContext)
+    ASTNode *pExpr) : ASTNode(pContext, location)
 {
-    _location = location;
     _delta = delta._value;
 
     AddNode(pExpr);

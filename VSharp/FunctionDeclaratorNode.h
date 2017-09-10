@@ -15,6 +15,7 @@ class FunctionDeclaratorNode : public ASTNode
 public:
     FunctionDeclaratorNode(
         PSLCompilerContext* pContext,
+        const YYLTYPE &location,
         ASTNode* pRetType,
         int symIndex,
         int genericSym);

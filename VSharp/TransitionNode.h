@@ -7,8 +7,9 @@ class TransitionNode : public ASTNode
 {
   public:
     TransitionNode(
-        PSLCompilerContext *pContext,
-        int symIndex) : ASTNode(pContext)
+        PSLCompilerContext *pContext, 
+        const YYLTYPE &location,
+        int symIndex) : ASTNode(pContext, location)
     {
         _symIndex = symIndex;
     }

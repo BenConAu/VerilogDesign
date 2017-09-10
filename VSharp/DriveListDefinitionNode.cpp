@@ -8,10 +8,8 @@
 DriveListDefinitionNode::DriveListDefinitionNode(
     PSLCompilerContext *pContext,
     const YYLTYPE &location,
-    ASTNode *pList) : ASTNode(pContext)
+    ASTNode *pList) : ASTNode(pContext, location)
 {
-    _location = location;
-
     AddNode(pList);
 }
 

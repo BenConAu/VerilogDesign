@@ -127,10 +127,9 @@ PSLcc: lex.yy.c \
 	   ModuleTypeInfo.cpp \
 	   OperatorNode.cpp \
 	   PSLCompiler.cpp \
+	   RegisterTypeInfo.cpp \
 	   ReturnNode.cpp \
 	   StateInfo.cpp \
-	   TransitionNode.cpp \
-	   RegisterTypeInfo.cpp \
 	   StateDeclaratorNode.cpp \
 	   StatementNode.cpp \
 	   StructDeclarationNode.cpp \
@@ -138,6 +137,7 @@ PSLcc: lex.yy.c \
 	   StructTypeInfo.cpp \
 	   SymbolInfo.cpp \
 	   SymbolTable.cpp \
+	   TransitionNode.cpp \
 	   TypeInfo.cpp \
 	   TypeNode.cpp \
 	   TypeCollection.cpp \

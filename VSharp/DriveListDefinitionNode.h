@@ -15,7 +15,4 @@ public:
   bool PreProcessNodeImpl() override;
   void PostProcessNodeImpl() override;
   const char *GetDebugName() override { return "DriveListDefinitionNode"; }
-
-private:
-  YYLTYPE _location;
 };

@@ -32,5 +32,4 @@ public:
 private:
   int _symIndex;
   int _arraySize;
-  YYLTYPE _location;
 };

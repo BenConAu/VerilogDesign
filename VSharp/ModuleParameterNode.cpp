@@ -22,7 +22,7 @@ void ModuleParameterNode::VerifyNodeImpl()
     // Needs to be a register
     if (!pTypeInfo->IsVerilogRegister())
     {
-        GetContext()->ReportError(_location, "Parameters to modules need to be outputting verilog registers");
+        GetContext()->ReportError(GetLocation(), "Parameters to modules need to be outputting verilog registers");
     }
 
     // Add variable to collection and mark first usage

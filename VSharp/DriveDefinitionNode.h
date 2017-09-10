@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ExpressionNode.h"
-#include "VSharp.tab.h"
 
 class DriveDefinitionNode : public ASTNode
 {
@@ -19,6 +18,5 @@ public:
   unsigned int GetDelta() const { return _delta; }
 
 private:
-  YYLTYPE _location;
   unsigned int _delta;
 };

@@ -8,6 +8,7 @@
 #include "ExpressionResult.h"
 #include "VerilogWriter.h"
 #include <stack>
+#include <deque>
 
 class FunctionDeclaratorNode;
 class FunctionCallNode;
@@ -27,6 +28,7 @@ class PSLCompilerContext
     void AddTypeDef(ASTNode *pNode);
     void AddModuleDef(ASTNode *pNode);
     void AddGlobal(ASTNode *pNode);
+    void AddImport(ASTNode *pNode);
 
     void OutputString(
         const char* pszString);
@@ -80,7 +82,7 @@ class PSLCompilerContext
     void DumpTree();
 
   private:
-    std::vector<std::unique_ptr<ASTNode>> _rootNodes;
+    std::deque<std::unique_ptr<ASTNode>> _rootNodes;
     std::vector<std::unique_ptr<VerilogWriter>> _writers;
     size_t _numStructs;
     size_t _numGlobals;
