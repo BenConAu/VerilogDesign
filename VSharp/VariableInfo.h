@@ -14,14 +14,14 @@ class VariableInfo : public SymbolInfo
   public:
     VariableInfo(
         PSLCompilerContext *pContext,   // The context that this variable lives in
-        ModuleDeclaratorNode *pScope,   // The scope that the variable is declared in
+        ModuleDefinitionNode *pScope,   // The scope that the variable is declared in
         int symIndex,                   // The symbol index for the identifier for the variable
         VariableLocationType location,  // The location of the variable
         TypeInfo *pInfo                 // The type of the variable
         );
 
     VariableLocationType GetLocationType() const { return _locationType; }
-    ExpressionResult *CalculateResult(ModuleDeclaratorNode *pScope);
+    ExpressionResult *CalculateResult(ModuleDefinitionNode *pScope);
 
     TypeInfo *GetTypeInfo() { return _pType; }
 

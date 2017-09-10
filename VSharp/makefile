@@ -48,8 +48,8 @@ PSLcc: lex.yy.c \
 	   IfStatementNode.h \
 	   IndexSelectionNode.cpp \
 	   IndexSelectionNode.h \
-	   ModuleDeclaratorNode.cpp \
-	   ModuleDeclaratorNode.h \
+	   ModuleDefinitionNode.cpp \
+	   ModuleDefinitionNode.h \
 	   ModuleInfo.cpp \
 	   ModuleInfo.h \
 	   ModuleParameterNode.cpp \
@@ -122,7 +122,7 @@ PSLcc: lex.yy.c \
 	   IfStatementNode.cpp \
 	   IndexSelectionNode.cpp \
 	   ModuleInfo.cpp \
-	   ModuleDeclaratorNode.cpp \
+	   ModuleDefinitionNode.cpp \
 	   ModuleParameterNode.cpp \
 	   OperatorNode.cpp \
 	   PSLCompiler.cpp \

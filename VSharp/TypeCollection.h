@@ -11,7 +11,7 @@
 #include "EnumTypeInfo.h"
 #include "ClockTypeInfo.h"
 
-class ModuleDeclaratorNode;
+class ModuleDefinitionNode;
 
 class TypeCollection
 {
@@ -21,13 +21,13 @@ public:
     StructTypeInfo* GetStructType(int symIndex);
     RegisterTypeInfo* GetRegisterType(int bitLength);
     ArrayTypeInfo* GetArrayType(TypeInfo* pBaseType, int arraySize);
-    GenericTypeInfo* GetGenericType(int symIndex, ModuleDeclaratorNode* pScope);
+    GenericTypeInfo* GetGenericType(int symIndex, ModuleDefinitionNode* pScope);
     VoidTypeInfo* GetVoidType();
     ClockTypeInfo* GetClockType();
 
     void AddStructType(int symIndex, StructTypeInfo* pInfo);
     void AddEnumType(int symIndex, EnumTypeInfo* pInfo);
-    GenericTypeInfo* AddGenericType(int symIndex, ModuleDeclaratorNode* pScope);
+    GenericTypeInfo* AddGenericType(int symIndex, ModuleDefinitionNode* pScope);
 
 private:
     std::map<int, std::unique_ptr<StructTypeInfo> > _structTypes;

@@ -16,7 +16,7 @@
 #include "IfStatementNode.h"
 #include "IndexSelectionNode.h"
 #include "ListNode.h"
-#include "ModuleDeclaratorNode.h"
+#include "ModuleDefinitionNode.h"
 #include "ModuleParameterNode.h"
 #include "OperatorNode.h"
 #include "ReturnNode.h"

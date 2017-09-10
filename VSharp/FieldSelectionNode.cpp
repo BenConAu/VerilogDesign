@@ -2,7 +2,7 @@
 #include "StructMember.h"
 #include "StaticTypeInfo.h"
 #include "VariableInfo.h"
-#include "ModuleDeclaratorNode.h"
+#include "ModuleDefinitionNode.h"
 #include "VSharpCompilerContext.h"
 #include "IdentifierNode.h"
 #include "FunctionCallNode.h"

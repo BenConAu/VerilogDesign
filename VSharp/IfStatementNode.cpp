@@ -1,6 +1,6 @@
 #include "IfStatementNode.h"
 #include "VSharpCompilerContext.h"
-#include "ModuleDeclaratorNode.h"
+#include "ModuleDefinitionNode.h"
 #include "ExpressionNode.h"
 #include "ListNode.h"
 #include "../PhaethonObjWriter/ObjWriter.h"

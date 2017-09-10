@@ -5,10 +5,10 @@
 
 class StateDeclaratorNode;
 
-class ModuleDeclaratorNode : public ASTNode
+class ModuleDefinitionNode : public ASTNode
 {
 public:
-    ModuleDeclaratorNode(
+    ModuleDefinitionNode(
         PSLCompilerContext* pContext, 
         int symIndex,
         int genericSym
@@ -29,7 +29,7 @@ public:
     bool PreProcessNodeImpl() override;
     void ProcessNodeImpl() override;
     void PostProcessNodeImpl() override;
-    const char* GetDebugName() override { return "ModuleDeclaratorNode"; }
+    const char* GetDebugName() override { return "ModuleDefinitionNode"; }
 
 private:
     template<typename T>

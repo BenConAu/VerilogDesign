@@ -1,5 +1,5 @@
 #include "VariableDeclarationNode.h"
-#include "ModuleDeclaratorNode.h"
+#include "ModuleDefinitionNode.h"
 #include "AssignmentNode.h"
 #include "IdentifierNode.h"
 #include "TypeNode.h"
@@ -54,7 +54,7 @@ VariableDeclarationNode::VariableDeclarationNode(
 void VariableDeclarationNode::PreVerifyNodeImpl()
 {
     //printf("Adding variable %s\n", GetContext()->_symbols[_symIndex].c_str());
-    ModuleDeclaratorNode *pFunc = GetTypedParent<ModuleDeclaratorNode>();
+    ModuleDefinitionNode *pFunc = GetTypedParent<ModuleDefinitionNode>();
 
     TypeInfo* pInfo = dynamic_cast<TypeNode *>(GetChild(0))->GetTypeInfo();
     if (_arraySize != -1)
@@ -72,7 +72,7 @@ void VariableDeclarationNode::PreVerifyNodeImpl()
 
 void VariableDeclarationNode::PostProcessNodeImpl()
 {
-    ModuleDeclaratorNode *pModule = GetTypedParent<ModuleDeclaratorNode>();
+    ModuleDefinitionNode *pModule = GetTypedParent<ModuleDefinitionNode>();
 
     // Spit out the preamble
     VariableInfo* pInfo = dynamic_cast<VariableInfo*>(GetContext()->_symbolTable.GetInfo(_symIndex, pModule));

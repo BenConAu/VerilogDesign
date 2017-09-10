@@ -3,12 +3,12 @@
 #include "TypeInfo.h"
 #include <string>
 
-class ModuleDeclaratorNode;
+class ModuleDefinitionNode;
 
 class GenericTypeInfo : public TypeInfo
 {
 public:
-    GenericTypeInfo(int symIndex, ModuleDeclaratorNode* pScope)
+    GenericTypeInfo(int symIndex, ModuleDefinitionNode* pScope)
     {
         _symIndex = symIndex;
         _pScope = pScope;
@@ -36,7 +36,7 @@ public:
         return _symIndex;
     }
 
-    ModuleDeclaratorNode* GetScope() const
+    ModuleDefinitionNode* GetScope() const
     {
         return _pScope;
     }
@@ -75,5 +75,5 @@ public:
     
 private:
     int _symIndex;
-    ModuleDeclaratorNode* _pScope;
+    ModuleDefinitionNode* _pScope;
 };

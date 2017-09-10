@@ -2,7 +2,7 @@
 #include "VSharpCompilerContext.h"
 #include "RegisterTypeInfo.h"
 #include "StructTypeInfo.h"
-#include "ModuleDeclaratorNode.h"
+#include "ModuleDefinitionNode.h"
 #include <sstream>
 
 TypeNode::TypeNode(
@@ -54,7 +54,7 @@ void TypeNode::SetModifier(int symIndex)
 
 TypeInfo *TypeNode::GetTypeInfo()
 {
-    ModuleDeclaratorNode *pScope = GetTypedParent<ModuleDeclaratorNode>();
+    ModuleDefinitionNode *pScope = GetTypedParent<ModuleDefinitionNode>();
     //printf("Scope for typeNode is %p\n", pScope);
 
     if (_pTypeInfo == nullptr)

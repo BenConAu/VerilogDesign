@@ -1,6 +1,6 @@
 #include "GlomExpressionNode.h"
 #include "VariableInfo.h"
-#include "ModuleDeclaratorNode.h"
+#include "ModuleDefinitionNode.h"
 #include "VSharpCompilerContext.h"
 #include "ListNode.h"
 

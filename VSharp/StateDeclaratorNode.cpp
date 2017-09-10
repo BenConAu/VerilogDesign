@@ -1,6 +1,6 @@
 #include "StateDeclaratorNode.h"
 #include "VSharpCompilerContext.h"
-#include "ModuleDeclaratorNode.h"
+#include "ModuleDefinitionNode.h"
 #include "../PhaethonObjWriter/ObjWriter.h"
 
 StateDeclaratorNode::StateDeclaratorNode(
@@ -17,7 +17,7 @@ StateDeclaratorNode::StateDeclaratorNode(
 
 void StateDeclaratorNode::VerifyNodeImpl()
 {
-    ModuleDeclaratorNode *pFunc = GetTypedParent<ModuleDeclaratorNode>();
+    ModuleDefinitionNode *pFunc = GetTypedParent<ModuleDefinitionNode>();
 
     // Add function to collection
     GetContext()->_symbolTable.AddState(
@@ -28,7 +28,7 @@ void StateDeclaratorNode::VerifyNodeImpl()
 
 bool StateDeclaratorNode::PreProcessNodeImpl()
 {
-    ModuleDeclaratorNode *pFunc = GetTypedParent<ModuleDeclaratorNode>();
+    ModuleDefinitionNode *pFunc = GetTypedParent<ModuleDefinitionNode>();
 
     SymbolInfo* pStateSymbolInfo = nullptr;
     if (_identifier != -1)

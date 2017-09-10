@@ -24,7 +24,7 @@ void SymbolTable::AddBuiltin()
 }
 
 VariableInfo *SymbolTable::AddVariable(
-    ModuleDeclaratorNode *pScope,
+    ModuleDefinitionNode *pScope,
     int symIndex,
     VariableLocationType location,
     TypeInfo *pTypeInfo)
@@ -76,7 +76,7 @@ FunctionInfo *SymbolTable::AddFunction(
 
 StateInfo *SymbolTable::AddState(
     int symIndex,
-    ModuleDeclaratorNode *pScope)
+    ModuleDefinitionNode *pScope)
 {
     for (auto iter = _symbols.lower_bound(symIndex); iter != _symbols.upper_bound(symIndex); iter++)
     {
@@ -92,7 +92,7 @@ StateInfo *SymbolTable::AddState(
 // Turns out this is for globals only
 SymbolInfo *SymbolTable::GetInfo(
     int symIndex, 
-    ModuleDeclaratorNode *pScope)
+    ModuleDefinitionNode *pScope)
 {
     //printf("Attempting GetInfo of symbol %s\n", _pContext->_symbols[symIndex].c_str());
 
@@ -108,7 +108,7 @@ SymbolInfo *SymbolTable::GetInfo(
 }
 
 void SymbolTable::GetFunctionVariables(
-    ModuleDeclaratorNode *pScope, 
+    ModuleDefinitionNode *pScope, 
     std::vector<VariableInfo*> &varList)
 {
     for (auto iter = _symbols.begin(); iter != _symbols.end(); iter++)

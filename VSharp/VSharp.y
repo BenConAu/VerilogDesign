@@ -298,13 +298,13 @@ module_prototype:
     ;
 
 module_header_with_parameters:
-	  module_header module_param_decl						        { $$ = $1; dynamic_cast<ModuleDeclaratorNode*>($$)->AddParameter($2); }
-	| module_header_with_parameters COMMA module_param_decl         { $$ = $1; dynamic_cast<ModuleDeclaratorNode*>($$)->AddParameter($3); }
+	  module_header module_param_decl						        { $$ = $1; dynamic_cast<ModuleDefinitionNode*>($$)->AddParameter($2); }
+	| module_header_with_parameters COMMA module_param_decl         { $$ = $1; dynamic_cast<ModuleDefinitionNode*>($$)->AddParameter($3); }
 	;
 
 module_header:
-      MODULE_TOKEN IDENTIFIER LEFT_PAREN                            { $$ = new ModuleDeclaratorNode(pContext, $2, -1); }
-    | MODULE_TOKEN IDENTIFIER LT IDENTIFIER GT LEFT_PAREN           { $$ = new ModuleDeclaratorNode(pContext, $2, $4); } 
+      MODULE_TOKEN IDENTIFIER LEFT_PAREN                            { $$ = new ModuleDefinitionNode(pContext, $2, -1); }
+    | MODULE_TOKEN IDENTIFIER LT IDENTIFIER GT LEFT_PAREN           { $$ = new ModuleDefinitionNode(pContext, $2, $4); } 
     ;
 
 module_param_decl:
@@ -368,7 +368,7 @@ struct_declaration:
     ;
 
 module_definition:
-      module_prototype module_states                                { $$ = $1; dynamic_cast<ModuleDeclaratorNode*>($$)->SetStatementList($2); }
+      module_prototype module_states                                { $$ = $1; dynamic_cast<ModuleDefinitionNode*>($$)->SetStatementList($2); }
     ;
 
 module_states:

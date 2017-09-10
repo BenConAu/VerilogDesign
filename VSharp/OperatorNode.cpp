@@ -1,5 +1,5 @@
 #include "OperatorNode.h"
-#include "ModuleDeclaratorNode.h"
+#include "ModuleDefinitionNode.h"
 #include "VSharp.tab.h"
 
 OperatorInfo OperatorNode::_opTable[] = {
@@ -62,7 +62,7 @@ ExpressionResult *OperatorNode::CalculateResult()
     //printf("Operation on node %p between two expressions\n", this);
     //GetContext()->DumpTree();
 
-    ModuleDeclaratorNode *pFunc = GetTypedParent<ModuleDeclaratorNode>();
+    ModuleDefinitionNode *pFunc = GetTypedParent<ModuleDefinitionNode>();
 
     ExpressionNode *pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));
     ExpressionNode *pRight = dynamic_cast<ExpressionNode *>(GetChild(1));

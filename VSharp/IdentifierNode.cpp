@@ -1,7 +1,7 @@
 #include "IdentifierNode.h"
 #include "VariableInfo.h"
 #include "VSharpCompilerContext.h"
-#include "ModuleDeclaratorNode.h"
+#include "ModuleDefinitionNode.h"
 #include "FunctionDeclaratorNode.h"
 #include "StaticTypeInfo.h"
 
@@ -47,7 +47,7 @@ const char* IdentifierNode::GetIdentifierName()
 
 void IdentifierNode::VerifyNodeImpl()
 {
-    ModuleDeclaratorNode *pScope = GetTypedParent<ModuleDeclaratorNode>();
+    ModuleDefinitionNode *pScope = GetTypedParent<ModuleDefinitionNode>();
     _pVarInfo = dynamic_cast<VariableInfo *>(GetContext()->_symbolTable.GetInfo(_symIndex, pScope));
     if (_pVarInfo == nullptr)
     {
@@ -74,7 +74,7 @@ ExpressionResult *IdentifierNode::CalculateResult()
 {
     if (_pVarInfo != nullptr)
     {
-        ModuleDeclaratorNode *pScope = GetTypedParent<ModuleDeclaratorNode>();
+        ModuleDefinitionNode *pScope = GetTypedParent<ModuleDefinitionNode>();
         
         return _pVarInfo->CalculateResult(pScope);
     }

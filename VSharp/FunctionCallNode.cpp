@@ -1,7 +1,7 @@
 #include "FunctionCallNode.h"
 #include "VariableInfo.h"
 #include "ModuleInfo.h"
-#include "ModuleDeclaratorNode.h"
+#include "ModuleDefinitionNode.h"
 #include "VSharpCompilerContext.h"
 #include "TypeNode.h"
 #include "FunctionInfo.h"
@@ -193,7 +193,7 @@ void FunctionCallNode::VerifyNodeImpl()
 
 FunctionInfo* FunctionCallNode::GetFunctionInfo()
 {
-    ModuleDeclaratorNode *pModule = GetTypedParent<ModuleDeclaratorNode>();
+    ModuleDefinitionNode *pModule = GetTypedParent<ModuleDefinitionNode>();
     return dynamic_cast<FunctionInfo*>(GetContext()->_symbolTable.GetInfo(_symIndex, pModule));
 }
 

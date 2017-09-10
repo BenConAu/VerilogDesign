@@ -5,7 +5,7 @@
 
 class TypeInfo;
 class GenericTypeInfo;
-class ModuleDeclaratorNode;
+class ModuleDefinitionNode;
 class FunctionDeclaratorNode;
 
 class FunctionInfo : public SymbolInfo

@@ -56,7 +56,7 @@ ArrayTypeInfo* TypeCollection::GetArrayType(TypeInfo* pBaseType, int arraySize)
     return _arrayTypes[pBaseType].get();
 }
 
-GenericTypeInfo* TypeCollection::AddGenericType(int symIndex, ModuleDeclaratorNode* pScope)
+GenericTypeInfo* TypeCollection::AddGenericType(int symIndex, ModuleDefinitionNode* pScope)
 {
     //printf("Adding generic type %d for function %p\n", symIndex, pScope);
     
@@ -65,7 +65,7 @@ GenericTypeInfo* TypeCollection::AddGenericType(int symIndex, ModuleDeclaratorNo
     return pNewType;
 }
 
-GenericTypeInfo* TypeCollection::GetGenericType(int symIndex, ModuleDeclaratorNode* pScope)
+GenericTypeInfo* TypeCollection::GetGenericType(int symIndex, ModuleDefinitionNode* pScope)
 {
     //printf("Searching for generic type %d for function %p\n", symIndex, pScope);
 

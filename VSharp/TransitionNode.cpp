@@ -1,12 +1,12 @@
 #include "TransitionNode.h"
 #include "ExpressionNode.h"
-#include "ModuleDeclaratorNode.h"
+#include "ModuleDefinitionNode.h"
 #include "StateInfo.h"
 
 void TransitionNode::PostProcessNodeImpl()
 {
     // What module are we transitioning in
-    ModuleDeclaratorNode *pFunc = GetTypedParent<ModuleDeclaratorNode>();
+    ModuleDefinitionNode *pFunc = GetTypedParent<ModuleDefinitionNode>();
 
     // Get the info
     StateInfo* pInfo = dynamic_cast<StateInfo*>(GetContext()->_symbolTable.GetInfo(_symIndex, pFunc));

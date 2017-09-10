@@ -1,4 +1,4 @@
-#include "ModuleDeclaratorNode.h"
+#include "ModuleDefinitionNode.h"
 #include "ModuleParameterNode.h"
 #include "TypeNode.h"
 #include "ListNode.h"
@@ -9,7 +9,7 @@
 #include "StateDeclaratorNode.h"
 #include "FunctionDeclaratorNode.h"
 
-ModuleDeclaratorNode::ModuleDeclaratorNode(
+ModuleDefinitionNode::ModuleDefinitionNode(
     PSLCompilerContext* pContext, 
     int symIndex,
     int genericSym
@@ -20,7 +20,7 @@ ModuleDeclaratorNode::ModuleDeclaratorNode(
     _paramCount = 0;
 }
 
-void ModuleDeclaratorNode::PreVerifyNodeImpl()
+void ModuleDefinitionNode::PreVerifyNodeImpl()
 {
     // We need to add this here before the children look for it
     GenericTypeInfo *pGenType = nullptr;
@@ -83,7 +83,7 @@ void ModuleDeclaratorNode::PreVerifyNodeImpl()
     }
 }
 
-void ModuleDeclaratorNode::VerifyNodeImpl()
+void ModuleDefinitionNode::VerifyNodeImpl()
 {
     // Add module to collection
     GetContext()->_symbolTable.AddModule(
@@ -92,7 +92,7 @@ void ModuleDeclaratorNode::VerifyNodeImpl()
         );
 }
 
-bool ModuleDeclaratorNode::PreProcessNodeImpl()
+bool ModuleDefinitionNode::PreProcessNodeImpl()
 {
     // Spit out the preamble
     ModuleInfo* pInfo = dynamic_cast<ModuleInfo*>(GetContext()->_symbolTable.GetInfo(_symIndex, nullptr));
@@ -142,7 +142,7 @@ bool ModuleDeclaratorNode::PreProcessNodeImpl()
     return true;
 }
 
-void ModuleDeclaratorNode::ProcessNodeImpl()
+void ModuleDefinitionNode::ProcessNodeImpl()
 {
     bool fParamsDone = false;
     bool fVariablesDone = false;
@@ -189,7 +189,7 @@ void ModuleDeclaratorNode::ProcessNodeImpl()
     GetContext()->OutputLine("end");
 }
 
-void ModuleDeclaratorNode::PostProcessNodeImpl()
+void ModuleDefinitionNode::PostProcessNodeImpl()
 {
     // End the module
     GetContext()->DecreaseIndent();

@@ -1,6 +1,6 @@
 #include "AssignmentNode.h"
 #include "VSharpCompilerContext.h"
-#include "ModuleDeclaratorNode.h"
+#include "ModuleDefinitionNode.h"
 #include "DriveDefinitionNode.h"
 
 AssignmentNode::AssignmentNode(
@@ -39,7 +39,7 @@ ASTNode* AssignmentNode::DuplicateNodeImpl()
 
 void AssignmentNode::PostProcessNodeImpl()
 {
-    ModuleDeclaratorNode *pFunc = GetTypedParent<ModuleDeclaratorNode>();
+    ModuleDefinitionNode *pFunc = GetTypedParent<ModuleDefinitionNode>();
     DriveDefinitionNode *pDrive = GetTypedParent<DriveDefinitionNode>();
 
     ExpressionNode *pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));

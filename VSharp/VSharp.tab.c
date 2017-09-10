@@ -1976,25 +1976,25 @@ yyreduce:
 
   case 65:
 #line 301 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = (yyvsp[-1].pNode); dynamic_cast<ModuleDeclaratorNode*>((yyval.pNode))->AddParameter((yyvsp[0].pNode)); }
+    { (yyval.pNode) = (yyvsp[-1].pNode); dynamic_cast<ModuleDefinitionNode*>((yyval.pNode))->AddParameter((yyvsp[0].pNode)); }
 #line 1981 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 66:
 #line 302 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = (yyvsp[-2].pNode); dynamic_cast<ModuleDeclaratorNode*>((yyval.pNode))->AddParameter((yyvsp[0].pNode)); }
+    { (yyval.pNode) = (yyvsp[-2].pNode); dynamic_cast<ModuleDefinitionNode*>((yyval.pNode))->AddParameter((yyvsp[0].pNode)); }
 #line 1987 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 67:
 #line 306 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new ModuleDeclaratorNode(pContext, (yyvsp[-1].symIndex), -1); }
+    { (yyval.pNode) = new ModuleDefinitionNode(pContext, (yyvsp[-1].symIndex), -1); }
 #line 1993 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 68:
 #line 307 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new ModuleDeclaratorNode(pContext, (yyvsp[-4].symIndex), (yyvsp[-2].symIndex)); }
+    { (yyval.pNode) = new ModuleDefinitionNode(pContext, (yyvsp[-4].symIndex), (yyvsp[-2].symIndex)); }
 #line 1999 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
@@ -2157,7 +2157,7 @@ yyreduce:
 
   case 95:
 #line 371 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = (yyvsp[-1].pNode); dynamic_cast<ModuleDeclaratorNode*>((yyval.pNode))->SetStatementList((yyvsp[0].pNode)); }
+    { (yyval.pNode) = (yyvsp[-1].pNode); dynamic_cast<ModuleDefinitionNode*>((yyval.pNode))->SetStatementList((yyvsp[0].pNode)); }
 #line 2162 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 

@@ -7,7 +7,7 @@
 #include "ModuleInfo.h"
 #include "VariableDeclarationNode.h"
 #include "StateDeclaratorNode.h"
-#include "ModuleDeclaratorNode.h"
+#include "ModuleDefinitionNode.h"
 #include "FunctionCallNode.h"
 
 FunctionDeclaratorNode::FunctionDeclaratorNode(
@@ -39,7 +39,7 @@ void FunctionDeclaratorNode::PreVerifyNodeImpl()
 
 void FunctionDeclaratorNode::VerifyNodeImpl()
 {
-    ModuleDeclaratorNode *pModule = GetTypedParent<ModuleDeclaratorNode>();
+    ModuleDefinitionNode *pModule = GetTypedParent<ModuleDefinitionNode>();
 
     // First child is return type, last is statement list
     for (size_t i = 1; i < GetChildCount() - 1; i++)

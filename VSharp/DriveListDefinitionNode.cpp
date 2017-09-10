@@ -2,7 +2,7 @@
 #include "IdentifierNode.h"
 #include "VariableInfo.h"
 #include "VSharpCompilerContext.h"
-#include "ModuleDeclaratorNode.h"
+#include "ModuleDefinitionNode.h"
 #include "../PhaethonObjWriter/ObjWriter.h"
 
 DriveListDefinitionNode::DriveListDefinitionNode(

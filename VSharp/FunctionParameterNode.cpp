@@ -1,11 +1,11 @@
 #include "FunctionParameterNode.h"
-#include "ModuleDeclaratorNode.h"
+#include "ModuleDefinitionNode.h"
 #include "TypeNode.h"
 #include "VariableInfo.h"
 
 void FunctionParameterNode::VerifyNodeImpl()
 {
-    ModuleDeclaratorNode *pModule = GetTypedParent<ModuleDeclaratorNode>();
+    ModuleDefinitionNode *pModule = GetTypedParent<ModuleDefinitionNode>();
 
     VariableLocationType location = VariableLocationType::Member;
     if (_fOut)

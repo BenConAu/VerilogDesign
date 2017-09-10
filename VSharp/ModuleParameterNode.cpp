@@ -1,11 +1,11 @@
 #include "ModuleParameterNode.h"
-#include "ModuleDeclaratorNode.h"
+#include "ModuleDefinitionNode.h"
 #include "TypeNode.h"
 #include "VariableInfo.h"
 
 void ModuleParameterNode::VerifyNodeImpl()
 {
-    ModuleDeclaratorNode *pModule = GetTypedParent<ModuleDeclaratorNode>();
+    ModuleDefinitionNode *pModule = GetTypedParent<ModuleDefinitionNode>();
 
     VariableLocationType location = VariableLocationType::Member;
     if (_fOut)
@@ -36,7 +36,7 @@ void ModuleParameterNode::VerifyNodeImpl()
 
 void ModuleParameterNode::PostProcessNodeImpl()
 {
-    ModuleDeclaratorNode *pModule = GetTypedParent<ModuleDeclaratorNode>();
+    ModuleDefinitionNode *pModule = GetTypedParent<ModuleDefinitionNode>();
 
     // Spit out the preamble
     VariableInfo* pInfo = dynamic_cast<VariableInfo*>(GetContext()->_symbolTable.GetInfo(_symIndex, pModule));

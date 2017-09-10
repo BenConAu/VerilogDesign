@@ -2,7 +2,7 @@
 #include "StructMember.h"
 #include "StructTypeInfo.h"
 #include "VariableInfo.h"
-#include "ModuleDeclaratorNode.h"
+#include "ModuleDefinitionNode.h"
 #include "VSharpCompilerContext.h"
 
 BitSelectionNode::BitSelectionNode(
