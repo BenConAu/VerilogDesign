@@ -103,7 +103,8 @@ extern int yydebug;
     IF_TOKEN = 307,
     ELSE_TOKEN = 308,
     SIZEOF_TOKEN = 309,
-    IDENTIFIER = 310
+    WIRE_TOKEN = 310,
+    IDENTIFIER = 311
   };
 #endif
 
@@ -118,7 +119,7 @@ union YYSTYPE
     int symIndex;
     ASTNode* pNode;
 
-#line 122 "VSharp.tab.h" /* yacc.c:1915  */
+#line 123 "VSharp.tab.h" /* yacc.c:1915  */
 };
 
 typedef union YYSTYPE YYSTYPE;

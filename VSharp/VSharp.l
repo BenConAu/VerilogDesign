@@ -69,6 +69,7 @@
 "else"               { return ELSE_TOKEN; }
 "enum"               { return ENUM_TOKEN; }
 "__finish"           { return FINISH_TOKEN; }
+"wire"               { return WIRE_TOKEN; }
 "true"               { yylval->constVal = { 1, 1 }; return BOOLCONSTANT; }
 "false"              { yylval->constVal = { 0, 1 }; return BOOLCONSTANT; }
 [0-9]+               { yylval->constVal = { static_cast<unsigned int>(atoi(yytext)), 32 }; return INTCONSTANT; }

@@ -86,6 +86,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token IF_TOKEN
 %token ELSE_TOKEN
 %token SIZEOF_TOKEN
+%token WIRE_TOKEN
 %token <symIndex> IDENTIFIER
 %type <pNode> variable_identifier
 %type <pNode> primary_expression
@@ -143,6 +144,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %type <pNode> drive_list_definition
 %type <pNode> drive_statement_list
 %type <pNode> drive_definition
+%type <pNode> type_name_specifier
 
 %%
 
@@ -292,6 +294,7 @@ variable_identifier:
 
 module_prototype:
       module_header_with_parameters RIGHT_PAREN                     { $$ = $1; }
+    | module_header RIGHT_PAREN                                     { $$ = $1; }
     ;
 
 module_header_with_parameters:
@@ -331,7 +334,7 @@ function_param_decl:
     | OUT_TOKEN fully_specified_type IDENTIFIER                     { $$ = new FunctionParameterNode(pContext, $2, $3, true); }
 	;
 
-fully_specified_type:
+type_name_specifier:
       UINT64_TOKEN                                                  { $$ = new TypeNode(pContext, @$, TypeClass::Register, 64); }
     | UINT32_TOKEN                                                  { $$ = new TypeNode(pContext, @$, TypeClass::Register, 32); }
     | UINT16_TOKEN                                                  { $$ = new TypeNode(pContext, @$, TypeClass::Register, 16); }
@@ -341,6 +344,11 @@ fully_specified_type:
     | BOOL_TOKEN                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Register, 1); }
 	| IDENTIFIER                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Unknown, $1); }
     | UINT_TOKEN LT INTCONSTANT GT                                  { $$ = new TypeNode(pContext, @$, $3); }
+    ;
+
+fully_specified_type:
+      WIRE_TOKEN type_name_specifier                                { $$ = $2; dynamic_cast<TypeNode*>($$)->SetModifier(WIRE_TOKEN); }
+    | type_name_specifier                                           { $$ = $1; }
     ;
 
 struct_specifier:

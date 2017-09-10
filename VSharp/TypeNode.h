@@ -26,11 +26,13 @@ public:
     TypeInfo* GetTypeInfo();
     void VerifyNodeImpl() override;
     const char* GetDebugName() override { return "TypeNode"; }
+    void SetModifier(int modifier);
 
 private:
     TypeClass _typeClass;
     int _extra;
     YYLTYPE _location;
+    bool _IsWire;
 
     TypeInfo* _pTypeInfo;
 };
