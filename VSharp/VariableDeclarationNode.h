@@ -4,6 +4,8 @@
 #include "VSharpCompilerContext.h"
 #include "VSharp.tab.h"
 
+class TypeNode;
+
 class VariableDeclarationNode : public ASTNode
 {
 public:
@@ -25,6 +27,7 @@ public:
   void PreVerifyNodeImpl() override;
   void PostProcessNodeImpl() override;
   const char *GetDebugName() override { return "VariableDeclarationNode"; }
+  TypeNode* GetTypeNode();
 
 private:
   int _symIndex;

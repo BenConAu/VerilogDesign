@@ -50,10 +50,10 @@ PSLcc: lex.yy.c \
 	   IndexSelectionNode.h \
 	   ModuleDefinitionNode.cpp \
 	   ModuleDefinitionNode.h \
-	   ModuleInfo.cpp \
-	   ModuleInfo.h \
 	   ModuleParameterNode.cpp \
 	   ModuleParameterNode.h \
+	   ModuleTypeInfo.cpp \
+	   ModuleTypeInfo.h \
 	   OperatorNode.cpp \
 	   OperatorNode.h \
 	   PSLCompiler.cpp \
@@ -121,9 +121,9 @@ PSLcc: lex.yy.c \
 	   IdentifierNode.cpp \
 	   IfStatementNode.cpp \
 	   IndexSelectionNode.cpp \
-	   ModuleInfo.cpp \
 	   ModuleDefinitionNode.cpp \
 	   ModuleParameterNode.cpp \
+	   ModuleTypeInfo.cpp \
 	   OperatorNode.cpp \
 	   PSLCompiler.cpp \
 	   ReturnNode.cpp \

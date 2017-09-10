@@ -81,17 +81,22 @@ TypeInfo *TypeNode::GetTypeInfo()
                 _pTypeInfo = GetContext()->_typeCollection.GetStructType(_extra);
                 if (_pTypeInfo == nullptr)
                 {
-                    // It was a good guess - perhaps it was a generic?
-                    _pTypeInfo = GetContext()->_typeCollection.GetGenericType(_extra, pScope);
-                    _typeClass = TypeClass::Generic;
-    
+                    _pTypeInfo = GetContext()->_typeCollection.GetGenericType(_extra, pScope);    
                     if (_pTypeInfo == nullptr)
                     {
-                        std::stringstream sstr;
-                        sstr << "Failed to find struct, enum, or generic type with name " << GetContext()->_symbols[_extra];
-                        static std::string error = sstr.str();
-    
-                        GetContext()->ReportError(_location, sstr.str().c_str());
+                        _pTypeInfo = GetContext()->_typeCollection.GetModuleType(_extra);
+                        if (_pTypeInfo == nullptr)
+                        {
+                            std::stringstream sstr;
+                            sstr << "Failed to find struct, enum, or generic type with name " << GetContext()->_symbols[_extra];
+                            static std::string error = sstr.str();
+        
+                            GetContext()->ReportError(_location, sstr.str().c_str());    
+                        }
+                        else
+                        {
+                            _typeClass = TypeClass::Module;
+                        }
                     }
                     else
                     {
@@ -116,6 +121,7 @@ TypeInfo *TypeNode::GetTypeInfo()
         case TypeClass::Array:
         case TypeClass::Static:
         case TypeClass::Struct:
+        case TypeClass::Module:
             throw "Not expected here";
             break;
         }

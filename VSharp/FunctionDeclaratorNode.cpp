@@ -4,7 +4,6 @@
 #include "ListNode.h"
 #include "TransitionNode.h"
 #include "VariableInfo.h"
-#include "ModuleInfo.h"
 #include "VariableDeclarationNode.h"
 #include "StateDeclaratorNode.h"
 #include "ModuleDefinitionNode.h"

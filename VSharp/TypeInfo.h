@@ -16,6 +16,7 @@ enum class TypeClass
     Enum,
     Static,
     Clock,
+    Module,
 };
 
 class TypeInfo

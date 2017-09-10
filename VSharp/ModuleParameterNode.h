@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ASTNode.h"
+#include "TypeNode.h"
 #include "VSharp.tab.h"
 
 class ModuleParameterNode : public ASTNode
@@ -23,7 +24,9 @@ public:
     void PostProcessNodeImpl() override;
     const char* GetDebugName() override { return "ModuleParameterNode"; }
     int GetSymbolIndex() const { return _symIndex; }
-
+    bool IsOutParam() const { return _fOut; }
+    TypeNode* GetTypeNode() { return dynamic_cast<TypeNode*>(GetChild(0)); }
+    
 private:
     YYLTYPE _location;
     int _symIndex;

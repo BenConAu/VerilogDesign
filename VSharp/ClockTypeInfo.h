@@ -12,7 +12,7 @@ public:
     TypeClass GetTypeClass() override;
     std::string DebugPrint() override { return "ClockTypeInfo"; }
     std::string GetTypeName() override { return "ClockTypeInfo"; }
-    bool EqualType(TypeInfo* pOther) override { throw "Wat"; }
+    bool EqualType(TypeInfo* pOther) override;
     TypeInfo* MakeSpecificType(TypeInfo* pGenericArgType, TypeCollection* pCollection) override { throw "Wat"; }
     std::string GetDeclaration(VariableInfo* pInfo) override;
     bool IsVerilogRegister() const override { return true; }

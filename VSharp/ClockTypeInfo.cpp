@@ -17,3 +17,8 @@ std::string ClockTypeInfo::GetDeclaration(VariableInfo* pInfo)
     sprintf(buffer, "reg %s = 0; always #5 %s = !%s", pInfo->GetSymbol(), pInfo->GetSymbol(), pInfo->GetSymbol()); 
     return buffer; 
 }
+
+bool ClockTypeInfo::EqualType(TypeInfo* pOther)
+{ 
+    return (dynamic_cast<ClockTypeInfo*>(pOther) != nullptr);
+}

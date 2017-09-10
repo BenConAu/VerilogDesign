@@ -1,7 +1,6 @@
 #include "SymbolTable.h"
 #include "VariableDeclarationNode.h"
 #include "VariableInfo.h"
-#include "ModuleInfo.h"
 #include "FunctionInfo.h"
 #include "StateInfo.h"
 #include "VSharp.tab.h"
@@ -39,21 +38,6 @@ VariableInfo *SymbolTable::AddVariable(
     }
 
     VariableInfo *pNewInfo = new VariableInfo(_pContext, pScope, symIndex, location, pTypeInfo);
-    _symbols.emplace(std::make_pair(symIndex, std::unique_ptr<SymbolInfo>(pNewInfo)));
-    return pNewInfo;
-}
-
-ModuleInfo *SymbolTable::AddModule(
-    int symIndex,
-    GenericTypeInfo *pGenType)
-{
-    for (auto iter = _symbols.lower_bound(symIndex); iter != _symbols.upper_bound(symIndex); iter++)
-    {
-        // Caller can decide how to report this error
-        return nullptr;
-    }
-
-    ModuleInfo *pNewInfo = new ModuleInfo(_pContext, symIndex, pGenType);
     _symbols.emplace(std::make_pair(symIndex, std::unique_ptr<SymbolInfo>(pNewInfo)));
     return pNewInfo;
 }

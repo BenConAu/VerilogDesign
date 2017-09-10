@@ -7,7 +7,6 @@
 
 class PSLCompilerContext;
 class VariableInfo;
-class ModuleInfo;
 class FunctionInfo;
 class TypeInfo;
 class StateInfo;
@@ -27,10 +26,6 @@ class SymbolTable
         int symIndex,
         VariableLocationType location,
         TypeInfo *pTypeInfo);
-
-    ModuleInfo *AddModule(
-        int symIndex,
-        GenericTypeInfo *pGenType);
 
     FunctionInfo *AddFunction(
         FunctionDeclaratorNode *pFuncDecl,

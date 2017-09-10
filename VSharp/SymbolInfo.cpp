@@ -1,4 +1,4 @@
-#include "ModuleInfo.h"
+#include "SymbolInfo.h"
 #include "VSharpCompilerContext.h"
 
 SymbolInfo::SymbolInfo(

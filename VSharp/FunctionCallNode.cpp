@@ -1,13 +1,133 @@
 #include "FunctionCallNode.h"
 #include "VariableInfo.h"
-#include "ModuleInfo.h"
 #include "ModuleDefinitionNode.h"
+#include "ModuleParameterNode.h"
 #include "VSharpCompilerContext.h"
 #include "TypeNode.h"
 #include "FunctionInfo.h"
 #include "FunctionDeclaratorNode.h"
 #include "StatementNode.h"
+#include "VariableDeclarationNode.h"
 #include "VSharp.tab.h"
+
+class FunctionCallSpec
+{
+public:
+    virtual size_t GetParameterCount() = 0;                 // The number of parameters that should be there
+    virtual TypeInfo* GetParameterType(size_t index) = 0;   // The type of the given parameter
+    virtual bool IsParameterOut(size_t index) = 0;          // Is the given parameter an out param
+    virtual TypeInfo* GetReturnType() = 0;                  // The return type of the expression
+};
+
+class StructConstructorSpec : public FunctionCallSpec
+{
+public:
+    StructConstructorSpec(StructTypeInfo* pStructInfo)
+    {
+        _pStructInfo = pStructInfo;
+    }
+
+    size_t GetParameterCount() override
+    {
+        return _pStructInfo->GetMemberCount();
+    }
+
+    TypeInfo* GetParameterType(size_t index) override
+    {
+        StructMember* pMember = _pStructInfo->GetMemberByIndex(index);
+        return pMember->GetTypeInfo();
+    }
+
+    bool IsParameterOut(size_t index) override
+    {
+        // Struct constructors never take out parameters
+        return false;
+    }    
+
+    TypeInfo* GetReturnType() override
+    {
+        return _pStructInfo;
+    }
+
+private:
+    StructTypeInfo* _pStructInfo;
+};
+
+class DefinedFunctionSpec : public FunctionCallSpec
+{
+public:
+    DefinedFunctionSpec(FunctionInfo* pFunctionInfo)
+    {
+        _pFunctionInfo = pFunctionInfo;
+    }
+
+    size_t GetParameterCount() override
+    {
+        return _pFunctionInfo->GetParameterCount();
+    }
+
+    TypeInfo* GetParameterType(size_t index) override
+    {
+        FunctionDeclaratorNode* pFuncDecl = _pFunctionInfo->GetFunctionDeclarator();
+        FunctionParameterNode* pDefParam = pFuncDecl->GetParameter(index);
+        
+        return pDefParam->GetTypeNode()->GetTypeInfo();
+    }
+
+    bool IsParameterOut(size_t index) override
+    {
+        FunctionDeclaratorNode* pFuncDecl = _pFunctionInfo->GetFunctionDeclarator();
+        FunctionParameterNode* pDefParam = pFuncDecl->GetParameter(index);
+        
+        return pDefParam->IsOutParam();
+    }
+
+    TypeInfo* GetReturnType() override
+    {
+        return _pFunctionInfo->GetReturnType();
+    }
+
+private:
+    FunctionInfo* _pFunctionInfo;
+};
+
+class DefinedModuleSpec : public FunctionCallSpec
+{
+public:
+    DefinedModuleSpec(ModuleTypeInfo* pModuleTypeInfo)
+    {
+        _pModuleTypeInfo = pModuleTypeInfo;
+    }
+
+    size_t GetParameterCount() override
+    {
+        return _pModuleTypeInfo->GetParameterCount();
+    }
+
+    TypeInfo* GetParameterType(size_t index) override
+    {
+        ModuleDefinitionNode* pModuleDef = _pModuleTypeInfo->GetModuleDefinition();
+        ModuleParameterNode* pDefParam = pModuleDef->GetParameter(index);
+        
+        return pDefParam->GetTypeNode()->GetTypeInfo();
+    }
+
+    bool IsParameterOut(size_t index) override
+    {
+        ModuleDefinitionNode* pModuleDef = _pModuleTypeInfo->GetModuleDefinition();
+        ModuleParameterNode* pDefParam = pModuleDef->GetParameter(index);
+        
+        return pDefParam->IsOutParam();
+    }
+
+    TypeInfo* GetReturnType() override
+    {
+        return _pModuleTypeInfo;
+    }
+
+private:
+    ModuleTypeInfo* _pModuleTypeInfo;
+};
 
 FunctionCallNode::FunctionCallNode(
     PSLCompilerContext *pContext,
@@ -16,6 +136,8 @@ FunctionCallNode::FunctionCallNode(
     ASTNode *pGenericType,
     ASTNode *pFirstArg) : ExpressionNode(pContext, location)
 {
+    //printf("Creating function call %s\n", pContext->_symbols[symIndex].c_str());
+
     AddNode(pGenericType);
 
     if (pFirstArg != nullptr)
@@ -24,7 +146,7 @@ FunctionCallNode::FunctionCallNode(
     }
 
     _symIndex = symIndex;
-    _functionType = FunctionType::Defined; // Until we learn otherwise
+    _functionType = FunctionType::Unknown; // Until we learn otherwise
 }
 
 FunctionCallNode::FunctionCallNode(
@@ -89,59 +211,53 @@ const char* FunctionCallNode::GetFunctionName()
 
 void FunctionCallNode::VerifyNodeImpl()
 {
+    std::unique_ptr<FunctionCallSpec> CallSpec;
+
     if (GetFunctionInfo() == nullptr)
     {
-        // If there is no function info, then it could be a constructor of a struct
-        StructTypeInfo* pStructInfo = GetContext()->_typeCollection.GetStructType(_symIndex);
-        if (pStructInfo == nullptr)
+        VariableDeclarationNode* pVarDecl = dynamic_cast<VariableDeclarationNode*>(GetParent());
+
+        // If there is no function info, then it could be a constructor of a struct or a declaration
+        // of a module (which also looks just like a function call from the parser perspective).
+        if (pVarDecl != nullptr)
         {
-            char message[256];
-            sprintf(
-                message, 
-                "Unknown function or struct type %s", 
-                GetFunctionName());
-            GetContext()->ReportError(GetLocation(), message);
+            _functionType = FunctionType::ModuleDecl;
+
+            // Find the type of the declaration
+            TypeNode* pTypeNode = pVarDecl->GetTypeNode();
+            if (pTypeNode->GetTypeClass() != TypeClass::Module)
+            {
+                GetContext()->ReportError(GetLocation(), "Not a module type");
+            }
+
+            // Should be a module type info
+            ModuleTypeInfo* pModuleInfo = dynamic_cast<ModuleTypeInfo*>(pTypeNode->GetTypeInfo());
+
+            // The function name should be the same symbol as the type name
+            if (pModuleInfo->GetSymbolIndex() != _symIndex)
+            {
+                GetContext()->ReportError(GetLocation(), "Module constructor needs same name as module type");
+            }
+
+            CallSpec.reset(new DefinedModuleSpec(pModuleInfo));
         }
-
-        _functionType = FunctionType::Constructor;
-
-        if (GetParameterCount() != pStructInfo->GetMemberCount())
+        else
         {
-            char message[256];
-            sprintf(
-                message, 
-                "Expected %lu arguments but got %lu arguments to constructor for %s",
-                pStructInfo->GetMemberCount(),
-                GetParameterCount(),
-                GetFunctionName());
+            _functionType = FunctionType::Constructor;
 
-            GetContext()->ReportError(GetLocation(), message);    
-        }
-
-        for (size_t i = 0; i < GetParameterCount(); i++)
-        {
-            FunctionCallParamNode* pCallParam = GetParameter(i);
-            StructMember* pMember = pStructInfo->GetMemberByIndex(i);
-
-            ExpressionNode* pParamExpr = pCallParam->GetParamExpr();
-            if (!pParamExpr->GetTypeInfo()->EqualType(pMember->GetTypeInfo()))
+            StructTypeInfo* pStructInfo = GetContext()->_typeCollection.GetStructType(_symIndex);
+            if (pStructInfo == nullptr)
             {
                 char message[256];
                 sprintf(
                     message, 
-                    "Expected type %s for argument %lu but got type %s",
-                    pMember->GetTypeInfo()->GetTypeName().c_str(),
-                    i,
-                    pParamExpr->GetTypeInfo()->GetTypeName().c_str());
-    
-                GetContext()->ReportError(GetLocation(), message);    
-    
-
-                GetContext()->ReportError(GetLocation(), "Mismatch in param type");
+                    "Unknown function or struct type %s", 
+                    GetFunctionName());
+                GetContext()->ReportError(GetLocation(), message);
             }
+    
+            CallSpec.reset(new StructConstructorSpec(pStructInfo));
         }
-
-        SetType(pStructInfo);
     }
     else
     {
@@ -166,28 +282,55 @@ void FunctionCallNode::VerifyNodeImpl()
     
                 GetContext()->ReportError(GetLocation(), message);    
             }
+
+            CallSpec.reset(new DefinedFunctionSpec(GetFunctionInfo()));
+        }
+    }
+
+    if (CallSpec.get() != nullptr)
+    {
+        if (GetParameterCount() != CallSpec->GetParameterCount())
+        {
+            char message[256];
+            sprintf(
+                message, 
+                "Expected %lu arguments but got %lu arguments when invoking %s",
+                CallSpec->GetParameterCount(),
+                GetParameterCount(),
+                GetFunctionName());
     
-            for (size_t i = 0; i < GetParameterCount(); i++)
+            GetContext()->ReportError(GetLocation(), message);    
+        }
+    
+        for (size_t i = 0; i < GetParameterCount(); i++)
+        {
+            FunctionCallParamNode* pCallParam = GetParameter(i);
+            ExpressionNode* pParamExpr = pCallParam->GetParamExpr();
+    
+            TypeInfo* pSpecInfo = CallSpec->GetParameterType(i);
+    
+            // Out params need to be passed correctly
+            if (pCallParam->IsOutParam() != CallSpec->IsParameterOut(i))
             {
-                FunctionDeclaratorNode* pFuncDecl = GetFunctionInfo()->GetFunctionDeclarator();
-                FunctionCallParamNode* pCallParam = GetParameter(i);
-                FunctionParameterNode* pDefParam = pFuncDecl->GetParameter(i);
+                GetContext()->ReportError(GetLocation(), "Mismatch in param in / out definition");
+            }
     
-                // Out params need to be passed correctly
-                if (pCallParam->IsOutParam() != pDefParam->IsOutParam())
-                {
-                    GetContext()->ReportError(GetLocation(), "Mismatch in param in / out definition");
-                }
+            // Types should match
+            if (!pParamExpr->GetTypeInfo()->EqualType(pSpecInfo))
+            {
+                char message[256];
+                sprintf(
+                    message, 
+                    "Expected type %s for argument %lu but got type %s",
+                    pSpecInfo->GetTypeName().c_str(),
+                    i,
+                    pParamExpr->GetTypeInfo()->GetTypeName().c_str());
     
-                ExpressionNode* pParamExpr = pCallParam->GetParamExpr();
-                if (!pParamExpr->GetTypeInfo()->EqualType(pDefParam->GetTypeNode()->GetTypeInfo()))
-                {
-                    GetContext()->ReportError(GetLocation(), "Mismatch in param type");
-                }
+                GetContext()->ReportError(GetLocation(), message);    
             }
         }
-
-        SetType(GetFunctionInfo()->GetReturnType());
+    
+        SetType(CallSpec->GetReturnType());
     }
 }
 
@@ -218,6 +361,30 @@ ExpressionResult *FunctionCallNode::CalculateResult()
 {
     switch(_functionType)
     {
+        case FunctionType::Unknown:
+            throw "Unexpected unknown function type during processing";
+
+        case FunctionType::ModuleDecl:
+            /*GetContext()->BeginLine();
+            GetContext()->OutputString(GetFunctionInfo()->GetVerilogName().c_str());
+            GetContext()->OutputString("(");
+
+            for (size_t i = 0; i < GetParameterCount(); i++)
+            {
+                ExpressionNode* pParam = GetParameter(i);
+                std::unique_ptr<ExpressionResult> paramResult(pParam->TakeResult());
+                
+                GetContext()->OutputString(paramResult->GetString().c_str());
+                if (i != GetParameterCount() - 1)
+                {
+                    GetContext()->OutputString(", ");
+                }
+            }
+
+            GetContext()->OutputString(");");
+            GetContext()->EndLine();*/
+            return nullptr;
+
         case FunctionType::BuiltIn:
             GetContext()->BeginLine();
             GetContext()->OutputString(GetFunctionInfo()->GetVerilogName().c_str());
@@ -282,4 +449,9 @@ ExpressionResult* FunctionCallNode::CreateMemberResult(int fieldSymIndex)
     }
     
     return new ExpressionResult(_parameterResults[memberIndex]);
+}
+
+size_t FunctionCallNode::GetParameterCount() const 
+{ 
+    return (GetChildCount() - 1); 
 }

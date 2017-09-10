@@ -4,7 +4,7 @@
 #include "ListNode.h"
 #include "TransitionNode.h"
 #include "VariableInfo.h"
-#include "ModuleInfo.h"
+#include "ModuleTypeInfo.h"
 #include "VariableDeclarationNode.h"
 #include "StateDeclaratorNode.h"
 #include "FunctionDeclaratorNode.h"
@@ -17,7 +17,6 @@ ModuleDefinitionNode::ModuleDefinitionNode(
 {
     _symIndex = symIndex;
     _genericIndex = genericSym;
-    _paramCount = 0;
 }
 
 void ModuleDefinitionNode::PreVerifyNodeImpl()
@@ -78,25 +77,22 @@ void ModuleDefinitionNode::PreVerifyNodeImpl()
         ModuleParameterNode* pParam = dynamic_cast<ModuleParameterNode*>(GetChild(i));
         if (pParam != nullptr)
         {
-            _paramCount++;
+            _paramList.push_back(pParam);
         }
     }
 }
 
 void ModuleDefinitionNode::VerifyNodeImpl()
 {
-    // Add module to collection
-    GetContext()->_symbolTable.AddModule(
-        _symIndex,
-        nullptr
-        );
+    ModuleTypeInfo* pNewType = new ModuleTypeInfo(_symIndex, this);
+    GetContext()->_typeCollection.AddModuleType(_symIndex, pNewType);
 }
 
 bool ModuleDefinitionNode::PreProcessNodeImpl()
 {
     // Spit out the preamble
-    ModuleInfo* pInfo = dynamic_cast<ModuleInfo*>(GetContext()->_symbolTable.GetInfo(_symIndex, nullptr));
-    GetContext()->OutputLine("module %s(", pInfo->GetSymbol());
+    ModuleTypeInfo* pInfo = GetContext()->_typeCollection.GetModuleType(_symIndex);
+    GetContext()->OutputLine("module %s(", GetContext()->_symbols[_symIndex].c_str());
     GetContext()->IncreaseIndent();
 
     GetContext()->OutputLine("reset,");
@@ -108,7 +104,7 @@ bool ModuleDefinitionNode::PreProcessNodeImpl()
         ModuleParameterNode* pParam = dynamic_cast<ModuleParameterNode*>(GetChild(i));
         if (pParam != nullptr)
         {
-            const char* pszComma = (i != _paramCount - 1) ? "," : "";
+            const char* pszComma = (i != _paramList.size() - 1) ? "," : "";
 
             // Only the first can be the first
             first = false;

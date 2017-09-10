@@ -40,10 +40,7 @@ VariableDeclarationNode::VariableDeclarationNode(
 
     if (pInitExpr != nullptr)
     {
-        IdentifierNode *pLeft = new IdentifierNode(pContext, location, symIndex);
-        AssignmentNode *pAssignment = new AssignmentNode(pContext, location, pLeft, pInitExpr);
-
-        AddNode(pAssignment);
+        AddNode(pInitExpr);
     }
 
     _symIndex = symIndex;
@@ -56,7 +53,7 @@ void VariableDeclarationNode::PreVerifyNodeImpl()
     //printf("Adding variable %s\n", GetContext()->_symbols[_symIndex].c_str());
     ModuleDefinitionNode *pFunc = GetTypedParent<ModuleDefinitionNode>();
 
-    TypeInfo* pInfo = dynamic_cast<TypeNode *>(GetChild(0))->GetTypeInfo();
+    TypeInfo* pInfo = GetTypeNode()->GetTypeInfo();
     if (_arraySize != -1)
     {
         pInfo = GetContext()->_typeCollection.GetArrayType(pInfo, _arraySize);
@@ -82,4 +79,9 @@ void VariableDeclarationNode::PostProcessNodeImpl()
 
     // This node owns putting the semicolon on it
     GetContext()->OutputLine("%s;", decl.c_str());    
+}
+
+TypeNode* VariableDeclarationNode::GetTypeNode()
+{
+    return dynamic_cast<TypeNode *>(GetChild(0));
 }

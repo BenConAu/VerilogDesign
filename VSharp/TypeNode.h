@@ -27,6 +27,7 @@ public:
     void VerifyNodeImpl() override;
     const char* GetDebugName() override { return "TypeNode"; }
     void SetModifier(int modifier);
+    TypeClass GetTypeClass() const { return _typeClass; }
 
 private:
     TypeClass _typeClass;

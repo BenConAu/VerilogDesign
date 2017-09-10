@@ -4,6 +4,7 @@
 #include "ASTNode.h"
 
 class StateDeclaratorNode;
+class ModuleParameterNode;
 
 class ModuleDefinitionNode : public ASTNode
 {
@@ -30,6 +31,9 @@ public:
     void ProcessNodeImpl() override;
     void PostProcessNodeImpl() override;
     const char* GetDebugName() override { return "ModuleDefinitionNode"; }
+
+    size_t GetParameterCount() { return _paramList.size(); }
+    ModuleParameterNode* GetParameter(size_t index) { return _paramList[index]; }
 
 private:
     template<typename T>
@@ -74,8 +78,6 @@ private:
     // The symbol index of the generic type
     int _genericIndex;
 
-    // Number of parameters
-    size_t _paramCount;
-
     std::vector<StateDeclaratorNode*> _stateList;
+    std::vector<ModuleParameterNode*> _paramList;
 };

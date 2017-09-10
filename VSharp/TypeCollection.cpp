@@ -21,6 +21,16 @@ StructTypeInfo* TypeCollection::GetStructType(int symIndex)
     return nullptr;
 }
 
+ModuleTypeInfo* TypeCollection::GetModuleType(int symIndex)
+{
+    if (_moduleTypes.find(symIndex) != _moduleTypes.end())
+    {
+        return _moduleTypes[symIndex].get();
+    }
+
+    return nullptr;
+}
+
 VoidTypeInfo* TypeCollection::GetVoidType()
 {
     return _voidType.get();
@@ -83,6 +93,11 @@ GenericTypeInfo* TypeCollection::GetGenericType(int symIndex, ModuleDefinitionNo
 void TypeCollection::AddStructType(int symIndex, StructTypeInfo* pInfo)
 {
     _structTypes[symIndex] = std::unique_ptr<StructTypeInfo>(pInfo);
+}
+
+void TypeCollection::AddModuleType(int symIndex, ModuleTypeInfo* pInfo)
+{
+    _moduleTypes[symIndex] = std::unique_ptr<ModuleTypeInfo>(pInfo);
 }
 
 void TypeCollection::AddEnumType(int symIndex, EnumTypeInfo* pInfo)
