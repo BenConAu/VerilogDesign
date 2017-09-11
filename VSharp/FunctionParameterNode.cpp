@@ -20,7 +20,7 @@ void FunctionParameterNode::VerifyNodeImpl()
     TypeInfo* pTypeInfo = dynamic_cast<TypeNode *>(GetChild(0))->GetTypeInfo();
 
     // Add variable to collection and mark first usage
-    VariableInfo *pParamInfo = GetContext()->_symbolTable.AddVariable(
+    VariableInfo *pParamInfo = GetContext()->GetSymbolTable()->AddVariable(
         pModule,
         _symIndex,
         location,

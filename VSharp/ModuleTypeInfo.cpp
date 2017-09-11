@@ -6,7 +6,7 @@
 
 std::string ModuleTypeInfo::GetTypeName()
 {
-    return _pModuleDef->GetContext()->_symbols[_symIndex];
+    return _pModuleDef->GetContext()->GetSymbolString(_symIndex);
 }
 
 std::string ModuleTypeInfo::GetDeclaration(VariableInfo* pInfo, ExpressionNode* pInitExpr)

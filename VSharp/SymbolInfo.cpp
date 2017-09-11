@@ -14,5 +14,5 @@ SymbolInfo::SymbolInfo(
 
 const char *SymbolInfo::GetSymbol()
 {
-    return _pContext->_symbols[_symIndex].c_str();
+    return _pContext->GetSymbolString(_symIndex).c_str();
 }

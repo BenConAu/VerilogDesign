@@ -93,7 +93,10 @@ void PSLCompilerContext::Parse()
     {
         _rootNodes[i]->VerifyNode();
     }
+}
 
+void PSLCompilerContext::Output()
+{
     //printf("Doing Process pass\n");
     //DumpTree();
 
@@ -179,4 +182,9 @@ void PSLCompilerContext::DumpTree()
     {
         _rootNodes[i]->DumpNode();
     }    
+}
+
+void PSLCompilerContext::ImportContext(PSLCompilerContext* pChildContext)
+{
+
 }

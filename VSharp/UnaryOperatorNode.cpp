@@ -27,7 +27,7 @@ void UnaryOperatorNode::VerifyNodeImpl()
             else if (_opTable[i]._resultType == ResultTypeMethod::Bool)
             {
                 throw "This is a boolean result";
-                //pResultType = GetContext()->_typeCollection.GetBasicType(BOOL_TOKEN);
+                //pResultType = GetContext()->GetTypeCollection()->GetBasicType(BOOL_TOKEN);
             }
             else
             {

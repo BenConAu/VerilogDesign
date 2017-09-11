@@ -16,7 +16,7 @@ void SymbolTable::AddBuiltin()
     FunctionInfo *pNewInfo = new FunctionInfo(
         _pContext, 
         _pContext->AddSymbol("__monitor"),
-        _pContext->_typeCollection.GetVoidType(),
+        _pContext->GetTypeCollection()->GetVoidType(),
         -1,
         "$monitor");
     _symbols.emplace(std::make_pair(pNewInfo->GetSymbolIndex(), std::unique_ptr<SymbolInfo>(pNewInfo)));
@@ -79,7 +79,7 @@ SymbolInfo *SymbolTable::GetInfo(
     int symIndex, 
     ModuleDefinitionNode *pScope)
 {
-    //printf("Attempting GetInfo of symbol %s\n", _pContext->_symbols[symIndex].c_str());
+    //printf("Attempting GetInfo of symbol %s\n", _pContext->GetSymbolString(symIndex].c_str());
 
     for (auto iter = _symbols.lower_bound(symIndex); iter != _symbols.upper_bound(symIndex); iter++)
     {

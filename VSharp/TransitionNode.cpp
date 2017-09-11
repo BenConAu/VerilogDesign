@@ -9,7 +9,7 @@ void TransitionNode::PostProcessNodeImpl()
     ModuleDefinitionNode *pFunc = GetTypedParent<ModuleDefinitionNode>();
 
     // Get the info
-    StateInfo* pInfo = dynamic_cast<StateInfo*>(GetContext()->_symbolTable.GetInfo(_symIndex, pFunc));
+    StateInfo* pInfo = dynamic_cast<StateInfo*>(GetContext()->GetSymbolTable()->GetInfo(_symIndex, pFunc));
 
     // Write out the state change
     GetContext()->OutputLine("fsmState <= `__%s;", pInfo->GetSymbol());

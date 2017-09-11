@@ -37,17 +37,17 @@ VariableDeclarationNode::VariableDeclarationNode(
 
 void VariableDeclarationNode::PreVerifyNodeImpl()
 {
-    //printf("Adding variable %s\n", GetContext()->_symbols[_symIndex].c_str());
+    //printf("Adding variable %s\n", GetContext()->GetSymbolString(_symIndex).c_str());
     ModuleDefinitionNode *pFunc = GetTypedParent<ModuleDefinitionNode>();
 
     TypeInfo* pInfo = GetTypeNode()->GetTypeInfo();
     if (_arraySize != -1)
     {
-        pInfo = GetContext()->_typeCollection.GetArrayType(pInfo, _arraySize);
+        pInfo = GetContext()->GetTypeCollection()->GetArrayType(pInfo, _arraySize);
     }
 
     // Add variable to collection and mark first usage
-    GetContext()->_symbolTable.AddVariable(
+    GetContext()->GetSymbolTable()->AddVariable(
         pFunc,
         _symIndex,
         VariableLocationType::Member,
@@ -60,7 +60,7 @@ void VariableDeclarationNode::PostProcessNodeImpl()
     ModuleDefinitionNode *pModule = GetTypedParent<ModuleDefinitionNode>();
 
     // Spit out the preamble
-    VariableInfo* pInfo = dynamic_cast<VariableInfo*>(GetContext()->_symbolTable.GetInfo(_symIndex, pModule));
+    VariableInfo* pInfo = dynamic_cast<VariableInfo*>(GetContext()->GetSymbolTable()->GetInfo(_symIndex, pModule));
     ExpressionNode* pInitExpr = dynamic_cast<ExpressionNode*>(GetChild(1));
 
     // Each type should know how to make a declaration

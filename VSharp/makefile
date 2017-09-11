@@ -56,7 +56,6 @@ PSLcc: lex.yy.c \
 	   ModuleTypeInfo.h \
 	   OperatorNode.cpp \
 	   OperatorNode.h \
-	   PSLCompiler.cpp \
 	   RegisterTypeInfo.cpp \
 	   RegisterTypeInfo.h \
 	   ReturnNode.cpp \
@@ -93,6 +92,7 @@ PSLcc: lex.yy.c \
 	   VariableInfo.cpp \
 	   VariableInfo.h \
 	   VoidTypeInfo.h \
+	   VSharpCompiler.cpp \
 	   VSharpCompilerContext.cpp \
 	   VSharpCompilerContext.h \
 	   StateDeclaratorNode.cpp \
@@ -126,7 +126,6 @@ PSLcc: lex.yy.c \
 	   ModuleParameterNode.cpp \
 	   ModuleTypeInfo.cpp \
 	   OperatorNode.cpp \
-	   PSLCompiler.cpp \
 	   RegisterTypeInfo.cpp \
 	   ReturnNode.cpp \
 	   StateInfo.cpp \
@@ -144,6 +143,7 @@ PSLcc: lex.yy.c \
 	   UnaryOperatorNode.cpp \
 	   VariableDeclarationNode.cpp \
 	   VariableInfo.cpp \
+	   VSharpCompiler.cpp \
 	   VSharpCompilerContext.cpp -o VSharpC
 
 lex.yy.c: VSharp.l

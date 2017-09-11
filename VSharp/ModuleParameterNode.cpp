@@ -26,7 +26,7 @@ void ModuleParameterNode::VerifyNodeImpl()
     }
 
     // Add variable to collection and mark first usage
-    VariableInfo *pParamInfo = GetContext()->_symbolTable.AddVariable(
+    VariableInfo *pParamInfo = GetContext()->GetSymbolTable()->AddVariable(
         pModule,
         _symIndex,
         location,
@@ -40,7 +40,7 @@ void ModuleParameterNode::PostProcessNodeImpl()
     ModuleDefinitionNode *pModule = GetTypedParent<ModuleDefinitionNode>();
 
     // Spit out the preamble
-    VariableInfo* pInfo = dynamic_cast<VariableInfo*>(GetContext()->_symbolTable.GetInfo(_symIndex, pModule));
+    VariableInfo* pInfo = dynamic_cast<VariableInfo*>(GetContext()->GetSymbolTable()->GetInfo(_symIndex, pModule));
     const char* pszModifier = _fOut ? "output reg" : "input wire";
 
     GetContext()->OutputLine(

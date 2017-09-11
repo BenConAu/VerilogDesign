@@ -30,7 +30,7 @@ void GlomExpressionNode::VerifyNodeImpl()
         bitLength += pType->GetBitLength();
     }
 
-    SetType(GetContext()->_typeCollection.GetRegisterType(bitLength));
+    SetType(GetContext()->GetTypeCollection()->GetRegisterType(bitLength));
 }
 
 ASTNode* GlomExpressionNode::DuplicateNodeImpl()

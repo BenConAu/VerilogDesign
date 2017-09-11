@@ -31,7 +31,7 @@ void FunctionDeclaratorNode::PreVerifyNodeImpl()
     GenericTypeInfo *pGenType = nullptr;
     if (_genericIndex != -1)
     {
-        /*pGenType = GetContext()->_typeCollection.AddGenericType(
+        /*pGenType = GetContext()->GetTypeCollection()->AddGenericType(
             _genericIndex,
             this);*/
     }
@@ -51,7 +51,7 @@ void FunctionDeclaratorNode::VerifyNodeImpl()
     }
     
     // Add function to module
-    GetContext()->_symbolTable.AddFunction(
+    GetContext()->GetSymbolTable()->AddFunction(
         this,
         _symIndex,
         nullptr

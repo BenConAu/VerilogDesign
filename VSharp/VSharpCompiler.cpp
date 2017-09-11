@@ -24,7 +24,8 @@ int main(int argc, char **argv)
 		//yydebug = 1;
 	    PSLCompilerContext context(argv[1]);
 
-		context.Parse();
+        context.Parse();
+        context.Output();
     }
     catch (char *pszMessage)
     {

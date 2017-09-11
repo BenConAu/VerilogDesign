@@ -44,7 +44,7 @@ public:
     void VerifyNodeImpl() override;
     void ProcessNodeImpl() override;
     const char* GetDebugName() override { return "FunctionDeclaratorNode"; }
-    const char* GetFunctionName() { return GetContext()->_symbols[_symIndex].c_str(); }
+    const char* GetFunctionName() { return GetContext()->GetSymbolString(_symIndex).c_str(); }
 
     bool IsParameter(int symIndex);
     ASTNode* DuplicateParameterIdentifier(int symIndex);

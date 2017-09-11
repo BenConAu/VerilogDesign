@@ -13,7 +13,7 @@ void StructTypeInfo::AddMember(
     if (dimension != -1)
     {
         // If the dimension is provided, then the type is of a pointer
-        pMemberType = pContext->_typeCollection.GetArrayType(pType, dimension);
+        pMemberType = pContext->GetTypeCollection()->GetArrayType(pType, dimension);
     }
 
     _members.push_back(std::unique_ptr<StructMember>(new StructMember(symIndex, pMemberType, dimension)));
@@ -21,7 +21,7 @@ void StructTypeInfo::AddMember(
 
 std::string StructTypeInfo::GetTypeName()
 {
-    return _pContext->_symbols[_symIndex];
+    return _pContext->GetSymbolString(_symIndex);
 }
 
 unsigned int StructTypeInfo::GetBaseLocation(int fieldSymIndex)

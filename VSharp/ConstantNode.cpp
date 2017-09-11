@@ -29,7 +29,7 @@ bool ConstantNode::IsConstant() const
 
 void ConstantNode::VerifyNodeImpl()
 {
-    SetType(GetContext()->_typeCollection.GetRegisterType(_value._bitLength));
+    SetType(GetContext()->GetTypeCollection()->GetRegisterType(_value._bitLength));
 }
 
 ExpressionResult *ConstantNode::CalculateResult()

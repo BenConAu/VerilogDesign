@@ -28,7 +28,7 @@ std::string EnumTypeInfo::DebugPrint()
 
 std::string EnumTypeInfo::GetTypeName()
 {
-    return _pContext->_symbols[_symIndex];
+    return _pContext->GetSymbolString(_symIndex);
 }
 
 int EnumTypeInfo::GetSymbolIndex()
@@ -55,7 +55,7 @@ bool EnumTypeInfo::IsMember(int sym)
 
 int EnumTypeInfo::GetValue(int sym)
 {
-    //printf("Getting value %d for symbol %s\n", _values[sym], _pContext->_symbols[sym].c_str());
+    //printf("Getting value %d for symbol %s\n", _values[sym], _pContext->GetSymbolString(sym].c_str());
 
     return _values[sym];
 }

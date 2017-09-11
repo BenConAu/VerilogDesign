@@ -26,7 +26,7 @@ void ModuleDefinitionNode::PreVerifyNodeImpl()
     GenericTypeInfo *pGenType = nullptr;
     if (_genericIndex != -1)
     {
-        /*pGenType = GetContext()->_typeCollection.AddGenericType(
+        /*pGenType = GetContext()->GetTypeCollection()->AddGenericType(
             _genericIndex,
             this);*/
     }
@@ -86,14 +86,14 @@ void ModuleDefinitionNode::PreVerifyNodeImpl()
 void ModuleDefinitionNode::VerifyNodeImpl()
 {
     ModuleTypeInfo* pNewType = new ModuleTypeInfo(_symIndex, this);
-    GetContext()->_typeCollection.AddModuleType(_symIndex, pNewType);
+    GetContext()->GetTypeCollection()->AddModuleType(_symIndex, pNewType);
 }
 
 bool ModuleDefinitionNode::PreProcessNodeImpl()
 {
     // Spit out the preamble
-    ModuleTypeInfo* pInfo = GetContext()->_typeCollection.GetModuleType(_symIndex);
-    GetContext()->OutputLine("module %s(", GetContext()->_symbols[_symIndex].c_str());
+    ModuleTypeInfo* pInfo = GetContext()->GetTypeCollection()->GetModuleType(_symIndex);
+    GetContext()->OutputLine("module %s(", GetContext()->GetSymbolString(_symIndex).c_str());
     GetContext()->IncreaseIndent();
 
 //    GetContext()->OutputLine("reset,");
@@ -112,7 +112,7 @@ bool ModuleDefinitionNode::PreProcessNodeImpl()
 
             GetContext()->OutputLine(
                 "%s%s", 
-                GetContext()->_symbolTable.GetInfo(pParam->GetSymbolIndex(), this)->GetSymbol(), 
+                GetContext()->GetSymbolTable()->GetInfo(pParam->GetSymbolIndex(), this)->GetSymbol(), 
                 pszComma);
         }
 
@@ -124,7 +124,7 @@ bool ModuleDefinitionNode::PreProcessNodeImpl()
     GetContext()->OutputLine("// State definitions");
     for (size_t i = 0; i < _stateList.size(); i++)
     {
-        const char* pszStateName = (i == 0) ? "initial" : GetContext()->_symbolTable.GetInfo(_stateList[i]->GetIdentifier(), this)->GetSymbol();
+        const char* pszStateName = (i == 0) ? "initial" : GetContext()->GetSymbolTable()->GetInfo(_stateList[i]->GetIdentifier(), this)->GetSymbol();
 
         GetContext()->OutputLine(
             "`define __%s %d", 

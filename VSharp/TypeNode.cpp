@@ -59,33 +59,33 @@ TypeInfo *TypeNode::GetTypeInfo()
         switch (_typeClass)
         {
         case TypeClass::Register:
-            _pTypeInfo = GetContext()->_typeCollection.GetRegisterType(_extra);
+            _pTypeInfo = GetContext()->GetTypeCollection()->GetRegisterType(_extra);
             break;
 
         case TypeClass::Void:
-            _pTypeInfo = GetContext()->_typeCollection.GetVoidType();
+            _pTypeInfo = GetContext()->GetTypeCollection()->GetVoidType();
             break;
 
         case TypeClass::Clock:
-            _pTypeInfo = GetContext()->_typeCollection.GetClockType();
+            _pTypeInfo = GetContext()->GetTypeCollection()->GetClockType();
             break;
 
         case TypeClass::Unknown:
         {
-            _pTypeInfo = GetContext()->_typeCollection.GetEnumType(_extra);
+            _pTypeInfo = GetContext()->GetTypeCollection()->GetEnumType(_extra);
             if (_pTypeInfo == nullptr)
             {
-                _pTypeInfo = GetContext()->_typeCollection.GetStructType(_extra);
+                _pTypeInfo = GetContext()->GetTypeCollection()->GetStructType(_extra);
                 if (_pTypeInfo == nullptr)
                 {
-                    _pTypeInfo = GetContext()->_typeCollection.GetGenericType(_extra, pScope);    
+                    _pTypeInfo = GetContext()->GetTypeCollection()->GetGenericType(_extra, pScope);    
                     if (_pTypeInfo == nullptr)
                     {
-                        _pTypeInfo = GetContext()->_typeCollection.GetModuleType(_extra);
+                        _pTypeInfo = GetContext()->GetTypeCollection()->GetModuleType(_extra);
                         if (_pTypeInfo == nullptr)
                         {
                             std::stringstream sstr;
-                            sstr << "Failed to find struct, enum, or generic type with name " << GetContext()->_symbols[_extra];
+                            sstr << "Failed to find struct, enum, or generic type with name " << GetContext()->GetSymbolString(_extra);
                             static std::string error = sstr.str();
         
                             GetContext()->ReportError(GetLocation(), sstr.str().c_str());    

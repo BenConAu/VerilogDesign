@@ -17,7 +17,7 @@ EnumDefinitionNode::EnumDefinitionNode(
 void EnumDefinitionNode::VerifyNodeImpl()
 {
     EnumTypeInfo* pNewType = new EnumTypeInfo(_symIndex, GetContext());
-    GetContext()->_typeCollection.AddEnumType(_symIndex, pNewType);
+    GetContext()->GetTypeCollection()->AddEnumType(_symIndex, pNewType);
 
     for (size_t i = 0; i < _enums.size(); i++)
     {

@@ -61,7 +61,7 @@ void BitSelectionNode::VerifyNodeImpl()
         GetContext()->ReportError(GetLocation(), "Bit indices out of order");
     }
 
-    SetType(GetContext()->_typeCollection.GetRegisterType(_i1 - _i2 + 1));
+    SetType(GetContext()->GetTypeCollection()->GetRegisterType(_i1 - _i2 + 1));
 }
 
 ExpressionResult *BitSelectionNode::CalculateResult()

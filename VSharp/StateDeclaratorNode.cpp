@@ -19,7 +19,7 @@ void StateDeclaratorNode::VerifyNodeImpl()
     ModuleDefinitionNode *pFunc = GetTypedParent<ModuleDefinitionNode>();
 
     // Add function to collection
-    GetContext()->_symbolTable.AddState(
+    GetContext()->GetSymbolTable()->AddState(
         _identifier,
         pFunc
         );    
@@ -32,7 +32,7 @@ bool StateDeclaratorNode::PreProcessNodeImpl()
     SymbolInfo* pStateSymbolInfo = nullptr;
     if (_identifier != -1)
     {
-        pStateSymbolInfo = GetContext()->_symbolTable.GetInfo(_identifier, pFunc);
+        pStateSymbolInfo = GetContext()->GetSymbolTable()->GetInfo(_identifier, pFunc);
         GetContext()->OutputLine("`__%s: begin", pStateSymbolInfo->GetSymbol());
     }
     else

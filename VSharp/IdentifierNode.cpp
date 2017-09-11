@@ -42,16 +42,16 @@ ASTNode* IdentifierNode::DuplicateNodeImpl()
 
 const char* IdentifierNode::GetIdentifierName()
 {
-    return GetContext()->_symbols[_symIndex].c_str();
+    return GetContext()->GetSymbolString(_symIndex).c_str();
 }
 
 void IdentifierNode::VerifyNodeImpl()
 {
     ModuleDefinitionNode *pScope = GetTypedParent<ModuleDefinitionNode>();
-    _pVarInfo = dynamic_cast<VariableInfo *>(GetContext()->_symbolTable.GetInfo(_symIndex, pScope));
+    _pVarInfo = dynamic_cast<VariableInfo *>(GetContext()->GetSymbolTable()->GetInfo(_symIndex, pScope));
     if (_pVarInfo == nullptr)
     {
-        _pTypeInfo = GetContext()->_typeCollection.GetEnumType(_symIndex);
+        _pTypeInfo = GetContext()->GetTypeCollection()->GetEnumType(_symIndex);
         if (_pTypeInfo == nullptr)
         {
             char message[256];

@@ -54,7 +54,7 @@ void IndexSelectionNode::VerifyNodeImpl()
         else
         {
             // Index a register and you get a single bit
-            SetType(GetContext()->_typeCollection.GetRegisterType(1));
+            SetType(GetContext()->GetTypeCollection()->GetRegisterType(1));
         }
     }
 }

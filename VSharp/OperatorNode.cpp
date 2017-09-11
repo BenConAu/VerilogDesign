@@ -43,7 +43,7 @@ void OperatorNode::VerifyNodeImpl()
             }
             else if (_opTable[i]._resultType == ResultTypeMethod::Bool)
             {
-                pResultType = GetContext()->_typeCollection.GetRegisterType(1);
+                pResultType = GetContext()->GetTypeCollection()->GetRegisterType(1);
             }
             else
             {

@@ -136,7 +136,7 @@ FunctionCallNode::FunctionCallNode(
     ASTNode *pGenericType,
     ASTNode *pFirstArg) : ExpressionNode(pContext, location)
 {
-    //printf("Creating function call %s\n", pContext->_symbols[symIndex].c_str());
+    //printf("Creating function call %s\n", pContext->GetSymbolString(symIndex].c_str());
 
     AddNode(pGenericType);
 
@@ -206,7 +206,7 @@ ASTNode* FunctionCallNode::DuplicateNodeImpl()
 
 const char* FunctionCallNode::GetFunctionName()
 {
-    return GetContext()->_symbols[_symIndex].c_str();
+    return GetContext()->GetSymbolString(_symIndex).c_str();
 }
 
 void FunctionCallNode::VerifyNodeImpl()
@@ -245,7 +245,7 @@ void FunctionCallNode::VerifyNodeImpl()
         {
             _functionType = FunctionType::Constructor;
 
-            StructTypeInfo* pStructInfo = GetContext()->_typeCollection.GetStructType(_symIndex);
+            StructTypeInfo* pStructInfo = GetContext()->GetTypeCollection()->GetStructType(_symIndex);
             if (pStructInfo == nullptr)
             {
                 char message[256];
@@ -337,7 +337,7 @@ void FunctionCallNode::VerifyNodeImpl()
 FunctionInfo* FunctionCallNode::GetFunctionInfo()
 {
     ModuleDefinitionNode *pModule = GetTypedParent<ModuleDefinitionNode>();
-    return dynamic_cast<FunctionInfo*>(GetContext()->_symbolTable.GetInfo(_symIndex, pModule));
+    return dynamic_cast<FunctionInfo*>(GetContext()->GetSymbolTable()->GetInfo(_symIndex, pModule));
 }
 
 ASTNode* FunctionCallNode::ExpandFunction(StatementNode* pOwningStatement)
@@ -353,7 +353,7 @@ ASTNode* FunctionCallNode::ExpandFunction(StatementNode* pOwningStatement)
         GetContext()->ReportError(GetLocation(), "Internal compiler error - function calls that return values cannot be builtin functions");
     }
 
-    //printf("Expanding function %s\n", GetContext()->_symbols[_symIndex].c_str());
+    //printf("Expanding function %s\n", GetContext()->GetSymbolString(_symIndex).c_str());
     return pFuncDecl->ExpandFunction(this, pOwningStatement);
 }
 
@@ -407,7 +407,7 @@ ExpressionResult *FunctionCallNode::CalculateResult()
 
 ExpressionResult* FunctionCallNode::CreateMemberResult(int fieldSymIndex)
 {
-    StructTypeInfo* pStructInfo = GetContext()->_typeCollection.GetStructType(_symIndex);            
+    StructTypeInfo* pStructInfo = GetContext()->GetTypeCollection()->GetStructType(_symIndex);            
     
     size_t memberIndex;
     if (!pStructInfo->GetMemberIndex(fieldSymIndex, &memberIndex))
