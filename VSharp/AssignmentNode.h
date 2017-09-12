@@ -9,13 +9,13 @@ class AssignmentNode : public StatementNode
 {
 public:
   AssignmentNode(
-      PSLCompilerContext *pContext,
+      ParserContext *pContext,
       const YYLTYPE &location,
       ASTNode *pLeft,
       ASTNode *pRight);
 
   AssignmentNode(
-    PSLCompilerContext *pContext,
+    ParserContext *pContext,
     const YYLTYPE &location);
   
   void VerifyNodeImpl() override;

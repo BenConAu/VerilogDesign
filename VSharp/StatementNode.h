@@ -8,7 +8,7 @@ class FunctionCallNode;
 class StatementNode : public ASTNode
 {
 public:
-    StatementNode(PSLCompilerContext* pContext, const YYLTYPE &location);
+    StatementNode(ParserContext* pContext, const YYLTYPE &location);
 
     bool PreProcessNodeImpl(OutputContext* pContext) override;
     void DumpNodeImpl() override;

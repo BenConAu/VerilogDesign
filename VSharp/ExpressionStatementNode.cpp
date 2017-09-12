@@ -3,7 +3,7 @@
 #include "FunctionCallNode.h"
 
 ExpressionStatementNode::ExpressionStatementNode(
-    PSLCompilerContext* pContext, 
+    ParserContext* pContext, 
     const YYLTYPE &location, 
     ASTNode* pExpression) : StatementNode(pContext, location)
 {
@@ -11,7 +11,7 @@ ExpressionStatementNode::ExpressionStatementNode(
 }
 
 ExpressionStatementNode::ExpressionStatementNode(
-    PSLCompilerContext* pContext, 
+    ParserContext* pContext, 
     const YYLTYPE &location) : StatementNode(pContext, location)
 {
 }

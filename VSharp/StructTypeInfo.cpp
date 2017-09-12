@@ -3,7 +3,7 @@
 #include "VariableInfo.h"
 
 void StructTypeInfo::AddMember(
-    PSLCompilerContext *pContext,
+    ParserContext *pContext,
     int symIndex,
     TypeInfo *pType,
     int dimension)

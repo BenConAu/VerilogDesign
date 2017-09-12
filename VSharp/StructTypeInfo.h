@@ -5,19 +5,19 @@
 #include <vector>
 #include <memory>
 
-class PSLCompilerContext;
+class ParserContext;
 
 class StructTypeInfo : public TypeInfo
 {
 public:
-    StructTypeInfo(int symIndex, PSLCompilerContext* pContext)
+    StructTypeInfo(int symIndex, ParserContext* pContext)
     {
         _symIndex = symIndex;
         _pContext = pContext;
     }
 
     void AddMember(
-        PSLCompilerContext *pContext,
+        ParserContext *pContext,
         int symIndex, 
         TypeInfo* pType, 
         int dimension);
@@ -94,6 +94,6 @@ public:
 
 private:
     int _symIndex;
-    PSLCompilerContext* _pContext;
+    ParserContext* _pContext;
     std::vector<std::unique_ptr<StructMember> > _members;
 };

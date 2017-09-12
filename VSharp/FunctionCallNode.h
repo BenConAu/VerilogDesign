@@ -22,14 +22,14 @@ class FunctionCallNode : public ExpressionNode
 {
 public:
   FunctionCallNode(
-      PSLCompilerContext *pContext,
+      ParserContext *pContext,
       const YYLTYPE &location,
       int symIndex,
       ASTNode *pGenericType,
       ASTNode *pFirstArg);
 
   FunctionCallNode(
-      PSLCompilerContext *pContext,
+      ParserContext *pContext,
       const YYLTYPE &location,
       int symIndex,
       FunctionType type);

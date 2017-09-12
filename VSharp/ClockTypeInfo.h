@@ -3,7 +3,7 @@
 #include "TypeInfo.h"
 #include <map>
 
-class PSLCompilerContext;
+class ParserContext;
 
 class ClockTypeInfo : public TypeInfo
 {

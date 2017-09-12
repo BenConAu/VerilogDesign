@@ -5,13 +5,13 @@
 #include "ListNode.h"
 #include "../PhaethonObjWriter/ObjWriter.h"
 
-IfStatementNode::IfStatementNode(PSLCompilerContext *pContext, YYLTYPE location, ASTNode *pTrue, ASTNode *pFalse) : StatementNode(pContext, location)
+IfStatementNode::IfStatementNode(ParserContext *pContext, YYLTYPE location, ASTNode *pTrue, ASTNode *pFalse) : StatementNode(pContext, location)
 {
     AddNode(pTrue);
     AddNode(pFalse);
 }
 
-IfStatementNode::IfStatementNode(PSLCompilerContext *pContext, YYLTYPE location) : StatementNode(pContext, location)
+IfStatementNode::IfStatementNode(ParserContext *pContext, YYLTYPE location) : StatementNode(pContext, location)
 {
 }
 

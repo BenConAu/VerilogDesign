@@ -10,7 +10,7 @@ class VariableDeclarationNode : public ASTNode
 {
 public:
   VariableDeclarationNode(
-    PSLCompilerContext *pContext,
+    ParserContext *pContext,
     const YYLTYPE &location,
     ASTNode *pType,
     int symIndex,
@@ -18,7 +18,7 @@ public:
     ASTNode *pInitExpr);
 
   VariableDeclarationNode(
-    PSLCompilerContext *pContext,
+    ParserContext *pContext,
     const YYLTYPE &location,
     ASTNode *pType,
     int symIndex,

@@ -7,20 +7,20 @@
 class FunctionCallParamNode : public ExpressionNode
 {
 public:
-    FunctionCallParamNode(PSLCompilerContext* pContext, const YYLTYPE &location, bool fOut, ASTNode* pExpr) : ExpressionNode(pContext, location)
+    FunctionCallParamNode(ParserContext* pContext, const YYLTYPE &location, bool fOut, ASTNode* pExpr) : ExpressionNode(pContext, location)
     {
         AddNode(pExpr);
         _fOut = fOut;
     }
 
-    FunctionCallParamNode(PSLCompilerContext* pContext, const YYLTYPE &location) : ExpressionNode(pContext, location)
+    FunctionCallParamNode(ParserContext* pContext, const YYLTYPE &location) : ExpressionNode(pContext, location)
     {
         _fOut = false;
         _literal = pContext->GetLastString();
     }
 
     FunctionCallParamNode(
-        PSLCompilerContext* pContext, 
+        ParserContext* pContext, 
         const YYLTYPE &location,
         bool fOut,
         const std::string& literal

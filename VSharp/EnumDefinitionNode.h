@@ -3,7 +3,7 @@
 #include "ASTNode.h"
 #include "VSharp.tab.h"
 
-class PSLCompilerContext;
+class ParserContext;
 class TypeInfo;
 
 // Indicates a member of a struct
@@ -11,7 +11,7 @@ class EnumDefinitionNode : public ASTNode
 {
 public:
     EnumDefinitionNode(
-        PSLCompilerContext* pContext,
+        ParserContext* pContext,
         const YYLTYPE &location,
         int firstEnum);
 

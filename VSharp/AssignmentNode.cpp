@@ -4,7 +4,7 @@
 #include "DriveDefinitionNode.h"
 
 AssignmentNode::AssignmentNode(
-    PSLCompilerContext *pContext, 
+    ParserContext *pContext, 
     const YYLTYPE &location, 
     ASTNode *pLeft, 
     ASTNode *pRight) : StatementNode(pContext, location)
@@ -14,7 +14,7 @@ AssignmentNode::AssignmentNode(
 }
 
 AssignmentNode::AssignmentNode(
-    PSLCompilerContext *pContext, 
+    ParserContext *pContext, 
     const YYLTYPE &location) : StatementNode(pContext, location)
 {
 }

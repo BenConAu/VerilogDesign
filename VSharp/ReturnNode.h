@@ -6,7 +6,7 @@ class ReturnNode : public ASTNode
 {
   public:
     ReturnNode(
-      PSLCompilerContext *pContext, 
+      ParserContext *pContext, 
       const YYLTYPE &location, 
       ASTNode *pChild) : ASTNode(pContext, location)
     {

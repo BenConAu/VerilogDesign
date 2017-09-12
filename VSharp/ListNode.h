@@ -3,7 +3,7 @@
 class ListNode : public ASTNode
 {
   public:
-    ListNode(PSLCompilerContext *pContext, const YYLTYPE &location, ASTNode *pFirst) : ASTNode(pContext, location)
+    ListNode(ParserContext *pContext, const YYLTYPE &location, ASTNode *pFirst) : ASTNode(pContext, location)
     {
         if (pFirst != nullptr)
         {

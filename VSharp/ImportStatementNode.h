@@ -6,7 +6,7 @@
 class ImportStatementNode : public ASTNode
 {
 public:
-    ImportStatementNode(PSLCompilerContext* pContext, const YYLTYPE &location) : ASTNode(pContext, location)
+    ImportStatementNode(ParserContext* pContext, const YYLTYPE &location) : ASTNode(pContext, location)
     {
         _literal = pContext->GetLastString();
     }

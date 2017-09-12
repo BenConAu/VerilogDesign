@@ -5,7 +5,7 @@
 #include "VSharpCompilerContext.h"
 
 EnumDefinitionNode::EnumDefinitionNode(
-    PSLCompilerContext* pContext, 
+    ParserContext* pContext, 
     const YYLTYPE &location,
     int firstEnum) : ASTNode(pContext, location)
 {

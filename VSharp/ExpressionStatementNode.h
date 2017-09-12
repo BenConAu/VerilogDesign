@@ -6,12 +6,12 @@ class ExpressionStatementNode : public StatementNode
 {
 public:
     ExpressionStatementNode(
-        PSLCompilerContext* pContext, 
+        ParserContext* pContext, 
         const YYLTYPE &location, 
         ASTNode* pExpr);
 
     ExpressionStatementNode(
-        PSLCompilerContext* pContext, 
+        ParserContext* pContext, 
         const YYLTYPE &location);
     
     const char* GetDebugName() override { return "ExpressionStatementNode"; }

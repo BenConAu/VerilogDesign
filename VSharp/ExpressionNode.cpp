@@ -2,7 +2,7 @@
 #include "VSharpCompilerContext.h"
 #include "FunctionCallNode.h"
 
-ExpressionNode::ExpressionNode(PSLCompilerContext* pContext, const YYLTYPE &location) : ASTNode(pContext, location)
+ExpressionNode::ExpressionNode(ParserContext* pContext, const YYLTYPE &location) : ASTNode(pContext, location)
 {
     _pType = nullptr;
     _pResult = nullptr;

@@ -10,7 +10,7 @@ class FunctionCallNode;
 class ExpressionNode : public ASTNode
 {
 public:
-    ExpressionNode(PSLCompilerContext* pContext, const YYLTYPE &location);
+    ExpressionNode(ParserContext* pContext, const YYLTYPE &location);
 
     TypeInfo* GetTypeInfo();
     void PostProcessNodeImpl(OutputContext* pContext) override;

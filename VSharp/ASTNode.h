@@ -7,7 +7,7 @@
 #include <map>
 #include "VSharp.tab.h"
 
-class PSLCompilerContext;
+class ParserContext;
 class VSharpCompiler;
 class DebugContext;
 class OutputContext;
@@ -15,7 +15,7 @@ class OutputContext;
 class ASTNode
 {
 public:
-    ASTNode(PSLCompilerContext* pContext, const YYLTYPE &location)
+    ASTNode(ParserContext* pContext, const YYLTYPE &location)
     {
         _pContext = pContext;
         _location = location;
@@ -90,7 +90,7 @@ public:
     
     int GetChildIndex(ASTNode* pNode);
 
-    PSLCompilerContext* GetContext() { return _pContext; }
+    ParserContext* GetContext() { return _pContext; }
     void DumpNode(DebugContext* pContext);    
     virtual void DumpNodeImpl();
 
@@ -98,7 +98,7 @@ protected:
     const YYLTYPE& GetLocation() { return _location; }    
     
 private:
-    PSLCompilerContext* _pContext;
+    ParserContext* _pContext;
     YYLTYPE _location;    
     ASTNode* _pParent;
     std::vector<std::unique_ptr<ASTNode> > _children;

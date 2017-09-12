@@ -5,7 +5,7 @@
 #include <string.h>
 
 ConstantNode::ConstantNode(
-    PSLCompilerContext *pContext, 
+    ParserContext *pContext, 
     const YYLTYPE& location, 
     const UIntConstant& v) : ExpressionNode(pContext, location)
 {

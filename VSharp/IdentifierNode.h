@@ -9,12 +9,12 @@ class IdentifierNode : public ExpressionNode
 {
 public:
     IdentifierNode(
-        PSLCompilerContext* pContext, 
+        ParserContext* pContext, 
         const YYLTYPE& location, 
         int symIndex);
 
     IdentifierNode(
-        PSLCompilerContext *pContext, 
+        ParserContext *pContext, 
         const YYLTYPE &location, 
         int symIndex, 
         VariableInfo* pVarInfo,

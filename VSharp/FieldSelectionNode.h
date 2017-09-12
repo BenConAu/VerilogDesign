@@ -10,13 +10,13 @@ class FieldSelectionNode : public ExpressionNode
 {
   public:
     FieldSelectionNode(
-        PSLCompilerContext *pContext,
+        ParserContext *pContext,
         const YYLTYPE &location,
         ASTNode *pExpr,
         int symIndex);
 
     FieldSelectionNode(
-        PSLCompilerContext *pContext,
+        ParserContext *pContext,
         const YYLTYPE &location,
         int symIndex,
         StaticTypeInfo *pStaticTypeInfo,

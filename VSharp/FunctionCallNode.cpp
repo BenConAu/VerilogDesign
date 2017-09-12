@@ -130,7 +130,7 @@ private:
 };
 
 FunctionCallNode::FunctionCallNode(
-    PSLCompilerContext *pContext,
+    ParserContext *pContext,
     const YYLTYPE &location,
     int symIndex,
     ASTNode *pGenericType,
@@ -150,7 +150,7 @@ FunctionCallNode::FunctionCallNode(
 }
 
 FunctionCallNode::FunctionCallNode(
-    PSLCompilerContext *pContext,
+    ParserContext *pContext,
     const YYLTYPE &location,
     int symIndex,
     FunctionType type) : ExpressionNode(pContext, location)

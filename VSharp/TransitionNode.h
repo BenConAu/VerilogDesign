@@ -7,7 +7,7 @@ class TransitionNode : public ASTNode
 {
   public:
     TransitionNode(
-        PSLCompilerContext *pContext, 
+        ParserContext *pContext, 
         const YYLTYPE &location,
         int symIndex) : ASTNode(pContext, location)
     {

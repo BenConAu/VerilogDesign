@@ -5,7 +5,7 @@
 #include "FunctionDeclaratorNode.h"
 #include "StaticTypeInfo.h"
 
-IdentifierNode::IdentifierNode(PSLCompilerContext *pContext, const YYLTYPE &location, int symIndex) : ExpressionNode(pContext, location)
+IdentifierNode::IdentifierNode(ParserContext *pContext, const YYLTYPE &location, int symIndex) : ExpressionNode(pContext, location)
 {
     _symIndex = symIndex;
     _pVarInfo = nullptr;
@@ -13,7 +13,7 @@ IdentifierNode::IdentifierNode(PSLCompilerContext *pContext, const YYLTYPE &loca
 }
 
 IdentifierNode::IdentifierNode(
-    PSLCompilerContext *pContext, 
+    ParserContext *pContext, 
     const YYLTYPE &location, 
     int symIndex, 
     VariableInfo* pVarInfo,

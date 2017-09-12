@@ -70,7 +70,7 @@
 #include "ASTTree.h"
 #include "VSharp.tab.h"
 
-#define YY_EXTRA_TYPE PSLCompilerContext*
+#define YY_EXTRA_TYPE ParserContext*
 #include "lex.h"
 
 void yyerror(YYLTYPE*, void*, const char *s);
@@ -113,7 +113,7 @@ extern int yydebug;
 #include "UIntConstant.h"
 
 class ASTNode;
-class PSLCompilerContext;
+class ParserContext;
 
 #line 119 "VSharp.tab.c" /* yacc.c:355  */
 
@@ -214,7 +214,7 @@ struct YYLTYPE
 
 
 
-int yyparse (PSLCompilerContext* pContext);
+int yyparse (ParserContext* pContext);
 
 #endif /* !YY_YY_VSHARP_TAB_H_INCLUDED  */
 
@@ -986,7 +986,7 @@ do {                                                                      \
 `----------------------------------------*/
 
 static void
-yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp, PSLCompilerContext* pContext)
+yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp, ParserContext* pContext)
 {
   FILE *yyo = yyoutput;
   YYUSE (yyo);
@@ -1007,7 +1007,7 @@ yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvalue
 `--------------------------------*/
 
 static void
-yy_symbol_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp, PSLCompilerContext* pContext)
+yy_symbol_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp, ParserContext* pContext)
 {
   YYFPRINTF (yyoutput, "%s %s (",
              yytype < YYNTOKENS ? "token" : "nterm", yytname[yytype]);
@@ -1047,7 +1047,7 @@ do {                                                            \
 `------------------------------------------------*/
 
 static void
-yy_reduce_print (yytype_int16 *yyssp, YYSTYPE *yyvsp, YYLTYPE *yylsp, int yyrule, PSLCompilerContext* pContext)
+yy_reduce_print (yytype_int16 *yyssp, YYSTYPE *yyvsp, YYLTYPE *yylsp, int yyrule, ParserContext* pContext)
 {
   unsigned long int yylno = yyrline[yyrule];
   int yynrhs = yyr2[yyrule];
@@ -1327,7 +1327,7 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
 `-----------------------------------------------*/
 
 static void
-yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep, YYLTYPE *yylocationp, PSLCompilerContext* pContext)
+yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep, YYLTYPE *yylocationp, ParserContext* pContext)
 {
   YYUSE (yyvaluep);
   YYUSE (yylocationp);
@@ -1349,7 +1349,7 @@ yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep, YYLTYPE *yylocatio
 `----------*/
 
 int
-yyparse (PSLCompilerContext* pContext)
+yyparse (ParserContext* pContext)
 {
 /* The lookahead symbol.  */
 int yychar;

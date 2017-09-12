@@ -4,7 +4,7 @@
 #include "TypeNode.h"
 
 StructDeclarationNode::StructDeclarationNode(
-    PSLCompilerContext* pContext,
+    ParserContext* pContext,
     const YYLTYPE &location,
     ASTNode* pTypeNode, 
     int symId,
@@ -17,7 +17,7 @@ StructDeclarationNode::StructDeclarationNode(
 }
 
 StructDeclarationNode::StructDeclarationNode(
-    PSLCompilerContext* pContext, 
+    ParserContext* pContext, 
     const YYLTYPE &location,
     ASTNode* pTypeNode, 
     int symId

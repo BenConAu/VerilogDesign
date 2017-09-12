@@ -6,7 +6,7 @@
 #include "VSharpCompilerContext.h"
 
 IndexSelectionNode::IndexSelectionNode(
-    PSLCompilerContext *pContext,
+    ParserContext *pContext,
     const YYLTYPE &location,
     ASTNode *pPostFix,
     ASTNode *pIndex) : ExpressionNode(pContext, location)
@@ -16,7 +16,7 @@ IndexSelectionNode::IndexSelectionNode(
 }
 
 IndexSelectionNode::IndexSelectionNode(
-    PSLCompilerContext *pContext,
+    ParserContext *pContext,
     const YYLTYPE &location) : ExpressionNode(pContext, location)
 {
 }

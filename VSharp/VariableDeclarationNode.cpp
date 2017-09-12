@@ -7,7 +7,7 @@
 #include "VariableInfo.h"
 
 VariableDeclarationNode::VariableDeclarationNode(
-    PSLCompilerContext *pContext,
+    ParserContext *pContext,
     const YYLTYPE &location,
     ASTNode *pType,
     int symIndex,
@@ -22,7 +22,7 @@ VariableDeclarationNode::VariableDeclarationNode(
 }
 
 VariableDeclarationNode::VariableDeclarationNode(
-    PSLCompilerContext *pContext,
+    ParserContext *pContext,
     const YYLTYPE &location,
     ASTNode *pType,
     int symIndex,

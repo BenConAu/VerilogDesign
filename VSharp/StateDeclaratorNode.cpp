@@ -4,7 +4,7 @@
 #include "../PhaethonObjWriter/ObjWriter.h"
 
 StateDeclaratorNode::StateDeclaratorNode(
-    PSLCompilerContext *pContext,
+    ParserContext *pContext,
     const YYLTYPE &location,
     int ident,
     ASTNode *pStatementList) : ASTNode(pContext, location)

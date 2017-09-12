@@ -1,7 +1,7 @@
 #include "VSharpCompilerContext.h"
 #include "ASTTree.h"
 #include "VSharp.tab.h"
-#define YY_EXTRA_TYPE PSLCompilerContext *
+#define YY_EXTRA_TYPE ParserContext *
 #include "lex.h"
 
 VSharpCompiler::VSharpCompiler() : _symbolTable(this)
@@ -15,7 +15,7 @@ OutputContext::OutputContext(const char* pszOutputFile, DebugContext* pDebugCont
     _pDebugContext = pDebugContext;
 }
 
-PSLCompilerContext::PSLCompilerContext(const char *pszInputFile, VSharpCompiler* pCompiler)
+ParserContext::ParserContext(const char *pszInputFile, VSharpCompiler* pCompiler)
 {
 	FILE *pFile = ::fopen(pszInputFile, "r");
 
@@ -30,12 +30,12 @@ PSLCompilerContext::PSLCompilerContext(const char *pszInputFile, VSharpCompiler*
     yyrestart(pFile, pScanner);
 }
 
-PSLCompilerContext::~PSLCompilerContext()
+ParserContext::~ParserContext()
 {
     yylex_destroy(pScanner);
 }
 
-int PSLCompilerContext::AddSymbol(const char *pszSymbol)
+int ParserContext::AddSymbol(const char *pszSymbol)
 {
     return _pCompiler->AddSymbol(pszSymbol);
 }
@@ -55,7 +55,7 @@ int VSharpCompiler::AddSymbol(const char *pszSymbol)
     return (_symbols.size() - 1);
 }
 
-void PSLCompilerContext::AddTypeDef(ASTNode *pNode)
+void ParserContext::AddTypeDef(ASTNode *pNode)
 {
     auto rootStart = _rootNodes.begin();
 
@@ -66,7 +66,7 @@ void PSLCompilerContext::AddTypeDef(ASTNode *pNode)
     _numStructs++;
 }
 
-void PSLCompilerContext::AddGlobal(ASTNode *pNode)
+void ParserContext::AddGlobal(ASTNode *pNode)
 {
     auto rootStart = _rootNodes.begin();
 
@@ -75,18 +75,18 @@ void PSLCompilerContext::AddGlobal(ASTNode *pNode)
     _numGlobals++;
 }
 
-void PSLCompilerContext::AddModuleDef(ASTNode *pNode)
+void ParserContext::AddModuleDef(ASTNode *pNode)
 {
     // Just tack onto the end
     _rootNodes.push_back(std::unique_ptr<ASTNode>(pNode));
 }
 
-void PSLCompilerContext::AddImport(ASTNode *pNode)
+void ParserContext::AddImport(ASTNode *pNode)
 {
     _rootNodes.push_front(std::unique_ptr<ASTNode>(pNode));
 }
 
-void PSLCompilerContext::Parse()
+void ParserContext::Parse()
 {
     //printf("Doing Bison parse\n");
 
@@ -102,7 +102,7 @@ void PSLCompilerContext::Parse()
     }
 }
 
-void PSLCompilerContext::Process(OutputContext* pContext)
+void ParserContext::Process(OutputContext* pContext)
 {
     //printf("Doing Process pass\n");
     //DumpTree();
@@ -125,7 +125,7 @@ void OutputContext::Finish()
     }
 }
 
-void PSLCompilerContext::UserAction(void *pVoidLocation, const char *pszText)
+void ParserContext::UserAction(void *pVoidLocation, const char *pszText)
 {
     YYLTYPE *pLocation = (YYLTYPE *)pVoidLocation;
 
@@ -175,7 +175,7 @@ void OutputContext::EndLine()
     OutputString("\n");
 }
 
-void PSLCompilerContext::DumpTree()
+void ParserContext::DumpTree()
 {
     printf("Dumping tree\n");
     for (size_t i = 0; i < _rootNodes.size(); i++)
@@ -189,7 +189,7 @@ const std::string& VSharpCompiler::GetSymbolString(int symIndex)
     return _symbols[symIndex];         
 }
 
-const std::string& PSLCompilerContext::GetSymbolString(int symIndex) 
+const std::string& ParserContext::GetSymbolString(int symIndex) 
 {
     return _pCompiler->GetSymbolString(symIndex);         
 }
@@ -199,7 +199,7 @@ TypeCollection* VSharpCompiler::GetTypeCollection()
     return &_typeCollection;
 }
 
-TypeCollection* PSLCompilerContext::GetTypeCollection() 
+TypeCollection* ParserContext::GetTypeCollection() 
 {
     return _pCompiler->GetTypeCollection();
 }
@@ -209,7 +209,7 @@ SymbolTable* VSharpCompiler::GetSymbolTable()
     return &_symbolTable; 
 }
 
-SymbolTable* PSLCompilerContext::GetSymbolTable() 
+SymbolTable* ParserContext::GetSymbolTable() 
 { 
     return _pCompiler->GetSymbolTable(); 
 }

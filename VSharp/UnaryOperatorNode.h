@@ -8,7 +8,7 @@ class UnaryOperatorNode : public ExpressionNode
 {
   public:
     UnaryOperatorNode(
-      PSLCompilerContext *pContext, 
+      ParserContext *pContext, 
       const YYLTYPE &location, 
       ASTNode *pLeft, 
       Operator op) : ExpressionNode(pContext, location)

@@ -5,7 +5,7 @@
 #include "ListNode.h"
 
 GlomExpressionNode::GlomExpressionNode(
-    PSLCompilerContext *pContext,
+    ParserContext *pContext,
     const YYLTYPE &location,
     ASTNode *pExprList) : ExpressionNode(pContext, location)
 {
@@ -13,7 +13,7 @@ GlomExpressionNode::GlomExpressionNode(
 }
 
 GlomExpressionNode::GlomExpressionNode(
-    PSLCompilerContext *pContext,
+    ParserContext *pContext,
     const YYLTYPE &location) : ExpressionNode(pContext, location)
 {
 }

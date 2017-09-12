@@ -45,7 +45,7 @@ extern int yydebug;
 #include "UIntConstant.h"
 
 class ASTNode;
-class PSLCompilerContext;
+class ParserContext;
 
 #line 51 "VSharp.tab.h" /* yacc.c:1915  */
 
@@ -146,6 +146,6 @@ struct YYLTYPE
 
 
 
-int yyparse (PSLCompilerContext* pContext);
+int yyparse (ParserContext* pContext);
 
 #endif /* !YY_YY_VSHARP_TAB_H_INCLUDED  */

@@ -3,7 +3,7 @@
 #include "ASTNode.h"
 #include "UIntConstant.h"
 
-class PSLCompilerContext;
+class ParserContext;
 class TypeInfo;
 
 // Indicates a member of a struct
@@ -11,14 +11,14 @@ class StructDeclarationNode : public ASTNode
 {
 public:
     StructDeclarationNode(
-        PSLCompilerContext* pContext,
+        ParserContext* pContext,
         const YYLTYPE &location,
         ASTNode* pTypeNode, 
         int symId, 
         const UIntConstant &dimension);
 
     StructDeclarationNode(
-        PSLCompilerContext* pContext,
+        ParserContext* pContext,
         const YYLTYPE &location, 
         ASTNode* pTypeNode, 
         int symId);

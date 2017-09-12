@@ -6,7 +6,7 @@
 #include "../PhaethonObjWriter/ObjWriter.h"
 
 DriveListDefinitionNode::DriveListDefinitionNode(
-    PSLCompilerContext *pContext,
+    ParserContext *pContext,
     const YYLTYPE &location,
     ASTNode *pList) : ASTNode(pContext, location)
 {

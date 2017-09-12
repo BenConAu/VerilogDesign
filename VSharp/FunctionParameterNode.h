@@ -6,7 +6,7 @@
 class FunctionParameterNode : public ASTNode
 {
 public:
-    FunctionParameterNode(PSLCompilerContext* pContext, const YYLTYPE &location, ASTNode* pType, int symIndex, bool fOut) : ASTNode(pContext, location)
+    FunctionParameterNode(ParserContext* pContext, const YYLTYPE &location, ASTNode* pType, int symIndex, bool fOut) : ASTNode(pContext, location)
     {
         AddNode(pType);
         _symIndex = symIndex;

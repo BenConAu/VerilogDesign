@@ -8,18 +8,18 @@ class TypeNode : public ASTNode
 {
 public:
     TypeNode(
-        PSLCompilerContext* pContext, 
+        ParserContext* pContext, 
         const YYLTYPE &location,
         TypeClass typeClass, 
         int type);
 
     TypeNode(
-        PSLCompilerContext* pContext, 
+        ParserContext* pContext, 
         const YYLTYPE &location,
         TypeClass typeClass);
         
     TypeNode(
-        PSLCompilerContext *pContext, 
+        ParserContext *pContext, 
         const YYLTYPE &location,
         const UIntConstant &bitLength);
 

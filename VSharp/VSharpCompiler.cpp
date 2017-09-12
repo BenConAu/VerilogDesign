@@ -2,7 +2,7 @@
 #include "VSharpCompilerContext.h"
 #include "ASTTree.h"
 #include "VSharp.tab.h"
-#define YY_EXTRA_TYPE PSLCompilerContext *
+#define YY_EXTRA_TYPE ParserContext *
 #include "lex.h"
 #include <cstdio>
 #include <iostream>
@@ -26,7 +26,7 @@ int main(int argc, char **argv)
 
         //yydebug = 1;
         VSharpCompiler compiler;
-        PSLCompilerContext context(argv[1], &compiler);
+        ParserContext context(argv[1], &compiler);
         OutputContext outputContext((base + ".sv").c_str(), context.GetDebugContext());
         context.Parse();
         context.Process(&outputContext);

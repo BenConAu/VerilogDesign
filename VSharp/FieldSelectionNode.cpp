@@ -8,7 +8,7 @@
 #include "FunctionCallNode.h"
 
 FieldSelectionNode::FieldSelectionNode(
-    PSLCompilerContext *pContext,
+    ParserContext *pContext,
     const YYLTYPE &location,
     ASTNode *pExpr,
     int symIndex) : ExpressionNode(pContext, location)
@@ -22,7 +22,7 @@ FieldSelectionNode::FieldSelectionNode(
 }
 
 FieldSelectionNode::FieldSelectionNode(
-    PSLCompilerContext *pContext,
+    ParserContext *pContext,
     const YYLTYPE &location,
     int symIndex,
     StaticTypeInfo *pStaticTypeInfo,

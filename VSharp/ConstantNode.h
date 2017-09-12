@@ -5,7 +5,7 @@
 class ConstantNode : public ExpressionNode
 {
 public:
-    ConstantNode(PSLCompilerContext* pContext, const YYLTYPE& location, const UIntConstant&);
+    ConstantNode(ParserContext* pContext, const YYLTYPE& location, const UIntConstant&);
 
     bool IsConstant() const override;
     void VerifyNodeImpl() override;

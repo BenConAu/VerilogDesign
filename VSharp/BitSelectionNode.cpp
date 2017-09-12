@@ -6,7 +6,7 @@
 #include "VSharpCompilerContext.h"
 
 BitSelectionNode::BitSelectionNode(
-    PSLCompilerContext *pContext,
+    ParserContext *pContext,
     const YYLTYPE &location,
     ASTNode *pPostFix,
     const UIntConstant &i1,
@@ -19,7 +19,7 @@ BitSelectionNode::BitSelectionNode(
 }
 
 BitSelectionNode::BitSelectionNode(
-    PSLCompilerContext *pContext,
+    ParserContext *pContext,
     const YYLTYPE &location,
     int i1,
     int i2) : ExpressionNode(pContext, location)

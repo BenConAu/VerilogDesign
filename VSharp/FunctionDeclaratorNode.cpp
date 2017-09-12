@@ -10,7 +10,7 @@
 #include "FunctionCallNode.h"
 
 FunctionDeclaratorNode::FunctionDeclaratorNode(
-    PSLCompilerContext* pContext,
+    ParserContext* pContext,
     const YYLTYPE &location,
     ASTNode* pRetType,
     int symIndex,

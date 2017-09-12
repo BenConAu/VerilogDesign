@@ -3,12 +3,12 @@
 #include "TypeInfo.h"
 #include <map>
 
-class PSLCompilerContext;
+class ParserContext;
 
 class EnumTypeInfo : public TypeInfo
 {
 public:
-    EnumTypeInfo(int symIndex, PSLCompilerContext* pContext);
+    EnumTypeInfo(int symIndex, ParserContext* pContext);
     void AddMember(int symIndex);
     TypeClass GetTypeClass() override;
     std::string DebugPrint() override;
@@ -25,6 +25,6 @@ public:
 
 private:
     int _symIndex;
-    PSLCompilerContext* _pContext;
+    ParserContext* _pContext;
     std::map<int, int> _values;
 };

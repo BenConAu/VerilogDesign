@@ -8,7 +8,7 @@ class OperatorNode : public ExpressionNode
 {
   public:
     OperatorNode(
-      PSLCompilerContext *pContext, 
+      ParserContext *pContext, 
       const YYLTYPE &location,
       ASTNode *pLeft, 
       ASTNode *pRight,
@@ -20,7 +20,7 @@ class OperatorNode : public ExpressionNode
     }
 
     OperatorNode(
-      PSLCompilerContext *pContext, 
+      ParserContext *pContext, 
       const YYLTYPE &location,
       Operator op,
       OperatorInfo opInfo) : ExpressionNode(pContext, location)

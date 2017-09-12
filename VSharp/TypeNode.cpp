@@ -6,7 +6,7 @@
 #include <sstream>
 
 TypeNode::TypeNode(
-    PSLCompilerContext *pContext,
+    ParserContext *pContext,
     const YYLTYPE &location,
     TypeClass typeClass,
     int type) : ASTNode(pContext, location)
@@ -18,7 +18,7 @@ TypeNode::TypeNode(
 }
 
 TypeNode::TypeNode(
-    PSLCompilerContext *pContext,
+    ParserContext *pContext,
     const YYLTYPE &location,
     TypeClass typeClass) : ASTNode(pContext, location)
 {
@@ -29,7 +29,7 @@ TypeNode::TypeNode(
 }
 
 TypeNode::TypeNode(
-    PSLCompilerContext *pContext, 
+    ParserContext *pContext, 
     const YYLTYPE &location,
     const UIntConstant &bitLength) : ASTNode(pContext, location)
 {

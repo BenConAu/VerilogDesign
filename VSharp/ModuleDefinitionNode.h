@@ -10,7 +10,7 @@ class ModuleDefinitionNode : public ASTNode
 {
 public:
     ModuleDefinitionNode(
-        PSLCompilerContext* pContext, 
+        ParserContext* pContext, 
         const YYLTYPE &location,
         int symIndex,
         int genericSym

@@ -7,7 +7,7 @@ class ModuleParameterNode : public ASTNode
 {
 public:
     ModuleParameterNode(
-        PSLCompilerContext* pContext,
+        ParserContext* pContext,
         const YYLTYPE &location,
         ASTNode* pType, 
         int symIndex, 

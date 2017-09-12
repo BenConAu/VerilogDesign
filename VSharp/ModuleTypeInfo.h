@@ -4,7 +4,7 @@
 #include <vector>
 #include <memory>
 
-class PSLCompilerContext;
+class ParserContext;
 class ModuleDefinitionNode;
 class ModuleParameterNode;
 

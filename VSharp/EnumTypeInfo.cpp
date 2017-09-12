@@ -3,7 +3,7 @@
 #include "VariableInfo.h"
 #include <cmath>
 
-EnumTypeInfo::EnumTypeInfo(int symIndex, PSLCompilerContext* pContext)
+EnumTypeInfo::EnumTypeInfo(int symIndex, ParserContext* pContext)
 {
     _symIndex = symIndex;
     _pContext = pContext;

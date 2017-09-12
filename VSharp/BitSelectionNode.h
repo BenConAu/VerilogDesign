@@ -7,14 +7,14 @@ class BitSelectionNode : public ExpressionNode
 {
   public:
     BitSelectionNode(
-        PSLCompilerContext *pContext,
+        ParserContext *pContext,
         const YYLTYPE &location,
         ASTNode *pPostFix,
         const UIntConstant &i1,
         const UIntConstant &i2);
 
     BitSelectionNode(
-      PSLCompilerContext *pContext,
+      ParserContext *pContext,
       const YYLTYPE &location,
       int i1,
       int i2);

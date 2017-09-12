@@ -8,7 +8,7 @@ class StateDeclaratorNode : public ASTNode
 {
 public:
   StateDeclaratorNode(
-      PSLCompilerContext *pContext,
+      ParserContext *pContext,
       const YYLTYPE &location,
       int ident,
       ASTNode *pStatementList);

@@ -56,11 +56,11 @@ private:
     DebugContext* _pDebugContext;
 };
 
-class PSLCompilerContext
+class ParserContext
 {
 public:
-    PSLCompilerContext(const char *pszInputFile, VSharpCompiler* pCompiler);
-    ~PSLCompilerContext();
+    ParserContext(const char *pszInputFile, VSharpCompiler* pCompiler);
+    ~ParserContext();
 
     void *pScanner;
     
@@ -122,10 +122,10 @@ class VSharpCompiler
     SymbolTable* GetSymbolTable();
     const std::string& GetSymbolString(int symIndex);
     
-    void ImportContext(PSLCompilerContext* pChildContext);
+    void ImportContext(ParserContext* pChildContext);
 
   private:
-    PSLCompilerContext* _pParent;
+    ParserContext* _pParent;
     SymbolTable _symbolTable;
     TypeCollection _typeCollection;
     std::vector<std::string> _symbols;

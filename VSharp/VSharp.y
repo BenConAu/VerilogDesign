@@ -5,7 +5,7 @@
 #include "ASTTree.h"
 #include "VSharp.tab.h"
 
-#define YY_EXTRA_TYPE PSLCompilerContext*
+#define YY_EXTRA_TYPE ParserContext*
 #include "lex.h"
 
 void yyerror(YYLTYPE*, void*, const char *s);
@@ -17,14 +17,14 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %pure-parser
 %define parse.error verbose
 %lex-param {void* scanner}
-%parse-param {PSLCompilerContext* pContext}
+%parse-param {ParserContext* pContext}
 
 %code requires 
 {
 #include "UIntConstant.h"
 
 class ASTNode;
-class PSLCompilerContext;
+class ParserContext;
 }
 
 %union 

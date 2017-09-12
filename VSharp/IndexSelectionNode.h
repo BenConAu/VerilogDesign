@@ -7,13 +7,13 @@ class IndexSelectionNode : public ExpressionNode
 {
   public:
     IndexSelectionNode(
-        PSLCompilerContext *pContext,
+        ParserContext *pContext,
         const YYLTYPE &location,
         ASTNode *pPostFix,
         ASTNode *pIndex);
 
     IndexSelectionNode(
-        PSLCompilerContext *pContext,
+        ParserContext *pContext,
         const YYLTYPE &location);
     
     void VerifyNodeImpl() override;

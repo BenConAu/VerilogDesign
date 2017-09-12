@@ -7,12 +7,12 @@ class GlomExpressionNode : public ExpressionNode
 {
   public:
     GlomExpressionNode(
-        PSLCompilerContext *pContext,
+        ParserContext *pContext,
         const YYLTYPE &location,
         ASTNode *pExprList);
 
     GlomExpressionNode(
-        PSLCompilerContext *pContext,
+        ParserContext *pContext,
         const YYLTYPE &location);
 
     void VerifyNodeImpl() override;

@@ -6,7 +6,7 @@ class DriveDefinitionNode : public ASTNode
 {
 public:
   DriveDefinitionNode(
-      PSLCompilerContext *pContext,
+      ParserContext *pContext,
       const YYLTYPE &location,
       const UIntConstant &delta,
       ASTNode *pExpr);
