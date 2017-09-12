@@ -1,5 +1,5 @@
 #include "SymbolInfo.h"
-#include "VSharpCompilerContext.h"
+#include "VSharpCompiler.h"
 
 SymbolInfo::SymbolInfo(
     VSharpCompiler *pCompiler,      // The context that this symbol lives in

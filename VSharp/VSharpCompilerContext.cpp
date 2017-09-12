@@ -1,13 +1,9 @@
 #include "VSharpCompilerContext.h"
+#include "VSharpCompiler.h"
 #include "ASTTree.h"
 #include "VSharp.tab.h"
 #define YY_EXTRA_TYPE ParserContext *
 #include "lex.h"
-
-VSharpCompiler::VSharpCompiler() : _symbolTable(this)
-{
-    _symbolTable.AddBuiltin();    
-}
 
 ParserContext::ParserContext(const char *pszInputFile, VSharpCompiler* pCompiler)
 {
@@ -32,21 +28,6 @@ ParserContext::~ParserContext()
 int ParserContext::AddSymbol(const char *pszSymbol)
 {
     return _pCompiler->AddSymbol(pszSymbol);
-}
-
-int VSharpCompiler::AddSymbol(const char *pszSymbol)
-{
-    //    printf("Adding symbol\n");
-    for (size_t i = 0; i < _symbols.size(); i++)
-    {
-        if (_symbols[i].compare(pszSymbol) == 0)
-        {
-            return i;
-        }
-    }
-
-    _symbols.push_back(pszSymbol);
-    return (_symbols.size() - 1);
 }
 
 void ParserContext::AddTypeDef(ASTNode *pNode)
@@ -137,29 +118,14 @@ void ParserContext::DumpTree()
     }    
 }
 
-const std::string& VSharpCompiler::GetSymbolString(int symIndex) 
-{
-    return _symbols[symIndex];         
-}
-
 const std::string& ParserContext::GetSymbolString(int symIndex) 
 {
     return _pCompiler->GetSymbolString(symIndex);         
 }
 
-TypeCollection* VSharpCompiler::GetTypeCollection() 
-{
-    return &_typeCollection;
-}
-
 TypeCollection* ParserContext::GetTypeCollection() 
 {
     return _pCompiler->GetTypeCollection();
-}
-
-SymbolTable* VSharpCompiler::GetSymbolTable() 
-{ 
-    return &_symbolTable; 
 }
 
 SymbolTable* ParserContext::GetSymbolTable() 

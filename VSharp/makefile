@@ -95,7 +95,9 @@ PSLcc: lex.yy.c \
 	   VariableInfo.cpp \
 	   VariableInfo.h \
 	   VoidTypeInfo.h \
+	   VSharpC.cpp \
 	   VSharpCompiler.cpp \
+	   VSharpCompiler.h \
 	   VSharpCompilerContext.cpp \
 	   VSharpCompilerContext.h \
 	   StateDeclaratorNode.cpp \
@@ -147,6 +149,7 @@ PSLcc: lex.yy.c \
 	   UnaryOperatorNode.cpp \
 	   VariableDeclarationNode.cpp \
 	   VariableInfo.cpp \
+	   VSharpC.cpp \
 	   VSharpCompiler.cpp \
 	   VSharpCompilerContext.cpp -o VSharpC
 

@@ -4,6 +4,7 @@
 #include "FunctionInfo.h"
 #include "StateInfo.h"
 #include "VSharp.tab.h"
+#include "VSharpCompiler.h"
 #include <sstream>
 
 SymbolTable::SymbolTable(VSharpCompiler *pCompiler)
