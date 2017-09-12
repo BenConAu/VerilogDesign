@@ -5,6 +5,29 @@
 #include "VariableInfo.h"
 #include "FunctionCallNode.h"
 
+FunctionCallParamNode::FunctionCallParamNode(ParserContext* pContext, const YYLTYPE &location, bool fOut, ASTNode* pExpr) : ExpressionNode(pContext, location)
+{
+    AddNode(pExpr);
+    _fOut = fOut;
+}
+
+FunctionCallParamNode::FunctionCallParamNode(ParserContext* pContext, const YYLTYPE &location) : ExpressionNode(pContext, location)
+{
+    _fOut = false;
+    _literal = pContext->GetLastString();
+}
+
+FunctionCallParamNode::FunctionCallParamNode(
+    ParserContext* pContext, 
+    const YYLTYPE &location,
+    bool fOut,
+    const std::string& literal
+    ) : ExpressionNode(pContext, location)
+{
+    _fOut = fOut;
+    _literal = literal;
+}
+
 ASTNode* FunctionCallParamNode::DuplicateNodeImpl()
 {
     return new FunctionCallParamNode(GetContext(), GetLocation(), _fOut, _literal);

@@ -1,5 +1,5 @@
 #define YYDEBUG 1
-#include "VSharpCompilerContext.h"
+#include "ParserContext.h"
 #include "VSharpCompiler.h"
 #include "OutputContext.h"
 #include "ASTTree.h"

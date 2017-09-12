@@ -1,6 +1,6 @@
 #include "IdentifierNode.h"
 #include "VariableInfo.h"
-#include "VSharpCompilerContext.h"
+#include "ParserContext.h"
 #include "ModuleDefinitionNode.h"
 #include "FunctionDeclaratorNode.h"
 #include "StaticTypeInfo.h"

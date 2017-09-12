@@ -2,7 +2,7 @@
 #include "VariableInfo.h"
 #include "ModuleDefinitionNode.h"
 #include "ModuleParameterNode.h"
-#include "VSharpCompilerContext.h"
+#include "ParserContext.h"
 #include "TypeNode.h"
 #include "FunctionInfo.h"
 #include "FunctionDeclaratorNode.h"

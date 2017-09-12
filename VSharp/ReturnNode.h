@@ -1,6 +1,6 @@
 #pragma once
 
-#include "VSharpCompilerContext.h"
+#include "ASTNode.h"
 
 class ReturnNode : public ASTNode
 {

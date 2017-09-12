@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ExpressionNode.h"
-#include "VSharpCompilerContext.h"
+#include "ParserContext.h"
 
 class ImportStatementNode : public ASTNode
 {

@@ -1,8 +1,6 @@
 #pragma once
 
 #include "ASTNode.h"
-#include "VSharpCompilerContext.h"
-#include "VSharp.tab.h"
 
 class TypeNode;
 

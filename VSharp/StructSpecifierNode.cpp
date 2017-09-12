@@ -2,7 +2,7 @@
 #include "TypeCollection.h"
 #include "StructDeclarationNode.h"
 #include "StructTypeInfo.h"
-#include "VSharpCompilerContext.h"
+#include "ParserContext.h"
 
 StructSpecifierNode::StructSpecifierNode(ParserContext* pContext, const YYLTYPE &location, ASTNode* pTypeNode) : ASTNode(pContext, location)
 {

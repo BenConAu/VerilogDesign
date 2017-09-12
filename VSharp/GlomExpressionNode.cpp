@@ -1,7 +1,7 @@
 #include "GlomExpressionNode.h"
 #include "VariableInfo.h"
 #include "ModuleDefinitionNode.h"
-#include "VSharpCompilerContext.h"
+#include "ParserContext.h"
 #include "ListNode.h"
 
 GlomExpressionNode::GlomExpressionNode(

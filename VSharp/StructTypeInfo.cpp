@@ -1,5 +1,5 @@
 #include "StructTypeInfo.h"
-#include "VSharpCompilerContext.h"
+#include "ParserContext.h"
 #include "VariableInfo.h"
 
 void StructTypeInfo::AddMember(

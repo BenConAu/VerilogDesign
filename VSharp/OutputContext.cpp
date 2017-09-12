@@ -1,5 +1,5 @@
 #include "OutputContext.h"
-#include "VSharpCompilerContext.h"
+#include "ParserContext.h"
 #include "ASTTree.h"
 
 OutputContext::OutputContext(const char* pszOutputFile, DebugContext* pDebugContext)

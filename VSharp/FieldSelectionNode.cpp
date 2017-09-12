@@ -3,7 +3,7 @@
 #include "StaticTypeInfo.h"
 #include "VariableInfo.h"
 #include "ModuleDefinitionNode.h"
-#include "VSharpCompilerContext.h"
+#include "ParserContext.h"
 #include "IdentifierNode.h"
 #include "FunctionCallNode.h"
 

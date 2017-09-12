@@ -1,5 +1,5 @@
 #include "ModuleTypeInfo.h"
-#include "VSharpCompilerContext.h"
+#include "ParserContext.h"
 #include "ModuleDefinitionNode.h"
 #include "ExpressionNode.h"
 #include "VariableInfo.h"

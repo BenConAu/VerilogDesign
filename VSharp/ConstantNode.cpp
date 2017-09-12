@@ -1,5 +1,5 @@
 #include "ConstantNode.h"
-#include "VSharpCompilerContext.h"
+#include "ParserContext.h"
 #include "VSharp.tab.h"
 #include "RegisterTypeInfo.h"
 #include <string.h>

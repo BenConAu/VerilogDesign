@@ -1,7 +1,7 @@
 %{
 
 #include "ASTTree.h"
-#include "VSharpCompilerContext.h"
+#include "ParserContext.h"
 #include "VSharp.tab.h"
 
 #define YY_EXTRA_TYPE ParserContext*

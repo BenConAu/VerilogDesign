@@ -1,5 +1,5 @@
 #include "VariableInfo.h"
-#include "VSharpCompilerContext.h"
+#include "ParserContext.h"
 #include "ModuleDefinitionNode.h"
 #include "ExpressionResult.h"
 

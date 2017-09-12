@@ -563,7 +563,7 @@ static yyconst flex_int32_t yy_rule_can_match_eol[66] =
 #line 2 "VSharp.l"
 
 #include "ASTTree.h"
-#include "VSharpCompilerContext.h"
+#include "ParserContext.h"
 #include "VSharp.tab.h"
 
 #define YY_EXTRA_TYPE ParserContext*

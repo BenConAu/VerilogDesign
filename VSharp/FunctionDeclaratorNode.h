@@ -1,6 +1,6 @@
 #pragma once
 
-#include "VSharpCompilerContext.h"
+#include "ParserContext.h"
 #include "ASTNode.h"
 #include "TypeNode.h"
 #include "FunctionParameterNode.h"

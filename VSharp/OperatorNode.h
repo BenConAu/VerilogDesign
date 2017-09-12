@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ExpressionNode.h"
-#include "VSharpCompilerContext.h"
 #include "OperatorInfo.h"
 
 class OperatorNode : public ExpressionNode

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "VSharpCompilerContext.h"
 #include "ASTNode.h"
 
 class TransitionNode : public ASTNode

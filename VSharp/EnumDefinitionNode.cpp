@@ -2,7 +2,7 @@
 #include "TypeCollection.h"
 #include "StructSpecifierNode.h"
 #include "TypeNode.h"
-#include "VSharpCompilerContext.h"
+#include "ParserContext.h"
 
 EnumDefinitionNode::EnumDefinitionNode(
     ParserContext* pContext, 

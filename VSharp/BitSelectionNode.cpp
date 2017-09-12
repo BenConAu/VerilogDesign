@@ -3,7 +3,7 @@
 #include "StructTypeInfo.h"
 #include "VariableInfo.h"
 #include "ModuleDefinitionNode.h"
-#include "VSharpCompilerContext.h"
+#include "ParserContext.h"
 
 BitSelectionNode::BitSelectionNode(
     ParserContext *pContext,

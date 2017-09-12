@@ -1,5 +1,5 @@
 #include "StateDeclaratorNode.h"
-#include "VSharpCompilerContext.h"
+#include "ParserContext.h"
 #include "ModuleDefinitionNode.h"
 #include "OutputContext.h"
 

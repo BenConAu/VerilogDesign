@@ -66,7 +66,7 @@
 
 #define YYDEBUG 1
 
-#include "VSharpCompilerContext.h"
+#include "ParserContext.h"
 #include "ASTTree.h"
 #include "VSharp.tab.h"
 
