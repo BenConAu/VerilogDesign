@@ -6,14 +6,12 @@
 class ImportStatementNode : public ASTNode
 {
 public:
-    ImportStatementNode(ParserContext* pContext, const YYLTYPE &location) : ASTNode(pContext, location)
-    {
-        _literal = pContext->GetLastString();
-    }
+    ImportStatementNode(ParserContext* pContext, const YYLTYPE &location);
 
-    void VerifyNodeImpl() override {}
+    void VerifyNodeImpl() override;
     const char* GetDebugName() override { return "ImportStatementNode"; }
 
 private:
     std::string _literal;
+    std::unique_ptr<ParserContext> _ImportedContext;
 };

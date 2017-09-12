@@ -44,7 +44,7 @@ public:
         throw std::string(errorText);
     }
 
-    VSharpCompiler* GetCompiler();
+    VSharpCompiler* GetCompiler() { return _pCompiler; }
     TypeCollection* GetTypeCollection();
     SymbolTable* GetSymbolTable();
     DebugContext* GetDebugContext() { return &_DebugContext; }

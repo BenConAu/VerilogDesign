@@ -126,6 +126,7 @@ PSLcc: lex.yy.c \
 	   GlomExpressionNode.cpp \
 	   IdentifierNode.cpp \
 	   IfStatementNode.cpp \
+	   ImportStatementNode.cpp \
 	   IndexSelectionNode.cpp \
 	   ModuleDefinitionNode.cpp \
 	   ModuleParameterNode.cpp \
