@@ -1,5 +1,6 @@
 #include "ASTNode.h"
 #include "VSharpCompilerContext.h"
+#include "OutputContext.h"
 
 void ASTNode::DumpNodeImpl()
 {

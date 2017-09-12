@@ -3,7 +3,7 @@
 #include "VariableInfo.h"
 #include "VSharpCompilerContext.h"
 #include "ModuleDefinitionNode.h"
-#include "../PhaethonObjWriter/ObjWriter.h"
+#include "OutputContext.h"
 
 DriveDefinitionNode::DriveDefinitionNode(
     ParserContext *pContext,

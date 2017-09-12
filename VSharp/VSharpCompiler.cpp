@@ -1,5 +1,6 @@
 #define YYDEBUG 1
 #include "VSharpCompilerContext.h"
+#include "OutputContext.h"
 #include "ASTTree.h"
 #include "VSharp.tab.h"
 #define YY_EXTRA_TYPE ParserContext *

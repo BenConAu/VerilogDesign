@@ -3,7 +3,7 @@
 #include "ModuleDefinitionNode.h"
 #include "ExpressionNode.h"
 #include "ListNode.h"
-#include "../PhaethonObjWriter/ObjWriter.h"
+#include "OutputContext.h"
 
 IfStatementNode::IfStatementNode(ParserContext *pContext, YYLTYPE location, ASTNode *pTrue, ASTNode *pFalse) : StatementNode(pContext, location)
 {

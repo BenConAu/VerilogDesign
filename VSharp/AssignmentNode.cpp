@@ -2,6 +2,7 @@
 #include "VSharpCompilerContext.h"
 #include "ModuleDefinitionNode.h"
 #include "DriveDefinitionNode.h"
+#include "OutputContext.h"
 
 AssignmentNode::AssignmentNode(
     ParserContext *pContext, 

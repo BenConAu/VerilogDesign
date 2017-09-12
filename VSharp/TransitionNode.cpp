@@ -2,6 +2,7 @@
 #include "ExpressionNode.h"
 #include "ModuleDefinitionNode.h"
 #include "StateInfo.h"
+#include "OutputContext.h"
 
 void TransitionNode::PostProcessNodeImpl(OutputContext* pContext)
 {

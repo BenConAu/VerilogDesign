@@ -57,6 +57,8 @@ PSLcc: lex.yy.c \
 	   ModuleTypeInfo.h \
 	   OperatorNode.cpp \
 	   OperatorNode.h \
+	   OutputContext.cpp \
+	   OutputContext.h \
 	   RegisterTypeInfo.cpp \
 	   RegisterTypeInfo.h \
 	   ReturnNode.cpp \
@@ -127,6 +129,7 @@ PSLcc: lex.yy.c \
 	   ModuleParameterNode.cpp \
 	   ModuleTypeInfo.cpp \
 	   OperatorNode.cpp \
+	   OutputContext.cpp \
 	   RegisterTypeInfo.cpp \
 	   ReturnNode.cpp \
 	   StateInfo.cpp \

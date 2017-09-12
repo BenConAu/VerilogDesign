@@ -8,6 +8,7 @@
 #include "VariableDeclarationNode.h"
 #include "StateDeclaratorNode.h"
 #include "FunctionDeclaratorNode.h"
+#include "OutputContext.h"
 
 ModuleDefinitionNode::ModuleDefinitionNode(
     ParserContext* pContext, 

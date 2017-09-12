@@ -1,6 +1,7 @@
 #include "ExpressionStatementNode.h"
 #include "VSharpCompilerContext.h"
 #include "FunctionCallNode.h"
+#include "OutputContext.h"
 
 ExpressionStatementNode::ExpressionStatementNode(
     ParserContext* pContext, 

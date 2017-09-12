@@ -1,7 +1,7 @@
 #include "StateDeclaratorNode.h"
 #include "VSharpCompilerContext.h"
 #include "ModuleDefinitionNode.h"
-#include "../PhaethonObjWriter/ObjWriter.h"
+#include "OutputContext.h"
 
 StateDeclaratorNode::StateDeclaratorNode(
     ParserContext *pContext,

@@ -5,6 +5,7 @@
 #include "TypeNode.h"
 #include "VariableLocationType.h"
 #include "VariableInfo.h"
+#include "OutputContext.h"
 
 VariableDeclarationNode::VariableDeclarationNode(
     ParserContext *pContext,

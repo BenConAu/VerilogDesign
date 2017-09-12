@@ -2,6 +2,7 @@
 #include "ModuleDefinitionNode.h"
 #include "TypeNode.h"
 #include "VariableInfo.h"
+#include "OutputContext.h"
 
 void ModuleParameterNode::VerifyNodeImpl()
 {
