@@ -12,30 +12,26 @@
 
 class FunctionDeclaratorNode;
 class FunctionCallNode;
+class VSharpCompiler;
 
-class PSLCompilerContext
+class DebugContext
 {
-  public:
-    PSLCompilerContext(
-        const char *pszInput);
-        
-    ~PSLCompilerContext();
+public:
+    int _indent = 0;
+    
+    void PrintIndent()
+    {
+        for (int i = 0; i < _indent; i++)
+        {
+            printf("  ");
+        }
+    }    
+};
 
-    void UserAction(void *pLocation, const char *pszText);
-    void Parse();
-    void Output();
-    void SetEntryPoint(FunctionDeclaratorNode *pNode);
-
-    int AddSymbol(const char *pszSymbol);
-    void AddTypeDef(ASTNode *pNode);
-    void AddModuleDef(ASTNode *pNode);
-    void AddGlobal(ASTNode *pNode);
-    void AddImport(ASTNode *pNode);
-
-    void ImportContext(PSLCompilerContext* pChildContext);
-
-    void OutputString(
-        const char* pszString);
+class OutputContext
+{
+public:
+    OutputContext(const char* pszOutputFile, DebugContext* pDebugContext);
 
     void OutputLine(
         const char* pszLine
@@ -55,22 +51,45 @@ class PSLCompilerContext
     void BeginLine();
     void EndLine();
 
+    void OutputString(const char* pszString);
+
     void IncreaseIndent() { _outputIndent++; }
     void DecreaseIndent() { _outputIndent--; }
 
-    int _indent = 0;
+    void Finish();
+
+    // Debug
+    DebugContext* GetDebugContext() { return _pDebugContext; }
+
+private:
+    int _outputIndent = 0;
+    
+    std::vector<std::unique_ptr<VerilogWriter>> _writers;
+
+    DebugContext* _pDebugContext;
+};
+
+class PSLCompilerContext
+{
+public:
+    PSLCompilerContext(const char *pszInputFile, VSharpCompiler* pCompiler);
+    ~PSLCompilerContext();
+
     void *pScanner;
-
-    void PrintIndent()
-    {
-        for (int i = 0; i < _indent; i++)
-        {
-            printf("  ");
-        }
-    }
-
-    const std::string& GetSymbolString(int symIndex) { return _symbols[symIndex]; }
-
+    
+public:
+    void Parse();    
+    void Process(OutputContext* pContext);
+    
+    // Called from parser
+    void AddTypeDef(ASTNode *pNode);
+    void AddModuleDef(ASTNode *pNode);
+    void AddGlobal(ASTNode *pNode);
+    void AddImport(ASTNode *pNode);    
+    void UserAction(void *pLocation, const char *pszText);
+    void StartString() { _currentString = ""; }
+    void AppendString(char* pszText) { _currentString.push_back(pszText[0]); }
+    
     void ReportError(const YYLTYPE &location, const char *pError)
     {
         char errorText[256];
@@ -78,28 +97,49 @@ class PSLCompilerContext
         throw std::string(errorText);
     }
 
-    void StartString() { _currentString = ""; }
-    void AppendString(char* pszText) { _currentString.push_back(pszText[0]); }
-    const std::string GetLastString() { return _currentString; }
-    TypeCollection* GetTypeCollection() { return &_typeCollection; }
-    SymbolTable* GetSymbolTable() { return &_symbolTable; }
-
-    void DumpTree();
-
-  private:
-    SymbolTable _symbolTable;
-    TypeCollection _typeCollection;
-    std::vector<std::string> _symbols;
+    VSharpCompiler* GetCompiler();
+    TypeCollection* GetTypeCollection();
+    SymbolTable* GetSymbolTable();
+    DebugContext* GetDebugContext() { return &_DebugContext; }
+    int AddSymbol(const char *pszSymbol);    
     
-    std::deque<std::unique_ptr<ASTNode>> _rootNodes;
-    std::vector<std::unique_ptr<VerilogWriter>> _writers;
-    size_t _numStructs;
-    size_t _numGlobals;
-    int _outputIndent = 0;
+    // Called from nodes
+    const std::string GetLastString() { return _currentString; }
+    const std::string& GetSymbolString(int symIndex);
 
-    // Verification stuff
-    FunctionDeclaratorNode *_pEntryPoint;
+    // Debugging
+    void DumpTree();
+            
+private:
+    // The compiler that the context lives in
+    VSharpCompiler* _pCompiler;
 
     // Current string
     std::string _currentString;
+
+    std::deque<std::unique_ptr<ASTNode>> _rootNodes;
+    size_t _numStructs;
+    size_t _numGlobals;
+
+    // For debugging
+    DebugContext _DebugContext;
+};
+
+class VSharpCompiler
+{
+  public:
+    VSharpCompiler();
+
+    int AddSymbol(const char *pszSymbol);    
+    TypeCollection* GetTypeCollection();
+    SymbolTable* GetSymbolTable();
+    const std::string& GetSymbolString(int symIndex);
+    
+    void ImportContext(PSLCompilerContext* pChildContext);
+
+  private:
+    PSLCompilerContext* _pParent;
+    SymbolTable _symbolTable;
+    TypeCollection _typeCollection;
+    std::vector<std::string> _symbols;
 };

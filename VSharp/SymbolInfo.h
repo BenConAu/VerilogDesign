@@ -1,27 +1,27 @@
 #pragma once
 
-class PSLCompilerContext;
+class VSharpCompiler;
 class ModuleDefinitionNode;
 
 class SymbolInfo
 {
   public:
     SymbolInfo(
-        PSLCompilerContext *pContext,   // The context that this symbol lives in
-        ModuleDefinitionNode *pScope, // The scope of the symbol
+        VSharpCompiler *pCompiler,      // The context that this symbol lives in
+        ModuleDefinitionNode *pScope,   // The scope of the symbol
         int symIndex                    // The symbol index for the identifier for the symbol
         );
 
     virtual ~SymbolInfo() {}
 
-    PSLCompilerContext *GetContext() { return _pContext; }
+    VSharpCompiler *GetCompiler() { return _pCompiler; }
     int GetSymbolIndex() const { return _symIndex; }
     const char *GetSymbol();
     ModuleDefinitionNode *GetScope() { return _pScope; }
 
   private:
     // The compiler context
-    PSLCompilerContext *_pContext;
+    VSharpCompiler *_pCompiler;
 
     // Symbol index from lexer
     int _symIndex;

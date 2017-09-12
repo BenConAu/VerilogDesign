@@ -8,6 +8,9 @@
 #include "VSharp.tab.h"
 
 class PSLCompilerContext;
+class VSharpCompiler;
+class DebugContext;
+class OutputContext;
 
 class ASTNode
 {
@@ -24,9 +27,9 @@ public:
     }
 
     void AddNode(ASTNode* pNode);
-    void ProcessNode();
+    void ProcessNode(OutputContext* pOutputContext);
 
-    void VerifyNode();
+    void VerifyNode(DebugContext* pContext);
 
     template<typename T>
     T* GetTypedParent()
@@ -72,9 +75,9 @@ public:
     virtual const char* GetDebugName() = 0;
     virtual void PreVerifyNodeImpl() {}
     virtual void VerifyNodeImpl() {}
-    virtual bool PreProcessNodeImpl() { return true; }
-    virtual void ProcessNodeImpl();
-    virtual void PostProcessNodeImpl() {}
+    virtual bool PreProcessNodeImpl(OutputContext* pContext) { return true; }
+    virtual void ProcessNodeImpl(OutputContext* pOutputContext);
+    virtual void PostProcessNodeImpl(OutputContext* pContext) {}
     virtual ASTNode* DuplicateNode();
     virtual ASTNode* DuplicateNodeImpl();
 
@@ -88,7 +91,7 @@ public:
     int GetChildIndex(ASTNode* pNode);
 
     PSLCompilerContext* GetContext() { return _pContext; }
-    void DumpNode();    
+    void DumpNode(DebugContext* pContext);    
     virtual void DumpNodeImpl();
 
 protected:

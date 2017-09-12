@@ -112,14 +112,14 @@ ASTNode* FunctionDeclaratorNode::ExpandFunction(FunctionCallNode* pCall, Stateme
     return pExpanded;
 }
 
-void FunctionDeclaratorNode::ProcessNodeImpl()
+void FunctionDeclaratorNode::ProcessNodeImpl(OutputContext* pContext)
 {
     if (_pCallNode != nullptr)
     {
         //printf("Processing a function while expanding it\n");
 
         // Since somebody is expanding a function, actually do the processing
-        ASTNode::ProcessNodeImpl();
+        ASTNode::ProcessNodeImpl(pContext);
 
         ListNode* pListNode = dynamic_cast<ListNode*>(GetChild(GetChildCount() - 1));
         if (pListNode == nullptr)

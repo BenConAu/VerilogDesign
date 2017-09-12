@@ -4,22 +4,24 @@
 #define YY_EXTRA_TYPE PSLCompilerContext *
 #include "lex.h"
 
-PSLCompilerContext::PSLCompilerContext(
-    const char *pszInputFile
-    ) : _symbolTable(this)
+VSharpCompiler::VSharpCompiler() : _symbolTable(this)
+{
+    _symbolTable.AddBuiltin();    
+}
+
+OutputContext::OutputContext(const char* pszOutputFile, DebugContext* pDebugContext)
+{
+    _writers.push_back(std::unique_ptr<VerilogWriter>(new VerilogWriter(pszOutputFile)));
+    _pDebugContext = pDebugContext;
+}
+
+PSLCompilerContext::PSLCompilerContext(const char *pszInputFile, VSharpCompiler* pCompiler)
 {
 	FILE *pFile = ::fopen(pszInputFile, "r");
 
-    _pEntryPoint = nullptr;
+    _pCompiler = pCompiler;
     _numStructs = 0;
     _numGlobals = 0;
-
-    _symbolTable.AddBuiltin();
-
-    std::string base = pszInputFile;
-    base = base.substr(0, base.length() - 3);
-
-    _writers.push_back(std::unique_ptr<VerilogWriter>(new VerilogWriter((base + ".sv").c_str())));
 
     yylex_init(&pScanner);
     yyset_extra(this, pScanner);
@@ -34,6 +36,11 @@ PSLCompilerContext::~PSLCompilerContext()
 }
 
 int PSLCompilerContext::AddSymbol(const char *pszSymbol)
+{
+    return _pCompiler->AddSymbol(pszSymbol);
+}
+
+int VSharpCompiler::AddSymbol(const char *pszSymbol)
 {
     //    printf("Adding symbol\n");
     for (size_t i = 0; i < _symbols.size(); i++)
@@ -91,11 +98,11 @@ void PSLCompilerContext::Parse()
     // Verify the tree
     for (size_t i = 0; i < _rootNodes.size(); i++)
     {
-        _rootNodes[i]->VerifyNode();
+        _rootNodes[i]->VerifyNode(&_DebugContext);
     }
 }
 
-void PSLCompilerContext::Output()
+void PSLCompilerContext::Process(OutputContext* pContext)
 {
     //printf("Doing Process pass\n");
     //DumpTree();
@@ -103,9 +110,12 @@ void PSLCompilerContext::Output()
     // Process the tree
     for (size_t i = 0; i < _rootNodes.size(); i++)
     {
-        _rootNodes[i]->ProcessNode();
+        _rootNodes[i]->ProcessNode(pContext);
     }
+}
 
+void OutputContext::Finish()
+{
     //printf("Doing Finish pass\n");
 
     // Code output is complete
@@ -113,16 +123,6 @@ void PSLCompilerContext::Output()
     {
         _writers[i]->FinishCode();
     }
-}
-
-void PSLCompilerContext::SetEntryPoint(FunctionDeclaratorNode *pEntryPoint)
-{
-    if (_pEntryPoint != nullptr)
-    {
-        throw "Cannot have two entry points";
-    }
-
-    _pEntryPoint = pEntryPoint;
 }
 
 void PSLCompilerContext::UserAction(void *pVoidLocation, const char *pszText)
@@ -145,7 +145,7 @@ void PSLCompilerContext::UserAction(void *pVoidLocation, const char *pszText)
     }
 }
 
-void PSLCompilerContext::OutputString(const char *pszLabel)
+void OutputContext::OutputString(const char *pszLabel)
 {
     for (int i = 0; i < _writers.size(); i++)
     {
@@ -153,7 +153,7 @@ void PSLCompilerContext::OutputString(const char *pszLabel)
     }
 }
 
-void PSLCompilerContext::OutputLine(
+void OutputContext::OutputLine(
     const char* pszLine
     )
 {
@@ -162,7 +162,7 @@ void PSLCompilerContext::OutputLine(
     EndLine();
 }
 
-void PSLCompilerContext::BeginLine()
+void OutputContext::BeginLine()
 {
     for (int i = 0; i < _outputIndent; i++)
     {
@@ -170,7 +170,7 @@ void PSLCompilerContext::BeginLine()
     }
 }
 
-void PSLCompilerContext::EndLine()
+void OutputContext::EndLine()
 {
     OutputString("\n");
 }
@@ -180,11 +180,36 @@ void PSLCompilerContext::DumpTree()
     printf("Dumping tree\n");
     for (size_t i = 0; i < _rootNodes.size(); i++)
     {
-        _rootNodes[i]->DumpNode();
+        _rootNodes[i]->DumpNode(&_DebugContext);
     }    
 }
 
-void PSLCompilerContext::ImportContext(PSLCompilerContext* pChildContext)
+const std::string& VSharpCompiler::GetSymbolString(int symIndex) 
 {
+    return _symbols[symIndex];         
+}
 
+const std::string& PSLCompilerContext::GetSymbolString(int symIndex) 
+{
+    return _pCompiler->GetSymbolString(symIndex);         
+}
+
+TypeCollection* VSharpCompiler::GetTypeCollection() 
+{
+    return &_typeCollection;
+}
+
+TypeCollection* PSLCompilerContext::GetTypeCollection() 
+{
+    return _pCompiler->GetTypeCollection();
+}
+
+SymbolTable* VSharpCompiler::GetSymbolTable() 
+{ 
+    return &_symbolTable; 
+}
+
+SymbolTable* PSLCompilerContext::GetSymbolTable() 
+{ 
+    return _pCompiler->GetSymbolTable(); 
 }

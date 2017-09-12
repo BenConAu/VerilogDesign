@@ -17,17 +17,17 @@ void DriveListDefinitionNode::VerifyNodeImpl()
 {
 }
 
-bool DriveListDefinitionNode::PreProcessNodeImpl()
+bool DriveListDefinitionNode::PreProcessNodeImpl(OutputContext* pContext)
 {
-    GetContext()->OutputLine("initial");
-    GetContext()->OutputLine("begin");
-    GetContext()->IncreaseIndent();
+    pContext->OutputLine("initial");
+    pContext->OutputLine("begin");
+    pContext->IncreaseIndent();
 
     return true;
 }
 
-void DriveListDefinitionNode::PostProcessNodeImpl()
+void DriveListDefinitionNode::PostProcessNodeImpl(OutputContext* pContext)
 {
-    GetContext()->DecreaseIndent();
-    GetContext()->OutputLine("end");
+    pContext->DecreaseIndent();
+    pContext->OutputLine("end");
 }

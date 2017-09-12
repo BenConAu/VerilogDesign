@@ -16,4 +16,5 @@ public:
     
     const char* GetDebugName() override { return "ExpressionStatementNode"; }
     ASTNode* DuplicateNodeImpl() override;
+    void PostProcessNodeImpl(OutputContext* pContext) override;
 };

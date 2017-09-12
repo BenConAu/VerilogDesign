@@ -19,7 +19,7 @@ public:
     }
 
     void VerifyNodeImpl() override;
-    void PostProcessNodeImpl() override;
+    void PostProcessNodeImpl(OutputContext* pContext) override;
     const char* GetDebugName() override { return "ModuleParameterNode"; }
     int GetSymbolIndex() const { return _symIndex; }
     bool IsOutParam() const { return _fOut; }

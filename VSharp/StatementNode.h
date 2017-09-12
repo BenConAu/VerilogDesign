@@ -10,7 +10,7 @@ class StatementNode : public ASTNode
 public:
     StatementNode(PSLCompilerContext* pContext, const YYLTYPE &location);
 
-    bool PreProcessNodeImpl() override;
+    bool PreProcessNodeImpl(OutputContext* pContext) override;
     void DumpNodeImpl() override;
     
     void SetCallReplacement(FunctionCallNode* pCallNode, ASTNode* pReplacement);

@@ -3,7 +3,7 @@
 #include "ModuleDefinitionNode.h"
 #include "StateInfo.h"
 
-void TransitionNode::PostProcessNodeImpl()
+void TransitionNode::PostProcessNodeImpl(OutputContext* pContext)
 {
     // What module are we transitioning in
     ModuleDefinitionNode *pFunc = GetTypedParent<ModuleDefinitionNode>();
@@ -12,7 +12,7 @@ void TransitionNode::PostProcessNodeImpl()
     StateInfo* pInfo = dynamic_cast<StateInfo*>(GetContext()->GetSymbolTable()->GetInfo(_symIndex, pFunc));
 
     // Write out the state change
-    GetContext()->OutputLine("fsmState <= `__%s;", pInfo->GetSymbol());
+    pContext->OutputLine("fsmState <= `__%s;", pInfo->GetSymbol());
 }
 
 ASTNode* TransitionNode::DuplicateNodeImpl()

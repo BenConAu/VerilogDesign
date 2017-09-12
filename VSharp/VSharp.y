@@ -96,7 +96,6 @@ class PSLCompilerContext;
 %type <pNode> postfix_expression
 %type <pNode> multiplicative_expression
 %type <pNode> additive_expression
-%type <pNode> assignment_expression
 %type <pNode> expression_statement
 %type <pNode> expression
 %type <pNode> statement
@@ -149,6 +148,7 @@ class PSLCompilerContext;
 %type <pNode> drive_definition
 %type <pNode> type_name_specifier
 %type <pNode> import_statement
+%type <pNode> assignment_statement
 
 %%
 
@@ -185,6 +185,7 @@ statement_list:
 
 statement:
       expression_statement                                          { $$ = $1; }
+    | assignment_statement                                          { $$ = $1; }
     | selection_statement                                           { $$ = $1; }
     | declaration_statement                                         { $$ = $1; }
     | transition_statement                                          { $$ = $1; }
@@ -195,6 +196,14 @@ expression_statement:
       expression SEMICOLON                                          { $$ = new ExpressionStatementNode(pContext, @$, $1); }
     ;
 
+assignment_statement:
+      postfix_expression assignment_operator expression SEMICOLON   { $$ = new AssignmentNode(pContext, @$, $1, $3); }
+    ;
+
+assignment_operator:
+      EQUAL
+    ;
+
 selection_statement:
       IF_TOKEN LEFT_PAREN expression RIGHT_PAREN selection_rest_statement 
                                                                     { $$ = $5; dynamic_cast<IfStatementNode*>($$)->SetExpression($3); }
@@ -203,10 +212,6 @@ selection_statement:
 selection_rest_statement:
       compound_statement ELSE_TOKEN compound_statement              { $$ = new IfStatementNode(pContext, @$, $1, $3); }
     | compound_statement                                            { $$ = new IfStatementNode(pContext, @$, $1, nullptr); }
-    ;
-
-expression:
-      assignment_expression                                         { $$ = $1; }
     ;
 
 unary_expression:
@@ -258,13 +263,8 @@ logical_or_expression:
     | logical_or_expression OR_OP logical_and_expression            { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::LogicalOr); } 
     ;
 
-assignment_expression:
+expression:
       logical_or_expression                                         { $$ = $1; }
-    | postfix_expression assignment_operator logical_or_expression  { $$ = new AssignmentNode(pContext, @$, $1, $3); }
-    ;
-
-assignment_operator:
-      EQUAL
     ;
 
 postfix_expression:
@@ -406,7 +406,7 @@ drive_statement_list:
     ;
 
 drive_definition:
-      INTCONSTANT COLON assignment_expression SEMICOLON             { $$ = new DriveDefinitionNode(pContext, @$, $1, $3); }
+      INTCONSTANT COLON assignment_statement                        { $$ = new DriveDefinitionNode(pContext, @$, $1, $3); }
     | INTCONSTANT COLON FINISH_TOKEN SEMICOLON                      { $$ = new DriveDefinitionNode(pContext, @$, $1, nullptr); }
     ;
 
@@ -452,7 +452,7 @@ function_call_header:
     ;
 
 fn_call_arg:
-      assignment_expression                                         { $$ = new FunctionCallParamNode(pContext, @$, false, $1); }
+      expression                                                    { $$ = new FunctionCallParamNode(pContext, @$, false, $1); }
     | OUT_TOKEN variable_identifier                                 { $$ = new FunctionCallParamNode(pContext, @$, true, $2); }
     | STRINGLITERAL                                                 { $$ = new FunctionCallParamNode(pContext, @$); }
     ;

@@ -20,7 +20,7 @@ void StatementNode::DumpNodeImpl()
     );    
 }
 
-bool StatementNode::PreProcessNodeImpl()
+bool StatementNode::PreProcessNodeImpl(OutputContext* pContext)
 {
     //printf("PreProcess for %p : %s\n", this, GetDebugName());
     

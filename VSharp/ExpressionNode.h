@@ -13,7 +13,7 @@ public:
     ExpressionNode(PSLCompilerContext* pContext, const YYLTYPE &location);
 
     TypeInfo* GetTypeInfo();
-    void PostProcessNodeImpl() override;
+    void PostProcessNodeImpl(OutputContext* pContext) override;
     void DumpNodeImpl() override;
 
     ExpressionResult* TakeResult();

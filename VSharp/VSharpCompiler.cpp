@@ -21,11 +21,16 @@ int main(int argc, char **argv)
 {
     try
     {
-		//yydebug = 1;
-	    PSLCompilerContext context(argv[1]);
+        std::string base = argv[1];
+        base = base.substr(0, base.length() - 3);
 
+        //yydebug = 1;
+        VSharpCompiler compiler;
+        PSLCompilerContext context(argv[1], &compiler);
+        OutputContext outputContext((base + ".sv").c_str(), context.GetDebugContext());
         context.Parse();
-        context.Output();
+        context.Process(&outputContext);
+        outputContext.Finish();
     }
     catch (char *pszMessage)
     {

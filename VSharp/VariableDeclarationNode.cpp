@@ -55,7 +55,7 @@ void VariableDeclarationNode::PreVerifyNodeImpl()
         pInfo);
 }
 
-void VariableDeclarationNode::PostProcessNodeImpl()
+void VariableDeclarationNode::PostProcessNodeImpl(OutputContext* pContext)
 {
     ModuleDefinitionNode *pModule = GetTypedParent<ModuleDefinitionNode>();
 
@@ -67,7 +67,7 @@ void VariableDeclarationNode::PostProcessNodeImpl()
     std::string decl = pInfo->GetTypeInfo()->GetDeclaration(pInfo, pInitExpr);
 
     // This node owns putting the semicolon on it
-    GetContext()->OutputLine("%s;", decl.c_str());    
+    pContext->OutputLine("%s;", decl.c_str());    
 }
 
 TypeNode* VariableDeclarationNode::GetTypeNode()

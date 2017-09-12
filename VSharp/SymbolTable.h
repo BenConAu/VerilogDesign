@@ -6,7 +6,7 @@
 #include "SymbolInfo.h"
 #include "TypeModifier.h"
 
-class PSLCompilerContext;
+class VSharpCompiler;
 class VariableInfo;
 class FunctionInfo;
 class TypeInfo;
@@ -19,7 +19,7 @@ enum class VariableLocationType;
 class SymbolTable
 {
   public:
-    SymbolTable(PSLCompilerContext *pContext);
+    SymbolTable(VSharpCompiler *pCompiler);
     void AddBuiltin();
 
     VariableInfo *AddVariable(
@@ -48,6 +48,6 @@ class SymbolTable
         );
 
   private:
-    PSLCompilerContext *_pContext;
+    VSharpCompiler *_pCompiler;
     std::multimap<int, std::unique_ptr<SymbolInfo>> _symbols;
 };

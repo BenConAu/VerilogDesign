@@ -35,7 +35,7 @@ void ModuleParameterNode::VerifyNodeImpl()
         );
 }
 
-void ModuleParameterNode::PostProcessNodeImpl()
+void ModuleParameterNode::PostProcessNodeImpl(OutputContext* pContext)
 {
     ModuleDefinitionNode *pModule = GetTypedParent<ModuleDefinitionNode>();
 
@@ -43,7 +43,7 @@ void ModuleParameterNode::PostProcessNodeImpl()
     VariableInfo* pInfo = dynamic_cast<VariableInfo*>(GetContext()->GetSymbolTable()->GetInfo(_symIndex, pModule));
     const char* pszModifier = _fOut ? "output reg" : "input wire";
 
-    GetContext()->OutputLine(
+    pContext->OutputLine(
         "%s[%d:0] %s;", 
         pszModifier, 
         pInfo->GetTypeInfo()->GetBitLength() - 1, 

@@ -14,7 +14,7 @@ class TransitionNode : public ASTNode
         _symIndex = symIndex;
     }
 
-    void PostProcessNodeImpl() override;
+    void PostProcessNodeImpl(OutputContext* pContext) override;
     ASTNode* DuplicateNodeImpl() override;
     
     const char *GetDebugName() override { return "TransitionNode"; }

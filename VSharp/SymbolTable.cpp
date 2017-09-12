@@ -6,17 +6,17 @@
 #include "VSharp.tab.h"
 #include <sstream>
 
-SymbolTable::SymbolTable(PSLCompilerContext *pContext)
+SymbolTable::SymbolTable(VSharpCompiler *pCompiler)
 {
-    _pContext = pContext;
+    _pCompiler = pCompiler;
 }
 
 void SymbolTable::AddBuiltin()
 {
     FunctionInfo *pNewInfo = new FunctionInfo(
-        _pContext, 
-        _pContext->AddSymbol("__monitor"),
-        _pContext->GetTypeCollection()->GetVoidType(),
+        _pCompiler, 
+        _pCompiler->AddSymbol("__monitor"),
+        _pCompiler->GetTypeCollection()->GetVoidType(),
         -1,
         "$monitor");
     _symbols.emplace(std::make_pair(pNewInfo->GetSymbolIndex(), std::unique_ptr<SymbolInfo>(pNewInfo)));
@@ -38,7 +38,7 @@ VariableInfo *SymbolTable::AddVariable(
         }
     }
 
-    VariableInfo *pNewInfo = new VariableInfo(_pContext, pScope, symIndex, location, modifier, pTypeInfo);
+    VariableInfo *pNewInfo = new VariableInfo(_pCompiler, pScope, symIndex, location, modifier, pTypeInfo);
     _symbols.emplace(std::make_pair(symIndex, std::unique_ptr<SymbolInfo>(pNewInfo)));
     return pNewInfo;
 }
@@ -54,7 +54,7 @@ FunctionInfo *SymbolTable::AddFunction(
         return nullptr;
     }
 
-    FunctionInfo *pNewInfo = new FunctionInfo(_pContext, pFuncDecl, symIndex, pGenType);
+    FunctionInfo *pNewInfo = new FunctionInfo(_pCompiler, pFuncDecl, symIndex, pGenType);
     _symbols.emplace(std::make_pair(symIndex, std::unique_ptr<SymbolInfo>(pNewInfo)));
     return pNewInfo;
 }
@@ -69,7 +69,7 @@ StateInfo *SymbolTable::AddState(
         return nullptr;
     }
 
-    StateInfo *pNewInfo = new StateInfo(_pContext, pScope, symIndex);
+    StateInfo *pNewInfo = new StateInfo(_pCompiler, pScope, symIndex);
     _symbols.emplace(std::make_pair(symIndex, std::unique_ptr<SymbolInfo>(pNewInfo)));
     return pNewInfo;
 }
@@ -79,7 +79,7 @@ SymbolInfo *SymbolTable::GetInfo(
     int symIndex, 
     ModuleDefinitionNode *pScope)
 {
-    //printf("Attempting GetInfo of symbol %s\n", _pContext->GetSymbolString(symIndex].c_str());
+    //printf("Attempting GetInfo of symbol %s\n", _pCompiler->GetSymbolString(symIndex].c_str());
 
     for (auto iter = _symbols.lower_bound(symIndex); iter != _symbols.upper_bound(symIndex); iter++)
     {

@@ -25,7 +25,7 @@ void StateDeclaratorNode::VerifyNodeImpl()
         );    
 }
 
-bool StateDeclaratorNode::PreProcessNodeImpl()
+bool StateDeclaratorNode::PreProcessNodeImpl(OutputContext* pContext)
 {
     ModuleDefinitionNode *pFunc = GetTypedParent<ModuleDefinitionNode>();
 
@@ -33,20 +33,20 @@ bool StateDeclaratorNode::PreProcessNodeImpl()
     if (_identifier != -1)
     {
         pStateSymbolInfo = GetContext()->GetSymbolTable()->GetInfo(_identifier, pFunc);
-        GetContext()->OutputLine("`__%s: begin", pStateSymbolInfo->GetSymbol());
+        pContext->OutputLine("`__%s: begin", pStateSymbolInfo->GetSymbol());
     }
     else
     {
-        GetContext()->OutputLine("`__initial: begin");
+        pContext->OutputLine("`__initial: begin");
     }
 
-    GetContext()->IncreaseIndent();
+    pContext->IncreaseIndent();
 
     return true;
 }
 
-void StateDeclaratorNode::PostProcessNodeImpl()
+void StateDeclaratorNode::PostProcessNodeImpl(OutputContext* pContext)
 {
-    GetContext()->DecreaseIndent();
-    GetContext()->OutputLine("end");
+    pContext->DecreaseIndent();
+    pContext->OutputLine("end");
 }

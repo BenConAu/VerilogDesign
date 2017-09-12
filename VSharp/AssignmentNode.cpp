@@ -37,7 +37,7 @@ ASTNode* AssignmentNode::DuplicateNodeImpl()
     return new AssignmentNode(GetContext(), GetLocation());
 }
 
-void AssignmentNode::PostProcessNodeImpl()
+void AssignmentNode::PostProcessNodeImpl(OutputContext* pContext)
 {
     ModuleDefinitionNode *pFunc = GetTypedParent<ModuleDefinitionNode>();
     DriveDefinitionNode *pDrive = GetTypedParent<DriveDefinitionNode>();
@@ -62,12 +62,12 @@ void AssignmentNode::PostProcessNodeImpl()
     if (pDrive == nullptr)
     {
         // Regular NBA somewhere
-        GetContext()->OutputLine("%s <= %s;", leftResult->GetString().c_str(), rightResult->GetString().c_str());
+        pContext->OutputLine("%s <= %s;", leftResult->GetString().c_str(), rightResult->GetString().c_str());
     }
     else
     {
         // Part of an initial block, get the timing information
-        GetContext()->OutputLine(
+        pContext->OutputLine(
             "# %d %s = %s;", 
             pDrive->GetDelta(),
             leftResult->GetString().c_str(), 

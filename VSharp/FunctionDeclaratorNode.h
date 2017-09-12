@@ -42,7 +42,7 @@ public:
     
     void PreVerifyNodeImpl() override;
     void VerifyNodeImpl() override;
-    void ProcessNodeImpl() override;
+    void ProcessNodeImpl(OutputContext* pOutputContext) override;
     const char* GetDebugName() override { return "FunctionDeclaratorNode"; }
     const char* GetFunctionName() { return GetContext()->GetSymbolString(_symIndex).c_str(); }
 

@@ -28,9 +28,9 @@ public:
 
     void PreVerifyNodeImpl() override;
     void VerifyNodeImpl() override;
-    bool PreProcessNodeImpl() override;
-    void ProcessNodeImpl() override;
-    void PostProcessNodeImpl() override;
+    bool PreProcessNodeImpl(OutputContext* pContext) override;
+    void ProcessNodeImpl(OutputContext* pOutputContext) override;
+    void PostProcessNodeImpl(OutputContext* pContext) override;
     const char* GetDebugName() override { return "ModuleDefinitionNode"; }
 
     size_t GetParameterCount() { return _paramList.size(); }

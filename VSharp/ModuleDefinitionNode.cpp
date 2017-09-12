@@ -89,12 +89,12 @@ void ModuleDefinitionNode::VerifyNodeImpl()
     GetContext()->GetTypeCollection()->AddModuleType(_symIndex, pNewType);
 }
 
-bool ModuleDefinitionNode::PreProcessNodeImpl()
+bool ModuleDefinitionNode::PreProcessNodeImpl(OutputContext* pContext)
 {
     // Spit out the preamble
     ModuleTypeInfo* pInfo = GetContext()->GetTypeCollection()->GetModuleType(_symIndex);
-    GetContext()->OutputLine("module %s(", GetContext()->GetSymbolString(_symIndex).c_str());
-    GetContext()->IncreaseIndent();
+    pContext->OutputLine("module %s(", GetContext()->GetSymbolString(_symIndex).c_str());
+    pContext->IncreaseIndent();
 
 //    GetContext()->OutputLine("reset,");
 
@@ -110,7 +110,7 @@ bool ModuleDefinitionNode::PreProcessNodeImpl()
             // Only the first can be the first
             first = false;
 
-            GetContext()->OutputLine(
+            pContext->OutputLine(
                 "%s%s", 
                 GetContext()->GetSymbolTable()->GetInfo(pParam->GetSymbolIndex(), this)->GetSymbol(), 
                 pszComma);
@@ -118,28 +118,28 @@ bool ModuleDefinitionNode::PreProcessNodeImpl()
 
     }
 
-    GetContext()->OutputLine(");");
+    pContext->OutputLine(");");
 
     // Define states so they are readable
-    GetContext()->OutputLine("// State definitions");
+    pContext->OutputLine("// State definitions");
     for (size_t i = 0; i < _stateList.size(); i++)
     {
         const char* pszStateName = (i == 0) ? "initial" : GetContext()->GetSymbolTable()->GetInfo(_stateList[i]->GetIdentifier(), this)->GetSymbol();
 
-        GetContext()->OutputLine(
+        pContext->OutputLine(
             "`define __%s %d", 
             pszStateName,
             i);
     }
 
     // All modules have a reset and a clock
-    GetContext()->OutputLine("// inputs / outputs");
-    GetContext()->OutputLine("input wire reset;");
+    pContext->OutputLine("// inputs / outputs");
+    pContext->OutputLine("input wire reset;");
 
     return true;
 }
 
-void ModuleDefinitionNode::ProcessNodeImpl()
+void ModuleDefinitionNode::ProcessNodeImpl(OutputContext* pContext)
 {
     bool fParamsDone = false;
     bool fVariablesDone = false;
@@ -151,21 +151,21 @@ void ModuleDefinitionNode::ProcessNodeImpl()
         StateDeclaratorNode* pState = dynamic_cast<StateDeclaratorNode*>(GetChild(i));
         if (pState == nullptr)
         {
-            GetChild(i)->ProcessNode();
+            GetChild(i)->ProcessNode(pContext);
         }
     }
 
     // We have a register that we store the current state in
-    GetContext()->OutputLine("reg [7:0] fsmState = 0;");
+    pContext->OutputLine("reg [7:0] fsmState = 0;");
 
     // Start the always block
-    GetContext()->OutputLine("always @(posedge clk)");
-    GetContext()->OutputLine("begin");
-    GetContext()->IncreaseIndent();
+    pContext->OutputLine("always @(posedge clk)");
+    pContext->OutputLine("begin");
+    pContext->IncreaseIndent();
 
     // Start the case statement
-    GetContext()->OutputLine("case(fsmState)");
-    GetContext()->IncreaseIndent();
+    pContext->OutputLine("case(fsmState)");
+    pContext->IncreaseIndent();
 
     for (size_t i = 0; i < GetChildCount(); i++)
     {
@@ -173,22 +173,22 @@ void ModuleDefinitionNode::ProcessNodeImpl()
         StateDeclaratorNode* pState = dynamic_cast<StateDeclaratorNode*>(GetChild(i));
         if (pState != nullptr)
         {
-            GetChild(i)->ProcessNode();
+            GetChild(i)->ProcessNode(pContext);
         }
     }
 
     // End the case statement
-    GetContext()->DecreaseIndent();
-    GetContext()->OutputLine("endcase");
+    pContext->DecreaseIndent();
+    pContext->OutputLine("endcase");
 
     // End the always statement
-    GetContext()->DecreaseIndent();
-    GetContext()->OutputLine("end");
+    pContext->DecreaseIndent();
+    pContext->OutputLine("end");
 }
 
-void ModuleDefinitionNode::PostProcessNodeImpl()
+void ModuleDefinitionNode::PostProcessNodeImpl(OutputContext* pContext)
 {
     // End the module
-    GetContext()->DecreaseIndent();
-    GetContext()->OutputLine("endmodule");
+    pContext->DecreaseIndent();
+    pContext->OutputLine("endmodule");
 }

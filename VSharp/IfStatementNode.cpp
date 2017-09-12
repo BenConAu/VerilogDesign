@@ -36,7 +36,7 @@ void IfStatementNode::VerifyNodeImpl()
     }
 }
 
-void IfStatementNode::ProcessNodeImpl()
+void IfStatementNode::ProcessNodeImpl(OutputContext* pContext)
 {
     // We are taking over the whole processing, so we have to be careful and
     // replicate everything that the base class does. We just need a specific
@@ -46,7 +46,7 @@ void IfStatementNode::ProcessNodeImpl()
     ListNode *pFalse = dynamic_cast<ListNode *>(GetChild(1));
 
     // Start with the test
-    pTest->ProcessNode();
+    pTest->ProcessNode(pContext);
     std::unique_ptr<ExpressionResult> testResult(pTest->TakeResult());
     if (testResult.get() == nullptr)
     {
@@ -57,13 +57,13 @@ void IfStatementNode::ProcessNodeImpl()
     {
         if (testResult->GetConstantValue())
         {
-            pTrue->ProcessNode();            
+            pTrue->ProcessNode(pContext);            
         }
         else
         {
             if (pFalse != nullptr)
             {
-                pFalse->ProcessNode();
+                pFalse->ProcessNode(pContext);
             }
         }
     }
@@ -75,26 +75,26 @@ void IfStatementNode::ProcessNodeImpl()
             "if (%s)", 
             testResult->GetString().c_str());
 
-        GetContext()->OutputLine(result);
+        pContext->OutputLine(result);
         
-        GetContext()->OutputLine("begin");
-        GetContext()->IncreaseIndent();
+        pContext->OutputLine("begin");
+        pContext->IncreaseIndent();
 
-        pTrue->ProcessNode();
+        pTrue->ProcessNode(pContext);
 
-        GetContext()->DecreaseIndent();
-        GetContext()->OutputLine("end");
+        pContext->DecreaseIndent();
+        pContext->OutputLine("end");
 
         if (pFalse != nullptr)
         {
-            GetContext()->OutputLine("else");
-            GetContext()->OutputLine("begin");
-            GetContext()->IncreaseIndent();
+            pContext->OutputLine("else");
+            pContext->OutputLine("begin");
+            pContext->IncreaseIndent();
         
-            pFalse->ProcessNode();
+            pFalse->ProcessNode(pContext);
         
-            GetContext()->DecreaseIndent();
-            GetContext()->OutputLine("end");
+            pContext->DecreaseIndent();
+            pContext->OutputLine("end");
         }
     }
 }

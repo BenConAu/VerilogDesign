@@ -20,3 +20,12 @@ ASTNode* ExpressionStatementNode::DuplicateNodeImpl()
 {
     return new ExpressionStatementNode(GetContext(), GetLocation());
 }
+
+void ExpressionStatementNode::PostProcessNodeImpl(OutputContext* pContext)
+{
+    ExpressionNode *pChildExpr = dynamic_cast<ExpressionNode *>(GetChild(0));
+    
+    std::unique_ptr<ExpressionResult> childResult(pChildExpr->TakeResult());
+
+    pContext->OutputLine("%s;", childResult->GetString().c_str());
+}

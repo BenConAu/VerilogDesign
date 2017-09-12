@@ -19,7 +19,7 @@ public:
     const YYLTYPE &location);
   
   void VerifyNodeImpl() override;
-  void PostProcessNodeImpl() override;
+  void PostProcessNodeImpl(OutputContext* pContext) override;
   const char *GetDebugName() override { return "AssignmentNode"; }
   ASTNode* DuplicateNodeImpl() override;
 };

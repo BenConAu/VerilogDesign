@@ -376,16 +376,14 @@ ExpressionResult *FunctionCallNode::CalculateResult()
 
         case FunctionType::BuiltIn:
         {
-            GetContext()->BeginLine();
-            GetContext()->OutputString(GetFunctionInfo()->GetVerilogName().c_str());
+            std::string resultString;
 
-            std::string resultString = "(";
+            resultString.append(GetFunctionInfo()->GetVerilogName());
+            resultString.append("(");
             AppendParameterList(resultString);
-            resultString.append(");");
+            resultString.append(")");
 
-            GetContext()->OutputString(resultString.c_str());
-            GetContext()->EndLine();
-            return nullptr;
+            return new ExpressionResult(resultString);
         }
 
         case FunctionType::Constructor:

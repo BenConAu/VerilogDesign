@@ -7,19 +7,20 @@ class TypeInfo;
 class GenericTypeInfo;
 class ModuleDefinitionNode;
 class FunctionDeclaratorNode;
+class VSharpCompiler;
 
 class FunctionInfo : public SymbolInfo
 {
   public:
     FunctionInfo(
-      PSLCompilerContext *pContext,       // The context that this function lives in
+      VSharpCompiler *pCompiler,          // The context that this function lives in
       FunctionDeclaratorNode *pFunction,  // The scope that the variable is declared in
       int symIndex,                       // The symbol index for the identifier for the function
       GenericTypeInfo *pGenInfo           // The type info for the generic of the function
       );
 
     FunctionInfo(
-      PSLCompilerContext *pContext,       // The context that this function lives in
+      VSharpCompiler *pCompiler,          // The context that this function lives in
       int symIndex,                       // The symbol index for the identifier for the function
       TypeInfo* pRetType,                 // The return type
       size_t numParam,                    // The parameter count

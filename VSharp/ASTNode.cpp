@@ -6,28 +6,28 @@ void ASTNode::DumpNodeImpl()
     printf("%s node %p\n", GetDebugName(), this);    
 }
 
-void ASTNode::DumpNode()
+void ASTNode::DumpNode(DebugContext* pContext)
 {
-    _pContext->PrintIndent();
+    pContext->PrintIndent();
     DumpNodeImpl();
-    _pContext->_indent++;
+    pContext->_indent++;
     
     for (size_t i = 0; i < _children.size(); i++)
     {
         if (_children[i] != nullptr)
         {
-            _children[i]->DumpNode();
+            _children[i]->DumpNode(pContext);
         }
     }
 
-    _pContext->_indent--;
+    pContext->_indent--;
 }
 
-void ASTNode::VerifyNode()
+void ASTNode::VerifyNode(DebugContext* pContext)
 {
     //_pContext->PrintIndent();
     //printf("Begin verifying %s node %p\n", GetDebugName(), this);
-    _pContext->_indent++;
+    pContext->_indent++;
 
     PreVerifyNodeImpl();
 
@@ -35,13 +35,13 @@ void ASTNode::VerifyNode()
     {
         if (_children[i] != nullptr)
         {
-            _children[i]->VerifyNode();
+            _children[i]->VerifyNode(pContext);
         }
     }
 
     VerifyNodeImpl();
 
-    _pContext->_indent--;
+    pContext->_indent--;
     //_pContext->PrintIndent();
     //printf("End verifying %s node %p\n", GetDebugName(), this);
 }
@@ -56,34 +56,34 @@ void ASTNode::AddNode(ASTNode *pNode)
     }
 }
 
-void ASTNode::ProcessNodeImpl()
+void ASTNode::ProcessNodeImpl(OutputContext* pOutputContext)
 {
     for (size_t i = 0; i < _children.size(); i++)
     {
         if (_children[i] != nullptr)
         {
-            _children[i]->ProcessNode();
+            _children[i]->ProcessNode(pOutputContext);
         }
     }
 }
 
-void ASTNode::ProcessNode()
+void ASTNode::ProcessNode(OutputContext* pOutputContext)
 {
     //_pContext->PrintIndent();
     //printf("Begin processing %s node %p\n", GetDebugName(), this);
-    _pContext->_indent++;
+    pOutputContext->GetDebugContext()->_indent++;
 
     // Processing before children are done - return true to continue
-    if (PreProcessNodeImpl())
+    if (PreProcessNodeImpl(pOutputContext))
     {
         // Actual processing
-        ProcessNodeImpl();
+        ProcessNodeImpl(pOutputContext);
     
         // Processing after children are done
-        PostProcessNodeImpl();
+        PostProcessNodeImpl(pOutputContext);
     }
 
-    _pContext->_indent--;
+    pOutputContext->GetDebugContext()->_indent--;
     //_pContext->PrintIndent();
     //printf("End processing %s node %p\n", GetDebugName(), this);
 }
