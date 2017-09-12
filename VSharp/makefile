@@ -13,6 +13,7 @@ PSLcc: lex.yy.c \
 	   ClockTypeInfo.h \
 	   ConstantNode.cpp \
 	   ConstantNode.h \
+	   DebugContext.h \
 	   DriveDefinitionNode.cpp \
 	   DriveDefinitionNode.h \
 	   DriveListDefinitionNode.cpp \
