@@ -3,8 +3,34 @@
 #include "VSharp.tab.h"
 
 OperatorInfo UnaryOperatorNode::_opTable[] = {
-    { Operator::Negate,  "-", ResultTypeMethod::Both },
+    { Operator::Negate,     "-",    ResultTypeMethod::Both },
+    { Operator::LogicalNot, "!",    ResultTypeMethod::Both },
 };
+
+UnaryOperatorNode::UnaryOperatorNode(
+    ParserContext *pContext, 
+    const YYLTYPE &location, 
+    ASTNode *pLeft, 
+    Operator op) : ExpressionNode(pContext, location)
+{
+    AddNode(pLeft);
+    _op = op;
+}
+
+UnaryOperatorNode::UnaryOperatorNode(
+    ParserContext *pContext, 
+    const YYLTYPE &location,
+    Operator op,
+    OperatorInfo opInfo) : ExpressionNode(pContext, location)
+{
+    _op = op;
+    _opInfo = opInfo;
+}
+  
+ASTNode* UnaryOperatorNode::DuplicateNodeImpl()
+{
+    return new UnaryOperatorNode(GetContext(), GetLocation(), _op, _opInfo);
+}
 
 void UnaryOperatorNode::VerifyNodeImpl()
 {
@@ -43,62 +69,18 @@ void UnaryOperatorNode::VerifyNodeImpl()
 
 ExpressionResult *UnaryOperatorNode::CalculateResult()
 {
-/*    FunctionDeclaratorNode *pFunc = GetTypedParent<FunctionDeclaratorNode>();
-
-    // The inputs to the multiply must be expressions themselves. Ideally this part
-    // could be factored into the expression class itself.
-    ExpressionNode *pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));
-
-    // Calculate the result of each of the inputs so that they will go out of scope
-    // after consumption. The result holds the location of the expression result
-    // (either a register or memory or such) as well as the lifetime of the usage
-    // of the resources it needs (if any).
+    ExpressionNode *pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));    
     std::unique_ptr<ExpressionResult> leftResult(pLeft->TakeResult());
 
-    // Multiplication only works with registers so we make wrappers
-    RegisterWrapper leftWrap(GetContext(), pFunc->GetRegCollection(), leftResult.get());
+    //printf("Left = %s\n", leftResult != nullptr ? leftResult->DebugPrint().c_str() : "null result!");
+    //printf("Right = %s\n", leftResult != nullptr ? rightResult->DebugPrint().c_str() : "null result!");
 
-    int bothType = -1;
-    if (TypeInfo::IsFloat(pLeft->GetTypeInfo()))
-    {
-        bothType = FLOAT_TOKEN;
-    }
-    else if (TypeInfo::IsNonFloat(pLeft->GetTypeInfo()))
-    {
-        bothType = WORD_TOKEN;
-    }
-    else
-    {
-        throw "Invalid arguments to binary operator";
-    }
+    char result[1024];
+    sprintf(
+        result, 
+        "%s%s", 
+        _opInfo._pszVerilog,
+        leftResult->GetString().c_str());
 
-    // Figure out opCode
-    OpCode opCode = OpCode::Unknown;
-    if (bothType == FLOAT_TOKEN)
-    {
-        opCode = _opInfo._opCodeFloat;
-    }
-    else if (bothType == WORD_TOKEN)
-    {
-        opCode = _opInfo._opCodeWord;
-    }
-
-    if (opCode == OpCode::Unknown)
-    {
-        throw "Unknown opcode for binary operation";
-    }
-
-    // Get register for our result
-    RegIndex resultIndex = pFunc->GetRegCollection()->AllocateRegister();
-    Operand resultOperand(resultIndex);
-
-    GetContext()->OutputInstruction(
-        opCode,
-        resultOperand,
-        leftWrap.GetWrapped());
-
-    //printf("Operator with result of type = %s\n", GetTypeInfo()->DebugPrint().c_str());
-    //printf("Making result for %p with register collection %p\n", this, pFunc->GetRegCollection());
-    return new ExpressionResult(resultOperand, pFunc->GetRegCollection());*/
-    return nullptr;
+    return new ExpressionResult(result);
 }

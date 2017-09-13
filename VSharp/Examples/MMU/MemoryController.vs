@@ -169,12 +169,16 @@ module MemoryController(
   state initial
   {
     mcStatus = ControllerStatus.MCWaiting;
+
+    transition Ready;
   }
 
   state Ready
   {
     if (mcReadReq || mcWriteReq)
     {
+      __display("We have hit the ready state");
+
       if (!mcAddrVirtual)
       {
         //$display("Physical access, mcReadReq is %h, addr is %h, ramIn is %h", mcReadReq, mcRamAddress, mcRamIn);

@@ -21,6 +21,14 @@ void SymbolTable::AddBuiltin()
         -1,
         "$monitor");
     _symbols.emplace(std::make_pair(pNewInfo->GetSymbolIndex(), std::unique_ptr<SymbolInfo>(pNewInfo)));
+
+    pNewInfo = new FunctionInfo(
+        _pCompiler, 
+        _pCompiler->AddSymbol("__display"),
+        _pCompiler->GetTypeCollection()->GetVoidType(),
+        -1,
+        "$display");
+    _symbols.emplace(std::make_pair(pNewInfo->GetSymbolIndex(), std::unique_ptr<SymbolInfo>(pNewInfo)));
 }
 
 VariableInfo *SymbolTable::AddVariable(

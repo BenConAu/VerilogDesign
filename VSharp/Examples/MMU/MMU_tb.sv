@@ -28,15 +28,15 @@ module MMU_TestBench(
     # 0 mcWriteReq = 1'b1;
     # 0 mcReadReq = 1'b0;
     # 0 mcRamIn = 32'd291;
-    # 10 mcWriteReq = 1'b0;
-    # 10 $finish;
+    # 100 mcWriteReq = 1'b0;
+    # 100 $finish;
   end
   reg [7:0] fsmState = 0;
   always @(posedge clk)
   begin
     case(fsmState)
       `__initial: begin
-        $monitor("RAM = %h:%h:%h:%h:%h:%h:%h:%h MMU value read = %h", fileRam[32'd0], fileRam[32'd1], fileRam[32'd2], fileRam[32'd3], fileRam[32'd4], fileRam[32'd5], fileRam[32'd6], fileRam[32'd7], RamOutput);
+        $monitor("RAM = %h:%h:%h:%h:%h:%h:%h:%h | Status = %h | MMU value read = %h", fileRam[32'd0], fileRam[32'd1], fileRam[32'd2], fileRam[32'd3], fileRam[32'd4], fileRam[32'd5], fileRam[32'd6], fileRam[32'd7], mcStatus, RamOutput);
         mcExecMode <= 1'b0;
         mcAddrVirtual <= 1'b0;
         if (phReadReq == 32'd1)

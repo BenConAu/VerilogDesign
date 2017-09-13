@@ -1,0 +1,23 @@
+RAM = xx:xx:xx:xx:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
+We have hit the ready state
+RAM = xx:xx:xx:xx:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
+RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
+RAM = 23:01:00:00:xx:xx:xx:xx | Status = 2 | MMU value read = xxxxxxxx
+We have hit the ready state
+RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
+RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
+RAM = 23:01:00:00:xx:xx:xx:xx | Status = 2 | MMU value read = xxxxxxxx
+We have hit the ready state
+RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
+RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
+RAM = 23:01:00:00:xx:xx:xx:xx | Status = 2 | MMU value read = xxxxxxxx
+RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
+RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
+RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
+RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
+RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
+RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
+RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
+RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
+RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
+RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx

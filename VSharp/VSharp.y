@@ -76,6 +76,7 @@ class ParserContext;
 %token DOT
 %token COMMA
 %token HAT
+%token BANG
 %token AMPERSAND
 %token EQUAL_OP
 %token NOTEQUAL_OP
@@ -217,6 +218,7 @@ selection_rest_statement:
 unary_expression:
       postfix_expression                                            { $$ = $1; }
     | MINUS postfix_expression                                      { $$ = new UnaryOperatorNode(pContext, @$, $2, Operator::Negate); }
+    | BANG postfix_expression                                       { $$ = new UnaryOperatorNode(pContext, @$, $2, Operator::LogicalNot); }
     ;
 
 multiplicative_expression:

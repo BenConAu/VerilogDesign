@@ -28,6 +28,7 @@
 "="                  { return EQUAL; }
 ":"                  { return COLON; }
 "^"                  { return HAT; }
+"!"                  { return BANG; }
 ";"                  { return SEMICOLON; }
 "{"                  { return LEFT_BRACE; }
 "}"                  { return RIGHT_BRACE; }

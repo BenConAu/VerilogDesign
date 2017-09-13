@@ -46,15 +46,15 @@ module MMU_TestBench()
     0: mcWriteReq = 0b1;
     0: mcReadReq = 0b0;
     0: mcRamIn = 0x123;
-    10: mcWriteReq = 0b0;
-		10: __finish;
+    100: mcWriteReq = 0b0;
+		100: __finish;
 	}
 
   // Fake RAM
   state initial
   {
     __monitor(
-      "RAM = %h:%h:%h:%h:%h:%h:%h:%h MMU value read = %h", 
+      "RAM = %h:%h:%h:%h:%h:%h:%h:%h | Status = %h | MMU value read = %h", 
       fileRam[0], 
       fileRam[1], 
       fileRam[2], 
@@ -62,7 +62,8 @@ module MMU_TestBench()
       fileRam[4], 
       fileRam[5], 
       fileRam[6], 
-      fileRam[7], 
+      fileRam[7],
+      mcStatus,
       RamOutput);
 
     // No funny business with kernel mode or virtual memory

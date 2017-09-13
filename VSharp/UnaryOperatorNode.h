@@ -10,16 +10,19 @@ class UnaryOperatorNode : public ExpressionNode
       ParserContext *pContext, 
       const YYLTYPE &location, 
       ASTNode *pLeft, 
-      Operator op) : ExpressionNode(pContext, location)
-    {
-        AddNode(pLeft);
-        _op = op;
-    }
+      Operator op);
 
+    UnaryOperatorNode(
+      ParserContext *pContext, 
+      const YYLTYPE &location,
+      Operator op,
+      OperatorInfo opInfo);
+    
     void VerifyNodeImpl() override;
     virtual ExpressionResult *CalculateResult() override;
     const char* GetDebugName() override { return "UnaryOperatorNode"; }
     bool IsLValue() override { return false; }    
+    ASTNode* DuplicateNodeImpl() override;
     
   private:
     Operator _op;

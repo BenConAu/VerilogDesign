@@ -1,5 +1,4 @@
 module MemoryController(
-  reset,
   clk,
   mcRamOut,
   mcStatus,
@@ -55,15 +54,17 @@ module MemoryController(
     case(fsmState)
       `__initial: begin
         mcStatus <= 1;
+        fsmState <= `__Ready;
       end
       `__Ready: begin
         if (mcReadReq || mcWriteReq)
         begin
-          if (mcAddrVirtual)
+          $display("We have hit the ready state");
+          if (!mcAddrVirtual)
           begin
             phRamAddress <= mcRamAddress;
             phReadReq <= mcReadReq;
-            phWriteReq <= mcReadReq;
+            phWriteReq <= !mcReadReq;
             phRamOut <= mcRamIn;
             savedRequest <= { mcReadReq, mcRamAddress, mcRamIn };
             mcStatus <= 1;
@@ -82,7 +83,7 @@ module MemoryController(
               begin
                 phRamAddress <= { tlbEntries[{ 4'd10, mcRamAddress[31:30] } ^ mcRamAddress[29:24] ^ mcRamAddress[23:18] ^ mcRamAddress[17:12] ^ mcRamAddress[11:6] ^ mcRamAddress[5:0]][19:0], mcRamAddress[11:0] };
                 phReadReq <= mcReadReq;
-                phWriteReq <= mcReadReq;
+                phWriteReq <= !mcReadReq;
                 phRamOut <= mcRamIn;
                 savedRequest <= { mcReadReq, { tlbEntries[{ 4'd10, mcRamAddress[31:30] } ^ mcRamAddress[29:24] ^ mcRamAddress[23:18] ^ mcRamAddress[17:12] ^ mcRamAddress[11:6] ^ mcRamAddress[5:0]][19:0], mcRamAddress[11:0] }, mcRamIn };
                 mcStatus <= 1;
@@ -137,7 +138,7 @@ module MemoryController(
         fsmState <= `__VPTWait4;
       end
       `__VPTWait4: begin
-        tlbEntries[{ 4'd10, savedRequest[63:32][31:30] } ^ savedRequest[63:32][29:24] ^ savedRequest[63:32][23:18] ^ savedRequest[63:32][17:12] ^ savedRequest[63:32][11:6] ^ savedRequest[63:32][5:0]] <= { savedFirstWord[31:31], savedFirstWord[30:30], savedFirstWord[29:8], { savedFirstWord[7:0], phRamIn[31:20] }, phRamIn[19:0] };
+        tlbEntries[{ 4'd10, savedRequest[63:62] } ^ savedRequest[61:56] ^ savedRequest[55:50] ^ savedRequest[49:44] ^ savedRequest[43:38] ^ savedRequest[37:32]] <= { savedFirstWord[31:31], savedFirstWord[30:30], savedFirstWord[29:8], { savedFirstWord[7:0], phRamIn[31:20] }, phRamIn[19:0] };
         if (savedFirstWord[30:30] && mcExecMode)
         begin
           mcStatus <= 0;
@@ -145,11 +146,11 @@ module MemoryController(
         end
         else
         begin
-          phRamAddress <= { phRamIn[19:0], savedRequest[63:32][11:0] };
+          phRamAddress <= { phRamIn[19:0], savedRequest[43:32] };
           phReadReq <= savedRequest[64:64];
-          phWriteReq <= savedRequest[64:64];
+          phWriteReq <= !savedRequest[64:64];
           phRamOut <= savedRequest[31:0];
-          savedRequest <= { savedRequest[64:64], { phRamIn[19:0], savedRequest[63:32][11:0] }, savedRequest[31:0] };
+          savedRequest <= { savedRequest[64:64], { phRamIn[19:0], savedRequest[43:32] }, savedRequest[31:0] };
           mcStatus <= 1;
           fsmState <= `__PRamWait1;
         end
