@@ -19,6 +19,7 @@ public:
     ExpressionResult* TakeResult();
     
     virtual ExpressionResult* CalculateResult() = 0;
+    virtual bool IsLValue() = 0;
 
     static bool EqualType(ASTNode* pA, ASTNode* pB);
 

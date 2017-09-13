@@ -8,6 +8,7 @@
 #include "FunctionDeclaratorNode.h"
 #include "StatementNode.h"
 #include "VariableDeclarationNode.h"
+#include "IdentifierNode.h"
 #include "VSharp.tab.h"
 
 class FunctionCallSpec
@@ -312,7 +313,26 @@ void FunctionCallNode::VerifyNodeImpl()
             // Out params need to be passed correctly
             if (pCallParam->IsOutParam() != CallSpec->IsParameterOut(i))
             {
-                GetContext()->ReportError(GetLocation(), "Mismatch in param in / out definition");
+                GetContext()->ReportError(GetLocation(), "Mismatch with in / out definition for param %d", i);                    
+            }            
+
+            if (CallSpec->IsParameterOut(i))
+            {
+                // Modules need to be called with wires for out
+                if (_functionType == FunctionType::ModuleDecl)
+                {
+                    IdentifierNode* pIdentiferNode = dynamic_cast<IdentifierNode*>(pParamExpr);
+                    if (pIdentiferNode == nullptr)
+                    {
+                        GetContext()->ReportError(GetLocation(), "Param %d of module out parameters must be identifiers to be wires", i);
+                    }
+
+                    VariableInfo* pVarInfo = pIdentiferNode->GetVariableInfo();
+                    if (pVarInfo->GetModifier() != TypeModifier::Wire)
+                    {
+                        GetContext()->ReportError(GetLocation(), "Module out parameter %d must be a wire", i);
+                    }
+                }
             }
     
             // Types should match

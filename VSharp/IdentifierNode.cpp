@@ -88,3 +88,8 @@ VariableInfo *IdentifierNode::GetVariableInfo()
 {
     return _pVarInfo;
 }
+
+bool IdentifierNode::IsLValue()
+{
+    return (_pVarInfo->GetModifier() != TypeModifier::Wire);
+}

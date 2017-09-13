@@ -126,3 +126,11 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
         }
     }
 }
+
+bool FieldSelectionNode::IsLValue()
+{
+    ExpressionNode *pExpr = dynamic_cast<ExpressionNode *>(GetChild(0));
+    
+    // Field selecting a valid L value will give an L value
+    return pExpr->IsLValue();
+}  

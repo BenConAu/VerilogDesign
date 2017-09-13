@@ -19,6 +19,7 @@ class UnaryOperatorNode : public ExpressionNode
     void VerifyNodeImpl() override;
     virtual ExpressionResult *CalculateResult() override;
     const char* GetDebugName() override { return "UnaryOperatorNode"; }
+    bool IsLValue() override { return false; }    
     
   private:
     Operator _op;

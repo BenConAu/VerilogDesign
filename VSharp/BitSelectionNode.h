@@ -20,11 +20,11 @@ class BitSelectionNode : public ExpressionNode
       int i2);
   
     void VerifyNodeImpl() override;
-    ASTNode* DuplicateNodeImpl() override;
-    
+    ASTNode* DuplicateNodeImpl() override;    
     ExpressionResult *CalculateResult() override;
     const char *GetDebugName() override { return "BitSelectionNode"; }
-
+    bool IsLValue() override;    
+    
   private:
     int _i1;
     int _i2;

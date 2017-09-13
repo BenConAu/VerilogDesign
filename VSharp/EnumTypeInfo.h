@@ -1,11 +1,11 @@
 #pragma once
 
-#include "TypeInfo.h"
+#include "RegisterTypeInfo.h"
 #include <map>
 
 class ParserContext;
 
-class EnumTypeInfo : public TypeInfo
+class EnumTypeInfo : public RegisterTypeInfo
 {
 public:
     EnumTypeInfo(int symIndex, ParserContext* pContext);
@@ -15,10 +15,7 @@ public:
     std::string GetTypeName() override;
     int GetSymbolIndex();
     bool EqualType(TypeInfo* pOther) override;
-    TypeInfo* MakeSpecificType(TypeInfo* pGenericArgType, TypeCollection* pCollection) override;
-    bool IsVerilogRegister() const override { return true; }
     int GetBitLength() const override;
-    std::string GetDeclaration(VariableInfo* pInfo, ExpressionNode* pInitExpr) override;
     
     bool IsMember(int symIndex);
     int GetValue(int symIndex);

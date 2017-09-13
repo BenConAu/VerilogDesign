@@ -44,6 +44,18 @@ public:
         throw std::string(errorText);
     }
 
+    template<typename... PT> 
+    void ReportError(
+        const YYLTYPE &location,
+        const char* pszLine,
+        PT... params
+        )
+    {
+        char line[512];
+        sprintf(line, pszLine, params...);
+        ReportError(location, line);
+    }    
+
     VSharpCompiler* GetCompiler() { return _pCompiler; }
     TypeCollection* GetTypeCollection();
     SymbolTable* GetSymbolTable();

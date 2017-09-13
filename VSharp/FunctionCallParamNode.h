@@ -18,7 +18,8 @@ public:
     const char* GetDebugName() override { return "FunctionCallParamNode"; }
     ExpressionResult* CalculateResult() override;
     ASTNode* DuplicateNodeImpl() override;
-
+    bool IsLValue() override { return false; }    
+    
     int IsOutParam() const { return _fOut; }
     ExpressionNode* GetParamExpr() { return dynamic_cast<ExpressionNode*>(GetChild(0)); }
 

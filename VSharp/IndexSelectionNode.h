@@ -18,7 +18,7 @@ class IndexSelectionNode : public ExpressionNode
     
     void VerifyNodeImpl() override;
     ASTNode* DuplicateNodeImpl() override;
-    
     ExpressionResult *CalculateResult() override;
     const char *GetDebugName() override { return "IndexSelectionNode"; }
+    bool IsLValue() override;    
 };

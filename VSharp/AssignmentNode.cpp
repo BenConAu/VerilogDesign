@@ -31,6 +31,12 @@ void AssignmentNode::VerifyNodeImpl()
 
         GetContext()->ReportError(GetLocation(), "Assignment must have equal types on each side");
     }
+
+    // No assigning to wires, please
+    if (!pLeft->IsLValue())
+    {
+        GetContext()->ReportError(GetLocation(), "Not a valid LValue for assignment");
+    }
 }
 
 ASTNode* AssignmentNode::DuplicateNodeImpl()

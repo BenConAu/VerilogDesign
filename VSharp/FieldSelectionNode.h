@@ -23,10 +23,10 @@ class FieldSelectionNode : public ExpressionNode
         StructTypeInfo *pStructTypeInfo);
               
     void VerifyNodeImpl() override;
-
     ExpressionResult *CalculateResult() override;
     const char *GetDebugName() override { return "FieldSelectionNode"; }
     ASTNode* DuplicateNodeImpl() override;
+    bool IsLValue() override;    
     
   private:
     int _fieldSymIndex;

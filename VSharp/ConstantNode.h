@@ -12,7 +12,8 @@ public:
     ExpressionResult* CalculateResult() override;
     const char* GetDebugName() override { return "ConstantNode"; }
     ASTNode* DuplicateNodeImpl() override;
-
+    bool IsLValue() override { return false; }    
+    
 private:
     unsigned int GetUInt();
 

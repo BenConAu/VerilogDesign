@@ -76,3 +76,11 @@ ExpressionResult *IndexSelectionNode::CalculateResult()
 
     return new ExpressionResult(result);
 }
+
+bool IndexSelectionNode::IsLValue()
+{
+    ExpressionNode *pExpr = dynamic_cast<ExpressionNode *>(GetChild(0));
+    
+    // Index selecting a valid L value will give an L value
+    return pExpr->IsLValue();
+}  

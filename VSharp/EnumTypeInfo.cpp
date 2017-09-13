@@ -3,7 +3,8 @@
 #include "VariableInfo.h"
 #include <cmath>
 
-EnumTypeInfo::EnumTypeInfo(int symIndex, ParserContext* pContext)
+// Passing 1 here is a bit dodgy, and it will come and bite me
+EnumTypeInfo::EnumTypeInfo(int symIndex, ParserContext* pContext) : RegisterTypeInfo(1)
 {
     _symIndex = symIndex;
     _pContext = pContext;
@@ -42,12 +43,6 @@ bool EnumTypeInfo::EqualType(TypeInfo* pOther)
     return (static_cast<TypeInfo*>(this) == pOther);
 }
 
-TypeInfo* EnumTypeInfo::MakeSpecificType(TypeInfo* pGenericArgType, TypeCollection* pCollection)
-{
-    // Structs cannot currently have generic arguments
-    return this;
-}    
-
 bool EnumTypeInfo::IsMember(int sym)
 {
     return (_values.count(sym) != 0);
@@ -70,16 +65,4 @@ int EnumTypeInfo::GetBitLength() const
     {
         return static_cast<int>(::ceil(::log2(_values.size())));
     }
-}
-
-std::string EnumTypeInfo::GetDeclaration(VariableInfo* pInfo, ExpressionNode* pInitExpr)
-{
-    if (pInitExpr != nullptr)
-    {
-        throw "Enum types don't support init expressions";
-    }
-
-    char buffer[1024];
-    sprintf(buffer, "reg[%d:0] %s", GetBitLength() - 1, pInfo->GetSymbol());
-    return buffer;
 }

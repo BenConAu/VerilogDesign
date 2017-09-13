@@ -27,7 +27,8 @@ public:
     ASTNode* DuplicateNodeImpl() override;
     const char* GetDebugName() override { return "IdentifierNode"; }
     const char* GetIdentifierName();
-
+    bool IsLValue() override;
+    
 private:
     int _symIndex;
     VariableInfo* _pVarInfo;

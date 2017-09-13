@@ -98,3 +98,11 @@ ExpressionResult *BitSelectionNode::CalculateResult()
 
     return new ExpressionResult(result);
 }
+
+bool BitSelectionNode::IsLValue()
+{
+    ExpressionNode *pExpr = dynamic_cast<ExpressionNode *>(GetChild(0));
+    
+    // Bit selecting a valid L value will give an L value
+    return pExpr->IsLValue();
+}  
