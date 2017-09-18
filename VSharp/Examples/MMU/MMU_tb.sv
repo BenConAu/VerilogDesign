@@ -5,8 +5,9 @@ module MMU_TestBench(
   `define __BeginPTWrite1 1
   `define __EndPTWrite1 2
   `define __EndPTWrite2 3
-  `define __EndPTRead1 4
-  `define __End 5
+  `define __BeginVirtualRead 4
+  `define __EndPTRead1 5
+  `define __End 6
   // inputs / outputs
   input wire reset;
   reg clk = 0; always #5 clk = !clk;
@@ -44,7 +45,7 @@ module MMU_TestBench(
         fsmState <= `__BeginPTWrite1;
       end
       `__BeginPTWrite1: begin
-        mcRamAddress <= 32'd0;
+        mcRamAddress <= 32'd21984;
         mcRequest <= 1'b1;
         mcWriteEnable <= 1'b1;
         mcRamIn <= entry1[63:32];
@@ -53,7 +54,7 @@ module MMU_TestBench(
       `__EndPTWrite1: begin
         if (mcStatus == 2)
         begin
-          mcRamAddress <= 32'd4;
+          mcRamAddress <= 32'd21988;
           mcRequest <= 1'b1;
           mcRamIn <= entry1[31:0];
           fsmState <= `__EndPTWrite2;
@@ -67,9 +68,21 @@ module MMU_TestBench(
         if (mcStatus == 2)
         begin
           mcAddrVirtual <= 1'b1;
-          mcRamAddress <= 32'd0;
+          mcRamAddress <= 32'd11255808;
           mcRequest <= 1'b1;
-          mcRamIn <= 32'd2882343476;
+          mcRamIn <= 32'd3203395597;
+          fsmState <= `__BeginVirtualRead;
+        end
+        else
+        begin
+          mcRequest <= 1'b0;
+        end
+      end
+      `__BeginVirtualRead: begin
+        if (mcStatus == 2)
+        begin
+          mcRequest <= 1'b1;
+          mcWriteEnable <= 1'b0;
           fsmState <= `__EndPTRead1;
         end
         else

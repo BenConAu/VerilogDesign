@@ -67,7 +67,8 @@ module MMU_TestBench()
   // Begin write of the first uint32 of the PT
   state BeginPTWrite1
   {
-    mcRamAddress = 0x0;
+    // 0xabc * 8 == 0x55e0
+    mcRamAddress = 0x55e0;
     mcRequest = true;
     mcWriteEnable = true;
     mcRamIn = entry1[63:32];
@@ -80,7 +81,7 @@ module MMU_TestBench()
   {
     if (mcStatus == ControllerStatus.MCReady)
     {
-      mcRamAddress = 0x4;
+      mcRamAddress = 0x55e4;
       mcRequest = true;
       mcRamIn = entry1[31:0];
 
@@ -101,10 +102,28 @@ module MMU_TestBench()
       // Enable virtual memory
       mcAddrVirtual = true;
       
-      // Write to 0x0, which should write to 0x1
-      mcRamAddress = 0x0;
+      // Write to 0xabc000, which should write to 0x7000
+      mcRamAddress = 0xabc000;
       mcRequest = true;
-      mcRamIn = 0xabcd1234;
+      mcRamIn = 0xbeeff00d;
+
+      transition BeginVirtualRead;
+    }
+    else
+    {
+      mcRequest = false;
+    }
+  }
+
+  // Test that reading back that value you just wrote
+  // works just fine.
+  state BeginVirtualRead
+  {
+    if (mcStatus == ControllerStatus.MCReady)
+    {
+      // Read from 0xabc000, which should read from 0x7000
+      mcRequest = true;
+      mcWriteEnable = false;
 
       transition EndPTRead1;
     }
