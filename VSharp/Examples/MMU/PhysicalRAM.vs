@@ -12,7 +12,7 @@ module PhysicalRAM(
   state initial
   {
     __monitor(
-      "%d | RAM = %h:%h:%h:%h:%h:%h:%h:%h | WriteEnable = %h | RAM value read = %h",
+      "%d | RAM 0x0 = %h:%h:%h:%h:%h:%h:%h:%h | RAM 0x7000 = %h:%h:%h:%h:%h:%h:%h:%h | WriteEnable = %h | RAM value read = %h",
       __time,
       fileRam[0], 
       fileRam[1], 
@@ -22,6 +22,14 @@ module PhysicalRAM(
       fileRam[5], 
       fileRam[6], 
       fileRam[7],
+      fileRam[0x7000], 
+      fileRam[0x7001], 
+      fileRam[0x7002], 
+      fileRam[0x7003], 
+      fileRam[0x7004], 
+      fileRam[0x7005], 
+      fileRam[0x7006], 
+      fileRam[0x7007], 
       WriteEnable,
       ReadValue);
 

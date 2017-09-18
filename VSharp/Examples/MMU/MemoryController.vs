@@ -191,15 +191,17 @@ module MemoryController(
       }
       else
       {
+        //__display("Virtual address request");
+
         // This is a request for a virtual address - see if the TLB entry for this address
         // is a valid one and if so, request the page pointed to by the TLB. If the TLB
         // misses, populate it first and then try again.
         if (IsTLBValidForAddress(mcRamAddress))
         {
-          //$display(
+          //__display(
             //"Page to translate %h found in TLB entry %h, index %h", 
             //mcRamAddress, 
-            //GetTLBEntry(GetPageHash(mcRamAddress)), 
+            //GetTLBEntryFromAddress(mcRamAddress),
             //GetPageHash(mcRamAddress));
 
           TranslateVirtualRequest(
@@ -211,7 +213,11 @@ module MemoryController(
         }
         else
         {
-          //$display("Page for address %h not found in TLB, page = %h, pt + page = %h", mcRamAddress, mcRamAddress[17:10], CalcPTEntryAddress(mcRamAddress));
+          //__display(
+            //"Page for virtual address %h not found in TLB | page = %h | PT Entry address = %h", 
+            //mcRamAddress, 
+            //GetPageNumber(mcRamAddress), 
+            //CalcPTEntryAddress(mcRamAddress));
 
           // TLB miss - need to lookup in page table. The page table
           // currently is a single level, and only supports up to 256

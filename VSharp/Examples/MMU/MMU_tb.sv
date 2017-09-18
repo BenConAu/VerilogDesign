@@ -2,9 +2,11 @@ module MMU_TestBench(
   );
   // State definitions
   `define __initial 0
-  `define __WaitWrite1 1
-  `define __WaitRead1 2
-  `define __End 3
+  `define __BeginPTWrite1 1
+  `define __EndPTWrite1 2
+  `define __EndPTWrite2 3
+  `define __EndPTRead1 4
+  `define __End 5
   // inputs / outputs
   input wire reset;
   reg clk = 0; always #5 clk = !clk;
@@ -22,12 +24,13 @@ module MMU_TestBench(
   wire[0:0] phRequest;
   wire[0:0] phWriteEnable;
   wire[31:0] debug;
-  wire[31:0] ptAddress;
+  reg[31:0] ptAddress;
+  reg[63:0] entry1;
   PhysicalRAM ram(clk, phRamAddress, phWriteEnable, phRamWrite, phRamRead);
   MemoryController MMU1(clk, RamOutput, mcStatus, mcRamAddress, mcRamIn, mcRequest, mcWriteEnable, mcAddrVirtual, mcExecMode, phRamRead, phRamAddress, phRamWrite, phRequest, phWriteEnable, ptAddress, debug);
   initial
   begin
-    # 100 $finish;
+    # 300 $finish;
   end
   reg [7:0] fsmState = 0;
   always @(posedge clk)
@@ -36,25 +39,45 @@ module MMU_TestBench(
       `__initial: begin
         mcExecMode <= 1'b0;
         mcAddrVirtual <= 1'b0;
+        ptAddress <= 32'd0;
+        entry1 <= { 1'b1, 1'b0, 22'd0, 20'd2748, 20'd7 };
+        fsmState <= `__BeginPTWrite1;
+      end
+      `__BeginPTWrite1: begin
         mcRamAddress <= 32'd0;
         mcRequest <= 1'b1;
         mcWriteEnable <= 1'b1;
-        mcRamIn <= 32'd291;
-        fsmState <= `__WaitWrite1;
+        mcRamIn <= entry1[63:32];
+        fsmState <= `__EndPTWrite1;
       end
-      `__WaitWrite1: begin
+      `__EndPTWrite1: begin
         if (mcStatus == 2)
         begin
+          mcRamAddress <= 32'd4;
           mcRequest <= 1'b1;
-          mcWriteEnable <= 1'b0;
-          fsmState <= `__WaitRead1;
+          mcRamIn <= entry1[31:0];
+          fsmState <= `__EndPTWrite2;
         end
         else
         begin
           mcRequest <= 1'b0;
         end
       end
-      `__WaitRead1: begin
+      `__EndPTWrite2: begin
+        if (mcStatus == 2)
+        begin
+          mcAddrVirtual <= 1'b1;
+          mcRamAddress <= 32'd0;
+          mcRequest <= 1'b1;
+          mcRamIn <= 32'd2882343476;
+          fsmState <= `__EndPTRead1;
+        end
+        else
+        begin
+          mcRequest <= 1'b0;
+        end
+      end
+      `__EndPTRead1: begin
         mcRequest <= 1'b0;
         if (mcStatus == 2)
         begin

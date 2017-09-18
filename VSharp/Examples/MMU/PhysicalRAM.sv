@@ -20,7 +20,7 @@ module PhysicalRAM(
   begin
     case(fsmState)
       `__initial: begin
-        $monitor("%d | RAM = %h:%h:%h:%h:%h:%h:%h:%h | WriteEnable = %h | RAM value read = %h", $time, fileRam[32'd0], fileRam[32'd1], fileRam[32'd2], fileRam[32'd3], fileRam[32'd4], fileRam[32'd5], fileRam[32'd6], fileRam[32'd7], WriteEnable, ReadValue);
+        $monitor("%d | RAM 0x0 = %h:%h:%h:%h:%h:%h:%h:%h | RAM 0x7000 = %h:%h:%h:%h:%h:%h:%h:%h | WriteEnable = %h | RAM value read = %h", $time, fileRam[32'd0], fileRam[32'd1], fileRam[32'd2], fileRam[32'd3], fileRam[32'd4], fileRam[32'd5], fileRam[32'd6], fileRam[32'd7], fileRam[32'd28672], fileRam[32'd28673], fileRam[32'd28674], fileRam[32'd28675], fileRam[32'd28676], fileRam[32'd28677], fileRam[32'd28678], fileRam[32'd28679], WriteEnable, ReadValue);
         if (WriteEnable)
         begin
           fileRam[address] <= WriteValue[7:0];

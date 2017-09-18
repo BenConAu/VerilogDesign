@@ -36,42 +36,55 @@ module MMU_TestBench()
   wire bool  phRequest;
   wire bool  phWriteEnable;
   wire uint32 debug;
-  wire uint32 ptAddress;
+  uint32 ptAddress;
+
+  // Somewhere to store PT entries
+  TLBEntry entry1;
 
   PhysicalRAM ram = PhysicalRAM(clk, phRamAddress, phWriteEnable, phRamWrite, out phRamRead);
 
 	drive
 	{
-		100: __finish;
+		300: __finish;
 	}
 
-  // Fake RAM
+  // Initialization
   state initial
   {
-    // No funny business with kernel mode or virtual memory
+    // No funny business with kernel mode or virtual memory yet
     mcExecMode = 0b0;
-    mcAddrVirtual = 0b0;
+    mcAddrVirtual = false;
 
-    mcRamAddress = 0;
-    mcRequest = true;
-    mcWriteEnable = true;
-    mcRamIn = 0x123;
+    // Page table will be at zero memory
+    ptAddress = 0x0;
 
-    transition WaitWrite1;
+    // Set up stuff we want to write out
+    entry1 = TLBEntry(true, false, 0u22, 0xabcu20, 7u20);
+
+    transition BeginPTWrite1;
   }
 
-  state WaitWrite1
+  // Begin write of the first uint32 of the PT
+  state BeginPTWrite1
   {
-    //__display("WaitWrite1 Status = %h", mcStatus);
+    mcRamAddress = 0x0;
+    mcRequest = true;
+    mcWriteEnable = true;
+    mcRamIn = entry1[63:32];
 
+    transition EndPTWrite1;    
+  }
+
+  // When that write is complete, begin write of second uint32
+  state EndPTWrite1
+  {
     if (mcStatus == ControllerStatus.MCReady)
     {
-      //__display("First write complete!");
-
+      mcRamAddress = 0x4;
       mcRequest = true;
-      mcWriteEnable = false;
+      mcRamIn = entry1[31:0];
 
-      transition WaitRead1;
+      transition EndPTWrite2;
     }
     else
     {
@@ -79,7 +92,29 @@ module MMU_TestBench()
     }
   }
 
-  state WaitRead1
+  // After writing both entries, now enable virtual memory
+  // and write a value to the beginning of the virtual page
+  state EndPTWrite2
+  {
+    if (mcStatus == ControllerStatus.MCReady)
+    {
+      // Enable virtual memory
+      mcAddrVirtual = true;
+      
+      // Write to 0x0, which should write to 0x1
+      mcRamAddress = 0x0;
+      mcRequest = true;
+      mcRamIn = 0xabcd1234;
+
+      transition EndPTRead1;
+    }
+    else
+    {
+      mcRequest = false;
+    }
+  }
+
+  state EndPTRead1
   {
     //__display("WaitRead1 Status = %h", mcStatus);
 
