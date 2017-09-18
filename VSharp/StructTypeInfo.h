@@ -1,16 +1,16 @@
 #pragma once
 
-#include "TypeInfo.h"
+#include "RegisterTypeInfo.h"
 #include "StructMember.h"
 #include <vector>
 #include <memory>
 
 class ParserContext;
 
-class StructTypeInfo : public TypeInfo
+class StructTypeInfo : public RegisterTypeInfo
 {
 public:
-    StructTypeInfo(int symIndex, ParserContext* pContext)
+    StructTypeInfo(int symIndex, ParserContext* pContext) : RegisterTypeInfo(0)
     {
         _symIndex = symIndex;
         _pContext = pContext;
@@ -59,7 +59,6 @@ public:
     }
 
     unsigned int GetBaseLocation(int fieldSymIndex);
-    int GetBitLength() const override;
 
     TypeClass GetTypeClass() override
     {
@@ -89,8 +88,6 @@ public:
         // Structs cannot currently have generic arguments
         return this;
     }
-
-    std::string GetDeclaration(VariableInfo* pInfo, ExpressionNode* pInitExpr) override;
 
 private:
     int _symIndex;

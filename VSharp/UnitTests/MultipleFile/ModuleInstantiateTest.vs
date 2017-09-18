@@ -6,9 +6,11 @@ module ModuleInstantiate(
 {
 	clock clk;
 	uint8 var1;
+	Foo inFoo;
 	wire uint16 var2;
+	wire Foo outFoo;
 
-	LittleModule m1 = LittleModule(clk, var1, out var2);
+	LittleModule m1 = LittleModule(clk, var1, inFoo, out var2, out outFoo);
 
 	drive
 	{

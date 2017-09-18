@@ -16,7 +16,11 @@ void StructTypeInfo::AddMember(
         pMemberType = pContext->GetTypeCollection()->GetArrayType(pType, dimension);
     }
 
-    _members.push_back(std::unique_ptr<StructMember>(new StructMember(symIndex, pMemberType, dimension)));
+    StructMember* pNewMember = new StructMember(symIndex, pMemberType, dimension);
+    _members.push_back(std::unique_ptr<StructMember>(pNewMember));
+
+    int currentBitLength = GetBitLength();
+    SetBitLength(currentBitLength + pNewMember->GetBitLength());
 }
 
 std::string StructTypeInfo::GetTypeName()
@@ -39,28 +43,4 @@ unsigned int StructTypeInfo::GetBaseLocation(int fieldSymIndex)
     }
 
     throw "Unknown member";
-}
-
-int StructTypeInfo::GetBitLength() const
-{
-    int size = 0;
-
-    for (size_t i = 0; i < _members.size(); i++)
-    {
-        size += _members[i]->GetBitLength();
-    }
-
-    return size;
-}
-
-std::string StructTypeInfo::GetDeclaration(VariableInfo* pInfo, ExpressionNode* pInitExpr)
-{
-    if (pInitExpr != nullptr)
-    {
-        throw "StructTypeInfo does not support init expressions yet";
-    }
-
-    char buffer[1024];
-    sprintf(buffer, "reg[%d:0] %s", GetBitLength() - 1, pInfo->GetSymbol());
-    return buffer;
 }

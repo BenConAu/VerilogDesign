@@ -15,7 +15,6 @@ public:
     std::string GetTypeName() override;
     int GetSymbolIndex();
     bool EqualType(TypeInfo* pOther) override;
-    int GetBitLength() const override;
     
     bool IsMember(int symIndex);
     int GetValue(int symIndex);

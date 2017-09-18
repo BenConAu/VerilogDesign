@@ -1,7 +1,14 @@
+struct Foo
+{
+	uint32 x;
+}
+
 module LittleModule(
 	clock clk,
 	uint8 mIn,
-	out uint16 mOut
+	Foo inFoo,
+	out uint16 mOut,
+	out Foo outFoo
 	)
 {
 	state initial

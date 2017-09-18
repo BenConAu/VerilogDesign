@@ -15,6 +15,11 @@ void EnumTypeInfo::AddMember(int symIndex)
     //printf("Adding member, size is now %d\n", (int)_values.size());
 
     _values[symIndex] = _values.size();
+
+    if (_values.size() != 1)
+    {
+        SetBitLength(static_cast<int>(::ceil(::log2(_values.size()))));
+    }
 }
 
 TypeClass EnumTypeInfo::GetTypeClass()
@@ -53,16 +58,4 @@ int EnumTypeInfo::GetValue(int sym)
     //printf("Getting value %d for symbol %s\n", _values[sym], _pContext->GetSymbolString(sym].c_str());
 
     return _values[sym];
-}
-
-int EnumTypeInfo::GetBitLength() const
-{
-    if (_values.size() == 1)
-    {
-        return 1;
-    }
-    else
-    {
-        return static_cast<int>(::ceil(::log2(_values.size())));
-    }
 }

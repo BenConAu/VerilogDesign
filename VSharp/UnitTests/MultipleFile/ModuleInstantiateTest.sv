@@ -9,8 +9,10 @@ module ModuleInstantiate(
   output reg[15:0] out1;
   reg clk = 0; always #5 clk = !clk;
   reg[7:0] var1;
+  reg[31:0] inFoo;
   wire[15:0] var2;
-  LittleModule m1(clk, var1, var2);
+  wire[31:0] outFoo;
+  LittleModule m1(clk, var1, inFoo, var2, outFoo);
   initial
   begin
     # 100 $finish;

@@ -16,6 +16,12 @@ class RegisterTypeInfo : public TypeInfo
     bool IsVerilogRegister() const override { return true; }
     std::string GetDeclaration(VariableInfo* pInfo, ExpressionNode* pInitExpr) override;
     
+  protected:
+    void SetBitLength(int l)
+    {
+      _bitLength = l;
+    }
+
   private:
     int _bitLength;
 };
