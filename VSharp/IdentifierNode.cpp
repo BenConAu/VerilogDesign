@@ -93,3 +93,15 @@ bool IdentifierNode::IsLValue()
 {
     return (_pVarInfo->GetModifier() != TypeModifier::Wire);
 }
+
+bool IdentifierNode::ConstEvaluate(UIntConstant* pVal)
+{
+    // Need to be defined as const
+    if (_pVarInfo != nullptr && _pVarInfo->GetModifier() == TypeModifier::Const)
+    {
+        (*pVal) = _pVarInfo->GetInitialValue();
+        return true;
+    }
+
+    return false;
+}

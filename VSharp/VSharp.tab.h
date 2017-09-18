@@ -108,7 +108,8 @@ class ParserContext;
     ELSE_TOKEN = 309,
     IMPORT_TOKEN = 310,
     WIRE_TOKEN = 311,
-    IDENTIFIER = 312
+    CONST_TOKEN = 312,
+    IDENTIFIER = 313
   };
 #endif
 
@@ -123,7 +124,7 @@ union YYSTYPE
     int symIndex;
     ASTNode* pNode;
 
-#line 127 "VSharp.tab.h" /* yacc.c:1915  */
+#line 128 "VSharp.tab.h" /* yacc.c:1915  */
 };
 
 typedef union YYSTYPE YYSTYPE;

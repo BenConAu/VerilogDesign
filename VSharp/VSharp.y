@@ -91,6 +91,7 @@ class ParserContext;
 %token ELSE_TOKEN
 %token IMPORT_TOKEN
 %token WIRE_TOKEN
+%token CONST_TOKEN
 %token <symIndex> IDENTIFIER
 %type <pNode> variable_identifier
 %type <pNode> primary_expression
@@ -357,7 +358,8 @@ type_name_specifier:
     ;
 
 fully_specified_type:
-      WIRE_TOKEN type_name_specifier                                { $$ = $2; dynamic_cast<TypeNode*>($$)->SetModifier(WIRE_TOKEN); }
+      WIRE_TOKEN type_name_specifier                                { $$ = $2; dynamic_cast<TypeNode*>($$)->SetModifier(TypeModifier::Wire); }
+    | CONST_TOKEN type_name_specifier                               { $$ = $2; dynamic_cast<TypeNode*>($$)->SetModifier(TypeModifier::Const); }
     | type_name_specifier                                           { $$ = $1; }
     ;
 
@@ -422,10 +424,10 @@ init_declarator_list:
     ;
 
 single_declaration:
-      fully_specified_type IDENTIFIER                               { $$ = new VariableDeclarationNode(pContext, @$, $1, $2, nullptr); }
-    | fully_specified_type IDENTIFIER LEFT_BRACKET INTCONSTANT RIGHT_BRACKET
+      fully_specified_type IDENTIFIER                               { $$ = new VariableDeclarationNode(pContext, @$, $1, $2, nullptr, nullptr); }
+    | fully_specified_type IDENTIFIER LEFT_BRACKET expression RIGHT_BRACKET
                                                                     { $$ = new VariableDeclarationNode(pContext, @$, $1, $2, $4, nullptr); }
-    | fully_specified_type IDENTIFIER EQUAL expression              { $$ = new VariableDeclarationNode(pContext, @$, $1, $2, $4); }
+    | fully_specified_type IDENTIFIER EQUAL expression              { $$ = new VariableDeclarationNode(pContext, @$, $1, $2, nullptr, $4); }
     ;
 
 declaration_statement:

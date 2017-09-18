@@ -5,6 +5,7 @@
 #include "VariableLocationType.h"
 #include "TypeModifier.h"
 #include "SymbolInfo.h"
+#include "UIntConstant.h"
 
 class ASTNode;
 class TypeInfo;
@@ -30,12 +31,15 @@ class VariableInfo : public SymbolInfo
     TypeInfo *GetTypeInfo() { return _pType; }
     void SetNameOverride(const char* pszName) { _nameOverride = pszName; }
     const std::string GetNameOverride() { return _nameOverride; }
+    void SetInitialValue(const UIntConstant& val) { _InitValue.reset(new UIntConstant(val)); }
+    UIntConstant GetInitialValue() { return *(_InitValue.get()); }
 
   private:
     // Type of location (globals are stored in data segment, local backed by register)
     VariableLocationType _locationType;
     TypeModifier _modifier;
     std::string _nameOverride;
+    std::unique_ptr<UIntConstant> _InitValue;
 
     // C++ type of variable
     TypeInfo *_pType;

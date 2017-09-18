@@ -62,8 +62,6 @@ ExpressionResult *OperatorNode::CalculateResult()
     //printf("Operation on node %p between two expressions\n", this);
     //GetContext()->DumpTree();
 
-    ModuleDefinitionNode *pFunc = GetTypedParent<ModuleDefinitionNode>();
-
     ExpressionNode *pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));
     ExpressionNode *pRight = dynamic_cast<ExpressionNode *>(GetChild(1));
     
@@ -88,4 +86,43 @@ ExpressionResult *OperatorNode::CalculateResult()
         rightResult->GetString().c_str());
 
     return new ExpressionResult(result);
+}
+
+bool OperatorNode::ConstEvaluate(UIntConstant* pVal)
+{
+    ExpressionNode *pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));
+    ExpressionNode *pRight = dynamic_cast<ExpressionNode *>(GetChild(1));
+        
+    UIntConstant leftConstant;
+    UIntConstant rightConstant;
+    if (pLeft->ConstEvaluate(&leftConstant) && pRight->ConstEvaluate(&rightConstant))
+    {
+        if (leftConstant._bitLength != rightConstant._bitLength)
+        {
+            // For now, you have to be picky about size of constant expressions
+            GetContext()->ReportError(GetLocation(), "Incompatible sizing for constant evaluation");            
+        }
+
+        // Set size of result
+        pVal->_bitLength = leftConstant._bitLength;
+
+        switch (_op)
+        {
+            case Operator::Subtract:
+                pVal->_value = leftConstant._value - rightConstant._value;
+                break;
+
+            case Operator::Add:
+                pVal->_value = leftConstant._value + rightConstant._value;
+                break;
+
+            default:
+                // Don't know how to do this yet
+                return false;
+        }
+
+        return true;
+    }
+
+    return false;
 }

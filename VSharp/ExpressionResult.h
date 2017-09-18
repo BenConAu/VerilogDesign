@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include "UIntConstant.h"
 
 class StaticTypeInfo;
 class FunctionCallNode;
@@ -31,8 +32,8 @@ struct ExpressionResult
     ExpressionResult(const std::string& str);
     ExpressionResult(StaticTypeInfo* pInfo);
     ExpressionResult(const std::string& str, FunctionCallNode* pNode);
-    ExpressionResult(const std::string& str, bool constantValue);
     ExpressionResult(FieldSelectResult* pRes);
+    ExpressionResult(const UIntConstant &ConstUInt);
 
     std::string DebugPrint();
 

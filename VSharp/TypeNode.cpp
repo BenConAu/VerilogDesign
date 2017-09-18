@@ -14,7 +14,7 @@ TypeNode::TypeNode(
     _typeClass = typeClass;
     _extra = type;
     _pTypeInfo = nullptr;
-    _IsWire = false;
+    _TypeModifier = TypeModifier::None;
 }
 
 TypeNode::TypeNode(
@@ -25,7 +25,7 @@ TypeNode::TypeNode(
     _typeClass = typeClass;
     _extra = 0;
     _pTypeInfo = nullptr;
-    _IsWire = false;
+    _TypeModifier = TypeModifier::None;
 }
 
 TypeNode::TypeNode(
@@ -36,17 +36,12 @@ TypeNode::TypeNode(
     _typeClass = TypeClass::Register;
     _extra = bitLength._value;
     _pTypeInfo = nullptr;
-    _IsWire = false;
+    _TypeModifier = TypeModifier::None;
 }
 
-void TypeNode::SetModifier(int symIndex)
+void TypeNode::SetModifier(TypeModifier modifier)
 {
-    if (symIndex != WIRE_TOKEN)
-    {
-        throw "Unexpected modifier";
-    }
-
-    _IsWire = true;
+    _TypeModifier = modifier;
 }
 
 TypeInfo *TypeNode::GetTypeInfo()

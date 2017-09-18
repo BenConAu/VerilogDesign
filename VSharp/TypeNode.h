@@ -2,6 +2,7 @@
 
 #include "ASTNode.h"
 #include "TypeInfo.h"
+#include "TypeModifier.h"
 #include "VSharp.tab.h"
 
 class TypeNode : public ASTNode
@@ -26,14 +27,14 @@ public:
     TypeInfo* GetTypeInfo();
     void VerifyNodeImpl() override;
     const char* GetDebugName() override { return "TypeNode"; }
-    void SetModifier(int modifier);
+    TypeModifier GetModifier() const { return _TypeModifier; }
+    void SetModifier(TypeModifier modifier);
     TypeClass GetTypeClass() const { return _typeClass; }
-    bool IsWire() const { return _IsWire; }
 
 private:
     TypeClass _typeClass;
+    TypeModifier _TypeModifier;
     int _extra;
-    bool _IsWire;
 
     TypeInfo* _pTypeInfo;
 };

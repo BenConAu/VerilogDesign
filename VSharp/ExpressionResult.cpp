@@ -26,15 +26,6 @@ ExpressionResult::ExpressionResult(const std::string& str, FunctionCallNode* pNo
     _pConstructorCall = pNode;
 }
 
-ExpressionResult::ExpressionResult(const std::string& str, bool constantValue)
-{
-    _result = str;
-    _IsConstant = true;
-    _ConstantValue = constantValue;
-    _pStaticInfo = nullptr;
-    _pConstructorCall = nullptr;
-}
-
 ExpressionResult::ExpressionResult(FieldSelectResult* pRes)
 {
     _FieldSelect.reset(pRes);
@@ -49,6 +40,27 @@ ExpressionResult::ExpressionResult(FieldSelectResult* pRes)
 
     _result = result;
     _IsConstant = false;
+    _pStaticInfo = nullptr;
+    _pConstructorCall = nullptr;
+}
+
+ExpressionResult::ExpressionResult(const UIntConstant& ConstUInt)
+{
+    if (ConstUInt._bitLength == 1)
+    {
+        _result = (ConstUInt._value == 1) ? "1'b1" : "1'b0";
+        _IsConstant = true;
+        _ConstantValue = (ConstUInt._value == 1);
+    }
+    else
+    {
+        char result[100];
+        sprintf(result, "%u'd%u", ConstUInt._bitLength, ConstUInt._value);
+    
+        _result = result;
+        _IsConstant = false;
+    }    
+
     _pStaticInfo = nullptr;
     _pConstructorCall = nullptr;
 }

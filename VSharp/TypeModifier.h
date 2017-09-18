@@ -4,4 +4,5 @@ enum class TypeModifier
 {
     None,
     Wire,
+    Const,
 };

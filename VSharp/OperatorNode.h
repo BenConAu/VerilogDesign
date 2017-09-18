@@ -34,6 +34,7 @@ class OperatorNode : public ExpressionNode
     virtual ExpressionResult *CalculateResult() override;
     const char* GetDebugName() override { return "OperatorNode"; }
     bool IsLValue() override { return false; }    
+    bool ConstEvaluate(UIntConstant* pVal) override;
     
   private:
     Operator _op;

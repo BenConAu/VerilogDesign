@@ -70,6 +70,7 @@
 "if"                 { return IF_TOKEN; }
 "else"               { return ELSE_TOKEN; }
 "enum"               { return ENUM_TOKEN; }
+"const"              { return CONST_TOKEN; }
 "__finish"           { return FINISH_TOKEN; }
 "wire"               { return WIRE_TOKEN; }
 "true"                      { yylval->constVal = UIntConstant((unsigned int)1, 1); return BOOLCONSTANT; }

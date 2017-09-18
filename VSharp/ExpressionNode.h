@@ -20,6 +20,7 @@ public:
     
     virtual ExpressionResult* CalculateResult() = 0;
     virtual bool IsLValue() = 0;
+    virtual bool ConstEvaluate(UIntConstant* pVal);
 
     static bool EqualType(ASTNode* pA, ASTNode* pB);
 

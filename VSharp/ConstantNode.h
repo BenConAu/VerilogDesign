@@ -13,6 +13,7 @@ public:
     const char* GetDebugName() override { return "ConstantNode"; }
     ASTNode* DuplicateNodeImpl() override;
     bool IsLValue() override { return false; }    
+    bool ConstEvaluate(UIntConstant* pVal) override;
     
 private:
     unsigned int GetUInt();

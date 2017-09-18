@@ -3,6 +3,7 @@
 #include "ASTNode.h"
 
 class TypeNode;
+class ExpressionNode;
 
 class VariableDeclarationNode : public ASTNode
 {
@@ -12,20 +13,14 @@ public:
     const YYLTYPE &location,
     ASTNode *pType,
     int symIndex,
-    const UIntConstant &arraySize,
+    ASTNode *pArraySizeExpr,
     ASTNode *pInitExpr);
 
-  VariableDeclarationNode(
-    ParserContext *pContext,
-    const YYLTYPE &location,
-    ASTNode *pType,
-    int symIndex,
-    ASTNode *pInitExpr);
-
-  void PreVerifyNodeImpl() override;
+  void VerifyNodeImpl() override;
   void PostProcessNodeImpl(OutputContext* pContext) override;
   const char *GetDebugName() override { return "VariableDeclarationNode"; }
   TypeNode* GetTypeNode();
+  ExpressionNode* GetInitNode();
 
 private:
   int _symIndex;

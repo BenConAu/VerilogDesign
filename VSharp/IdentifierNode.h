@@ -28,6 +28,7 @@ public:
     const char* GetDebugName() override { return "IdentifierNode"; }
     const char* GetIdentifierName();
     bool IsLValue() override;
+    bool ConstEvaluate(UIntConstant* pVal) override;
     
 private:
     int _symIndex;

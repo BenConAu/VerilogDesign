@@ -12,35 +12,38 @@ VariableDeclarationNode::VariableDeclarationNode(
     const YYLTYPE &location,
     ASTNode *pType,
     int symIndex,
-    const UIntConstant& arraySize,
+    ASTNode *pArraySizeExpr,
     ASTNode *pInitExpr) : ASTNode(pContext, location)
 {
     AddNode(pType);
+    AddNode(pArraySizeExpr);
     AddNode(pInitExpr);
 
     _symIndex = symIndex;
-    _arraySize = arraySize._value;
-}
 
-VariableDeclarationNode::VariableDeclarationNode(
-    ParserContext *pContext,
-    const YYLTYPE &location,
-    ASTNode *pType,
-    int symIndex,
-    ASTNode *pInitExpr) : ASTNode(pContext, location)
-{
-    AddNode(pType);
-    AddNode(pInitExpr);
-
-    _symIndex = symIndex;
+    // We will determine this size when we verify
     _arraySize = -1;
 }
 
-void VariableDeclarationNode::PreVerifyNodeImpl()
+void VariableDeclarationNode::VerifyNodeImpl()
 {
     //printf("Adding variable %s\n", GetContext()->GetSymbolString(_symIndex).c_str());
     ModuleDefinitionNode *pFunc = GetTypedParent<ModuleDefinitionNode>();
 
+    // Is there an array size?
+    ExpressionNode* pArraySize = dynamic_cast<ExpressionNode*>(GetChild(1));
+    if (pArraySize != nullptr)
+    {
+        UIntConstant SizeEval;
+        if (!pArraySize->ConstEvaluate(&SizeEval))
+        {
+            GetContext()->ReportError(GetLocation(), "Array size must be constant expression");
+        }
+
+        _arraySize = SizeEval._value;
+    }
+
+    // From the type node and array size we can get the type info
     TypeInfo* pInfo = GetTypeNode()->GetTypeInfo();
     if (_arraySize != -1)
     {
@@ -48,12 +51,36 @@ void VariableDeclarationNode::PreVerifyNodeImpl()
     }
 
     // Add variable to collection and mark first usage
-    GetContext()->GetSymbolTable()->AddVariable(
+    VariableInfo* pVarInfo = GetContext()->GetSymbolTable()->AddVariable(
         pFunc,
         _symIndex,
         VariableLocationType::Member,
-        GetTypeNode()->IsWire() ? TypeModifier::Wire : TypeModifier::None,
+        GetTypeNode()->GetModifier(),
         pInfo);
+
+    ExpressionNode* pInitExpr = GetInitNode();
+    if (pInitExpr != nullptr)
+    {
+        RegisterTypeInfo* pRegInfo = dynamic_cast<RegisterTypeInfo*>(pInfo);
+
+        // You need to initialize register types to constant expressions
+        if (pRegInfo != nullptr)
+        {
+            // Right now we want this to only be for constant values
+            if (GetTypeNode()->GetModifier() != TypeModifier::Const)
+            {
+                GetContext()->ReportError(GetLocation(), "Can only initialize constant registers");
+            }
+
+            UIntConstant InitValue;
+            if (!pInitExpr->ConstEvaluate(&InitValue))
+            {
+                GetContext()->ReportError(GetLocation(), "Init expressions for register types must be constant expressions");
+            }
+
+            pVarInfo->SetInitialValue(InitValue);
+        }
+    }
 }
 
 void VariableDeclarationNode::PostProcessNodeImpl(OutputContext* pContext)
@@ -62,16 +89,24 @@ void VariableDeclarationNode::PostProcessNodeImpl(OutputContext* pContext)
 
     // Spit out the preamble
     VariableInfo* pInfo = dynamic_cast<VariableInfo*>(GetContext()->GetSymbolTable()->GetInfo(_symIndex, pModule));
-    ExpressionNode* pInitExpr = dynamic_cast<ExpressionNode*>(GetChild(1));
 
-    // Each type should know how to make a declaration
-    std::string decl = pInfo->GetTypeInfo()->GetDeclaration(pInfo, pInitExpr);
-
-    // This node owns putting the semicolon on it
-    pContext->OutputLine("%s;", decl.c_str());    
+    // We don't emit Verilog for constant variables
+    if (pInfo->GetModifier() != TypeModifier::Const)
+    {
+        // Each type should know how to make a declaration
+        std::string decl = pInfo->GetTypeInfo()->GetDeclaration(pInfo, GetInitNode());
+    
+        // This node owns putting the semicolon on it
+        pContext->OutputLine("%s;", decl.c_str());    
+    }
 }
 
 TypeNode* VariableDeclarationNode::GetTypeNode()
 {
     return dynamic_cast<TypeNode *>(GetChild(0));
+}
+
+ExpressionNode* VariableDeclarationNode::GetInitNode()
+{
+    return dynamic_cast<ExpressionNode *>(GetChild(2));
 }

@@ -33,8 +33,18 @@ void ExpressionNode::SetType(TypeInfo *pInfo)
 
 void ExpressionNode::PostProcessNodeImpl(OutputContext* pContext)
 {
+    // Maybe we can make a constant out of this
+    UIntConstant Eval;
+    if (ConstEvaluate(&Eval))
+    {
+        _pResult = new ExpressionResult(Eval);
+    }
+    else
+    {
+        _pResult = CalculateResult();
+    }
+
     // Calculate our result using the result of the children
-    _pResult = CalculateResult();
     _fResultCalculated = true;
 }
 
@@ -80,4 +90,9 @@ ExpressionResult* ExpressionNode::TakeResult()
     {
         throw "Result already taken";
     }
+}
+
+bool ExpressionNode::ConstEvaluate(UIntConstant* pVal)
+{
+    return false;
 }
