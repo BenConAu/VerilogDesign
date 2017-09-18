@@ -43,7 +43,11 @@ void BitSelectionNode::VerifyNodeImpl()
     RegisterTypeInfo* pRegTypeInfo = dynamic_cast<RegisterTypeInfo*>(pTypeInfo);
     if (pRegTypeInfo == nullptr)
     {
-        GetContext()->ReportError(GetLocation(), "Can only select bits from uint types");
+        StructTypeInfo* pStructTypeInfo = dynamic_cast<StructTypeInfo*>(pTypeInfo);
+        if (pStructTypeInfo == nullptr)
+        {
+            GetContext()->ReportError(GetLocation(), "Can only select bits from uint and struct types");            
+        }
     }
 
     if (_i1 < 0 || _i2 < 0)
@@ -51,7 +55,7 @@ void BitSelectionNode::VerifyNodeImpl()
         GetContext()->ReportError(GetLocation(), "Must have positive bit indices to select bits");
     }
 
-    if (_i1 >= pRegTypeInfo->GetBitLength() || _i2 >= pRegTypeInfo->GetBitLength())
+    if (_i1 >= pTypeInfo->GetBitLength() || _i2 >= pTypeInfo->GetBitLength())
     {
         GetContext()->ReportError(GetLocation(), "Bit index out of range");
     }
