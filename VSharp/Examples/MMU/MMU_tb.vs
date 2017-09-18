@@ -39,7 +39,7 @@ module MMU_TestBench()
   uint32 ptAddress;
 
   // Somewhere to store PT entries
-  TLBEntry entry1;
+  PTEntry entry1;
 
   PhysicalRAM ram = PhysicalRAM(clk, phRamAddress, phWriteEnable, phRamWrite, out phRamRead);
 
@@ -59,7 +59,7 @@ module MMU_TestBench()
     ptAddress = 0x0;
 
     // Set up stuff we want to write out
-    entry1 = TLBEntry(true, false, 0u22, 0xabcu20, 7u20);
+    entry1 = PTEntry(true, false, 0u22, 0xabcu20, 7u20);
 
     transition BeginPTWrite1;
   }

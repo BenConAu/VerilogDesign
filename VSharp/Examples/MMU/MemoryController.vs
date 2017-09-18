@@ -5,7 +5,7 @@ enum ControllerStatus
   MCReady,
 }
 
-struct TLBEntry
+struct PTEntry
 {
   bool IsValid;           // If this entry is valid or not
   bool IsProtected;       // If this page is ptotected 
@@ -48,9 +48,9 @@ module MemoryController(
   uint32 savedFirstWord;
 
   // Construct a TLB entry from two memory words that have been read
-  TLBEntry TLBEntryFromWords(uint32 upperWord, uint32 lowerWord)
+  PTEntry TLBEntryFromWords(uint32 upperWord, uint32 lowerWord)
   {
-    return TLBEntry(
+    return PTEntry(
       upperWord[31:31],
       upperWord[30:30],
       upperWord[29:8],
@@ -81,17 +81,17 @@ module MemoryController(
   }
 
   // The TLBs - we have one for kernel mode and one for user mode
-  TLBEntry tlbEntries[64];
+  PTEntry tlbEntries[64];
 
   // Query for a TLB entry from an address
-  TLBEntry GetTLBEntryFromAddress(uint32 address)
+  PTEntry GetTLBEntryFromAddress(uint32 address)
   {
     return tlbEntries[GetPageHash(address)];
   }
   
   void SetTLBEntry(
     uint<6> pageNumber,
-    TLBEntry newEntry)
+    PTEntry newEntry)
   {
       tlbEntries[pageNumber] = newEntry;
   }
@@ -143,7 +143,7 @@ module MemoryController(
   // Given an address and a TLB entry that is known to map to it, attempt
   // to create the appropriate physical RAM request.
   void TranslateVirtualRequest(
-    TLBEntry reqTLBEntry,
+    PTEntry reqTLBEntry,
     MemoryRequest request)
   {
     if (reqTLBEntry.IsProtected && mcExecMode)
