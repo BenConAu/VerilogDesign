@@ -24,5 +24,12 @@ VariableInfo::VariableInfo(
 
 ExpressionResult *VariableInfo::CalculateResult(ModuleDefinitionNode *pScope)
 {
-    return new ExpressionResult(GetSymbol());
+    if (_nameOverride.length() == 0)
+    {
+        return new ExpressionResult(GetSymbol());
+    }
+    else
+    {
+        return new ExpressionResult(_nameOverride);
+    }
 }

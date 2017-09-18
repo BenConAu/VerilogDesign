@@ -1,23 +1,10 @@
-RAM = xx:xx:xx:xx:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
-We have hit the ready state
-RAM = xx:xx:xx:xx:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
-RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
-RAM = 23:01:00:00:xx:xx:xx:xx | Status = 2 | MMU value read = xxxxxxxx
-We have hit the ready state
-RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
-RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
-RAM = 23:01:00:00:xx:xx:xx:xx | Status = 2 | MMU value read = xxxxxxxx
-We have hit the ready state
-RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
-RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
-RAM = 23:01:00:00:xx:xx:xx:xx | Status = 2 | MMU value read = xxxxxxxx
-RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
-RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
-RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
-RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
-RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
-RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
-RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
-RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
-RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
-RAM = 23:01:00:00:xx:xx:xx:xx | Status = 1 | MMU value read = xxxxxxxx
+                   5 | RAM = xx:xx:xx:xx:xx:xx:xx:xx | WriteEnable = x | RAM value read = xxxxxxxx
+                  15 | RAM = xx:xx:xx:xx:xx:xx:xx:xx | WriteEnable = 1 | RAM value read = xxxxxxxx
+                  25 | RAM = 23:01:00:00:xx:xx:xx:xx | WriteEnable = 1 | RAM value read = xxxxxxxx
+                  35 | RAM = 23:01:00:00:xx:xx:xx:xx | WriteEnable = 1 | RAM value read = xxxxxxxx
+                  45 | RAM = 23:01:00:00:xx:xx:xx:xx | WriteEnable = 1 | RAM value read = xxxxxxxx
+                  55 | RAM = 23:01:00:00:xx:xx:xx:xx | WriteEnable = 0 | RAM value read = xxxxxxxx
+                  65 | RAM = 23:01:00:00:xx:xx:xx:xx | WriteEnable = 0 | RAM value read = 00000123
+                  75 | RAM = 23:01:00:00:xx:xx:xx:xx | WriteEnable = 0 | RAM value read = 00000123
+                  85 | RAM = 23:01:00:00:xx:xx:xx:xx | WriteEnable = 0 | RAM value read = 00000123
+                  95 | RAM = 23:01:00:00:xx:xx:xx:xx | WriteEnable = 0 | RAM value read = 00000123

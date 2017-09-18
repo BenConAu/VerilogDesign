@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <string>
 #include "VariableLocationType.h"
 #include "TypeModifier.h"
 #include "SymbolInfo.h"
@@ -27,11 +28,14 @@ class VariableInfo : public SymbolInfo
     ExpressionResult *CalculateResult(ModuleDefinitionNode *pScope);
 
     TypeInfo *GetTypeInfo() { return _pType; }
+    void SetNameOverride(const char* pszName) { _nameOverride = pszName; }
+    const std::string GetNameOverride() { return _nameOverride; }
 
   private:
     // Type of location (globals are stored in data segment, local backed by register)
     VariableLocationType _locationType;
     TypeModifier _modifier;
+    std::string _nameOverride;
 
     // C++ type of variable
     TypeInfo *_pType;

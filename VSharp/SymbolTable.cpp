@@ -29,6 +29,16 @@ void SymbolTable::AddBuiltin()
         -1,
         "$display");
     _symbols.emplace(std::make_pair(pNewInfo->GetSymbolIndex(), std::unique_ptr<SymbolInfo>(pNewInfo)));
+
+    VariableInfo *pVarInfo = new VariableInfo(
+        _pCompiler,
+        nullptr,
+        _pCompiler->AddSymbol("__time"),
+        VariableLocationType::Member,
+        TypeModifier::None,
+        _pCompiler->GetTypeCollection()->GetRegisterType(32));
+    pVarInfo->SetNameOverride("$time");
+    _symbols.emplace(std::make_pair(pVarInfo->GetSymbolIndex(), std::unique_ptr<SymbolInfo>(pVarInfo)));
 }
 
 VariableInfo *SymbolTable::AddVariable(

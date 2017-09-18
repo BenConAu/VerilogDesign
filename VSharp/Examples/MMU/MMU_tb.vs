@@ -1,12 +1,55 @@
 import "MemoryController.vs";
 
+module PhysicalRAM(
+  clock clk,
+  uint32 address,
+  bool WriteEnable,
+  uint32 WriteValue,
+  out uint32 ReadValue
+  )
+{
+  // Storage for the fake RAM
+  uint8 fileRam[65536];
+
+  state initial
+  {
+    __monitor(
+      "%d | RAM = %h:%h:%h:%h:%h:%h:%h:%h | WriteEnable = %h | RAM value read = %h",
+      __time,
+      fileRam[0], 
+      fileRam[1], 
+      fileRam[2], 
+      fileRam[3], 
+      fileRam[4], 
+      fileRam[5], 
+      fileRam[6], 
+      fileRam[7],
+      WriteEnable,
+      ReadValue);
+
+    if (WriteEnable)
+    {
+      //$display("Writing %h into %h", phRamWrite, phRamAddress);
+      fileRam[address] = WriteValue[7:0];
+      fileRam[address + 1] = WriteValue[15:8];
+      fileRam[address + 2] = WriteValue[23:16];
+      fileRam[address + 3] = WriteValue[31:24];
+    }
+    else
+    {
+      //$display("Retrieving address %h", phRamAddress);
+      ReadValue[7:0] = fileRam[address];
+      ReadValue[15:8] = fileRam[address + 1];
+      ReadValue[23:16] = fileRam[address + 2];
+      ReadValue[31:24] = fileRam[address + 3];
+    }
+  }
+}
+
 module MMU_TestBench()
 {  
   // Define the clock to drive the circuit
   clock clk;
-
-  // Storage for the fake RAM
-  uint8 fileRam[65536];
 
   // The value that the controller returned
   wire uint32 RamOutput;
@@ -21,8 +64,8 @@ module MMU_TestBench()
   uint32 mcRamIn;
 
   // Whether we want a read or a write
-  bool mcReadReq;
-  bool mcWriteReq;
+  bool mcRequest;
+  bool mcWriteEnable;
 
   // Whether we want virtual addressing
   bool mcAddrVirtual;
@@ -31,62 +74,72 @@ module MMU_TestBench()
   bool mcExecMode;
 
   // The value that we want to write to physical RAM
-  uint32 phRamRead;
+  wire uint32 phRamRead;
 
   wire uint32 phRamWrite;
   wire uint32 phRamAddress;
-  wire bool  phReadReq;
-  wire bool  phWriteReq;
+  wire bool  phRequest;
+  wire bool  phWriteEnable;
   wire uint32 debug;
   wire uint32 ptAddress;
 
+  PhysicalRAM ram = PhysicalRAM(clk, phRamAddress, phWriteEnable, phRamWrite, out phRamRead);
+
 	drive
 	{
-    0: mcRamAddress = 0;
-    0: mcWriteReq = 0b1;
-    0: mcReadReq = 0b0;
-    0: mcRamIn = 0x123;
-    100: mcWriteReq = 0b0;
 		100: __finish;
 	}
 
   // Fake RAM
   state initial
   {
-    __monitor(
-      "RAM = %h:%h:%h:%h:%h:%h:%h:%h | Status = %h | MMU value read = %h", 
-      fileRam[0], 
-      fileRam[1], 
-      fileRam[2], 
-      fileRam[3], 
-      fileRam[4], 
-      fileRam[5], 
-      fileRam[6], 
-      fileRam[7],
-      mcStatus,
-      RamOutput);
-
     // No funny business with kernel mode or virtual memory
     mcExecMode = 0b0;
     mcAddrVirtual = 0b0;
 
-    if (phReadReq == 1)
-    {
-      //$display("Retrieving address %h", phRamAddress);
-      phRamRead[7:0] = fileRam[phRamAddress];
-      phRamRead[15:8] = fileRam[phRamAddress + 1];
-      phRamRead[23:16] = fileRam[phRamAddress + 2];
-      phRamRead[31:24] = fileRam[phRamAddress + 3];
-    }
+    mcRamAddress = 0;
+    mcRequest = true;
+    mcWriteEnable = true;
+    mcRamIn = 0x123;
 
-    if (phWriteReq == 1)
+    transition WaitWrite1;
+  }
+
+  state WaitWrite1
+  {
+    //__display("WaitWrite1 Status = %h", mcStatus);
+
+    if (mcStatus == ControllerStatus.MCReady)
     {
-      //$display("Writing %h into %h", phRamWrite, phRamAddress);
-      fileRam[phRamAddress] = phRamWrite[7:0];
-      fileRam[phRamAddress + 1] = phRamWrite[15:8];
-      fileRam[phRamAddress + 2] = phRamWrite[23:16];
-      fileRam[phRamAddress + 3] = phRamWrite[31:24];
+      //__display("First write complete!");
+
+      mcRequest = true;
+      mcWriteEnable = false;
+
+      transition WaitRead1;
     }
+    else
+    {
+      mcRequest = false;
+    }
+  }
+
+  state WaitRead1
+  {
+    //__display("WaitRead1 Status = %h", mcStatus);
+
+    mcRequest = false;
+
+    if (mcStatus == ControllerStatus.MCReady)
+    {
+      //__display("First read of %h complete!", RamOutput);
+
+      transition End;
+    }
+  }
+
+  state End
+  {
   }
 
   MemoryController MMU1 = MemoryController(
@@ -95,15 +148,15 @@ module MMU_TestBench()
     out mcStatus,             // [Output] Status of controller (0 means not ready, 1 means ready, 2 means error)
     mcRamAddress,             // [Input] RAM address requested
     mcRamIn,                  // [Input] RAM to write
-    mcReadReq,                // [Input] RAM read request
-    mcWriteReq,               // [Input] RAM write request
+    mcRequest,                // [Input] RAM read request
+    mcWriteEnable,            // [Input] RAM write request
     mcAddrVirtual,            // [Input] Virtual flag for RAM
     mcExecMode,               // [Input] Execution mode for RAM
     phRamRead,                // [Input]  RAM at requested address
     out phRamAddress,         // [Output] RAM address requested
     out phRamWrite,           // [Output] RAM to write
-    out phReadReq,            // [Output] RAM read request
-    out phWriteReq,           // [Output] RAM write request
+    out phRequest,            // [Output] RAM read request
+    out phWriteEnable,        // [Output] RAM write request
     ptAddress,                // [Input] Page table address
     out debug                 // [Output] Debug port
     );
