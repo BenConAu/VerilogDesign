@@ -24,7 +24,7 @@ module EnumTest(
 
 	state StartState
 	{
-		out1 = 0x1;
+		out1 = 0x1u32;
 		out2 = true;
 		out3 = 1u4;
 

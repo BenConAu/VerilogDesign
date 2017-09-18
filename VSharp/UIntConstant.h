@@ -4,11 +4,11 @@
 
 struct UIntConstant
 {
-    UIntConstant(const char* pszLengthened)
+    UIntConstant(const char* pszLengthened, int radix)
     {
         const char* pszUStart = ::strstr(pszLengthened, "u");
 
-        _value = ::atoi(pszLengthened);
+        _value = ::strtol(pszLengthened, nullptr, radix);
         _bitLength = ::atoi(pszUStart + 1);
     }
 
