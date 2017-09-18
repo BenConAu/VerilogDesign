@@ -1,0 +1,32 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "V#",
+	"patterns": [
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#strings"
+		}
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [{
+				"name": "keyword.control.vsharp",
+				"match": "\\b(enum|state|transition|struct|module|bool|uint|uint8|uint16|uint32|uint64|clock|if|return)\\b"
+			}]
+		},
+		"strings": {
+			"name": "string.quoted.double.vsharp",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "constant.character.escape.vsharp",
+					"match": "\\\\."
+				}
+			]
+		}
+	},
+	"scopeName": "source.vsharp"
+}

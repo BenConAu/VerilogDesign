@@ -1,0 +1,26 @@
+{
+    "name": "vs",
+    "displayName": "vs",
+    "description": "V#",
+    "version": "0.0.1",
+    "publisher": "BenCon77",
+    "engines": {
+        "vscode": "^1.16.0"
+    },
+    "categories": [
+        "Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "vsharp",
+            "aliases": ["V#", "vsharp"],
+            "extensions": ["vs"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "vsharp",
+            "scopeName": "source.vsharp",
+            "path": "./syntaxes/vsharp.tmLanguage.json"
+        }]
+    }
+}
