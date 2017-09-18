@@ -13,10 +13,8 @@ module MMU_TestBench(
   reg clk = 0; always #5 clk = !clk;
   wire[31:0] RamOutput;
   wire[1:0] mcStatus;
-  reg[31:0] mcRamAddress;
-  reg[31:0] mcRamIn;
-  reg[0:0] mcRequest;
-  reg[0:0] mcWriteEnable;
+  reg[64:0] mcRequest;
+  reg[0:0] mcCommand;
   reg[0:0] mcAddrVirtual;
   reg[0:0] mcExecMode;
   wire[31:0] phRamRead;
@@ -28,7 +26,7 @@ module MMU_TestBench(
   reg[31:0] ptAddress;
   reg[63:0] entry1;
   PhysicalRAM ram(clk, phRamAddress, phWriteEnable, phRamWrite, phRamRead);
-  MemoryController MMU1(clk, RamOutput, mcStatus, mcRamAddress, mcRamIn, mcRequest, mcWriteEnable, mcAddrVirtual, mcExecMode, phRamRead, phRamAddress, phRamWrite, phRequest, phWriteEnable, ptAddress, debug);
+  MemoryController MMU1(clk, RamOutput, mcStatus, mcRequest, mcCommand, mcAddrVirtual, mcExecMode, phRamRead, phRamAddress, phRamWrite, phRequest, phWriteEnable, ptAddress, debug);
   initial
   begin
     # 300 $finish;
@@ -45,53 +43,51 @@ module MMU_TestBench(
         fsmState <= `__BeginPTWrite1;
       end
       `__BeginPTWrite1: begin
-        mcRamAddress <= 32'd21984;
-        mcRequest <= 1'b1;
-        mcWriteEnable <= 1'b1;
-        mcRamIn <= entry1[63:32];
+        mcRequest <= { 32'd21984, entry1[63:32], 1'b1 };
+        mcCommand <= 1;
         fsmState <= `__EndPTWrite1;
       end
       `__EndPTWrite1: begin
         if (mcStatus == 2)
         begin
-          mcRamAddress <= 32'd21988;
-          mcRequest <= 1'b1;
-          mcRamIn <= entry1[31:0];
+          mcRequest[64:33] <= 32'd21988;
+          mcRequest[32:1] <= entry1[31:0];
+          mcCommand <= 1;
           fsmState <= `__EndPTWrite2;
         end
         else
         begin
-          mcRequest <= 1'b0;
+          mcCommand <= 0;
         end
       end
       `__EndPTWrite2: begin
         if (mcStatus == 2)
         begin
           mcAddrVirtual <= 1'b1;
-          mcRamAddress <= 32'd11255808;
-          mcRequest <= 1'b1;
-          mcRamIn <= 32'd3203395597;
+          mcRequest[64:33] <= 32'd11255808;
+          mcRequest[32:1] <= 32'd3203395597;
+          mcCommand <= 1;
           fsmState <= `__BeginVirtualRead;
         end
         else
         begin
-          mcRequest <= 1'b0;
+          mcCommand <= 0;
         end
       end
       `__BeginVirtualRead: begin
         if (mcStatus == 2)
         begin
-          mcRequest <= 1'b1;
-          mcWriteEnable <= 1'b0;
+          mcRequest[0:0] <= 1'b0;
+          mcCommand <= 1;
           fsmState <= `__EndPTRead1;
         end
         else
         begin
-          mcRequest <= 1'b0;
+          mcCommand <= 0;
         end
       end
       `__EndPTRead1: begin
-        mcRequest <= 1'b0;
+        mcCommand <= 0;
         if (mcStatus == 2)
         begin
           fsmState <= `__End;

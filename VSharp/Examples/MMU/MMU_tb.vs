@@ -12,15 +12,11 @@ module MMU_TestBench()
   // The controller reports its status
   wire ControllerStatus mcStatus;
 
-  // The address that we provide to the controller
-  uint32 mcRamAddress;
+  // The request that we provide to the controller
+  MemoryRequest mcRequest;
 
-  // The value we want to write to RAM
-  uint32 mcRamIn;
-
-  // Whether we want a read or a write
-  bool mcRequest;
-  bool mcWriteEnable;
+  // Whether we are making a request from the controller
+  ControllerCommand mcCommand;
 
   // Whether we want virtual addressing
   bool mcAddrVirtual;
@@ -67,11 +63,12 @@ module MMU_TestBench()
   // Begin write of the first uint32 of the PT
   state BeginPTWrite1
   {
-    // 0xabc * 8 == 0x55e0
-    mcRamAddress = 0x55e0;
-    mcRequest = true;
-    mcWriteEnable = true;
-    mcRamIn = entry1[63:32];
+    mcRequest = MemoryRequest(
+      0x55e0,         // Address - 0xabc * 8 == 0x55e0
+      entry1[63:32],  // What to write, MSB of PT entry
+      true);          // This is a write
+
+    mcCommand = ControllerCommand.Request;
 
     transition EndPTWrite1;    
   }
@@ -79,17 +76,19 @@ module MMU_TestBench()
   // When that write is complete, begin write of second uint32
   state EndPTWrite1
   {
-    if (mcStatus == ControllerStatus.MCReady)
+    if (mcStatus == ControllerStatus.Ready)
     {
-      mcRamAddress = 0x55e4;
-      mcRequest = true;
-      mcRamIn = entry1[31:0];
+      // Write LSB of PT entry
+      mcRequest.Address = 0x55e4;
+      mcRequest.WriteData = entry1[31:0];
+
+      mcCommand = ControllerCommand.Request;
 
       transition EndPTWrite2;
     }
     else
     {
-      mcRequest = false;
+      mcCommand = ControllerCommand.None;
     }
   }
 
@@ -97,21 +96,22 @@ module MMU_TestBench()
   // and write a value to the beginning of the virtual page
   state EndPTWrite2
   {
-    if (mcStatus == ControllerStatus.MCReady)
+    if (mcStatus == ControllerStatus.Ready)
     {
       // Enable virtual memory
       mcAddrVirtual = true;
       
       // Write to 0xabc000, which should write to 0x7000
-      mcRamAddress = 0xabc000;
-      mcRequest = true;
-      mcRamIn = 0xbeeff00d;
+      mcRequest.Address = 0xabc000;
+      mcRequest.WriteData = 0xbeeff00d;
+
+      mcCommand = ControllerCommand.Request;
 
       transition BeginVirtualRead;
     }
     else
     {
-      mcRequest = false;
+      mcCommand = ControllerCommand.None;
     }
   }
 
@@ -119,17 +119,18 @@ module MMU_TestBench()
   // works just fine.
   state BeginVirtualRead
   {
-    if (mcStatus == ControllerStatus.MCReady)
+    if (mcStatus == ControllerStatus.Ready)
     {
       // Read from 0xabc000, which should read from 0x7000
-      mcRequest = true;
-      mcWriteEnable = false;
+      mcRequest.WriteEnable = false;
+
+      mcCommand = ControllerCommand.Request;
 
       transition EndPTRead1;
     }
     else
     {
-      mcRequest = false;
+      mcCommand = ControllerCommand.None;
     }
   }
 
@@ -137,9 +138,9 @@ module MMU_TestBench()
   {
     //__display("WaitRead1 Status = %h", mcStatus);
 
-    mcRequest = false;
+    mcCommand = ControllerCommand.None;
 
-    if (mcStatus == ControllerStatus.MCReady)
+    if (mcStatus == ControllerStatus.Ready)
     {
       //__display("First read of %h complete!", RamOutput);
 
@@ -155,10 +156,8 @@ module MMU_TestBench()
     clk,                      // [Input] The clock driving the controller
     out RamOutput,            // [Output] RAM at requested address
     out mcStatus,             // [Output] Status of controller (0 means not ready, 1 means ready, 2 means error)
-    mcRamAddress,             // [Input] RAM address requested
-    mcRamIn,                  // [Input] RAM to write
-    mcRequest,                // [Input] RAM read request
-    mcWriteEnable,            // [Input] RAM write request
+    mcRequest,                // [Input] Controller request
+    mcCommand,                // [Input] Controller command
     mcAddrVirtual,            // [Input] Virtual flag for RAM
     mcExecMode,               // [Input] Execution mode for RAM
     phRamRead,                // [Input]  RAM at requested address

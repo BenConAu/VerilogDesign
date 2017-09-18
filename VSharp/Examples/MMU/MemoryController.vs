@@ -1,8 +1,16 @@
+// Status of memory controller - it will only serve requests
+// if you make a request while it is ready.
 enum ControllerStatus
 {
   Error,
-  MCWaiting,
-  MCReady,
+  Waiting,
+  Ready,
+}
+
+enum ControllerCommand
+{
+  None,
+  Request,
 }
 
 struct PTEntry
@@ -24,11 +32,9 @@ struct MemoryRequest
 module MemoryController(
   clock clk,                      // [Input] The clock driving the controller
   out uint32 mcRamOut,            // [Output] RAM at requested address
-  out ControllerStatus mcStatus,  // [Output] Status of controller (0 means not ready, 1 means ready, 2 means error)
-  uint32 mcRamAddress,            // [Input] RAM address requested
-  uint32 mcRamIn,                 // [Input] RAM to write
-  bool mcRequest,                 // [Input] Request enable
-  bool mcWriteEnable,             // [Input] RAM read request
+  out ControllerStatus mcStatus,  // [Output] Status of controller
+  MemoryRequest RequestIn,        // [Input] Request made of controller
+  ControllerCommand mcCommand,    // [Input] Request enable
   bool mcAddrVirtual,             // [Input] Virtual flag for RAM
   bool mcExecMode,                // [Input] Execution mode for RAM
   uint32 phRamIn,                 // [Input]  RAM at requested address
@@ -136,7 +142,7 @@ module MemoryController(
     // Save the request details
     savedRequest = request;
 
-    mcStatus = ControllerStatus.MCWaiting;
+    mcStatus = ControllerStatus.Waiting;
     transition PRamWait1;    
   }
 
@@ -168,7 +174,7 @@ module MemoryController(
 
   state initial
   {
-    mcStatus = ControllerStatus.MCWaiting;
+    mcStatus = ControllerStatus.Waiting;
 
     transition Ready;
   }
@@ -176,18 +182,14 @@ module MemoryController(
   state Ready
   {
     // Only initiate requests when ready and request line is high
-    if (mcRequest)
+    if (mcCommand == ControllerCommand.Request)
     {
       if (!mcAddrVirtual)
       {
         //__display("Physical access, mcWriteEnable is %h, addr is %h, ramIn is %h", mcWriteEnable, mcRamAddress, mcRamIn);
 
         // This is a request for a physical address, so pass the request directly
-        RequestPhysicalAddress(
-          MemoryRequest(
-            mcRamAddress,
-            mcRamIn,
-            mcWriteEnable));
+        RequestPhysicalAddress(RequestIn);
       }
       else
       {
@@ -196,7 +198,7 @@ module MemoryController(
         // This is a request for a virtual address - see if the TLB entry for this address
         // is a valid one and if so, request the page pointed to by the TLB. If the TLB
         // misses, populate it first and then try again.
-        if (IsTLBValidForAddress(mcRamAddress))
+        if (IsTLBValidForAddress(RequestIn.Address))
         {
           //__display(
             //"Page to translate %h found in TLB entry %h, index %h", 
@@ -205,11 +207,8 @@ module MemoryController(
             //GetPageHash(mcRamAddress));
 
           TranslateVirtualRequest(
-            GetTLBEntryFromAddress(mcRamAddress),
-            MemoryRequest( 
-              mcRamAddress,
-              mcRamIn,
-              mcWriteEnable));
+            GetTLBEntryFromAddress(RequestIn.Address),
+            RequestIn);
         }
         else
         {
@@ -222,27 +221,25 @@ module MemoryController(
           // TLB miss - need to lookup in page table. The page table
           // currently is a single level, and only supports up to 256
           // pages to keep it easy (8 bit index).
-          phRamAddress = CalcPTEntryAddress(mcRamAddress);
+          phRamAddress = CalcPTEntryAddress(RequestIn.Address);
           phRequest = true;
           phWriteEnable = false;
 
           // Save the address of the first word of the PT entry
-          savedPTReadAddr = CalcPTEntryAddress(mcRamAddress);
+          savedPTReadAddr = CalcPTEntryAddress(RequestIn.Address);
 
           // Save our request parameters
-          savedRequest.Address = mcRamAddress;
-          savedRequest.WriteEnable = mcWriteEnable;
-          savedRequest.WriteData = mcRamIn;
+          savedRequest = RequestIn;
 
           // Wait for the first word to read out
-          mcStatus = ControllerStatus.MCWaiting;
+          mcStatus = ControllerStatus.Waiting;
           transition VPTWait1;
         }
       }
     }
     else
     {
-      mcStatus = ControllerStatus.MCWaiting;
+      mcStatus = ControllerStatus.Waiting;
     }
   }
 
@@ -252,7 +249,7 @@ module MemoryController(
     //__display("%d | Physical Ram Wait 1 for %h", __time, phRamAddress);
 
     phRequest = false;
-    mcStatus = ControllerStatus.MCWaiting;
+    mcStatus = ControllerStatus.Waiting;
     transition PRamWait2;
   }
 
@@ -270,7 +267,7 @@ module MemoryController(
       //$display("Finish PRWait2 with isRead not set");
     }
 
-    mcStatus = ControllerStatus.MCReady;
+    mcStatus = ControllerStatus.Ready;
     transition Ready;
   }
 
@@ -280,7 +277,7 @@ module MemoryController(
 
     // Wait for read to complete
     phRequest = false;
-    mcStatus = ControllerStatus.MCWaiting;
+    mcStatus = ControllerStatus.Waiting;
     transition VPTWait2;
   }
 
@@ -294,7 +291,7 @@ module MemoryController(
     // Now get second half
     phRequest = true;
     phRamAddress = savedPTReadAddr + 4;
-    mcStatus = ControllerStatus.MCWaiting;
+    mcStatus = ControllerStatus.Waiting;
     transition VPTWait3;
   }
 
@@ -304,7 +301,7 @@ module MemoryController(
 
     // Wait for read to complete
     phRequest = false;
-    mcStatus = ControllerStatus.MCWaiting;
+    mcStatus = ControllerStatus.Waiting;
     transition VPTWait4;
   }
 
@@ -326,7 +323,7 @@ module MemoryController(
   state Error
   {
     // Wait a clock for the error to register
-    mcStatus = ControllerStatus.MCWaiting;
+    mcStatus = ControllerStatus.Waiting;
 
     transition Ready;
   }
