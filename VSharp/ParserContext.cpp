@@ -56,6 +56,11 @@ void ParserContext::AddModuleDef(ASTNode *pNode)
     _rootNodes.push_back(std::unique_ptr<ASTNode>(pNode));
 }
 
+void ParserContext::AddFunction(ASTNode* pNode)
+{
+    _rootNodes.push_back(std::unique_ptr<ASTNode>(pNode));
+}
+
 void ParserContext::AddImport(ASTNode *pNode)
 {
     _rootNodes.push_front(std::unique_ptr<ASTNode>(pNode));

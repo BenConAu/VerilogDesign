@@ -62,24 +62,24 @@ enum OpCode
 
 bool Is8ByteOpcode(OpCode opCodeParam)
 {
-  if (opCodeParam == OpCode::MovRC ||
-      opCodeParam == OpCode::MovRdRo ||
-      opCodeParam == OpCode::MovRdRoR ||
-      opCodeParam == OpCode::MovRdC ||
-      opCodeParam == OpCode::MovdCR ||
-      opCodeParam == OpCode::MovdRoR ||
-      opCodeParam == OpCode::MovdRoRR ||
-      opCodeParam == OpCode::CmpRC ||
-      opCodeParam == OpCode::JmpC ||
-      opCodeParam == OpCode::JneC ||
-      opCodeParam == OpCode::JeC ||
-      opCodeParam == OpCode::JzRC ||
-      opCodeParam == OpCode::JnzRC ||
-      opCodeParam == OpCode::RCallRC ||
-      opCodeParam == OpCode::AddRRC ||
-      opCodeParam == OpCode::SubRRC ||
-      opCodeParam == OpCode::MulAddRRC ||
-      opCodeParam == OpCode::LeaRRoR)
+  if (opCodeParam == OpCode.MovRC ||
+      opCodeParam == OpCode.MovRdRo ||
+      opCodeParam == OpCode.MovRdRoR ||
+      opCodeParam == OpCode.MovRdC ||
+      opCodeParam == OpCode.MovdCR ||
+      opCodeParam == OpCode.MovdRoR ||
+      opCodeParam == OpCode.MovdRoRR ||
+      opCodeParam == OpCode.CmpRC ||
+      opCodeParam == OpCode.JmpC ||
+      opCodeParam == OpCode.JneC ||
+      opCodeParam == OpCode.JeC ||
+      opCodeParam == OpCode.JzRC ||
+      opCodeParam == OpCode.JnzRC ||
+      opCodeParam == OpCode.RCallRC ||
+      opCodeParam == OpCode.AddRRC ||
+      opCodeParam == OpCode.SubRRC ||
+      opCodeParam == OpCode.MulAddRRC ||
+      opCodeParam == OpCode.LeaRRoR)
   {
     return true;
   }
@@ -91,18 +91,18 @@ bool Is8ByteOpcode(OpCode opCodeParam)
 
 bool IsRAMOpcode(OpCode opCodeParam)
 {
-  if (opCodeParam == OpCode::MovRdR ||
-      opCodeParam == OpCode::MovRdRo ||
-      opCodeParam == OpCode::MovRdRoR ||
-      opCodeParam == OpCode::MovRdC ||
-      opCodeParam == OpCode::MovdCR ||
-      opCodeParam == OpCode::MovdRoR ||
-      opCodeParam == OpCode::MovdRoRR ||
-      opCodeParam == OpCode::PushR ||
-      opCodeParam == OpCode::PopR ||
-      opCodeParam == OpCode::CallR ||
-      opCodeParam == OpCode::Ret ||
-      opCodeParam == OpCode::SysCallRRR)
+  if (opCodeParam == OpCode.MovRdR ||
+      opCodeParam == OpCode.MovRdRo ||
+      opCodeParam == OpCode.MovRdRoR ||
+      opCodeParam == OpCode.MovRdC ||
+      opCodeParam == OpCode.MovdCR ||
+      opCodeParam == OpCode.MovdRoR ||
+      opCodeParam == OpCode.MovdRoRR ||
+      opCodeParam == OpCode.PushR ||
+      opCodeParam == OpCode.PopR ||
+      opCodeParam == OpCode.CallR ||
+      opCodeParam == OpCode.Ret ||
+      opCodeParam == OpCode.SysCallRRR)
   {
     return true;
   }
@@ -114,10 +114,10 @@ bool IsRAMOpcode(OpCode opCodeParam)
 
 bool IsIOOpcode(OpCode opCodeParam)
 {
-  if (opCodeParam == OpCode::DoutR ||
-      opCodeParam == OpCode::DinR ||
-      opCodeParam == OpCode::ReadPortRR ||
-      opCodeParam == OpCode::WritePortRR)
+  if (opCodeParam == OpCode.DoutR ||
+      opCodeParam == OpCode.DinR ||
+      opCodeParam == OpCode.ReadPortRR ||
+      opCodeParam == OpCode.WritePortRR)
   {
     return true;
   }

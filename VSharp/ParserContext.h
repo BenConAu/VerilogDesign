@@ -31,6 +31,7 @@ public:
     // Called from parser
     void AddTypeDef(ASTNode *pNode);
     void AddModuleDef(ASTNode *pNode);
+    void AddFunction(ASTNode *pNode);
     void AddGlobal(ASTNode *pNode);
     void AddImport(ASTNode *pNode);    
     void UserAction(void *pLocation, const char *pszText);

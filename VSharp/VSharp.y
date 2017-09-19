@@ -174,6 +174,7 @@ translation_unit:
 
 external_declaration:
       module_definition                                             { $$ = $1; pContext->AddModuleDef($$); }
+    | function_definition                                           { $$ = $1; pContext->AddFunction($$); }
     | import_statement                                              { $$ = $1; pContext->AddImport($$); }
     | enum_definition                                               { $$ = $1; pContext->AddTypeDef($$); }
 	| struct_specifier                                              { $$ = $1; pContext->AddTypeDef($$); }

@@ -311,7 +311,7 @@ void OutputInstructions()
                 fprintf(vsFile, " ||\n      ");
             }
 
-            ::fprintf(vsFile, "opCodeParam == OpCode::%s", data.opCode.c_str());
+            ::fprintf(vsFile, "opCodeParam == OpCode.%s", data.opCode.c_str());
 
             fFirst = false;
         }
@@ -332,7 +332,7 @@ void OutputInstructions()
                 fprintf(vsFile, " ||\n      ");
             }
 
-            ::fprintf(vsFile, "opCodeParam == OpCode::%s", data.opCode.c_str());
+            ::fprintf(vsFile, "opCodeParam == OpCode.%s", data.opCode.c_str());
 
             fFirst = false;
         }
@@ -353,7 +353,7 @@ void OutputInstructions()
                 fprintf(vsFile, " ||\n      ");
             }
 
-            ::fprintf(vsFile, "opCodeParam == OpCode::%s", data.opCode.c_str());
+            ::fprintf(vsFile, "opCodeParam == OpCode.%s", data.opCode.c_str());
 
             fFirst = false;
         }
