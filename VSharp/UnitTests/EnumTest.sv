@@ -8,7 +8,7 @@ module EnumTest(
   // inputs / outputs
   input wire reset;
   input wire[31:0] in1;
-  output reg[0:0] out1;
+  output reg[1:0] out1;
   reg clk = 0; always #5 clk = !clk;
   initial
   begin
@@ -30,7 +30,7 @@ module EnumTest(
         end
         else
         begin
-          out1 <= 0;
+          out1 <= { 2'd2 };
         end
       end
     endcase

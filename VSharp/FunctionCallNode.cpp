@@ -9,6 +9,7 @@
 #include "StatementNode.h"
 #include "VariableDeclarationNode.h"
 #include "IdentifierNode.h"
+#include "EnumTypeInfo.h"
 #include "VSharp.tab.h"
 
 class FunctionCallSpec
@@ -52,6 +53,40 @@ public:
 
 private:
     StructTypeInfo* _pStructInfo;
+};
+
+class EnumConstructorSpec : public FunctionCallSpec
+{
+public:
+    EnumConstructorSpec(EnumTypeInfo* pInfo)
+    {
+        _pEnumInfo = pInfo;
+    }
+
+    size_t GetParameterCount() override
+    {
+        return 1;
+    }
+
+    TypeInfo* GetParameterType(size_t index) override
+    {
+        // Provide a way to make from uint
+        return _pEnumInfo->GetContext()->GetTypeCollection()->GetRegisterType(_pEnumInfo->GetBitLength());
+    }
+
+    bool IsParameterOut(size_t index) override
+    {
+        // Enum constructors never take out parameters
+        return false;
+    }    
+
+    TypeInfo* GetReturnType() override
+    {
+        return _pEnumInfo;
+    }
+
+private:
+    EnumTypeInfo* _pEnumInfo;
 };
 
 class DefinedFunctionSpec : public FunctionCallSpec
@@ -249,15 +284,23 @@ void FunctionCallNode::VerifyNodeImpl()
             StructTypeInfo* pStructInfo = GetContext()->GetTypeCollection()->GetStructType(_symIndex);
             if (pStructInfo == nullptr)
             {
-                char message[256];
-                sprintf(
-                    message, 
-                    "Unknown function or struct type %s", 
-                    GetFunctionName());
-                GetContext()->ReportError(GetLocation(), message);
+                EnumTypeInfo* pEnumInfo = GetContext()->GetTypeCollection()->GetEnumType(_symIndex);
+                if (pEnumInfo == nullptr)
+                {
+                    char message[256];
+                    sprintf(
+                        message, 
+                        "Unknown function, struct, or enum type %s", 
+                        GetFunctionName());
+                    GetContext()->ReportError(GetLocation(), message);
+                }
+
+                CallSpec.reset(new EnumConstructorSpec(pEnumInfo));
             }
-    
-            CallSpec.reset(new StructConstructorSpec(pStructInfo));
+            else
+            {
+                CallSpec.reset(new StructConstructorSpec(pStructInfo));
+            }
         }
     }
     else
@@ -408,6 +451,8 @@ ExpressionResult *FunctionCallNode::CalculateResult()
 
         case FunctionType::Constructor:
         {
+            // This should work even for enums, because a single thing in a concat list
+            // is just that single thing.
             std::string resultString = "{ ";
             AppendParameterList(resultString);
             resultString.append(" }");               

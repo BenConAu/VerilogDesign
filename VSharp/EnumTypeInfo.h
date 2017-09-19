@@ -19,6 +19,7 @@ public:
     
     bool IsMember(int symIndex);
     int GetValue(int symIndex);
+    ParserContext* GetContext() { return _pContext; }
 
 private:
     int _symIndex;

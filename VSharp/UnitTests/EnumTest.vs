@@ -2,6 +2,7 @@ enum Foo
 {
 	Bar,
 	Baz,
+	Baffle,
 }
 
 module EnumTest(
@@ -33,7 +34,8 @@ module EnumTest(
 		}
 		else
 		{
-			out1 = Foo.Bar;
+			// Try out constructor
+			out1 = Foo(2u2);
 		}
 	}
 }
