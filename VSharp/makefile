@@ -9,6 +9,8 @@ PSLcc: lex.yy.c \
 	   AssignmentNode.h \
 	   BitSelectionNode.cpp \
 	   BitSelectionNode.h \
+	   CaseStatementNode.cpp \
+	   CaseStatementNode.h \
 	   ClockTypeInfo.cpp \
 	   ClockTypeInfo.h \
 	   ConstantNode.cpp \
@@ -85,6 +87,8 @@ PSLcc: lex.yy.c \
 	   StructSpecifierNode.h \
 	   StructTypeInfo.cpp \
 	   StructTypeInfo.h \
+	   SwitchStatementNode.cpp \
+	   SwitchStatementNode.h \
 	   SymbolInfo.cpp \
 	   SymbolInfo.h \
 	   SymbolTable.cpp \
@@ -112,6 +116,7 @@ PSLcc: lex.yy.c \
 	   ASTNode.cpp \
 	   AssignmentNode.cpp \
 	   BitSelectionNode.cpp \
+	   CaseStatementNode.cpp \
 	   ClockTypeInfo.cpp \
 	   ConstantNode.cpp \
 	   DriveDefinitionNode.cpp \
@@ -147,6 +152,7 @@ PSLcc: lex.yy.c \
 	   StructDeclarationNode.cpp \
 	   StructSpecifierNode.cpp \
 	   StructTypeInfo.cpp \
+	   SwitchStatementNode.cpp \
 	   SymbolInfo.cpp \
 	   SymbolTable.cpp \
 	   TernaryExpressionNode.cpp \

@@ -53,6 +53,8 @@ class ParserContext;
 %token DRIVE_TOKEN
 %token CLOCK_TOKEN
 %token FINISH_TOKEN
+%token CASE_TOKEN
+%token SWITCH_TOKEN
 
 %token <constVal> INTCONSTANT
 %token <constVal> BOOLCONSTANT
@@ -155,6 +157,9 @@ class ParserContext;
 %type <pNode> import_statement
 %type <pNode> assignment_statement
 %type <pNode> conditional_expression
+%type <pNode> switch_statement
+%type <pNode> case_statement
+%type <pNode> case_list
 
 %%
 
@@ -196,6 +201,22 @@ statement:
     | declaration_statement                                         { $$ = $1; }
     | transition_statement                                          { $$ = $1; }
     | return_statement                                              { $$ = $1; }
+    | switch_statement                                              { $$ = $1; }
+    ;
+
+switch_statement:
+      SWITCH_TOKEN LEFT_PAREN expression RIGHT_PAREN LEFT_BRACE case_list RIGHT_BRACE
+                                                                    { $$ = $6; dynamic_cast<SwitchStatementNode*>($$)->SetTest($3); }
+    ;
+
+case_list:
+      case_statement                                                { $$ = new SwitchStatementNode(pContext, @$, $1); }
+    | case_list case_statement                                      { $$ = $1; dynamic_cast<SwitchStatementNode*>($$)->AddNode($2); }
+    ;
+
+case_statement:
+      CASE_TOKEN expression COLON LEFT_BRACE statement_list RIGHT_BRACE   
+                                                                    { $$ = new CaseStatementNode(pContext, @$, $2, $5); }
     ;
 
 expression_statement:

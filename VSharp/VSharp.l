@@ -76,6 +76,8 @@
 "const"              { return CONST_TOKEN; }
 "__finish"           { return FINISH_TOKEN; }
 "wire"               { return WIRE_TOKEN; }
+"switch"                    { return SWITCH_TOKEN; }
+"case"                      { return CASE_TOKEN; }
 "true"                      { yylval->constVal = UIntConstant((unsigned int)1, 1); return BOOLCONSTANT; }
 "false"                     { yylval->constVal = UIntConstant((unsigned int)0, 1); return BOOLCONSTANT; }
 [0-9]+                      { yylval->constVal = { static_cast<unsigned int>(atoi(yytext)), 32 }; return INTCONSTANT; }
