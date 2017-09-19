@@ -41,6 +41,8 @@
 ">>"                 { return SHIFTRIGHT; }
 ".<"                 { return LT_OP; }
 ">."                 { return GT_OP; }
+"<="                 { return LT_EQUAL_OP; }
+">="                 { return GT_EQUAL_OP; }
 "<"                  { return LT; }
 ">"                  { return GT; }
 "\."                 { return DOT; }

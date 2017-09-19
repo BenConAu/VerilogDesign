@@ -11,6 +11,8 @@ enum class Operator
     NotEqual,
     LessThan,
     GreaterThan,
+    LessThanEqual,
+    GreaterThanEqual,
     Negate,
     LogicalAnd,
     LogicalOr,

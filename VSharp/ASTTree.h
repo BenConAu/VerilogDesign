@@ -20,6 +20,7 @@
 #include "ModuleDefinitionNode.h"
 #include "ModuleParameterNode.h"
 #include "OperatorNode.h"
+#include "ParenNode.h"
 #include "ReturnNode.h"
 #include "StateDeclaratorNode.h"
 #include "StructDeclarationNode.h"

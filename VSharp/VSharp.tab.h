@@ -87,29 +87,31 @@ class ParserContext;
     GT = 288,
     LT_OP = 289,
     GT_OP = 290,
-    SHIFTLEFT = 291,
-    SHIFTRIGHT = 292,
-    ARROW = 293,
-    DOT = 294,
-    COMMA = 295,
-    HAT = 296,
-    BANG = 297,
-    AMPERSAND = 298,
-    EQUAL_OP = 299,
-    NOTEQUAL_OP = 300,
-    BOOL_TOKEN = 301,
-    STRUCT_TOKEN = 302,
-    TRANSITION_TOKEN = 303,
-    LEFT_BRACE = 304,
-    RIGHT_BRACE = 305,
-    LEFT_BRACKET = 306,
-    RIGHT_BRACKET = 307,
-    IF_TOKEN = 308,
-    ELSE_TOKEN = 309,
-    IMPORT_TOKEN = 310,
-    WIRE_TOKEN = 311,
-    CONST_TOKEN = 312,
-    IDENTIFIER = 313
+    LT_EQUAL_OP = 291,
+    GT_EQUAL_OP = 292,
+    SHIFTLEFT = 293,
+    SHIFTRIGHT = 294,
+    ARROW = 295,
+    DOT = 296,
+    COMMA = 297,
+    HAT = 298,
+    BANG = 299,
+    AMPERSAND = 300,
+    EQUAL_OP = 301,
+    NOTEQUAL_OP = 302,
+    BOOL_TOKEN = 303,
+    STRUCT_TOKEN = 304,
+    TRANSITION_TOKEN = 305,
+    LEFT_BRACE = 306,
+    RIGHT_BRACE = 307,
+    LEFT_BRACKET = 308,
+    RIGHT_BRACKET = 309,
+    IF_TOKEN = 310,
+    ELSE_TOKEN = 311,
+    IMPORT_TOKEN = 312,
+    WIRE_TOKEN = 313,
+    CONST_TOKEN = 314,
+    IDENTIFIER = 315
   };
 #endif
 
@@ -124,7 +126,7 @@ union YYSTYPE
     int symIndex;
     ASTNode* pNode;
 
-#line 128 "VSharp.tab.h" /* yacc.c:1915  */
+#line 130 "VSharp.tab.h" /* yacc.c:1915  */
 };
 
 typedef union YYSTYPE YYSTYPE;

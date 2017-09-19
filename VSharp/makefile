@@ -59,6 +59,8 @@ PSLcc: lex.yy.c \
 	   OperatorNode.h \
 	   OutputContext.cpp \
 	   OutputContext.h \
+	   ParenNode.cpp \
+	   ParenNode.h \
 	   ParserContext.cpp \
 	   ParserContext.h \
 	   RegisterTypeInfo.cpp \
@@ -133,6 +135,7 @@ PSLcc: lex.yy.c \
 	   ModuleTypeInfo.cpp \
 	   OperatorNode.cpp \
 	   OutputContext.cpp \
+	   ParenNode.cpp \
 	   ParserContext.cpp \
 	   RegisterTypeInfo.cpp \
 	   ReturnNode.cpp \

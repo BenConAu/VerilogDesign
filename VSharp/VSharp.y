@@ -70,6 +70,8 @@ class ParserContext;
 %token GT
 %token LT_OP
 %token GT_OP
+%token LT_EQUAL_OP
+%token GT_EQUAL_OP
 %token SHIFTLEFT
 %token SHIFTRIGHT
 %token ARROW
@@ -243,6 +245,8 @@ relational_expression:
       shift_expression                                              { $$ = $1; }
     | relational_expression LT_OP shift_expression                  { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::LessThan); }
     | relational_expression GT_OP shift_expression                  { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::GreaterThan); }
+    | relational_expression LT_EQUAL_OP shift_expression            { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::LessThanEqual); }
+    | relational_expression GT_EQUAL_OP shift_expression            { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::GreaterThanEqual); }
     ;
 
 equality_expression:
@@ -284,6 +288,7 @@ primary_expression:
     | glom_expression                                               { $$ = $1; }
     | INTCONSTANT                                                   { $$ = new ConstantNode(pContext, @$, $1); }
     | BOOLCONSTANT                                                  { $$ = new ConstantNode(pContext, @$, $1); }
+    | LEFT_PAREN expression RIGHT_PAREN                             { $$ = new ParenNode(pContext, @$, $2); }
     ;
 
 glom_expression:

@@ -28,7 +28,7 @@ module OperatorTest(
       `__StartState: begin
         if (a == 32'd0 && b == 32'd1)
         begin
-          out1 <= 32'd1;
+          out1 <= (32'd2 + b) * (32'd1 + b);
         end
       end
     endcase

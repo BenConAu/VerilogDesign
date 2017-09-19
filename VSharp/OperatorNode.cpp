@@ -3,18 +3,20 @@
 #include "VSharp.tab.h"
 
 OperatorInfo OperatorNode::_opTable[] = {
-    { Operator::Multiply,    "*",    ResultTypeMethod::Both },
-    { Operator::Add,         "+",    ResultTypeMethod::Both },
-    { Operator::Subtract,    "-",    ResultTypeMethod::Both },
-    { Operator::ShiftLeft,   "<<",   ResultTypeMethod::Both },
-    { Operator::ShiftRight,  ">>",   ResultTypeMethod::Both },
-    { Operator::BitwiseXor,  "^",    ResultTypeMethod::Both },
-    { Operator::Equal,       "==",   ResultTypeMethod::Bool },
-    { Operator::NotEqual,    "!=",   ResultTypeMethod::Bool },
-    { Operator::LessThan,    "<",    ResultTypeMethod::Bool },
-    { Operator::GreaterThan, ">",    ResultTypeMethod::Bool },
-    { Operator::LogicalAnd,  "&&",   ResultTypeMethod::Bool },
-    { Operator::LogicalOr,   "||",   ResultTypeMethod::Bool },
+    { Operator::Multiply,           "*",    ResultTypeMethod::Both },
+    { Operator::Add,                "+",    ResultTypeMethod::Both },
+    { Operator::Subtract,           "-",    ResultTypeMethod::Both },
+    { Operator::ShiftLeft,          "<<",   ResultTypeMethod::Both },
+    { Operator::ShiftRight,         ">>",   ResultTypeMethod::Both },
+    { Operator::BitwiseXor,         "^",    ResultTypeMethod::Both },
+    { Operator::Equal,              "==",   ResultTypeMethod::Bool },
+    { Operator::NotEqual,           "!=",   ResultTypeMethod::Bool },
+    { Operator::LessThan,           "<",    ResultTypeMethod::Bool },
+    { Operator::GreaterThan,        ">",    ResultTypeMethod::Bool },
+    { Operator::LessThanEqual,      "<=",   ResultTypeMethod::Bool },
+    { Operator::GreaterThanEqual,   ">=",   ResultTypeMethod::Bool },
+    { Operator::LogicalAnd,         "&&",   ResultTypeMethod::Bool },
+    { Operator::LogicalOr,          "||",   ResultTypeMethod::Bool },
 };
 
 ASTNode* OperatorNode::DuplicateNodeImpl()

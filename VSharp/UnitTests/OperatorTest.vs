@@ -26,7 +26,7 @@ module OperatorTest(
 	{
 		if (a == 0 && b == 1)
 		{
-			out1 = 1;
+			out1 = (2 + b) * (1 + b);
 		}
 	}
 }
