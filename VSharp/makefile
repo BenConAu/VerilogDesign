@@ -22,6 +22,7 @@ PSLcc: lex.yy.c \
 	   DriveListDefinitionNode.h \
 	   EnumDefinitionNode.cpp \
 	   EnumDefinitionNode.h \
+	   EnumItem.h \
 	   EnumTypeInfo.cpp \
 	   EnumTypeInfo.h \
 	   ExpressionNode.cpp \

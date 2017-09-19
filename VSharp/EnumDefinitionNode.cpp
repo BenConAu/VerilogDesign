@@ -7,7 +7,7 @@
 EnumDefinitionNode::EnumDefinitionNode(
     ParserContext* pContext, 
     const YYLTYPE &location,
-    int firstEnum) : ASTNode(pContext, location)
+    EnumItem firstEnum) : ASTNode(pContext, location)
 {
     _symIndex = -1;
 

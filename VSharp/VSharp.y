@@ -22,6 +22,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %code requires 
 {
 #include "UIntConstant.h"
+#include "EnumItem.h"
 
 class ASTNode;
 class ParserContext;
@@ -32,6 +33,7 @@ class ParserContext;
     UIntConstant constVal;
     int symIndex;
     ASTNode* pNode;
+    EnumItem _EnumItem;
 }
 
 %locations
@@ -161,6 +163,7 @@ class ParserContext;
 %type <pNode> switch_statement
 %type <pNode> case_statement
 %type <pNode> case_list
+%type <_EnumItem> enum_item
 
 %%
 
@@ -186,9 +189,14 @@ enum_definition:
     ;
 
 enum_list:
-      IDENTIFIER                                                    { $$ = new EnumDefinitionNode(pContext, @$, $1); }
-    | enum_list COMMA IDENTIFIER                                    { $$ = $1; dynamic_cast<EnumDefinitionNode*>($$)->AddEnum($3); }
+      enum_item                                                     { $$ = new EnumDefinitionNode(pContext, @$, $1); }
+    | enum_list COMMA enum_item                                     { $$ = $1; dynamic_cast<EnumDefinitionNode*>($$)->AddEnum($3); }
     ;
+
+enum_item:
+      IDENTIFIER                                                    { $$ = EnumItem($1); }
+    | IDENTIFIER EQUAL INTCONSTANT                                  { $$ = EnumItem($1, $3); }
+    ;    
 
 statement_list:
       statement                                                     { $$ = new ListNode(pContext, @$, $1); }

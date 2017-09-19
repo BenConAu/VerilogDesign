@@ -10,11 +10,18 @@ EnumTypeInfo::EnumTypeInfo(int symIndex, ParserContext* pContext) : RegisterType
     _pContext = pContext;
 }
 
-void EnumTypeInfo::AddMember(int symIndex)
+void EnumTypeInfo::AddMember(EnumItem item)
 {
     //printf("Adding member, size is now %d\n", (int)_values.size());
 
-    _values[symIndex] = _values.size();
+    if (item._HasValue)
+    {
+        _values[item._SymIndex] = item._Value;
+    }
+    else
+    {
+        _values[item._SymIndex] = _values.size();
+    }
 
     if (_values.size() != 1)
     {
