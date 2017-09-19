@@ -281,4 +281,84 @@ void OutputInstructions()
     ::fprintf(fvfile, ")\n    IsIOOpcode = 1;\n  else\n    IsIOOpcode = 0;\nendfunction\n\n");
 
     ::fclose(fvfile);
+
+    // Now the Verilog
+    FILE* vsFile = ::fopen("Generated/PhaethonOpCode.vs", "w");
+    
+    // An enum for the opcodes
+    ::fprintf(fhfile, "enum OpCode\n{\n    Unknown = 0,\n");
+    
+    // The opCode enum does as defines in verilog
+    for (size_t i = 0; i < g_instructionData.size(); i++)
+    {
+        InstructionData& data = g_instructionData[i];
+
+        ::fprintf(vsFile, "    %s = %d,\n", data.opCode.c_str(), (int)i + 1);
+    }
+    ::fprintf(vsFile, "    MaxOpCode = %d\n}\n\n", (int)g_instructionData.size());
+
+    // V# function to tell opCodes that have constant data
+    ::fprintf(vsFile, "bool Is8ByteOpcode(OpCode opCodeParam)\n{\n  if (");
+    fFirst = true;
+    for (size_t i = 0; i < g_instructionData.size(); i++)
+    {
+        InstructionData& data = g_instructionData[i];
+
+        if (data.constIndex != -1)
+        {
+            if (!fFirst)
+            {
+                fprintf(vsFile, " ||\n      ");
+            }
+
+            ::fprintf(vsFile, "opCodeParam == OpCode::%s", data.opCode.c_str());
+
+            fFirst = false;
+        }
+    }
+    ::fprintf(vsFile, ")\n  {\n    return true;\n  }\n  else\n  {\n    return false;\n  }\n}\n\n");
+
+    // Verilog function to tell opCodes that read or write RAM
+    ::fprintf(vsFile, "bool IsRAMOpcode(OpCode opCodeParam)\n{\n  if (");
+    fFirst = true;
+    for (size_t i = 0; i < g_instructionData.size(); i++)
+    {
+        InstructionData& data = g_instructionData[i];
+
+        if (data.fRAM)
+        {
+            if (!fFirst)
+            {
+                fprintf(vsFile, " ||\n      ");
+            }
+
+            ::fprintf(vsFile, "opCodeParam == OpCode::%s", data.opCode.c_str());
+
+            fFirst = false;
+        }
+    }
+    ::fprintf(vsFile, ")\n  {\n    return true;\n  }\n  else\n  {\n    return false;\n  }\n}\n\n");
+
+    // Verilog function to tell opCodes that read or write IO
+    ::fprintf(vsFile, "bool IsIOOpcode(OpCode opCodeParam)\n{\n  if (");
+    fFirst = true;
+    for (size_t i = 0; i < g_instructionData.size(); i++)
+    {
+        InstructionData& data = g_instructionData[i];
+
+        if (data.fIO)
+        {
+            if (!fFirst)
+            {
+                fprintf(vsFile, " ||\n      ");
+            }
+
+            ::fprintf(vsFile, "opCodeParam == OpCode::%s", data.opCode.c_str());
+
+            fFirst = false;
+        }
+    }
+    ::fprintf(vsFile, ")\n  {\n    return true;\n  }\n  else\n  {\n    return false;\n  }\n}\n\n");
+    
+    ::fclose(vsFile);
 }
