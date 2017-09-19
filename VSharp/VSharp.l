@@ -36,6 +36,7 @@
 ")"                  { return RIGHT_PAREN; }
 "["                  { return LEFT_BRACKET; }
 "]"                  { return RIGHT_BRACKET; }
+"?"                  { return QUESTION; }
 "->"                 { return ARROW; }
 "<<"                 { return SHIFTLEFT; }
 ">>"                 { return SHIFTRIGHT; }

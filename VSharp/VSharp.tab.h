@@ -97,21 +97,22 @@ class ParserContext;
     HAT = 298,
     BANG = 299,
     AMPERSAND = 300,
-    EQUAL_OP = 301,
-    NOTEQUAL_OP = 302,
-    BOOL_TOKEN = 303,
-    STRUCT_TOKEN = 304,
-    TRANSITION_TOKEN = 305,
-    LEFT_BRACE = 306,
-    RIGHT_BRACE = 307,
-    LEFT_BRACKET = 308,
-    RIGHT_BRACKET = 309,
-    IF_TOKEN = 310,
-    ELSE_TOKEN = 311,
-    IMPORT_TOKEN = 312,
-    WIRE_TOKEN = 313,
-    CONST_TOKEN = 314,
-    IDENTIFIER = 315
+    QUESTION = 301,
+    EQUAL_OP = 302,
+    NOTEQUAL_OP = 303,
+    BOOL_TOKEN = 304,
+    STRUCT_TOKEN = 305,
+    TRANSITION_TOKEN = 306,
+    LEFT_BRACE = 307,
+    RIGHT_BRACE = 308,
+    LEFT_BRACKET = 309,
+    RIGHT_BRACKET = 310,
+    IF_TOKEN = 311,
+    ELSE_TOKEN = 312,
+    IMPORT_TOKEN = 313,
+    WIRE_TOKEN = 314,
+    CONST_TOKEN = 315,
+    IDENTIFIER = 316
   };
 #endif
 
@@ -126,7 +127,7 @@ union YYSTYPE
     int symIndex;
     ASTNode* pNode;
 
-#line 130 "VSharp.tab.h" /* yacc.c:1915  */
+#line 131 "VSharp.tab.h" /* yacc.c:1915  */
 };
 
 typedef union YYSTYPE YYSTYPE;

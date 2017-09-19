@@ -80,6 +80,7 @@ class ParserContext;
 %token HAT
 %token BANG
 %token AMPERSAND
+%token QUESTION
 %token EQUAL_OP
 %token NOTEQUAL_OP
 %token BOOL_TOKEN
@@ -153,6 +154,7 @@ class ParserContext;
 %type <pNode> type_name_specifier
 %type <pNode> import_statement
 %type <pNode> assignment_statement
+%type <pNode> conditional_expression
 
 %%
 
@@ -270,8 +272,13 @@ logical_or_expression:
     | logical_or_expression OR_OP logical_and_expression            { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::LogicalOr); } 
     ;
 
-expression:
+conditional_expression:
       logical_or_expression                                         { $$ = $1; }
+    | logical_or_expression QUESTION expression COLON expression    { $$ = new TernaryExpressionNode(pContext, @$, $1, $3, $5); }
+    ;
+
+expression:
+      conditional_expression                                        { $$ = $1; }
     ;
 
 postfix_expression:

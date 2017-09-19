@@ -25,6 +25,7 @@
 #include "StateDeclaratorNode.h"
 #include "StructDeclarationNode.h"
 #include "StructSpecifierNode.h"
+#include "TernaryExpressionNode.h"
 #include "TransitionNode.h"
 #include "TypeNode.h"
 #include "UnaryOperatorNode.h"

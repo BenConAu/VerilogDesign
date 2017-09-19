@@ -70,7 +70,9 @@ PSLcc: lex.yy.c \
 	   StateInfo.cpp \
 	   StateInfo.h \
 	   StatementNode.cpp \
-	   StatementNode.h\
+	   StatementNode.h \
+	   TernaryExpressionNode.cpp \
+	   TernaryExpressionNode.h \
 	   TransitionNode.cpp \
 	   TransitionNode.h \
 	   ListNode.h \
@@ -147,6 +149,7 @@ PSLcc: lex.yy.c \
 	   StructTypeInfo.cpp \
 	   SymbolInfo.cpp \
 	   SymbolTable.cpp \
+	   TernaryExpressionNode.cpp \
 	   TransitionNode.cpp \
 	   TypeInfo.cpp \
 	   TypeNode.cpp \
