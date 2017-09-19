@@ -66,12 +66,6 @@ void VariableDeclarationNode::VerifyNodeImpl()
         // You need to initialize register types to constant expressions
         if (pRegInfo != nullptr)
         {
-            // Right now we want this to only be for constant values
-            if (GetTypeNode()->GetModifier() != TypeModifier::Const)
-            {
-                GetContext()->ReportError(GetLocation(), "Can only initialize constant registers");
-            }
-
             UIntConstant InitValue;
             if (!pInitExpr->ConstEvaluate(&InitValue))
             {
