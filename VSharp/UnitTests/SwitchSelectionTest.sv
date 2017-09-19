@@ -30,6 +30,10 @@ module SwitchSelectionTest(
           end
           32'd1: begin
             out1 <= 16'd2748;
+            val <= 32'd2;
+          end
+          default: begin
+            out1 <= 16'd48879;
             val <= 32'd0;
           end
         endcase

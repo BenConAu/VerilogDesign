@@ -32,6 +32,12 @@ module SwitchSelectionTest(
 			case 1:
 			{
 				out1 = 0xabcu16;
+				val = 2;
+			}
+
+			default:
+			{
+				out1 = 0xbeefu16;
 				val = 0;
 			}
 		}

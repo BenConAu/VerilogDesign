@@ -55,6 +55,7 @@ class ParserContext;
 %token FINISH_TOKEN
 %token CASE_TOKEN
 %token SWITCH_TOKEN
+%token DEFAULT_TOKEN
 
 %token <constVal> INTCONSTANT
 %token <constVal> BOOLCONSTANT
@@ -217,6 +218,7 @@ case_list:
 case_statement:
       CASE_TOKEN expression COLON LEFT_BRACE statement_list RIGHT_BRACE   
                                                                     { $$ = new CaseStatementNode(pContext, @$, $2, $5); }
+    | DEFAULT_TOKEN COLON LEFT_BRACE statement_list RIGHT_BRACE     { $$ = new CaseStatementNode(pContext, @$, nullptr, $4); }
     ;
 
 expression_statement:

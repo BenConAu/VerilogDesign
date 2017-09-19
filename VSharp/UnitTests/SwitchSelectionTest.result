@@ -1,10 +1,10 @@
 val = 00000001, out1 = xxxx
-val = 00000000, out1 = 0abc
+val = 00000002, out1 = 0abc
+val = 00000000, out1 = beef
 val = 00000001, out1 = 0123
-val = 00000000, out1 = 0abc
+val = 00000002, out1 = 0abc
+val = 00000000, out1 = beef
 val = 00000001, out1 = 0123
-val = 00000000, out1 = 0abc
+val = 00000002, out1 = 0abc
+val = 00000000, out1 = beef
 val = 00000001, out1 = 0123
-val = 00000000, out1 = 0abc
-val = 00000001, out1 = 0123
-val = 00000000, out1 = 0abc

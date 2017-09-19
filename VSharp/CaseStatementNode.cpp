@@ -26,10 +26,18 @@ void CaseStatementNode::VerifyNodeImpl()
 void CaseStatementNode::ProcessNodeImpl(OutputContext* pContext)
 {
     ExpressionNode *pExpr = dynamic_cast<ExpressionNode *>(GetChild(0));
-    pExpr->ProcessNode(pContext);
-    std::unique_ptr<ExpressionResult> exprResult(pExpr->TakeResult());
-    
-    pContext->OutputLine("%s: begin", exprResult->GetString().c_str());
+    if (pExpr != nullptr)
+    {
+        pExpr->ProcessNode(pContext);
+        std::unique_ptr<ExpressionResult> exprResult(pExpr->TakeResult());        
+
+        pContext->OutputLine("%s: begin", exprResult->GetString().c_str());
+    }
+    else
+    {
+        pContext->OutputLine("default: begin");
+    }
+
     pContext->IncreaseIndent();
 
     ListNode *pList = dynamic_cast<ListNode *>(GetChild(1));
