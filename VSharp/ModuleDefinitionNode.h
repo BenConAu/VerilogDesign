@@ -79,6 +79,9 @@ private:
     // The symbol index of the generic type
     int _genericIndex;
 
+    // Is this a forward definition?
+    bool _IsForward;
+
     std::vector<StateDeclaratorNode*> _stateList;
     std::vector<ModuleParameterNode*> _paramList;
 };

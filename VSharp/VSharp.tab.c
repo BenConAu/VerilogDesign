@@ -481,7 +481,7 @@ union yyalloc
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  66
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  147
+#define YYNRULES  148
 /* YYNSTATES -- Number of states.  */
 #define YYNSTATES  281
 
@@ -546,10 +546,10 @@ static const yytype_uint16 yyrline[] =
      351,   352,   356,   357,   361,   362,   366,   367,   371,   375,
      378,   379,   383,   384,   388,   389,   393,   394,   395,   396,
      397,   398,   399,   400,   401,   405,   406,   407,   411,   416,
-     417,   421,   422,   427,   431,   432,   436,   437,   441,   442,
-     443,   444,   448,   452,   453,   457,   458,   462,   463,   467,
-     471,   472,   474,   478,   482,   483,   487,   488,   492,   493,
-     497,   498,   499,   503,   504,   505,   509,   512
+     417,   421,   422,   427,   428,   432,   433,   437,   438,   442,
+     443,   444,   445,   449,   453,   454,   458,   459,   463,   464,
+     468,   472,   473,   475,   479,   483,   484,   488,   489,   493,
+     494,   498,   499,   500,   504,   505,   506,   510,   513
 };
 #endif
 
@@ -663,31 +663,31 @@ static const yytype_uint8 yydefact[] =
 {
        0,     0,     0,    96,    97,    98,    99,   100,     0,   101,
      102,     0,     0,     0,     0,   103,     0,     2,     6,     7,
-       9,     0,     0,     0,     5,     0,     0,     0,   107,     0,
-       8,     4,     0,   129,     0,     0,     0,     0,     0,   105,
-     106,     1,     3,     0,   113,    80,     0,     0,    81,    82,
-       0,     0,    88,    89,     0,     0,    90,     0,   130,    78,
-      84,     0,     0,     0,     0,    10,     0,     0,   114,   133,
-     120,     0,   116,   121,   118,   119,    83,     0,    86,     0,
-       0,    72,    73,     0,     0,     0,     0,     0,   134,     0,
+       9,   113,     0,     0,     5,     0,     0,     0,   107,     0,
+       8,     4,     0,   130,     0,     0,     0,     0,     0,   105,
+     106,     1,     3,     0,   114,    80,     0,     0,    81,    82,
+       0,     0,    88,    89,     0,     0,    90,     0,   131,    78,
+      84,     0,     0,     0,     0,    10,     0,     0,   115,   134,
+     121,     0,   117,   122,   119,   120,    83,     0,    86,     0,
+       0,    72,    73,     0,     0,     0,     0,     0,   135,     0,
       79,     0,    17,    25,    19,    20,    21,    40,    42,    45,
       48,    53,    56,    58,    60,    62,    64,     0,    37,    65,
       71,    70,     0,    22,    68,     0,     0,    24,    23,    91,
        0,    94,     0,    92,     0,     0,     0,   104,    15,     0,
-      13,     0,     0,   109,     0,     0,     0,   115,   117,    87,
+      13,     0,     0,   109,     0,     0,     0,   116,   118,    87,
       79,     0,    37,     0,    38,     0,    39,     0,    76,     0,
-       0,   138,     0,   135,    18,     0,     0,     0,     0,     0,
+       0,   139,     0,   136,    18,     0,     0,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-      31,    33,     0,     0,     0,   130,   137,   136,     0,    95,
-     132,     0,     0,     0,     0,     0,    11,     0,   108,   110,
-     128,   127,     0,     0,   123,   146,     0,    74,   147,     0,
-      75,     0,     0,   145,   143,   140,     0,    41,    43,    44,
+      31,    33,     0,     0,     0,   131,   138,   137,     0,    95,
+     133,     0,     0,     0,     0,     0,    11,     0,   108,   110,
+     129,   128,     0,     0,   124,   147,     0,    74,   148,     0,
+      75,     0,     0,   146,   144,   141,     0,    41,    43,    44,
       46,    47,    49,    50,    51,    52,    54,    55,    57,    59,
-      61,     0,    69,    72,     0,     0,   142,     0,   131,    85,
-      16,    12,    14,   111,     0,     0,   122,   124,     0,    77,
-       0,    79,   144,     0,     0,     0,    66,    32,    93,     0,
-       0,   125,     0,     0,    34,    36,   139,    63,     0,     0,
-     126,     0,     0,     0,    27,     0,   141,    67,   112,     0,
+      61,     0,    69,    72,     0,     0,   143,     0,   132,    85,
+      16,    12,    14,   111,     0,     0,   123,   125,     0,    77,
+       0,    79,   145,     0,     0,     0,    66,    32,    93,     0,
+       0,   126,     0,     0,    34,    36,   140,    63,     0,     0,
+     127,     0,     0,     0,    27,     0,   142,    67,   112,     0,
        0,    26,    28,    35,     0,     0,     0,     0,     0,    30,
       29
 };
@@ -904,10 +904,10 @@ static const yytype_uint8 yyr1[] =
       99,    99,   100,   100,   101,   101,   102,   102,   103,   104,
      105,   105,   106,   106,   107,   107,   108,   108,   108,   108,
      108,   108,   108,   108,   108,   109,   109,   109,   110,   111,
-     111,   112,   112,   113,   114,   114,   115,   115,   116,   116,
-     116,   116,   117,   118,   118,   119,   119,   120,   120,   121,
-     122,   122,   122,   123,   124,   124,   125,   125,   126,   126,
-     127,   127,   127,   128,   128,   128,   129,   130
+     111,   112,   112,   113,   113,   114,   114,   115,   115,   116,
+     116,   116,   116,   117,   118,   118,   119,   119,   120,   120,
+     121,   122,   122,   122,   123,   124,   124,   125,   125,   126,
+     126,   127,   127,   127,   128,   128,   128,   129,   130
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
@@ -924,10 +924,10 @@ static const yytype_uint8 yyr2[] =
        2,     2,     2,     3,     3,     6,     2,     3,     2,     2,
        2,     3,     3,     6,     2,     3,     1,     1,     1,     1,
        1,     1,     1,     1,     4,     2,     2,     1,     5,     1,
-       2,     3,     6,     2,     2,     3,     1,     2,     1,     1,
-       1,     1,     4,     1,     2,     3,     4,     3,     3,     1,
-       2,     5,     4,     1,     2,     3,     2,     2,     2,     5,
-       3,     6,     3,     1,     2,     1,     3,     3
+       2,     3,     6,     1,     2,     2,     3,     1,     2,     1,
+       1,     1,     1,     4,     1,     2,     3,     4,     3,     3,
+       1,     2,     5,     4,     1,     2,     3,     2,     2,     2,
+       5,     3,     6,     3,     1,     2,     1,     3,     3
 };
 
 
@@ -2355,37 +2355,37 @@ yyreduce:
 
   case 113:
 #line 427 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = (yyvsp[-1].pNode); dynamic_cast<ModuleDefinitionNode*>((yyval.pNode))->SetStatementList((yyvsp[0].pNode)); }
+    { (yyval.pNode) = (yyvsp[0].pNode); }
 #line 2360 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 114:
-#line 431 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new ListNode(pContext, (yyloc), nullptr); }
+#line 428 "VSharp.y" /* yacc.c:1661  */
+    { (yyval.pNode) = (yyvsp[-1].pNode); dynamic_cast<ModuleDefinitionNode*>((yyval.pNode))->SetStatementList((yyvsp[0].pNode)); }
 #line 2366 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 115:
 #line 432 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = (yyvsp[-1].pNode); }
+    { (yyval.pNode) = new ListNode(pContext, (yyloc), nullptr); }
 #line 2372 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 116:
-#line 436 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new ListNode(pContext, (yyloc), (yyvsp[0].pNode)); }
+#line 433 "VSharp.y" /* yacc.c:1661  */
+    { (yyval.pNode) = (yyvsp[-1].pNode); }
 #line 2378 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 117:
 #line 437 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = (yyvsp[-1].pNode); (yyval.pNode)->AddNode((yyvsp[0].pNode)); }
+    { (yyval.pNode) = new ListNode(pContext, (yyloc), (yyvsp[0].pNode)); }
 #line 2384 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 118:
-#line 441 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = (yyvsp[0].pNode); }
+#line 438 "VSharp.y" /* yacc.c:1661  */
+    { (yyval.pNode) = (yyvsp[-1].pNode); (yyval.pNode)->AddNode((yyvsp[0].pNode)); }
 #line 2390 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
@@ -2408,91 +2408,91 @@ yyreduce:
     break;
 
   case 122:
-#line 448 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new DriveListDefinitionNode(pContext, (yyloc), (yyvsp[-1].pNode)); }
+#line 445 "VSharp.y" /* yacc.c:1661  */
+    { (yyval.pNode) = (yyvsp[0].pNode); }
 #line 2414 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 123:
-#line 452 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new ListNode(pContext, (yyloc), (yyvsp[0].pNode)); }
+#line 449 "VSharp.y" /* yacc.c:1661  */
+    { (yyval.pNode) = new DriveListDefinitionNode(pContext, (yyloc), (yyvsp[-1].pNode)); }
 #line 2420 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 124:
 #line 453 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = (yyvsp[-1].pNode); (yyval.pNode)->AddNode((yyvsp[0].pNode)); }
+    { (yyval.pNode) = new ListNode(pContext, (yyloc), (yyvsp[0].pNode)); }
 #line 2426 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 125:
-#line 457 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new DriveDefinitionNode(pContext, (yyloc), (yyvsp[-2].constVal), (yyvsp[0].pNode)); }
+#line 454 "VSharp.y" /* yacc.c:1661  */
+    { (yyval.pNode) = (yyvsp[-1].pNode); (yyval.pNode)->AddNode((yyvsp[0].pNode)); }
 #line 2432 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 126:
 #line 458 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new DriveDefinitionNode(pContext, (yyloc), (yyvsp[-3].constVal), nullptr); }
+    { (yyval.pNode) = new DriveDefinitionNode(pContext, (yyloc), (yyvsp[-2].constVal), (yyvsp[0].pNode)); }
 #line 2438 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 127:
-#line 462 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new StateDeclaratorNode(pContext, (yyloc), (yyvsp[-1].symIndex), (yyvsp[0].pNode)); }
+#line 459 "VSharp.y" /* yacc.c:1661  */
+    { (yyval.pNode) = new DriveDefinitionNode(pContext, (yyloc), (yyvsp[-3].constVal), nullptr); }
 #line 2444 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 128:
 #line 463 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new StateDeclaratorNode(pContext, (yyloc), -1, (yyvsp[0].pNode)); }
+    { (yyval.pNode) = new StateDeclaratorNode(pContext, (yyloc), (yyvsp[-1].symIndex), (yyvsp[0].pNode)); }
 #line 2450 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 129:
-#line 467 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = (yyvsp[0].pNode); }
+#line 464 "VSharp.y" /* yacc.c:1661  */
+    { (yyval.pNode) = new StateDeclaratorNode(pContext, (yyloc), -1, (yyvsp[0].pNode)); }
 #line 2456 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 130:
-#line 471 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new VariableDeclarationNode(pContext, (yyloc), (yyvsp[-1].pNode), (yyvsp[0].symIndex), nullptr, nullptr); }
+#line 468 "VSharp.y" /* yacc.c:1661  */
+    { (yyval.pNode) = (yyvsp[0].pNode); }
 #line 2462 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 131:
-#line 473 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new VariableDeclarationNode(pContext, (yyloc), (yyvsp[-4].pNode), (yyvsp[-3].symIndex), (yyvsp[-1].pNode), nullptr); }
+#line 472 "VSharp.y" /* yacc.c:1661  */
+    { (yyval.pNode) = new VariableDeclarationNode(pContext, (yyloc), (yyvsp[-1].pNode), (yyvsp[0].symIndex), nullptr, nullptr); }
 #line 2468 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 132:
 #line 474 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new VariableDeclarationNode(pContext, (yyloc), (yyvsp[-3].pNode), (yyvsp[-2].symIndex), nullptr, (yyvsp[0].pNode)); }
+    { (yyval.pNode) = new VariableDeclarationNode(pContext, (yyloc), (yyvsp[-4].pNode), (yyvsp[-3].symIndex), (yyvsp[-1].pNode), nullptr); }
 #line 2474 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 133:
-#line 478 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = (yyvsp[0].pNode); }
+#line 475 "VSharp.y" /* yacc.c:1661  */
+    { (yyval.pNode) = new VariableDeclarationNode(pContext, (yyloc), (yyvsp[-3].pNode), (yyvsp[-2].symIndex), nullptr, (yyvsp[0].pNode)); }
 #line 2480 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 134:
-#line 482 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new ListNode(pContext, (yyloc), nullptr); }
+#line 479 "VSharp.y" /* yacc.c:1661  */
+    { (yyval.pNode) = (yyvsp[0].pNode); }
 #line 2486 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 135:
 #line 483 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = (yyvsp[-1].pNode); }
+    { (yyval.pNode) = new ListNode(pContext, (yyloc), nullptr); }
 #line 2492 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 136:
-#line 487 "VSharp.y" /* yacc.c:1661  */
+#line 484 "VSharp.y" /* yacc.c:1661  */
     { (yyval.pNode) = (yyvsp[-1].pNode); }
 #line 2498 "VSharp.tab.c" /* yacc.c:1661  */
     break;
@@ -2504,67 +2504,73 @@ yyreduce:
     break;
 
   case 138:
-#line 492 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new FunctionCallNode(pContext, (yyloc), (yyvsp[-1].symIndex), nullptr, nullptr); }
+#line 489 "VSharp.y" /* yacc.c:1661  */
+    { (yyval.pNode) = (yyvsp[-1].pNode); }
 #line 2510 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 139:
 #line 493 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new FunctionCallNode(pContext, (yyloc), (yyvsp[-4].symIndex), (yyvsp[-2].pNode), nullptr); }
+    { (yyval.pNode) = new FunctionCallNode(pContext, (yyloc), (yyvsp[-1].symIndex), nullptr, nullptr); }
 #line 2516 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 140:
-#line 497 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new FunctionCallNode(pContext, (yyloc), (yyvsp[-2].symIndex), nullptr, (yyvsp[0].pNode)); }
+#line 494 "VSharp.y" /* yacc.c:1661  */
+    { (yyval.pNode) = new FunctionCallNode(pContext, (yyloc), (yyvsp[-4].symIndex), (yyvsp[-2].pNode), nullptr); }
 #line 2522 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 141:
 #line 498 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new FunctionCallNode(pContext, (yyloc), (yyvsp[-5].symIndex), (yyvsp[-3].pNode), (yyvsp[0].pNode)); }
+    { (yyval.pNode) = new FunctionCallNode(pContext, (yyloc), (yyvsp[-2].symIndex), nullptr, (yyvsp[0].pNode)); }
 #line 2528 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 142:
 #line 499 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = (yyvsp[-2].pNode); (yyval.pNode)->AddNode((yyvsp[0].pNode)); }
+    { (yyval.pNode) = new FunctionCallNode(pContext, (yyloc), (yyvsp[-5].symIndex), (yyvsp[-3].pNode), (yyvsp[0].pNode)); }
 #line 2534 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 143:
-#line 503 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new FunctionCallParamNode(pContext, (yyloc), false, (yyvsp[0].pNode)); }
+#line 500 "VSharp.y" /* yacc.c:1661  */
+    { (yyval.pNode) = (yyvsp[-2].pNode); (yyval.pNode)->AddNode((yyvsp[0].pNode)); }
 #line 2540 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 144:
 #line 504 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new FunctionCallParamNode(pContext, (yyloc), true, (yyvsp[0].pNode)); }
+    { (yyval.pNode) = new FunctionCallParamNode(pContext, (yyloc), false, (yyvsp[0].pNode)); }
 #line 2546 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 145:
 #line 505 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new FunctionCallParamNode(pContext, (yyloc)); }
+    { (yyval.pNode) = new FunctionCallParamNode(pContext, (yyloc), true, (yyvsp[0].pNode)); }
 #line 2552 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 146:
-#line 509 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new ReturnNode(pContext, (yyloc), (yyvsp[-1].pNode)); }
+#line 506 "VSharp.y" /* yacc.c:1661  */
+    { (yyval.pNode) = new FunctionCallParamNode(pContext, (yyloc)); }
 #line 2558 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
   case 147:
-#line 512 "VSharp.y" /* yacc.c:1661  */
-    { (yyval.pNode) = new TransitionNode(pContext, (yyloc), (yyvsp[-1].symIndex)); }
+#line 510 "VSharp.y" /* yacc.c:1661  */
+    { (yyval.pNode) = new ReturnNode(pContext, (yyloc), (yyvsp[-1].pNode)); }
 #line 2564 "VSharp.tab.c" /* yacc.c:1661  */
     break;
 
+  case 148:
+#line 513 "VSharp.y" /* yacc.c:1661  */
+    { (yyval.pNode) = new TransitionNode(pContext, (yyloc), (yyvsp[-1].symIndex)); }
+#line 2570 "VSharp.tab.c" /* yacc.c:1661  */
+    break;
 
-#line 2568 "VSharp.tab.c" /* yacc.c:1661  */
+
+#line 2574 "VSharp.tab.c" /* yacc.c:1661  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2799,5 +2805,5 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 515 "VSharp.y" /* yacc.c:1906  */
+#line 516 "VSharp.y" /* yacc.c:1906  */
 

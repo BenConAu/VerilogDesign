@@ -424,7 +424,8 @@ struct_declaration:
     ;
 
 module_definition:
-      module_prototype module_states                                { $$ = $1; dynamic_cast<ModuleDefinitionNode*>($$)->SetStatementList($2); }
+      module_prototype                                              { $$ = $1; }
+    | module_prototype module_states                                { $$ = $1; dynamic_cast<ModuleDefinitionNode*>($$)->SetStatementList($2); }
     ;
 
 module_states:
