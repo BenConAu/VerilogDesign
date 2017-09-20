@@ -77,10 +77,10 @@ ExpressionResult *IndexSelectionNode::CalculateResult()
     return new ExpressionResult(result);
 }
 
-bool IndexSelectionNode::IsLValue()
+VariableInfo* IndexSelectionNode::IsVariableExpression()
 {
     ExpressionNode *pExpr = dynamic_cast<ExpressionNode *>(GetChild(0));
     
-    // Index selecting a valid L value will give an L value
-    return pExpr->IsLValue();
+    // Index selecting a variable expression will yield one
+    return pExpr->IsVariableExpression();
 }  

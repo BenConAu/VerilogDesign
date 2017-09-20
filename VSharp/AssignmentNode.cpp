@@ -3,6 +3,7 @@
 #include "ModuleDefinitionNode.h"
 #include "DriveDefinitionNode.h"
 #include "OutputContext.h"
+#include "VariableInfo.h"
 
 AssignmentNode::AssignmentNode(
     ParserContext *pContext, 
@@ -33,7 +34,8 @@ void AssignmentNode::VerifyNodeImpl()
     }
 
     // No assigning to wires, please
-    if (!pLeft->IsLValue())
+    VariableInfo* pVarInfo = pLeft->IsVariableExpression();
+    if (pVarInfo == nullptr || pVarInfo->GetModifier() == TypeModifier::Wire)
     {
         GetContext()->ReportError(GetLocation(), "Not a valid LValue for assignment");
     }

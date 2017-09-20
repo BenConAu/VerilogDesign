@@ -7,6 +7,8 @@
 
 class FunctionCallNode;
 
+
+
 class ExpressionNode : public ASTNode
 {
 public:
@@ -19,7 +21,7 @@ public:
     ExpressionResult* TakeResult();
     
     virtual ExpressionResult* CalculateResult() = 0;
-    virtual bool IsLValue() = 0;
+    virtual VariableInfo* IsVariableExpression() = 0;
     virtual bool ConstEvaluate(UIntConstant* pVal);
 
     static bool EqualType(ASTNode* pA, ASTNode* pB);

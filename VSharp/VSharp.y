@@ -424,7 +424,7 @@ struct_declaration:
     ;
 
 module_definition:
-      module_prototype                                              { $$ = $1; }
+      module_prototype SEMICOLON                                    { $$ = $1; }
     | module_prototype module_states                                { $$ = $1; dynamic_cast<ModuleDefinitionNode*>($$)->SetStatementList($2); }
     ;
 
@@ -502,7 +502,7 @@ function_call_header:
 
 fn_call_arg:
       expression                                                    { $$ = new FunctionCallParamNode(pContext, @$, false, $1); }
-    | OUT_TOKEN variable_identifier                                 { $$ = new FunctionCallParamNode(pContext, @$, true, $2); }
+    | OUT_TOKEN postfix_expression                                  { $$ = new FunctionCallParamNode(pContext, @$, true, $2); }
     | STRINGLITERAL                                                 { $$ = new FunctionCallParamNode(pContext, @$); }
     ;
 

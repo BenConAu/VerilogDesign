@@ -40,10 +40,10 @@ ExpressionResult *ParenNode::CalculateResult()
     return new ExpressionResult(result);
 }
 
-bool ParenNode::IsLValue()
+VariableInfo* ParenNode::IsVariableExpression()
 {
     ExpressionNode *pExpr = dynamic_cast<ExpressionNode *>(GetChild(0));
     
-    // Bit selecting a valid L value will give an L value
-    return pExpr->IsLValue();
+    // Index selecting a variable expression will yield one
+    return pExpr->IsVariableExpression();
 }  

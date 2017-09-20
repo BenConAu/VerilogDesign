@@ -37,12 +37,12 @@ void FunctionCallParamNode::VerifyNodeImpl()
 {
     if (_fOut)
     {
-        IdentifierNode* pIdent = dynamic_cast<IdentifierNode*>(GetChild(0));
+        ExpressionNode* pExpr = dynamic_cast<ExpressionNode*>(GetChild(0));
 
         // Needs to refer to an existing variable
-        if (pIdent == nullptr)
+        if (pExpr->IsVariableExpression() == nullptr)
         {
-            throw "Unknown identifier used as out param in function";
+            GetContext()->ReportError(GetLocation(), "Invalid expression used as out param in function");
         }
     }
 }

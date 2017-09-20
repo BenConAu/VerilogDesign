@@ -70,11 +70,3 @@ ExpressionResult *TernaryExpressionNode::CalculateResult()
 
     return new ExpressionResult(result);
 }
-
-bool TernaryExpressionNode::IsLValue()
-{
-    ExpressionNode *pExpr = dynamic_cast<ExpressionNode *>(GetChild(0));
-    
-    // Bit selecting a valid L value will give an L value
-    return pExpr->IsLValue();
-}  

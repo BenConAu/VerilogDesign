@@ -21,7 +21,7 @@ class UnaryOperatorNode : public ExpressionNode
     void VerifyNodeImpl() override;
     virtual ExpressionResult *CalculateResult() override;
     const char* GetDebugName() override { return "UnaryOperatorNode"; }
-    bool IsLValue() override { return false; }    
+    VariableInfo* IsVariableExpression() override { return nullptr; }
     ASTNode* DuplicateNodeImpl() override;
     
   private:

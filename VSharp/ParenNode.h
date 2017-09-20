@@ -19,5 +19,5 @@ class ParenNode : public ExpressionNode
     ASTNode* DuplicateNodeImpl() override;    
     ExpressionResult *CalculateResult() override;
     const char *GetDebugName() override { return "ParenNode"; }
-    bool IsLValue() override;    
-};
+    VariableInfo* IsVariableExpression() override;
+  };

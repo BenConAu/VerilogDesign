@@ -41,7 +41,7 @@ public:
   ASTNode* DuplicateNode() override;
   ASTNode* DuplicateNodeImpl() override;
   void DumpNodeImpl() override;
-  bool IsLValue() override { return false; }    
+  VariableInfo* IsVariableExpression() override { return nullptr; }
   
   // Parameter management and other properties
   FunctionCallParamNode* GetParameter(size_t index) { return dynamic_cast<FunctionCallParamNode*>(GetChild(index + 1)); }

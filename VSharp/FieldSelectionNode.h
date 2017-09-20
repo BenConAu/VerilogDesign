@@ -26,7 +26,7 @@ class FieldSelectionNode : public ExpressionNode
     ExpressionResult *CalculateResult() override;
     const char *GetDebugName() override { return "FieldSelectionNode"; }
     ASTNode* DuplicateNodeImpl() override;
-    bool IsLValue() override;    
+    VariableInfo* IsVariableExpression() override;
     
   private:
     int _fieldSymIndex;

@@ -127,10 +127,10 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
     }
 }
 
-bool FieldSelectionNode::IsLValue()
+VariableInfo* FieldSelectionNode::IsVariableExpression()
 {
     ExpressionNode *pExpr = dynamic_cast<ExpressionNode *>(GetChild(0));
     
-    // Field selecting a valid L value will give an L value
-    return pExpr->IsLValue();
+    // Index selecting a variable expression will yield one
+    return pExpr->IsVariableExpression();
 }  

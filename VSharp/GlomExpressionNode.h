@@ -19,5 +19,5 @@ class GlomExpressionNode : public ExpressionNode
     ASTNode* DuplicateNodeImpl() override;
     ExpressionResult *CalculateResult() override;
     const char *GetDebugName() override { return "GlomExpressionNode"; }
-    bool IsLValue() override { return false; }  // We might revisit this   
+    VariableInfo* IsVariableExpression() override { return nullptr; } // Might revisit
 };

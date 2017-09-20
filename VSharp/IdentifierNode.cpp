@@ -89,9 +89,9 @@ VariableInfo *IdentifierNode::GetVariableInfo()
     return _pVarInfo;
 }
 
-bool IdentifierNode::IsLValue()
+VariableInfo* IdentifierNode::IsVariableExpression()
 {
-    return (_pVarInfo->GetModifier() != TypeModifier::Wire);
+    return _pVarInfo;
 }
 
 bool IdentifierNode::ConstEvaluate(UIntConstant* pVal)

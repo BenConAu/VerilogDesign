@@ -21,5 +21,5 @@ class TernaryExpressionNode : public ExpressionNode
     ASTNode* DuplicateNodeImpl() override;    
     ExpressionResult *CalculateResult() override;
     const char *GetDebugName() override { return "TernaryExpressionNode"; }
-    bool IsLValue() override;    
-};
+    VariableInfo* IsVariableExpression() override { return nullptr; }
+  };

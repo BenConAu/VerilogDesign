@@ -12,7 +12,7 @@ public:
     ExpressionResult* CalculateResult() override;
     const char* GetDebugName() override { return "ConstantNode"; }
     ASTNode* DuplicateNodeImpl() override;
-    bool IsLValue() override { return false; }    
+    VariableInfo* IsVariableExpression() override { return nullptr; }
     bool ConstEvaluate(UIntConstant* pVal) override;
     
 private:

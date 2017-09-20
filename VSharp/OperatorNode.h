@@ -33,7 +33,7 @@ class OperatorNode : public ExpressionNode
     void VerifyNodeImpl() override;
     virtual ExpressionResult *CalculateResult() override;
     const char* GetDebugName() override { return "OperatorNode"; }
-    bool IsLValue() override { return false; }    
+    VariableInfo* IsVariableExpression() override { return nullptr; }
     bool ConstEvaluate(UIntConstant* pVal) override;
     
   private:

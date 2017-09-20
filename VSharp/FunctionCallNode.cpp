@@ -259,15 +259,13 @@ void FunctionCallNode::VerifyNodeImpl()
         {
             _functionType = FunctionType::ModuleDecl;
 
-            // Find the type of the declaration
+            // Should be a module type info
             TypeNode* pTypeNode = pVarDecl->GetTypeNode();
-            if (pTypeNode->GetTypeClass() != TypeClass::Module)
+            ModuleTypeInfo* pModuleInfo = dynamic_cast<ModuleTypeInfo*>(pTypeNode->GetTypeInfo());
+            if (pModuleInfo == nullptr)
             {
                 GetContext()->ReportError(GetLocation(), "Not a module type");
             }
-
-            // Should be a module type info
-            ModuleTypeInfo* pModuleInfo = dynamic_cast<ModuleTypeInfo*>(pTypeNode->GetTypeInfo());
 
             // The function name should be the same symbol as the type name
             if (pModuleInfo->GetSymbolIndex() != _symIndex)
@@ -364,13 +362,12 @@ void FunctionCallNode::VerifyNodeImpl()
                 // Modules need to be called with wires for out
                 if (_functionType == FunctionType::ModuleDecl)
                 {
-                    IdentifierNode* pIdentiferNode = dynamic_cast<IdentifierNode*>(pParamExpr);
-                    if (pIdentiferNode == nullptr)
+                    VariableInfo* pVarInfo = pParamExpr->IsVariableExpression();
+                    if (pVarInfo == nullptr)
                     {
-                        GetContext()->ReportError(GetLocation(), "Param %d of module out parameters must be identifiers to be wires", i);
+                        GetContext()->ReportError(GetLocation(), "Param %d of module out parameters must be identifier expressions to be wires", i);
                     }
 
-                    VariableInfo* pVarInfo = pIdentiferNode->GetVariableInfo();
                     if (pVarInfo->GetModifier() != TypeModifier::Wire)
                     {
                         GetContext()->ReportError(GetLocation(), "Module out parameter %d must be a wire", i);
