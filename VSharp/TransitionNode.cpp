@@ -8,12 +8,17 @@ void TransitionNode::PostProcessNodeImpl(OutputContext* pContext)
 {
     // What module are we transitioning in
     ModuleDefinitionNode *pFunc = GetTypedParent<ModuleDefinitionNode>();
+    SymbolInfo* pInfo = GetContext()->GetSymbolTable()->GetInfo(_symIndex, pFunc);
 
     // Get the info
-    StateInfo* pInfo = dynamic_cast<StateInfo*>(GetContext()->GetSymbolTable()->GetInfo(_symIndex, pFunc));
+    StateInfo* pStateInfo = dynamic_cast<StateInfo*>(pInfo);
+    if (pStateInfo == nullptr)
+    {
+        GetContext()->ReportError(GetLocation(), "Unknown state %s", GetContext()->GetSymbolString(_symIndex).c_str());
+    }
 
     // Write out the state change
-    pContext->OutputLine("fsmState <= `__%s;", pInfo->GetSymbol());
+    pContext->OutputLine("fsmState <= `__%s;", pStateInfo->GetSymbol());
 }
 
 ASTNode* TransitionNode::DuplicateNodeImpl()
