@@ -1,6 +1,7 @@
 #include "RegisterTypeInfo.h"
 #include "ParserContext.h"
 #include "VariableInfo.h"
+#include "ExpressionNode.h"
 #include "VSharp.tab.h"
 
 RegisterTypeInfo::RegisterTypeInfo(int bitLength)
@@ -56,18 +57,30 @@ TypeInfo *RegisterTypeInfo::MakeSpecificType(TypeInfo *pGenericArgType, TypeColl
 
 std::string RegisterTypeInfo::GetDeclaration(VariableInfo* pInfo, ExpressionNode* pInitExpr)
 {
+    char buffer[1024];
+
     if (pInitExpr != nullptr)
     {
-        throw "RegisterTypeInfo does not yet support init expressions";
-    }
+        std::unique_ptr<ExpressionResult> exprResult(pInitExpr->TakeResult());        
 
-    char buffer[1024];
-    sprintf(
-        buffer, 
-        "%s[%d:0] %s",
-        (pInfo->GetModifier() == TypeModifier::Wire) ? "wire" : "reg",
-        GetBitLength() - 1, 
-        pInfo->GetSymbol());
+        // This won't work with arrays eventually, but that is cool for now
+        sprintf(
+            buffer, 
+            "%s[%d:0] %s = %s",
+            (pInfo->GetModifier() == TypeModifier::Wire) ? "wire" : "reg",
+            GetBitLength() - 1, 
+            pInfo->GetSymbol(),
+            exprResult->GetString().c_str());
+    }
+    else
+    {
+        sprintf(
+            buffer, 
+            "%s[%d:0] %s",
+            (pInfo->GetModifier() == TypeModifier::Wire) ? "wire" : "reg",
+            GetBitLength() - 1, 
+            pInfo->GetSymbol());
+    }
 
     return buffer;
 }

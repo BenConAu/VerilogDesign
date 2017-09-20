@@ -9,6 +9,7 @@ module ConstExprTest(
   output reg[15:0] out1;
   reg clk = 0; always #5 clk = !clk;
   reg[31:0] TestArray1[3:0];
+  reg[31:0] TestMutable = 32'd1;
   initial
   begin
     # 100 $finish;

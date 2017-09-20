@@ -3,8 +3,13 @@ module ConstExprTest(
 	)
 {
 	clock clk;
+
+	// Test a constant that compiles away
 	const uint32 TestConstant = 4;
 	uint32 TestArray1[TestConstant];
+
+	// Test something initialized
+	uint32 TestMutable = 1;
 
 	drive
 	{
