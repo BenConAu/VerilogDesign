@@ -1,8 +1,17 @@
+import "../../../PhaethonISA/Generated/PhaethonOpCode.vs";
+
 enum ErrorCode
 {
   BadInstr1,
   BadInstr2,
   BadMem,
+}
+
+enum ControllerStatus
+{
+  Error,
+  Waiting,
+  Ready,
 }
 
 module ALU(
@@ -17,14 +26,14 @@ module ALU(
   out bool addrVirtual,       // [Output] Virtual flag for RAM
   out bool execMode,          // [Output] Whether we are in user or kernel
   out uint32 ptAddress,       // [Output] Page Table Address
-  out uint32 uartReadReq,     // [Output] uart read requested
+  out bool uartReadReq,       // [Output] uart read requested
   bool uartReadAck,           // [Input]  Flag to indicate read success
   uint8 uartReadData,         // [Input]  Actual data read 
   out bool uartWriteReq,      // [Output] uart write requested
   out uint8 uartWriteData,    // [Output] uart data to write
   bool uartWriteReady,        // [Input]  uart ready to send
   out uint32 ipointer,        // [Debug]  Instruction pointer value
-  out uint8 opCode,           // [Debug]  current opCode value
+  out OpCode opCode,          // [Debug]  current opCode value
   out uint32 r0,              // [Debug]  current r0 value
   out uint32 r1,              // [Debug]  current r1 value
   out uint32 r2,              // [Debug]  current r2 value
@@ -38,20 +47,18 @@ module ALU(
   )
 {
 
-//  `include "../PhaethonISA/Generated/PhaethonOpCode.v"
 //  `include "Common.sv"
 
   // Local registers that need initialization
   uint32 counter = 0;
   bool initComplete = false;
   
-  const uint32 StackPointerReg = 0;
-  const uint32 FlagsReg        = 1;
-  const uint32 SysCallReg      = 2;
-  const uint32 CodeReturnReg   = 3;
-  const uint32 KPageTableReg   = 4;
-  const uint32 UPageTableReg   = 5;
-  const uint32 FixedRegCount   = 6;
+  const uint8 StackPointerReg = 0;
+  const uint8 FlagsReg        = 1;
+  const uint8 SysCallReg      = 2;
+  const uint8 CodeReturnReg   = 3;
+  const uint8 PageTableReg    = 4;
+  const uint8 FixedRegCount   = 5;
 
   // Other local registers that are initialized elsewhere
   uint32  regarray[64 + FixedRegCount];
@@ -66,7 +73,7 @@ module ALU(
   uint<7> fOpEnable;
   bool    condJump;
   uint32  sentinel;
-  uint8   errorHaltCode;
+  ErrorCode   errorHaltCode;
   uint32  errorHaltData;
 
   // Wire up the results from the floating units
@@ -116,61 +123,40 @@ module ALU(
      //$monitor("%t, ram = %h, %h, %h, %h : %h, %h, %h, %h",
        //$time, ramIn[7:0], ramIn[15:8], ramIn[23:16], ramIn[31:24], ramAddress, ramIn, opAddress, ramValue);
 
-  // Mode InitialMode: Schedule read of code at instruction pointer and clear
-  //         out enable bits for auxillary modules.
   state initial
   {
-    if (!initComplete)
-    {
-      // We initialize most stuff here because it can be done once
-      // here and work both with the reset input and with an initializer
-      // for the registers.
-      debug = 0;
-      debug2 = 0;
-      debug3 = 1;
-      
-      writeReq = 0;
-      uartReadReq = 0;
-      readReq = 0;
-      opDataWord = 0xffffffff;
-      opCode = 0;
-      fOpEnable = 0b0000000;
-      ipointer = 0;
-      condJump = false;
-      dbgBufferWriteReq = false;
-      dbgBufferReadReq = false;
-      execMode = false;
-      addrVirtual = false;
+    // We initialize most stuff here because it can be done once
+    // here and work both with the reset input and with an initializer
+    // for the registers.
+    debug = 0;
+    debug2 = 0;
+    debug3 = 1u9;
+    
+    writeReq = false;
+    uartReadReq = false;
+    readReq = false;
+    opDataWord = 0xffffffff;
+    opCode = OpCode.Unknown;
+    fOpEnable = 0b0000000;
+    ipointer = 0;
+    condJump = false;
+    dbgBufferWriteReq = false;
+    dbgBufferReadReq = false;
+    execMode = false;
+    addrVirtual = false;
 
-      // First real register position
-      rPos = `FixedRegCount;
+    // First real register position
+    rPos = FixedRegCount;
 
-      // Some stuff is hard to do with initializers, so we do it here
-      regarray[StackPointerReg] = 0;
-      regarray[FlagsReg] = 0;
-      regarray[SysCallReg] = 0;
-      regarray[CodeReturnReg] = 0;
-      regarray[KPageTableReg] = 0;
-      regarray[UPageTableReg] = 0;
+    // Some stuff is hard to do with initializers, so we do it here
+    regarray[StackPointerReg] = 0;
+    regarray[FlagsReg] = 0;
+    regarray[SysCallReg] = 0;
+    regarray[CodeReturnReg] = 0;
+    regarray[PageTableReg] = 0;
 
-      // Mark initialization as complete
-      initComplete = true;
-
-      // Mode won't change, so next clock we will be back but skip init
-    }
-    else
-    {
-      // { RAM read for instruction data
-      readReq = 1;
-      ramAddress = ipointer;
-      opDataWord = 'h0badf00d;
-
-      // Clear out stuff for the pipeline
-      fOpEnable = 0b0000000;
-      condJump = false;
-      
-      transiton InstrReadComplete;
-    }
+    // Mark initialization as complete
+    initComplete = true;
   }
 
   state always
@@ -184,14 +170,29 @@ module ALU(
     r5 = regarray[`StackPointerReg];
 
     // Keep the output register in sync with what we have been setting
-    kptAddress = regarray[`KPageTableReg];
-    uptAddress = regarray[`UPageTableReg];
+    ptAddress = regarray[`PageTableReg];
 
     //debug3[8:0] = mode;
     //debug2[7:0] = mode;
     //debug2[15:8] = opCode;
-    debug2[11:0] = ipointer;
-    debug2[31:12] = opCode;
+    debug2[11:0] = ipointer[11:0];
+    debug2[31:12] = { 0u14, opCode };
+  }
+
+  // Mode InitialMode: Schedule read of code at instruction pointer and clear
+  //         out enable bits for auxillary modules.
+  state InitialMode
+  {
+    // Begin RAM read for instruction data
+    readReq = true;
+    ramAddress = ipointer;
+    opDataWord = 0x0badf00d;
+
+    // Clear out stuff for the pipeline
+    fOpEnable = 0b0000000;
+    condJump = false;
+    
+    transition InstrReadComplete;
   }
 
   // Mode InstrReadComplete: Handle completion of instruction pointer read request and
@@ -200,31 +201,31 @@ module ALU(
   state InstrReadComplete
   {
     // Stop request
-    readReq = 0;
+    readReq = false;
 
-    if (mcStatus == `MCReady)
+    if (mcStatus == ControllerStatus.Ready)
     {
       // If ramReady is high then we have received something
       //$display("Receiving instr1 value %h from MemoryController", ramIn);
 
-      opCode = ramIn[7:0];
+      opCode = OpCode(ramIn[5:0]);
       regAddress =  (ramIn[15:8] >= 64)  ? (ramIn[15:8] - 64)  : (ramIn[15:8] + rPos);
       regAddress2 = (ramIn[23:16] >= 64) ? (ramIn[23:16] - 64) : (ramIn[23:16] + rPos);
       regAddress3 = (ramIn[31:24] >= 64) ? (ramIn[31:24] - 64) : (ramIn[31:24] + rPos);
 
       // Move to next mode now
-      mode = `RegValueSet;
+      transition RegValueSet;
     }
     else 
     {
-      if (mcStatus == `MCError)
+      if (mcStatus == ControllerStatus.Error)
       {
         __display("Memory controller error when reading instruction, halting");
 
         // Set error condition
-        mode = `ErrorHalt;
-        errorHaltCode = `ErrorCodeBadInstr1;
+        errorHaltCode = ErrorCode.BadInstr1;
         errorHaltData = ramAddress;
+        transition ErrorHalt;
       }
     }
   }
@@ -236,7 +237,7 @@ module ALU(
   {
     // Read values from registers
     regValue[0] = regarray[regAddress[7:0]];
-    if (opCode == `VfaddRRR)
+    if (opCode == OpCode.VfaddRRR)
     {
       regValue[1] = regarray[regAddress[7:0] + 1];
       regValue[2] = regarray[regAddress[7:0] + 2];
@@ -244,7 +245,7 @@ module ALU(
     }
 
     regValue2[0] = regarray[regAddress2[7:0]];
-    if (opCode == `VfaddRRR)
+    if (opCode == OpCode.VfaddRRR)
     {
       regValue2[1] = regarray[regAddress2[7:0] + 1];
       regValue2[2] = regarray[regAddress2[7:0] + 2];
@@ -252,7 +253,7 @@ module ALU(
     }
 
     regValue3[0] = regarray[regAddress3[7:0]];
-    if (opCode == `VfaddRRR)
+    if (opCode == OpCode.VfaddRRR)
     {
       regValue3[1] = regarray[regAddress3[7:0] + 1];
       regValue3[2] = regarray[regAddress3[7:0] + 2];
@@ -260,37 +261,37 @@ module ALU(
     }
 
     // Enable operation for module
-    if (opCode == `FaddRRR || opCode == `VfaddRRR) { fOpEnable[0:0] = 1; }
-    if (opCode == `FsubRR) { fOpEnable[1:1] = 1; }
-    if (opCode == `FconvR) { fOpEnable[2:2] = 1; }
-    if (opCode == `FmulRRR) { fOpEnable[3:3] = 1; }
-    if (opCode == `FmuladdRRR) { fOpEnable[4:4] = 1; }
-    if (opCode == `FminRR) { fOpEnable[5:5] = 1; }
-    if (opCode == `FmaxRR) { fOpEnable[5:5] = 1; }
-    if (opCode == `FdivRR) { fOpEnable[6:6] = 1; }
+    if (opCode == OpCode.FaddRRR || opCode == OpCode.VfaddRRR) { fOpEnable[0:0] = true; }
+    if (opCode == OpCode.FsubRR) { fOpEnable[1:1] = true; }
+    if (opCode == OpCode.FconvR) { fOpEnable[2:2] = true; }
+    if (opCode == OpCode.FmulRRR) { fOpEnable[3:3] = true; }
+    if (opCode == OpCode.FmuladdRRR) { fOpEnable[4:4] = true; }
+    if (opCode == OpCode.FminRR) { fOpEnable[5:5] = true; }
+    if (opCode == OpCode.FmaxRR) { fOpEnable[5:5] = true; }
+    if (opCode == OpCode.FdivRR) { fOpEnable[6:6] = true; }
 
     // Determine if a conditional jump needs to happen
-    if (opCode == `JneC && regarray[`FlagsReg][0:0] == false) { condJump = true; }
-    if (opCode == `JeC && regarray[`FlagsReg][0:0] == true) { condJump = true; }
-    if (opCode == `JzRC && regarray[regAddress[7:0]] == 0) { condJump = true; }
-    if (opCode == `JnzRC && regarray[regAddress[7:0]] != 0) { condJump = true; }
+    if (opCode == OpCode.JneC && regarray[FlagsReg][0:0] == false) { condJump = true; }
+    if (opCode == OpCode.JeC && regarray[FlagsReg][0:0] == true) { condJump = true; }
+    if (opCode == OpCode.JzRC && regarray[regAddress[7:0]] == 0) { condJump = true; }
+    if (opCode == OpCode.JnzRC && regarray[regAddress[7:0]] != 0) { condJump = true; }
 
-    if (Is8ByteOpcode(opCode) == 1)
+    if (Is8ByteOpcode(opCode))
     {
       // Read values from ram requested by instruction
-      readReq = 1;
+      readReq = true;
       ramAddress = ipointer + 4;
 
       // We need to move into further modes
-      mode = `DataWordComplete;
+      transition DataWordComplete;
     }
     else 
     {
-      if (IsRAMOpcode(opCode) == 1|| IsIOOpcode(opCode) == 1)
+      if (IsRAMOpcode(opCode) || IsIOOpcode(opCode))
       {
         // We are not reading a constant, but we might still be
         // doing a RAM operation, move into the mode where we do that
-        mode = `RWRequest;
+        transition RWRequest;
       }
       else
       {
@@ -298,7 +299,7 @@ module ALU(
         // to wait for that word data to come back, and there
         // can be no further reads or writes since the word
         // data is where the address would go
-        mode = `ProcessOpCode;
+        transition ProcessOpCode;
       }
     }
   }
@@ -310,9 +311,9 @@ module ALU(
   state DataWordComplete
   {
     // Stop request
-    readReq = 0;
+    readReq = false;
 
-    if (mcStatus == `MCReady)
+    if (mcStatus == ControllerStatus.Ready)
     {
       //$display("DataWordComplete with word %h", ramIn);
 
@@ -321,148 +322,148 @@ module ALU(
 
       // Move to next mode - only progress to data read / write
       // for opCodes that actually need it.
-      if (IsRAMOpcode(opCode) == 1 || IsIOOpcode(opCode) == 1)
+      if (IsRAMOpcode(opCode) || IsIOOpcode(opCode))
       {
         //$display("DataWordComplete getting another RW %h", opCode);
-        mode = `RWRequest;
+        transition RWRequest;
       }
       else
       {
         //$display("DataWordComplete processing an OpCode %h", opCode);
-        mode = `ProcessOpCode;
+        transition ProcessOpCode;
       }
     }
     else 
     {
-      if (mcStatus == `MCError)
+      if (mcStatus == ControllerStatus.Error)
       {
         // Set error condition
-        mode = `ErrorHalt;
-        errorHaltCode = `ErrorCodeBadInstr2;
+        errorHaltCode = ErrorCode.BadInstr2;
         errorHaltData = ramAddress;
+        transition ErrorHalt;
       }
     }        
   }
 
   state RWRequest
   {
-    if (IsRAMOpcode(opCode) == 1)
+    if (IsRAMOpcode(opCode))
     {
       //$display("RWRequest for RAM opcode");
 
       switch (opCode)
       {
-        case MovRdC: 
+        case OpCode.MovRdC: 
         {
           // Read values from address encoded in code
-          readReq = 1;
+          readReq = true;
           ramAddress = opDataWord;
 
           //$display("Requesting RdC read from %h", opDataWord);
         }
 
-        case MovRdRo: 
+        case OpCode.MovRdRo: 
         {
           // First register is destination, second register is base address, 
           // constant stores offset in bytes.
-          readReq = 1;
+          readReq = true;
           ramAddress = opDataWord + regValue2[0];
 
           //$display("Requesting read from %h", opDataWord + regValue2);
         }
 
-        case MovRdRoR: 
+        case OpCode.MovRdRoR: 
         {
           // First register is destination, second register is base address, 
           // constant stores size of item, and third register stores index of item.
-          readReq = 1;
+          readReq = true;
           ramAddress = regValue2[0] + opDataWord * regValue3[0];
 
           //$display("Requesting read from %h", regValue2[0] + opDataWord * regValue3[0]);
         }
 
-        case MovRdR: 
+        case OpCode.MovRdR: 
         {
           // Read values from address encoded in code
-          readReq = 1;
+          readReq = true;
           ramAddress = regValue2[0];
 
           //$display("Requesting read from %h", opDataWord + regValue2);
         }
 
-        case PopR: 
+        case OpCode.PopR: 
         {
           // Read value from stack
-          readReq = 1;
+          readReq = true;
           ramAddress = regarray[`StackPointerReg] - 4;
 
           //$display("Requesting read from %h - 4", regarray[`StackPointerReg]);
         }
 
-        case Ret: 
+        case OpCode.Ret: 
         {
           // Read value from stack
-          readReq = 1;
+          readReq = true;
           ramAddress = regarray[`StackPointerReg] - 4;
         
           //$display("Requesting read from %h - 4", regarray[`StackPointerReg]);
         }
       
-        case MovdCR: 
+        case OpCode.MovdCR: 
         {
           // Write values to ram requested by instruction
-          writeReq = 1;
+          writeReq = true;
           ramAddress = opDataWord;
           ramOut = regValue2[0];
         
           //$display("Reqesting write %h to address value %h", regValue2[0], opDataWord);
         }
 
-        case MovdRoR: 
+        case OpCode.MovdRoR: 
         {
           // Write values to ram requested by instruction
-          writeReq = 1;
+          writeReq = true;
           ramAddress = opDataWord + regValue[0];
           ramOut = regValue2[0];
         
           //$display("Reqesting write %h to address value %h", regValue2[0], opDataWord + regValue[0]);
         }
       
-        case MovdRoRR: 
+        case OpCode.MovdRoRR: 
         {
           // first register is base address, constant stores size of items, 
           // second register stores index of item, third register is destination, 
-          writeReq = 1;
+          writeReq = true;
           ramAddress = regValue[0] + opDataWord * regValue2[0];
           ramOut = regValue3[0];
         
           //$display("Reqesting write %h to address value %h", regValue2[0], regValue[0] + opDataWord * regValue2[0]);
         }
 
-        case PushR: 
+        case OpCode.PushR: 
         {
           // Write register value to stack
-          writeReq = 1;
+          writeReq = true;
           ramAddress = regarray[`StackPointerReg];
           ramOut = regValue[0];
         
           //$display("Reqesting push %h", regValue);
         }
       
-        case CallR: 
+        case OpCode.CallR: 
         {
           // Write ip to stack
-          writeReq = 1;
+          writeReq = true;
           ramAddress = regarray[`StackPointerReg];
           ramOut = ipointer;
         
           //$display("Reqesting push %h", regValue);
         }
 
-        case SysCallRRR: 
+        case OpCode.SysCallRRR: 
         {
           // Read function address from register
-          readReq = 1;
+          readReq = true;
           ramAddress = regValue[0];
         }
       }
@@ -471,23 +472,23 @@ module ALU(
     }
     else 
     {
-      if (IsIOOpcode(opCode) == 1)
+      if (IsIOOpcode(opCode))
       {
         //$display("IO opcode");
 
         // Stop request
-        readReq = 0;
+        readReq = false;
 
         switch (opCode)
         {
-          case ReadPortRR: 
+          case OpCode.ReadPortRR: 
           {
             switch (regValue2[0])
             {
               case 1: 
               {
                 // Port 1 is read from UART
-                uartReadReq = 1;
+                uartReadReq = true;
               }
           
               //case 2: 
@@ -497,32 +498,32 @@ module ALU(
           
               default: 
               {
-                $display("Unknown port %h being read", regValue[0]);
+                __display("Unknown port %h being read", regValue[0]);
               }
             }
           }
 
-          case WritePortRR: 
+          case OpCode.WritePortRR: 
           {
-            uartWriteReq = 1;
+            uartWriteReq = true;
             uartWriteData = regValue2[0][7:0];
           }
 
-          case DoutR: 
+          case OpCode.DoutR: 
           {
             //$display("DoutR write req");
 
-            dbgBufferWriteReq = 1;
+            dbgBufferWriteReq = true;
             dbgBufferWriteData = regValue[0];
           }
 
-          case DinR: 
+          case OpCode.DinR: 
           {
-            dbgBufferReadReq = 1;
+            dbgBufferReadReq = true;
           }
         }
 
-        mode = `IORWWait;
+        transition IORWWait;
       }
     }
   }
@@ -545,9 +546,9 @@ module ALU(
     readReq = false;
     writeReq = false;
 
-    if (mcStatus == `MCReady)
+    if (mcStatus == ControllerStatus.Ready)
     {
-      if (opCode == `MovRdC || opCode == `MovRdRo || opCode == `MovRdRoR || opCode == `MovRdR || opCode == `PopR || opCode == `Ret)
+      if (opCode == OpCode.MovRdC || opCode == OpCode.MovRdRo || opCode == OpCode.MovRdRoR || opCode == OpCode.MovRdR || opCode == OpCode.PopR || opCode == OpCode.Ret)
       {
         //$display("Receiving read address value %h", ramIn);
 
@@ -555,28 +556,28 @@ module ALU(
         ramValue = ramIn;
       }
 
-      mode = `ProcessOpCode;
+      transition ProcessOpCode;
     }
     else 
     {
-      if (mcStatus == `MCError)
+      if (mcStatus == ControllerStatus.Error)
       {
-        if (execMode == 0)
+        if (!execMode)
         {
-          $display("Memory controller says access to protected page from kernel mode, execMode = %h", execMode);
+          __display("Memory controller says access to protected page from kernel mode, execMode = %h", execMode);
 
           // Set error condition if supervisor hits this
-          mode = `ErrorHalt;
-          errorHaltCode = `ErrorCodeBadMem;
+          transition ErrorHalt;
+          errorHaltCode = ErrorCode.BadMem;
           errorHaltData = ramAddress;
         }
         else
         {
-          $display("Memory controller says access to protected page from user mode, execMode = %h", execMode);
+          __display("Memory controller says access to protected page from user mode, execMode = %h", execMode);
 
           // Exit back to supervisor if user hits this
-          opCode = `Exit;
-          mode = `ProcessOpCode;
+          opCode = OpCode.Exit;
+          transition ProcessOpCode;
         }
       }
     }
@@ -584,7 +585,7 @@ module ALU(
 
   state IORWComplete 
   {
-    if (opCode == `ReadPortRR)
+    if (opCode == OpCode.ReadPortRR)
     {
       switch (regValue2[0])
       {
@@ -594,7 +595,7 @@ module ALU(
           if (uartReadAck == true)
           {
             ramValue[7:0] = uartReadData;
-            ramValue[31:8] = 1;
+            ramValue[31:8] = 1u24;
           }
           else
           {
@@ -607,18 +608,18 @@ module ALU(
         {
           // Port 2 is UART write ready status
           ramValue[0:0] = uartWriteReady;
-          ramValue[31:1] = 0;
+          ramValue[31:1] = 0u31;
         }
 
         default: 
         {
-          $display("Unknown port %h being read", regValue[0]);
+          __display("Unknown port %h being read", regValue[0]);
         }
       }
     }
     else 
     {
-      if (opCode == `DinR)
+      if (opCode == OpCode.DinR)
       {
         ramValue = dbgBufferReadData;
       }
@@ -635,11 +636,11 @@ module ALU(
     // Now we can do writes to non-ram things
     switch (opCode)
     {
-      case MovRC:  { regarray[regAddress[7:0]] = opDataWord;   }            // mov reg, const
-      case MovRdC: { regarray[regAddress[7:0]] = ramValue;     }            // mov reg, [addr]
-      case MovRR:  { regarray[regAddress[7:0]] = regValue2[0]; }            // mov reg, reg
+      case OpCode.MovRC:  { regarray[regAddress[7:0]] = opDataWord;   }            // mov reg, const
+      case OpCode.MovRdC: { regarray[regAddress[7:0]] = ramValue;     }            // mov reg, [addr]
+      case OpCode.MovRR:  { regarray[regAddress[7:0]] = regValue2[0]; }            // mov reg, reg
 
-      case PackRRR: 
+      case OpCode.PackRRR: 
       {
         switch (regValue3[0][1:0])
         {
@@ -647,62 +648,62 @@ module ALU(
           case 1: { regarray[regAddress[7:0]][15:8] = regValue2[0][7:0]; }
           case 2: { regarray[regAddress[7:0]][23:16] = regValue2[0][7:0]; }
           case 3: { regarray[regAddress[7:0]][31:24] = regValue2[0][7:0]; }
-          default: { $display("Out of range byte position"); }
+          default: { __display("Out of range byte position"); }
         }
       }
 
-      case MovRdRo:  { regarray[regAddress[7:0]] = ramValue; }              // mov reg, [reg + const]
-      case MovRdRoR: { regarray[regAddress[7:0]] = ramValue; }              // mov reg, [reg + const * reg]
-      case MovRdR:   { regarray[regAddress[7:0]] = ramValue; }              // mov reg, [reg]
+      case OpCode.MovRdRo:  { regarray[regAddress[7:0]] = ramValue; }              // mov reg, [reg + const]
+      case OpCode.MovRdRoR: { regarray[regAddress[7:0]] = ramValue; }              // mov reg, [reg + const * reg]
+      case OpCode.MovRdR:   { regarray[regAddress[7:0]] = ramValue; }              // mov reg, [reg]
       //case MovdCR:   { } // Done above
       //case MovdRoR:  { } // Done above
       //case MovdRoRR: { } // Done above
 
-      case LeaRRoR: 
+      case OpCode.LeaRRoR: 
       {
         //$display("Doing lea with opDataWord %h", opDataWord);
         regarray[regAddress[7:0]] = regValue2[0] + opDataWord * regValue3[0];
       }
 
-      case ReadPortRR: { regarray[regAddress[7:0]] = ramValue; }            // ReadPort reg, reg
+      case OpCode.ReadPortRR: { regarray[regAddress[7:0]] = ramValue; }            // ReadPort reg, reg
       //case WritePortRR: { } // Done above
 
-      case PushR: 
+      case OpCode.PushR: 
       {
         regarray[`StackPointerReg] = regarray[`StackPointerReg] + 4;                             // push reg
       }
 
-      case PopR: 
+      case OpCode.PopR: 
       {
         regarray[regAddress[7:0]] = ramValue;                        // pop reg
         regarray[`StackPointerReg] = regarray[`StackPointerReg] - 4;
       }
 
-      case CallR: 
+      case OpCode.CallR: 
       {
         // Stack pointer increases like a push
         regarray[`StackPointerReg] = regarray[`StackPointerReg] + 4;                             // call reg
 
         // Jump to the function
         ipointer = regValue[0];
-        debug3 = 3;
+        debug3 = 3u9;
 
         //$display("Doing a call");
       }
 
-      case Ret: 
+      case OpCode.Ret: 
       {
         // Stack pointer decreases like a pop
         regarray[`StackPointerReg] = regarray[`StackPointerReg] - 4;                             // ret
 
         // Return to the saved position, after the call
         ipointer = ramValue + 4;
-        debug3 = 4;
+        debug3 = 4u9;
 
         //$display("Doing a ret");
       }
 
-      case RCallRC: 
+      case OpCode.RCallRC: 
       {
         // Store return address
         regarray[rPos + opDataWord] = ipointer;
@@ -715,16 +716,16 @@ module ALU(
 
         // Jump to the function
         ipointer = regValue[0];
-        debug3 = 5;
+        debug3 = 5u9;
 
         //$display("Doing a register shift call to %h", regValue[0]);
       }
 
-      case RRet: 
+      case OpCode.RRet: 
       {
         // Get the return address
         ipointer = regarray[rPos - 2] + 8;
-        debug3 = 6;
+        debug3 = 6u9;
 
         // Get the window value
         rPos = rPos - (regarray[rPos - 1] + 2);
@@ -732,61 +733,61 @@ module ALU(
         //$display("Doing an rret");
       }
 
-      case CmpRR: // cmp reg, reg
+      case OpCode.CmpRR: // cmp reg, reg
       {                                                   
-        regarray[`FlagsReg][0:0] = (regValue[0] == regValue2[0] ? 1 : 0);
-        regarray[`FlagsReg][1:1] = (regValue[0] .< regValue2[0] ? 1 : 0);
-        regarray[`FlagsReg][2:2] = (regValue[0] >. regValue2[0] ? 1 : 0);
+        regarray[FlagsReg][0:0] = (regValue[0] == regValue2[0] ? true : false);
+        regarray[FlagsReg][1:1] = (regValue[0] .< regValue2[0] ? true : false);
+        regarray[FlagsReg][2:2] = (regValue[0] >. regValue2[0] ? true : false);
       }
 
-      case CmpRC: 
+      case OpCode.CmpRC: 
       {
-        regarray[`FlagsReg][0:0] = (regValue[0] == opDataWord ? 1 : 0);
-        regarray[`FlagsReg][1:1] = (regValue[0] .< opDataWord ? 1 : 0);
-        regarray[`FlagsReg][2:2] = (regValue[0] >. opDataWord ? 1 : 0);
+        regarray[FlagsReg][0:0] = (regValue[0] == opDataWord ? true : false);
+        regarray[FlagsReg][1:1] = (regValue[0] .< opDataWord ? true : false);
+        regarray[FlagsReg][2:2] = (regValue[0] >. opDataWord ? true : false);
       }
 
-      case CmpERRR: 
+      case OpCode.CmpERRR: 
       {                                                 // cmpe reg, reg, reg
         regarray[regAddress[7:0]] = (regValue2[0] == regValue3[0] ? 1 : 0);
       }
 
-      case CmpNeRRR: 
+      case OpCode.CmpNeRRR: 
       {                                                 // cmpne reg, reg, reg
         regarray[regAddress[7:0]] = (regValue2[0] != regValue3[0] ? 1 : 0);
       }
 
-      case CmpLtRRR: 
+      case OpCode.CmpLtRRR: 
       {                                                 // cmplt reg, reg, reg
         regarray[regAddress[7:0]] = (regValue2[0] .< regValue3[0] ? 1 : 0);
       }
 
-      case CmpGtRRR: 
+      case OpCode.CmpGtRRR: 
       {                                                 // cmpgt reg, reg, reg
         regarray[regAddress[7:0]] = (regValue2[0] >. regValue3[0] ? 1 : 0);
       }
 
-      case JmpC: 
+      case OpCode.JmpC: 
       {  
         ipointer = opDataWord;                              // jmp address
-        debug3 = 7;
+        debug3 = 7u9;
       }
 
-      //`JneC: { } // Done above
-      //`JeC: { }   // Done above
-      //`JzRC: { } // Done above
-      //`JnzRC: { }   // Done above
+      //OpCode.JneC: { } // Done above
+      //OpCode.JeC: { }   // Done above
+      //OpCode.JzRC: { } // Done above
+      //OpCode.JnzRC: { }   // Done above
 
-      case FaddRRR:    { regarray[regAddress[7:0]] = fAddResult[0]; }        // fadd reg, reg, reg
-      case FsubRR:     { regarray[regAddress[7:0]] = fSubResult;     }        // fsub reg, reg
-      case FconvR:     { regarray[regAddress[7:0]] = fConvResult;    }        // fconv reg
-      case FmulRRR:    { regarray[regAddress[7:0]] = fMulResult;     }        // fmul reg, reg, reg
-      case FdivRR:     { regarray[regAddress[7:0]] = fDivResult;     }
-      case FmuladdRRR: { regarray[regAddress[7:0]] = fMulAddResult;   }       // fmul reg, reg
-      case FminRR:     { regarray[regAddress[7:0]] = (fCompareResult == 'b01 ? regValue2[0] : regValue[0]); }
-      case FmaxRR:     { regarray[regAddress[7:0]] = (fCompareResult == 'b11 ? regValue2[0] : regValue[0]); }
+      case OpCode.FaddRRR:    { regarray[regAddress[7:0]] = fAddResult[0]; }        // fadd reg, reg, reg
+      case OpCode.FsubRR:     { regarray[regAddress[7:0]] = fSubResult;     }        // fsub reg, reg
+      case OpCode.FconvR:     { regarray[regAddress[7:0]] = fConvResult;    }        // fconv reg
+      case OpCode.FmulRRR:    { regarray[regAddress[7:0]] = fMulResult;     }        // fmul reg, reg, reg
+      case OpCode.FdivRR:     { regarray[regAddress[7:0]] = fDivResult;     }
+      case OpCode.FmuladdRRR: { regarray[regAddress[7:0]] = fMulAddResult;   }       // fmul reg, reg
+      case OpCode.FminRR:     { regarray[regAddress[7:0]] = (fCompareResult == 0b01 ? regValue2[0] : regValue[0]); }
+      case OpCode.FmaxRR:     { regarray[regAddress[7:0]] = (fCompareResult == 0b11 ? regValue2[0] : regValue[0]); }
 
-      case VfaddRRR: 
+      case OpCode.VfaddRRR: 
       {
         regarray[regAddress[7:0]] = fAddResult[0];
         regarray[regAddress[7:0] + 1] = fAddResult[1];
@@ -794,19 +795,19 @@ module ALU(
         regarray[regAddress[7:0] + 3] = fAddResult[3];
       }
 
-      case AddRRC:    { regarray[regAddress[7:0]] = regValue2[0] + opDataWord;    } // add reg, reg, const
-      case AddRRR:    { regarray[regAddress[7:0]] = regValue2[0] + regValue3[0];  } // add reg, reg, reg
-      case SubRRC:    { regarray[regAddress[7:0]] = regValue2[0] - opDataWord;    } // add reg, reg, const
-      case SubRRR:    { regarray[regAddress[7:0]] = regValue2[0] - regValue3[0];  } // add reg, reg, reg
-      case IncR:      { regarray[regAddress[7:0]] = regValue[0] + 1;              } // dec reg
-      case DecR:      { regarray[regAddress[7:0]] = regValue[0] - 1;              } // dec reg
-      case ShlRRR:    { regarray[regAddress[7:0]] = regValue2[0] << regValue3[0]; } // shl reg, reg, reg
-      case ShrRRR:    { regarray[regAddress[7:0]] = regValue2[0] >> regValue3[0]; } // shl reg, reg, reg
-      case NegRR:     { regarray[regAddress[7:0]] = -regValue2[0];                } // neg reg, reg
+      case OpCode.AddRRC:    { regarray[regAddress[7:0]] = regValue2[0] + opDataWord;    } // add reg, reg, const
+      case OpCode.AddRRR:    { regarray[regAddress[7:0]] = regValue2[0] + regValue3[0];  } // add reg, reg, reg
+      case OpCode.SubRRC:    { regarray[regAddress[7:0]] = regValue2[0] - opDataWord;    } // add reg, reg, const
+      case OpCode.SubRRR:    { regarray[regAddress[7:0]] = regValue2[0] - regValue3[0];  } // add reg, reg, reg
+      case OpCode.IncR:      { regarray[regAddress[7:0]] = regValue[0] + 1;              } // dec reg
+      case OpCode.DecR:      { regarray[regAddress[7:0]] = regValue[0] - 1;              } // dec reg
+      case OpCode.ShlRRR:    { regarray[regAddress[7:0]] = regValue2[0] << regValue3[0]; } // shl reg, reg, reg
+      case OpCode.ShrRRR:    { regarray[regAddress[7:0]] = regValue2[0] >> regValue3[0]; } // shl reg, reg, reg
+      case OpCode.NegRR:     { regarray[regAddress[7:0]] = -regValue2[0];                } // neg reg, reg
 
-      case MulAddRRC: { regarray[regAddress[7:0]] = regValue[0] + regValue2[0] * opDataWord; }
+      case OpCode.MulAddRRC: { regarray[regAddress[7:0]] = regValue[0] + regValue2[0] * opDataWord; }
 
-      case ExecR: 
+      case OpCode.ExecR: 
       {
         if (execMode == false)
         {
@@ -821,7 +822,7 @@ module ALU(
         }
       }
 
-      case Exit: 
+      case OpCode.Exit: 
       {
         //$display("Processing exit");
 
@@ -837,34 +838,34 @@ module ALU(
         }
       }
 
-      case DoutR: 
+      case OpCode.DoutR: 
       {
         // In simulation we use $display for this
-        $display("DebugOut %h", regValue[0]);
+        __display("DebugOut %h", regValue[0]);
   
         // FPGA we hit the 7seg display with the value
         debug = regValue[0];
       }
 
-      case DinR: 
+      case OpCode.DinR: 
       {
         regarray[regAddress[7:0]] = ramValue;
       }
 
-      case DlenR: 
+      case OpCode.DlenR: 
       {
         regarray[regAddress[7:0]] = dbgBufferLength;
       }
 
-      case VpEnable: 
+      case OpCode.VpEnable: 
       {
-        addrVirtual = 1;
+        addrVirtual = true;
       }
 
       default: 
       {
         // In simulation we want this to be obvious
-        $display("Unknown instruction %h", opCode);
+        __display("Unknown instruction %h", opCode);
       }
     }
 
@@ -875,52 +876,52 @@ module ALU(
     if (condJump == true)
     {
       ipointer = opDataWord;
-      debug3 = 8;
+      debug3 = 8u9;
     }
     else 
     {
-      if (opCode != `JmpC &&
-          opCode != `CallR &&
-          opCode != `Ret &&
-          opCode != `RCallRC &&
-          opCode != `RRet &&
-          opCode != `ExecR &&
-          opCode != `Exit
+      if (opCode != OpCode.JmpC &&
+          opCode != OpCode.CallR &&
+          opCode != OpCode.Ret &&
+          opCode != OpCode.RCallRC &&
+          opCode != OpCode.RRet &&
+          opCode != OpCode.ExecR &&
+          opCode != OpCode.Exit
           )
       {
         //$display("Incrementing ip");
 
-        if (Is8ByteOpcode(opCode) == 1)
+        if (Is8ByteOpcode(opCode))
         {
           ipointer = ipointer + 8;
-          debug3 = 9;
+          debug3 = 9u9;
         }
         else
         {
           ipointer = ipointer + 4;
-          debug3 = 10;
+          debug3 = 10u9;
         }
       }
     }
 
     //$display("Finished instruction %h", opCode);
 
-    if (opCode != 0 && opCode <= `MaxOpCode)
+    if (opCode != OpCode.Unknown && opCode <= OpCode.MaxOpCode)
     {
       // Mode change back if opCode was valid
-      mode = `InitialMode;
+      transition InitialMode;
     }
     else
     {
       // Bad opCode, halt and report
-      mode = `ErrorHalt;
-      errorHaltData = opCode;
+      //errorHaltData = opCode;
+      transition ErrorHalt;
     }
   }
 
   state ErrorHalt
   {
-    $display("Halt with error code %h and data %h", errorHaltCode, errorHaltData);
+    __display("Halt with error code %h and data %h", errorHaltCode, errorHaltData);
     debug = errorHaltData;
   }
 }
