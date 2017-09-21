@@ -92,17 +92,17 @@ GenericTypeInfo* TypeCollection::GetGenericType(int symIndex, ModuleDefinitionNo
 
 void TypeCollection::AddStructType(int symIndex, StructTypeInfo* pInfo)
 {
-    _structTypes[symIndex] = std::unique_ptr<StructTypeInfo>(pInfo);
+    _structTypes.insert(std::make_pair(symIndex, std::unique_ptr<StructTypeInfo>(pInfo)));
 }
 
 void TypeCollection::AddModuleType(int symIndex, ModuleTypeInfo* pInfo)
 {
-    _moduleTypes[symIndex] = std::unique_ptr<ModuleTypeInfo>(pInfo);
+    _moduleTypes.insert(std::make_pair(symIndex, std::unique_ptr<ModuleTypeInfo>(pInfo)));
 }
 
 void TypeCollection::AddEnumType(int symIndex, EnumTypeInfo* pInfo)
 {
-    _enumTypes[symIndex] = std::unique_ptr<EnumTypeInfo>(pInfo);
+    _enumTypes.insert(std::make_pair(symIndex, std::unique_ptr<EnumTypeInfo>(pInfo)));
 }
 
 EnumTypeInfo* TypeCollection::GetEnumType(int symIndex)

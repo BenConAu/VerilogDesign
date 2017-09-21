@@ -368,7 +368,7 @@ void FunctionCallNode::VerifyNodeImpl()
                         GetContext()->ReportError(GetLocation(), "Param %d of module out parameters must be identifier expressions to be wires", i);
                     }
 
-                    if (pVarInfo->GetModifier() != TypeModifier::Wire)
+                    if (pVarInfo->GetModifier() != TypeModifier::Wire && pVarInfo->GetLocationType() != VariableLocationType::Output)
                     {
                         GetContext()->ReportError(GetLocation(), "Module out parameter %d must be a wire", i);
                     }

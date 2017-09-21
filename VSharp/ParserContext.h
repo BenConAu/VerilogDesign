@@ -41,7 +41,7 @@ public:
     void ReportError(const YYLTYPE &location, const char *pError)
     {
         char errorText[256];
-        sprintf(errorText, "Line %d: %s", location.first_line, pError);
+        sprintf(errorText, "File: %s | Line %d: %s", _currentFile.c_str(), location.first_line, pError);
         throw std::string(errorText);
     }
 
@@ -76,6 +76,9 @@ private:
 
     // Current string
     std::string _currentString;
+
+    // The file that we are parsing
+    std::string _currentFile;
 
     std::deque<std::unique_ptr<ASTNode>> _rootNodes;
     size_t _numStructs;

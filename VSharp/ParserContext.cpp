@@ -9,6 +9,13 @@ ParserContext::ParserContext(const char *pszInputFile, VSharpCompiler* pCompiler
 {
 	FILE *pFile = ::fopen(pszInputFile, "r");
 
+    if (pFile == nullptr)
+    {
+        YYLTYPE location = { 0 };
+        ReportError(location, "Cannot find file %s", pszInputFile);
+    }
+
+    _currentFile = pszInputFile;
     _pCompiler = pCompiler;
     _numStructs = 0;
     _numGlobals = 0;
