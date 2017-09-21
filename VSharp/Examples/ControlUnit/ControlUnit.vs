@@ -14,6 +14,9 @@ enum ControllerStatus
   Ready,
 }
 
+// Forward declare stuff
+module FloatingAdd(uint32 a, uint32 b, bool negate, out uint32 outVal, out uint32 debug, clock clk, bool enable);
+
 module ALU(
   clock clk,                  // [Input]  Clock driving the ALU
   bool reset,                 // [Input]  Reset pin
@@ -86,11 +89,11 @@ module ALU(
   wire uint32 floatDebug;
   wire uint<2> fCompareResult;
 
-  //FloatingAdd         fAdd0(regValue2[0], regValue3[0], false, fAddResult[0], floatDebug, clk, fOpEnable[0:0]);
-  //FloatingAdd         fAdd1(regValue2[1], regValue3[1], false, fAddResult[1], floatDebug, clk, fOpEnable[0:0]);
-  //FloatingAdd         fAdd2(regValue2[2], regValue3[2], false, fAddResult[2], floatDebug, clk, fOpEnable[0:0]);
-  //FloatingAdd         fAdd3(regValue2[3], regValue3[3], false, fAddResult[3], floatDebug, clk, fOpEnable[0:0]);
-  //FloatingAdd         fSub(regValue[0], regValue2[0], true, fSubResult, floatDebug, clk, fOpEnable[1:1]);
+  FloatingAdd         fAdd0 = FloatingAdd(regValue2[0], regValue3[0], false, out fAddResult[0], out floatDebug, clk, fOpEnable[0:0]);
+  FloatingAdd         fAdd1 = FloatingAdd(regValue2[1], regValue3[1], false, out fAddResult[1], out floatDebug, clk, fOpEnable[0:0]);
+  FloatingAdd         fAdd2 = FloatingAdd(regValue2[2], regValue3[2], false, out fAddResult[2], out floatDebug, clk, fOpEnable[0:0]);
+  FloatingAdd         fAdd3 = FloatingAdd(regValue2[3], regValue3[3], false, out fAddResult[3], out floatDebug, clk, fOpEnable[0:0]);
+  FloatingAdd         fSub =  FloatingAdd(regValue[0], regValue2[0], true, out fSubResult, out floatDebug, clk, fOpEnable[1:1]);
   //FloatingFromInt     fConv(regValue[0], fConvResult, floatDebug, clk, fOpEnable[2:2]);
   //FloatingMultiply    fMul(regValue2[0], regValue3[0], fMulResult, floatDebug, clk, fOpEnable[3:3]);
   //FloatingMultiplyAdd fMulAdd(regValue[0], regValue2[0], regValue3[0], fMulAddResult, floatDebug, clk, fOpEnable[4:4]);

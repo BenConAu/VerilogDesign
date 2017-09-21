@@ -97,6 +97,11 @@ module ALU(
   wire[31:0] fDivResult;
   wire[31:0] floatDebug;
   wire[1:0] fCompareResult;
+  FloatingAdd fAdd0(regValue2[32'd0], regValue3[32'd0], 1'b0, fAddResult[32'd0], floatDebug, clk, fOpEnable[0:0]);
+  FloatingAdd fAdd1(regValue2[32'd1], regValue3[32'd1], 1'b0, fAddResult[32'd1], floatDebug, clk, fOpEnable[0:0]);
+  FloatingAdd fAdd2(regValue2[32'd2], regValue3[32'd2], 1'b0, fAddResult[32'd2], floatDebug, clk, fOpEnable[0:0]);
+  FloatingAdd fAdd3(regValue2[32'd3], regValue3[32'd3], 1'b0, fAddResult[32'd3], floatDebug, clk, fOpEnable[0:0]);
+  FloatingAdd fSub(regValue[32'd0], regValue2[32'd0], 1'b1, fSubResult, floatDebug, clk, fOpEnable[1:1]);
   wire[31:0] dbgBufDbg1;
   wire[31:0] dbgBufDbg2;
   reg[0:0] dbgBufferWriteReq;
