@@ -22,17 +22,18 @@ module CPU(
 {
   // Our main job in this module is wiring everything together
   wire uint32  mcRamRead;
-  wire ControllerStatus   mcStatus;
+  wire ControllerStatus mcStatus;
+  wire ControllerCommand mcCommand;
   wire uint32  mcRamAddress;
   wire uint32  mcRamWrite;
-  wire bool   mcReadReq;
-  wire bool   mcWriteReq;
-  wire bool   mcAddrVirtual;
-  wire bool   mcExecMode;
+  wire bool    mcReadReq;
+  wire bool    mcWriteReq;
+  wire bool    mcAddrVirtual;
+  wire bool    mcExecMode;
   wire uint32  ptAddress;
   
   wire uint32  iPointer;
-  wire OpCode   opCode;
+  wire OpCode  opCode;
   wire uint32  r0;
   wire uint32  r1;
   wire uint32  r2;
@@ -40,6 +41,7 @@ module CPU(
   wire uint32  r4;
   wire uint32  r5;
   wire uint8   rPos;
+  wire uint32  mcDebug;
 
   ControlUnit control = ControlUnit(
     clk,
@@ -73,26 +75,24 @@ module CPU(
     out debug3
     );
 
-  wire uint32 mcDebug;
-
   MemoryController mc1 = MemoryController(
     clk,              // Global clock
-    out mcRamRead,        // [Output] RAM at requested address
-    out mcStatus,         // [Output] RAM is ready to be picked up
-    MemoryRequest(
-      mcRamAddress,     // [Input] RAM address requested
-      mcRamWrite,       // [Input] RAM to write
-      mcReadReq),        // [Input] RAM read request)
-    mcWriteReq,       // [Input] RAM write request
+    out mcRamRead,    // [Output] RAM at requested address
+    out mcStatus,     // [Output] RAM is ready to be picked up
+    MemoryRequest(    // [Input] Memory request
+      mcRamAddress,   // [Input] RAM address requested
+      mcRamWrite,     // [Input] RAM to write
+      mcWriteReq),    // [Input] RAM read request
+    mcCommand,        // [Input] Controller command
     mcAddrVirtual,    // [Input] Virtual flag for RAM
     mcExecMode,       // [Input] Exec mode
     phRamRead,        // [Input]  RAM at requested address
-    phRamAddress,     // [Output] RAM address requested
-    phRamWrite,       // [Output] RAM to write
-    phReadReq,        // [Output] RAM read request
-    phWriteReq,       // [Output] RAM write request
+    out phRamAddress, // [Output] RAM address requested
+    out phRamWrite,   // [Output] RAM to write
+    out phReadReq,    // [Output] RAM read request
+    out phWriteReq,   // [Output] RAM write request
     ptAddress,        // [Input] Page table address
-    mcDebug           // [Output] Debug port
+    out mcDebug       // [Output] Debug port
   );
 
 //initial

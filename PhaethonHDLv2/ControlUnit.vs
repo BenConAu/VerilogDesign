@@ -1,17 +1,11 @@
 import "../PhaethonISA/Generated/PhaethonOpCode.vs";
+import "MemoryController.vs";
 
 enum ErrorCode
 {
   BadInstr1,
   BadInstr2,
   BadMem,
-}
-
-enum ControllerStatus
-{
-  Error,
-  Waiting,
-  Ready,
 }
 
 // Forward declare stuff
