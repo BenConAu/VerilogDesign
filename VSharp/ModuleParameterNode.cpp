@@ -6,19 +6,14 @@
 
 void ModuleParameterNode::VerifyNodeImpl()
 {
-    ModuleDefinitionNode *pModule = GetTypedParent<ModuleDefinitionNode>();
-
-    VariableLocationType location = VariableLocationType::Member;
+    VariableLocationType location = VariableLocationType::Input;
     if (_fOut)
     {
         location = VariableLocationType::Output;
     }
-    else
-    {
-        location = VariableLocationType::Input;
-    }
 
-    TypeInfo* pTypeInfo = dynamic_cast<TypeNode *>(GetChild(0))->GetTypeInfo();
+    TypeNode* pTypeNode = dynamic_cast<TypeNode *>(GetChild(0));
+    TypeInfo* pTypeInfo = pTypeNode->GetTypeInfo();
 
     // Needs to be a register
     if (!pTypeInfo->IsVerilogRegister())
@@ -28,10 +23,10 @@ void ModuleParameterNode::VerifyNodeImpl()
 
     // Add variable to collection and mark first usage
     VariableInfo *pParamInfo = GetContext()->GetSymbolTable()->AddVariable(
-        pModule,
+        GetTypedParent<ModuleDefinitionNode>(),
         _symIndex,
         location,
-        TypeModifier::None,
+        pTypeNode->GetModifier(),
         pTypeInfo
         );
 }
@@ -42,10 +37,12 @@ void ModuleParameterNode::PostProcessNodeImpl(OutputContext* pContext)
 
     // Spit out the preamble
     VariableInfo* pInfo = dynamic_cast<VariableInfo*>(GetContext()->GetSymbolTable()->GetInfo(_symIndex, pModule));
-    const char* pszModifier = _fOut ? "output reg" : "input wire";
-
+    const char* pszInOut = _fOut ? "output" : "input";
+    const char* pszModifier = (pInfo->GetModifier() == TypeModifier::Wire || !_fOut) ? "wire" : "reg";
+    
     pContext->OutputLine(
-        "%s[%d:0] %s;", 
+        "%s %s[%d:0] %s;",
+        pszInOut,
         pszModifier, 
         pInfo->GetTypeInfo()->GetBitLength() - 1, 
         pInfo->GetSymbol());

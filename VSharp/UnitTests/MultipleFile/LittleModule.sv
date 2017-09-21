@@ -3,7 +3,8 @@ module LittleModule(
   mIn,
   inFoo,
   mOut,
-  outFoo
+  outFoo,
+  testOutFoo
   );
   // State definitions
   `define __initial 0
@@ -14,12 +15,14 @@ module LittleModule(
   input wire[31:0] inFoo;
   output reg[15:0] mOut;
   output reg[31:0] outFoo;
+  output reg[31:0] testOutFoo;
   reg [7:0] fsmState = 0;
   always @(posedge clk)
   begin
     case(fsmState)
       `__initial: begin
         mOut <= { mIn, mIn };
+        testOutFoo <= { mIn, mIn, mIn, mIn };
       end
     endcase
   end

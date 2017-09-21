@@ -26,22 +26,22 @@ module DoubleExpansionTest(
         begin
           if (32'd20 == 32'd100)
           begin
-            out1 <= 32'd1 + 32'd1 + 32'd50;
+            out1 <= 32'd52;
           end
           else
           begin
-            out1 <= 32'd1 + 32'd1 + 32'd5;
+            out1 <= 32'd7;
           end
         end
         else
         begin
           if (32'd20 == 32'd100)
           begin
-            out1 <= 32'd1 + 32'd2 + 32'd50;
+            out1 <= 32'd53;
           end
           else
           begin
-            out1 <= 32'd1 + 32'd2 + 32'd5;
+            out1 <= 32'd8;
           end
         end
       end

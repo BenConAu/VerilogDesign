@@ -24,11 +24,11 @@ module BitSelectionTest(
       `__StartState: begin
         if (32'd10 == 32'd0)
         begin
-          out1 <= 32'd1 + 32'd1;
+          out1 <= 32'd2;
         end
         else
         begin
-          out1 <= 32'd1 + 32'd2;
+          out1 <= 32'd3;
         end
       end
     endcase
