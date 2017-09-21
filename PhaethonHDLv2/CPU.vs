@@ -1,23 +1,21 @@
 #import "ControlUnit.vs";
-#import "MemoryController.vs";
 
 module CPU(
   clock clk,                // [Input]  Clock driving the ALU
-  bool reset,               // [Input]  Reset pin
   uint32 phRamRead,         // [Input]  RAM at requested address
-  out uint32 phRamAddress,  // [Output] RAM address requested
-  out uint32 phRamWrite,     // [Output] RAM to write
-  out bool phReadReq,       // [Output] RAM read request
-  out bool phWriteReq,      // [Output] RAM write request  
-  out bool uartReadReq,     // [Output] uart read requested
+  out wire uint32 phRamAddress,  // [Output] RAM address requested
+  out wire uint32 phRamWrite,     // [Output] RAM to write
+  out wire bool phReadReq,       // [Output] RAM read request
+  out wire bool phWriteReq,      // [Output] RAM write request  
+  out wire bool uartReadReq,     // [Output] uart read requested
   bool uartReadAck,         // [Input]  Flag to indicate read success
   uint8 uartReadData,       // [Input]  Actual data read 
-  out bool uartWriteReq,    // [Output] uart write requested
-  out uint8 uartWriteData,  // [Output] uart data to write
+  out wire bool uartWriteReq,    // [Output] uart write requested
+  out wire uint8 uartWriteData,  // [Output] uart data to write
   bool uartWriteReady,      // [Input]  uart ready to send
-  out uint32 debug,         // [Output] Debug port 1
-  out uint32 debug2,        // [Output] Debug port 2
-  out uint<9> debug3        // [Output] Debug port 3
+  out wire uint32 debug,         // [Output] Debug port 1
+  out wire uint32 debug2,        // [Output] Debug port 2
+  out wire uint<9> debug3        // [Output] Debug port 3
   )
 {
   // Our main job in this module is wiring everything together
@@ -45,7 +43,6 @@ module CPU(
 
   ControlUnit control = ControlUnit(
     clk,
-    reset,
     mcRamRead,
     mcStatus,
     out mcRamAddress,
@@ -95,6 +92,10 @@ module CPU(
     out mcDebug       // [Output] Debug port
   );
 
+
+  state initial
+  {
+  }
 //initial
   //$monitor("At time %t, ip = %h, opCode = %h, mcReadReq = %h, mcRamAddress = %h, mcStatus = %h, ramValue = %h, kptAddress = %h, uptAddress = %h, r[0:1:2:3:4:5] = %h:%h:%h:%h:%h:%h, rPos = %h, debug = %h",
     //$time, iPointer[15:0], opCode, mcReadReq, mcRamAddress, mcStatus, mcRamRead, kptAddress, uptAddress, r0, r1, r2, r3, r4, r5, rPos, debug);

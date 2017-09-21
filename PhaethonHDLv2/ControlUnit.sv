@@ -1,6 +1,5 @@
 module ControlUnit(
   clk,
-  reset,
   ramIn,
   mcStatus,
   ramAddress,
@@ -45,7 +44,6 @@ module ControlUnit(
   // inputs / outputs
   input wire reset;
   input wire[0:0] clk;
-  input wire[0:0] reset;
   input wire[31:0] ramIn;
   input wire[1:0] mcStatus;
   output reg[31:0] ramAddress;

@@ -13,7 +13,6 @@ module FloatingAdd(uint32 a, uint32 b, bool negate, out uint32 outVal, out uint3
 
 module ControlUnit(
   clock clk,                  // [Input]  Clock driving the ALU
-  bool reset,                 // [Input]  Reset pin
   uint32 ramIn,               // [Input]  RAM at requested address
   ControllerStatus mcStatus,  // [Input]  RAM ready signal
   out uint32 ramAddress,      // [Output] RAM address requested
