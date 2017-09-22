@@ -19,6 +19,8 @@ module UARTReceive(
     counter = 0u16;
     startCount = 0;
     endCount = 0;
+
+    transition Waiting;
   }
 
   state Waiting
@@ -28,6 +30,8 @@ module UARTReceive(
 
     if (rxd == 1)
     {
+      //__display("Start state reset");
+
       // Did not maintain start state for long enough    
       counter = 0u16;
     }
@@ -35,6 +39,8 @@ module UARTReceive(
     {
       if (counter == 217u16)
       {
+        //__display("Start bit identified");
+
         // We have decided this is a start bit
         startCount = startCount + 1;
         counter = 0u16;

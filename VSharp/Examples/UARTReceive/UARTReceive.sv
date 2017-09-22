@@ -31,6 +31,7 @@ module UARTReceive(
         counter <= 16'd0;
         startCount <= 32'd0;
         endCount <= 32'd0;
+        fsmState <= `__Waiting;
       end
       `__Waiting: begin
         dataComplete <= 1'b0;
