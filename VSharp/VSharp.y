@@ -48,6 +48,7 @@ class ParserContext;
 %token UINT8_TOKEN
 %token VOID_TOKEN
 %token INITIAL_TOKEN
+%token ALWAYS_TOKEN
 %token RETURN_TOKEN
 %token AND_OP
 %token OR_OP
@@ -461,7 +462,8 @@ drive_definition:
 
 module_state:
       STATE_TOKEN IDENTIFIER compound_statement                     { $$ = new StateDeclaratorNode(pContext, @$, $2, $3); }
-    | STATE_TOKEN INITIAL_TOKEN compound_statement                  { $$ = new StateDeclaratorNode(pContext, @$, -1, $3); }
+    | STATE_TOKEN INITIAL_TOKEN compound_statement                  { $$ = new StateDeclaratorNode(pContext, @$, KnownStates::Initial, $3); }
+    | STATE_TOKEN ALWAYS_TOKEN compound_statement                   { $$ = new StateDeclaratorNode(pContext, @$, KnownStates::Always, $3); }
     ;
 
 init_declarator_list:

@@ -63,6 +63,7 @@
 "void"               { return VOID_TOKEN; }
 "clock"              { return CLOCK_TOKEN; }
 "initial"            { return INITIAL_TOKEN; }
+"always"             { return ALWAYS_TOKEN; }
 "bool"               { return BOOL_TOKEN; }
 "struct"             { return STRUCT_TOKEN; }
 "drive"              { return DRIVE_TOKEN; }

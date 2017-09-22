@@ -83,5 +83,7 @@ private:
     bool _IsForward;
 
     std::vector<StateDeclaratorNode*> _stateList;
+    StateDeclaratorNode* _pAlwaysState;
+
     std::vector<ModuleParameterNode*> _paramList;
 };

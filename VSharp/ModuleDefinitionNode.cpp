@@ -20,6 +20,7 @@ ModuleDefinitionNode::ModuleDefinitionNode(
     _symIndex = symIndex;
     _genericIndex = genericSym;
     _IsForward = false;
+    _pAlwaysState = nullptr;
 }
 
 void ModuleDefinitionNode::PreVerifyNodeImpl()
@@ -76,9 +77,13 @@ void ModuleDefinitionNode::PreVerifyNodeImpl()
         if (pState != nullptr)
         {
             // Initial state is special
-            if (pState->GetIdentifier() == -1)
+            if (pState->GetKnownState() == KnownStates::Initial)
             {
                 _stateList[0] = pState;
+            }
+            else if (pState->GetKnownState() == KnownStates::Always)
+            {
+                _pAlwaysState = pState;
             }
             else
             {
@@ -183,19 +188,20 @@ void ModuleDefinitionNode::ProcessNodeImpl(OutputContext* pContext)
         pContext->OutputLine("case(fsmState)");
         pContext->IncreaseIndent();
 
-        for (size_t i = 0; i < GetChildCount(); i++)
+        for (size_t i = 0; i < _stateList.size(); i++)
         {
-            // Figure out what we have here
-            StateDeclaratorNode* pState = dynamic_cast<StateDeclaratorNode*>(GetChild(i));
-            if (pState != nullptr)
-            {
-                GetChild(i)->ProcessNode(pContext);
-            }
+            _stateList[i]->ProcessNode(pContext);
         }
 
         // End the case statement
         pContext->DecreaseIndent();
         pContext->OutputLine("endcase");
+
+        // If we have an always state, put it here
+        if (_pAlwaysState != nullptr)
+        {
+            _pAlwaysState->ProcessNode(pContext);
+        }
 
         // End the always statement
         pContext->DecreaseIndent();
