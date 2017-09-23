@@ -69,7 +69,7 @@ void ModuleDefinitionNode::PreVerifyNodeImpl()
     // Add all of the states into a list - the initial state has
     // value zero, but all other states start at this number and
     // work their way up.
-    _stateList.resize(1);
+    _stateList.push_back(nullptr);
 
     for (size_t i = 0; i < GetChildCount(); i++)
     {
@@ -184,18 +184,26 @@ void ModuleDefinitionNode::ProcessNodeImpl(OutputContext* pContext)
         pContext->OutputLine("begin");
         pContext->IncreaseIndent();
 
-        // Start the case statement
-        pContext->OutputLine("case(fsmState)");
-        pContext->IncreaseIndent();
-
-        for (size_t i = 0; i < _stateList.size(); i++)
+        // State case statement only if we have more than 1
+        // state in the list, or if we have an initial state
+        if (_stateList.size() > 1 || _stateList[0] != nullptr)
         {
-            _stateList[i]->ProcessNode(pContext);
-        }
+            // Start the case statement
+            pContext->OutputLine("case(fsmState)");
+            pContext->IncreaseIndent();
 
-        // End the case statement
-        pContext->DecreaseIndent();
-        pContext->OutputLine("endcase");
+            for (size_t i = 0; i < _stateList.size(); i++)
+            {
+                if (_stateList[i] != nullptr)
+                {
+                    _stateList[i]->ProcessNode(pContext);                
+                }
+            }
+
+            // End the case statement
+            pContext->DecreaseIndent();
+            pContext->OutputLine("endcase");
+        }
 
         // If we have an always state, put it here
         if (_pAlwaysState != nullptr)

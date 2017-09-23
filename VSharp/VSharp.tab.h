@@ -101,23 +101,24 @@ class ParserContext;
     COMMA = 301,
     HAT = 302,
     BANG = 303,
-    AMPERSAND = 304,
-    QUESTION = 305,
-    EQUAL_OP = 306,
-    NOTEQUAL_OP = 307,
-    BOOL_TOKEN = 308,
-    STRUCT_TOKEN = 309,
-    TRANSITION_TOKEN = 310,
-    LEFT_BRACE = 311,
-    RIGHT_BRACE = 312,
-    LEFT_BRACKET = 313,
-    RIGHT_BRACKET = 314,
-    IF_TOKEN = 315,
-    ELSE_TOKEN = 316,
-    IMPORT_TOKEN = 317,
-    WIRE_TOKEN = 318,
-    CONST_TOKEN = 319,
-    IDENTIFIER = 320
+    BAR = 304,
+    AMPERSAND = 305,
+    QUESTION = 306,
+    EQUAL_OP = 307,
+    NOTEQUAL_OP = 308,
+    BOOL_TOKEN = 309,
+    STRUCT_TOKEN = 310,
+    TRANSITION_TOKEN = 311,
+    LEFT_BRACE = 312,
+    RIGHT_BRACE = 313,
+    LEFT_BRACKET = 314,
+    RIGHT_BRACKET = 315,
+    IF_TOKEN = 316,
+    ELSE_TOKEN = 317,
+    IMPORT_TOKEN = 318,
+    WIRE_TOKEN = 319,
+    CONST_TOKEN = 320,
+    IDENTIFIER = 321
   };
 #endif
 
@@ -133,7 +134,7 @@ union YYSTYPE
     ASTNode* pNode;
     EnumItem _EnumItem;
 
-#line 137 "VSharp.tab.h" /* yacc.c:1915  */
+#line 138 "VSharp.tab.h" /* yacc.c:1915  */
 };
 
 typedef union YYSTYPE YYSTYPE;

@@ -17,6 +17,7 @@ enum class Operator
     LogicalAnd,
     LogicalOr,
     BitwiseXor,
+    BitwiseOr,
     LogicalNot,
 };
 

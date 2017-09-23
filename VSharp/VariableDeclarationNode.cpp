@@ -58,6 +58,11 @@ void VariableDeclarationNode::VerifyNodeImpl()
         GetTypeNode()->GetModifier(),
         pInfo);
 
+    if (pVarInfo == nullptr)
+    {
+        GetContext()->ReportError(GetLocation(), "Duplicate variable declaration %s", GetContext()->GetSymbolString(_symIndex).c_str());
+    }
+
     ExpressionNode* pInitExpr = GetInitNode();
     if (pInitExpr != nullptr)
     {

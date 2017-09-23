@@ -85,6 +85,7 @@ class ParserContext;
 %token COMMA
 %token HAT
 %token BANG
+%token BAR
 %token AMPERSAND
 %token QUESTION
 %token EQUAL_OP
@@ -150,6 +151,7 @@ class ParserContext;
 %type <pNode> logical_and_expression
 %type <pNode> logical_or_expression
 %type <pNode> exclusive_or_expression
+%type <pNode> inclusive_or_expression
 %type <pNode> glom_expression
 %type <pNode> glom_list
 %type <pNode> enum_definition
@@ -295,9 +297,14 @@ exclusive_or_expression:
     | exclusive_or_expression HAT equality_expression               { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::BitwiseXor); }
     ;
 
-logical_and_expression:
+inclusive_or_expression:
       exclusive_or_expression                                       { $$ = $1; }
-    | logical_and_expression AND_OP exclusive_or_expression         { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::LogicalAnd); } 
+    | inclusive_or_expression BAR exclusive_or_expression           { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::BitwiseOr); }
+    ;
+
+logical_and_expression:
+      inclusive_or_expression                                       { $$ = $1; }
+    | logical_and_expression AND_OP inclusive_or_expression         { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::LogicalAnd); } 
     ;
 
 logical_or_expression:

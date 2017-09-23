@@ -30,6 +30,14 @@ void SymbolTable::AddBuiltin()
         "$display");
     _symbols.emplace(std::make_pair(pNewInfo->GetSymbolIndex(), std::unique_ptr<SymbolInfo>(pNewInfo)));
 
+    pNewInfo = new FunctionInfo(
+        _pCompiler, 
+        _pCompiler->AddSymbol("__readmemh"),
+        _pCompiler->GetTypeCollection()->GetVoidType(),
+        -1,
+        "$readmemh");
+    _symbols.emplace(std::make_pair(pNewInfo->GetSymbolIndex(), std::unique_ptr<SymbolInfo>(pNewInfo)));
+
     VariableInfo *pVarInfo = new VariableInfo(
         _pCompiler,
         nullptr,
