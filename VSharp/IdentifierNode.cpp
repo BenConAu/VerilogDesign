@@ -30,14 +30,25 @@ ASTNode* IdentifierNode::DuplicateNodeImpl()
 
     // Are we in a function?
     FunctionDeclaratorNode *pFuncDecl = GetTypedParent<FunctionDeclaratorNode>();
-    if (pFuncDecl != nullptr && pFuncDecl->IsParameter(_symIndex))
+    if (pFuncDecl != nullptr)
     {
-        return pFuncDecl->DuplicateParameterIdentifier(_symIndex);
+        if (pFuncDecl->IsParameter(_symIndex))
+        {
+            // This was an identifier passed into the function, replace it
+            return pFuncDecl->DuplicateParameterIdentifier(_symIndex);
+        }        
+        else
+        {
+            if (pFuncDecl->IsGenericParameter(_symIndex))
+            {
+                // This was a generic identifier passed into the function, replace it
+                return pFuncDecl->DuplicateGenericParameterIdentifier(_symIndex);
+            }
+        }
     }
-    else
-    {
-        return new IdentifierNode(GetContext(), GetLocation(), _symIndex, _pVarInfo, _pTypeInfo);
-    }
+
+    // If no function replacement shenanigans are going on, then duplicate the identifier
+    return new IdentifierNode(GetContext(), GetLocation(), _symIndex, _pVarInfo, _pTypeInfo);
 }
 
 const char* IdentifierNode::GetIdentifierName()
@@ -54,9 +65,17 @@ void IdentifierNode::VerifyNodeImpl()
         _pTypeInfo = GetContext()->GetTypeCollection()->GetEnumType(_symIndex);
         if (_pTypeInfo == nullptr)
         {
-            char message[256];
-            sprintf(message, "Unknown variable or type %s", GetIdentifierName());
-            GetContext()->ReportError(GetLocation(), message);    
+            // Check function scope for generic identifiers
+            FunctionDeclaratorNode *pFuncScope = GetTypedParent<FunctionDeclaratorNode>();
+            _pVarInfo = dynamic_cast<VariableInfo*>(GetContext()->GetSymbolTable()->GetInfo(_symIndex, pFuncScope));
+            if (_pVarInfo == nullptr)
+            {
+                char message[256];
+                sprintf(message, "Unknown variable, type or generic param %s", GetIdentifierName());
+                GetContext()->ReportError(GetLocation(), message);        
+            }
+
+            SetType(_pVarInfo->GetTypeInfo());
         }
         else
         {
@@ -74,9 +93,7 @@ ExpressionResult *IdentifierNode::CalculateResult()
 {
     if (_pVarInfo != nullptr)
     {
-        ModuleDefinitionNode *pScope = GetTypedParent<ModuleDefinitionNode>();
-        
-        return _pVarInfo->CalculateResult(pScope);
+        return _pVarInfo->CalculateResult();
     }
     else
     {

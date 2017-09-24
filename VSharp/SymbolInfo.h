@@ -1,14 +1,14 @@
 #pragma once
 
 class VSharpCompiler;
-class ModuleDefinitionNode;
+class ASTNode;
 
 class SymbolInfo
 {
   public:
     SymbolInfo(
         VSharpCompiler *pCompiler,      // The context that this symbol lives in
-        ModuleDefinitionNode *pScope,   // The scope of the symbol
+        ASTNode *pScope,                // The scope of the symbol
         int symIndex                    // The symbol index for the identifier for the symbol
         );
 
@@ -17,7 +17,7 @@ class SymbolInfo
     VSharpCompiler *GetCompiler() { return _pCompiler; }
     int GetSymbolIndex() const { return _symIndex; }
     const char *GetSymbol();
-    ModuleDefinitionNode *GetScope() { return _pScope; }
+    ASTNode *GetScope() { return _pScope; }
 
   private:
     // The compiler context
@@ -27,5 +27,5 @@ class SymbolInfo
     int _symIndex;
 
     // Scope symbol was declared in (null if global)
-    ModuleDefinitionNode *_pScope;    
+    ASTNode *_pScope;    
 };

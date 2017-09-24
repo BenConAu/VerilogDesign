@@ -50,7 +50,7 @@ void SymbolTable::AddBuiltin()
 }
 
 VariableInfo *SymbolTable::AddVariable(
-    ModuleDefinitionNode *pScope,
+    ASTNode *pScope,
     int symIndex,
     VariableLocationType location,
     TypeModifier modifier,
@@ -73,7 +73,7 @@ VariableInfo *SymbolTable::AddVariable(
 FunctionInfo *SymbolTable::AddFunction(
     FunctionDeclaratorNode *pFuncDecl,
     int symIndex,
-    GenericTypeInfo *pGenType)
+    ExpressionNode *pGenericExpr)
 {
     for (auto iter = _symbols.lower_bound(symIndex); iter != _symbols.upper_bound(symIndex); iter++)
     {
@@ -81,14 +81,14 @@ FunctionInfo *SymbolTable::AddFunction(
         return nullptr;
     }
 
-    FunctionInfo *pNewInfo = new FunctionInfo(_pCompiler, pFuncDecl, symIndex, pGenType);
+    FunctionInfo *pNewInfo = new FunctionInfo(_pCompiler, pFuncDecl, symIndex, pGenericExpr);
     _symbols.emplace(std::make_pair(symIndex, std::unique_ptr<SymbolInfo>(pNewInfo)));
     return pNewInfo;
 }
 
 StateInfo *SymbolTable::AddState(
     int symIndex,
-    ModuleDefinitionNode *pScope)
+    ASTNode *pScope)
 {
     for (auto iter = _symbols.lower_bound(symIndex); iter != _symbols.upper_bound(symIndex); iter++)
     {
@@ -104,15 +104,17 @@ StateInfo *SymbolTable::AddState(
 // Turns out this is for globals only
 SymbolInfo *SymbolTable::GetInfo(
     int symIndex, 
-    ModuleDefinitionNode *pScope)
+    ASTNode *pScope)
 {
     //printf("Attempting GetInfo of symbol %s\n", _pCompiler->GetSymbolString(symIndex].c_str());
 
     for (auto iter = _symbols.lower_bound(symIndex); iter != _symbols.upper_bound(symIndex); iter++)
     {
-        if (iter->second->GetScope() == pScope || iter->second->GetScope() == nullptr)
+        SymbolInfo* pInfo = iter->second.get();
+
+        if (pInfo->GetScope() == pScope || pInfo->GetScope() == nullptr)
         {
-            return iter->second.get();
+            return pInfo;
         }
     }
 
@@ -120,7 +122,7 @@ SymbolInfo *SymbolTable::GetInfo(
 }
 
 void SymbolTable::GetFunctionVariables(
-    ModuleDefinitionNode *pScope, 
+    ASTNode *pScope, 
     std::vector<VariableInfo*> &varList)
 {
     for (auto iter = _symbols.begin(); iter != _symbols.end(); iter++)

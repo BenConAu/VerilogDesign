@@ -5,7 +5,7 @@
 
 VariableInfo::VariableInfo(
     VSharpCompiler *pCompiler,      // The context that this variable lives in
-    ModuleDefinitionNode *pScope,   // The scope that the variable is declared in
+    ASTNode *pScope,                // The scope that the variable is declared in
     int symIndex,                   // The symbol index for the identifier for the variable
     VariableLocationType location,  // The location of the variable
     TypeModifier modifier,          // The type modifier
@@ -20,9 +20,10 @@ VariableInfo::VariableInfo(
     _pType = pInfo;
     _locationType = location;
     _modifier = modifier;
+    _pScope = pScope;
 }
 
-ExpressionResult *VariableInfo::CalculateResult(ModuleDefinitionNode *pScope)
+ExpressionResult *VariableInfo::CalculateResult()
 {
     if (_nameOverride.length() == 0)
     {

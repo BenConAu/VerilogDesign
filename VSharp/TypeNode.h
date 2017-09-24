@@ -22,7 +22,7 @@ public:
     TypeNode(
         ParserContext *pContext, 
         const YYLTYPE &location,
-        const UIntConstant &bitLength);
+        ASTNode* pExpr);
 
     TypeInfo* GetTypeInfo();
     void VerifyNodeImpl() override;

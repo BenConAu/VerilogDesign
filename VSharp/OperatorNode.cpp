@@ -4,6 +4,7 @@
 
 OperatorInfo OperatorNode::_opTable[] = {
     { Operator::Multiply,           "*",    ResultTypeMethod::Both },
+    { Operator::Divide,             "/",    ResultTypeMethod::Both },
     { Operator::Add,                "+",    ResultTypeMethod::Both },
     { Operator::Subtract,           "-",    ResultTypeMethod::Both },
     { Operator::ShiftLeft,          "<<",   ResultTypeMethod::Both },

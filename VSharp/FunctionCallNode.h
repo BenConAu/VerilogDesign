@@ -25,7 +25,7 @@ public:
       ParserContext *pContext,
       const YYLTYPE &location,
       int symIndex,
-      ASTNode *pGenericType,
+      ASTNode *pGenericExpr,
       ASTNode *pFirstArg);
 
   FunctionCallNode(
@@ -45,6 +45,7 @@ public:
   
   // Parameter management and other properties
   FunctionCallParamNode* GetParameter(size_t index) { return dynamic_cast<FunctionCallParamNode*>(GetChild(index + 1)); }
+  ExpressionNode* GetGenericParameter() { return dynamic_cast<ExpressionNode*>(GetChild(0)); }
   size_t GetParameterCount() const;
   const char *GetFunctionName();
 

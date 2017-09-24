@@ -8,32 +8,59 @@
 #include "StateDeclaratorNode.h"
 #include "ModuleDefinitionNode.h"
 #include "FunctionCallNode.h"
+#include "IdentifierNode.h"
 
 FunctionDeclaratorNode::FunctionDeclaratorNode(
     ParserContext* pContext,
     const YYLTYPE &location,
     ASTNode* pRetType,
     int symIndex,
-    int genericSym
+    ASTNode* pGenericExpr
     ) : ASTNode(pContext, location)
 {
     AddNode(pRetType);
+    AddNode(pGenericExpr);
 
+    _GenericType = GenericType::None;
     _symIndex = symIndex;
-    _genericIndex = genericSym;
     _pCallNode = nullptr;
     _pStatementNode = nullptr;
 }
 
 void FunctionDeclaratorNode::PreVerifyNodeImpl()
 {
-    // We need to add this here before the children look for it
-    GenericTypeInfo *pGenType = nullptr;
-    if (_genericIndex != -1)
+    if (GetChild(1) != nullptr)
     {
-        /*pGenType = GetContext()->GetTypeCollection()->AddGenericType(
-            _genericIndex,
-            this);*/
+        IdentifierNode* pIdentifierNode = dynamic_cast<IdentifierNode*>(GetChild(1));
+        if (pIdentifierNode != nullptr)
+        {
+            _GenericType = GenericType::Identifier;
+
+            // Add variable to collection
+            VariableInfo* pVarInfo = GetContext()->GetSymbolTable()->AddVariable(
+                this,
+                pIdentifierNode->GetSymbolIndex(),
+                VariableLocationType::Generic,
+                TypeModifier::None,
+                GetContext()->GetTypeCollection()->GetRegisterType(32));
+
+            if (pVarInfo == nullptr)
+            {
+                GetContext()->ReportError(GetLocation(), "Duplicate generic parameter %s", GetContext()->GetSymbolString(pIdentifierNode->GetSymbolIndex()).c_str());
+            }            
+        }
+        else
+        {
+            ConstantNode* pConstantNode = dynamic_cast<ConstantNode*>(GetChild(1));
+            if (pConstantNode != nullptr)
+            {
+                _GenericType = GenericType::Constant;
+            }
+            else
+            {
+                GetContext()->ReportError(GetLocation(), "Invalid expression for generic argument for function");
+            }
+        }
     }
 }
 
@@ -42,19 +69,18 @@ void FunctionDeclaratorNode::VerifyNodeImpl()
     ModuleDefinitionNode *pModule = GetTypedParent<ModuleDefinitionNode>();
 
     // First child is return type, last is statement list
-    for (size_t i = 1; i < GetChildCount() - 1; i++)
+    for (size_t i = 0; i < GetParameterCount(); i++)
     {
-        FunctionParameterNode* pParam = dynamic_cast<FunctionParameterNode*>(GetChild(i));
-        int symIndex = pParam->GetSymbolIndex();
+        int symIndex = GetParameter(i)->GetSymbolIndex();
 
-        _passedArgs.emplace(std::make_pair(symIndex, i - 1));
+        _passedArgs.emplace(std::make_pair(symIndex, i));
     }
     
     // Add function to module
     GetContext()->GetSymbolTable()->AddFunction(
         this,
         _symIndex,
-        nullptr
+        dynamic_cast<ExpressionNode*>(GetChild(1))
         );
 }
 
@@ -69,6 +95,20 @@ bool FunctionDeclaratorNode::IsParameter(int symIndex)
     return true;
 }
 
+bool FunctionDeclaratorNode::IsGenericParameter(int symIndex)
+{
+    if (_GenericType == GenericType::Identifier)
+    {
+        VariableInfo* pInfo = dynamic_cast<VariableInfo*>(GetContext()->GetSymbolTable()->GetInfo(symIndex, this));
+
+        if (pInfo->GetLocationType() == VariableLocationType::Generic)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
 
 ASTNode* FunctionDeclaratorNode::DuplicateParameterIdentifier(int symIndex)
 {
@@ -87,6 +127,18 @@ ASTNode* FunctionDeclaratorNode::DuplicateParameterIdentifier(int symIndex)
 
     // Duplicate that instead of the parameter
     return pParamNode->DuplicateNode();
+}
+
+ASTNode* FunctionDeclaratorNode::DuplicateGenericParameterIdentifier(int symIndex)
+{
+    if (!IsGenericParameter(symIndex))
+    {
+        throw "Non-paramter symbol index given";
+    }
+
+    ExpressionNode* pGenericParam = _pCallNode->GetGenericParameter();
+
+    return pGenericParam->DuplicateNode();
 }
 
 ASTNode* FunctionDeclaratorNode::ExpandFunction(FunctionCallNode* pCall, StatementNode* pStatement)

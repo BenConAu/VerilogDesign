@@ -4,6 +4,7 @@
 #include "ASTNode.h"
 #include "TypeNode.h"
 #include "FunctionParameterNode.h"
+#include "FunctionInfo.h"
 #include <stack>
 
 class FunctionCallNode;
@@ -18,7 +19,7 @@ public:
         const YYLTYPE &location,
         ASTNode* pRetType,
         int symIndex,
-        int genericSym);
+        ASTNode* pGenericExpr);
 
     void AddParameter(ASTNode* pNode)
     {
@@ -37,8 +38,8 @@ public:
 
     TypeNode* GetReturnType() { return dynamic_cast<TypeNode*>(GetChild(0)); }
     ExpressionResult* GetResult() { return _lastResult.get(); }
-    size_t GetParameterCount() const { return (GetChildCount() - 2); }
-    FunctionParameterNode* GetParameter(size_t index) { return dynamic_cast<FunctionParameterNode*>(GetChild(index + 1)); }
+    size_t GetParameterCount() const { return (GetChildCount() - 3); }
+    FunctionParameterNode* GetParameter(size_t index) { return dynamic_cast<FunctionParameterNode*>(GetChild(index + 2)); }
     
     void PreVerifyNodeImpl() override;
     void VerifyNodeImpl() override;
@@ -47,7 +48,9 @@ public:
     const char* GetFunctionName() { return GetContext()->GetSymbolString(_symIndex).c_str(); }
 
     bool IsParameter(int symIndex);
+    bool IsGenericParameter(int symIndex);
     ASTNode* DuplicateParameterIdentifier(int symIndex);
+    ASTNode* DuplicateGenericParameterIdentifier(int symIndex);
     ASTNode* ExpandFunction(FunctionCallNode* pCall, StatementNode* pStatement);
     StatementNode* GetStatementNode() { return _pStatementNode; }
     FunctionCallNode* GetCallNode() { return _pCallNode; }
@@ -57,8 +60,8 @@ private:
     int _symIndex;
 
     // The symbol index of the generic type
-    int _genericIndex;
-
+    GenericType _GenericType;
+    
     // Arguments
     std::map<int, size_t> _passedArgs;
 

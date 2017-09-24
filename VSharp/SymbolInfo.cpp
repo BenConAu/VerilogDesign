@@ -3,7 +3,7 @@
 
 SymbolInfo::SymbolInfo(
     VSharpCompiler *pCompiler,      // The context that this symbol lives in
-    ModuleDefinitionNode *pScope,   // The scope of the symbol
+    ASTNode *pScope,                // The scope of the symbol
     int symIndex                    // The symbol index for the identifier for the symbol
     )
 {

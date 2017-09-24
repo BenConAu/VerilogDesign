@@ -68,6 +68,7 @@ class ParserContext;
 %token COLON
 %token EQUAL
 %token STAR
+%token SLASH
 %token PLUS
 %token MINUS
 %token LEFT_PAREN
@@ -264,6 +265,7 @@ unary_expression:
 multiplicative_expression:
       unary_expression                                              { $$ = $1; }
     | multiplicative_expression STAR unary_expression               { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::Multiply); }
+    | multiplicative_expression SLASH unary_expression              { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::Divide); }
     ;
 
 additive_expression:
@@ -324,7 +326,7 @@ expression:
 postfix_expression:
       primary_expression                                            { $$ = $1; }
     | postfix_expression LEFT_BRACKET expression RIGHT_BRACKET      { $$ = new IndexSelectionNode(pContext, @$, $1, $3); }
-    | postfix_expression LEFT_BRACKET INTCONSTANT COLON INTCONSTANT RIGHT_BRACKET      
+    | postfix_expression LEFT_BRACKET expression COLON expression RIGHT_BRACKET      
                                                                     { $$ = new BitSelectionNode(pContext, @$, $1, $3, $5); }
     | function_call                                                 { $$ = $1; }
 	| postfix_expression DOT IDENTIFIER								{ $$ = new FieldSelectionNode(pContext, @$, $1, $3); }
@@ -388,8 +390,8 @@ function_header_with_parameters:
 	;
 
 function_header:
-      fully_specified_type IDENTIFIER LEFT_PAREN                    { $$ = new FunctionDeclaratorNode(pContext, @$, $1, $2, -1); }
-    | fully_specified_type IDENTIFIER LT IDENTIFIER GT LEFT_PAREN   { $$ = new FunctionDeclaratorNode(pContext, @$, $1, $2, $4); } 
+      fully_specified_type IDENTIFIER LEFT_PAREN                    { $$ = new FunctionDeclaratorNode(pContext, @$, $1, $2, nullptr); }
+    | fully_specified_type IDENTIFIER LT expression GT LEFT_PAREN   { $$ = new FunctionDeclaratorNode(pContext, @$, $1, $2, $4); } 
     ;
 
 function_param_decl:
@@ -406,7 +408,7 @@ type_name_specifier:
     | CLOCK_TOKEN                                                   { $$ = new TypeNode(pContext, @$, TypeClass::Clock); }
     | BOOL_TOKEN                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Register, 1); }
 	| IDENTIFIER                                                    { $$ = new TypeNode(pContext, @$, TypeClass::Unknown, $1); }
-    | UINT_TOKEN LT INTCONSTANT GT                                  { $$ = new TypeNode(pContext, @$, $3); }
+    | UINT_TOKEN LT expression GT                                   { $$ = new TypeNode(pContext, @$, $3); }
     ;
 
 fully_specified_type:
@@ -500,12 +502,12 @@ function_call:
 
 function_call_header_no_param:
       IDENTIFIER LEFT_PAREN                                         { $$ = new FunctionCallNode(pContext, @$, $1, nullptr, nullptr); }
-    | IDENTIFIER LT fully_specified_type GT LEFT_PAREN              { $$ = new FunctionCallNode(pContext, @$, $1, $3, nullptr); }
+    | IDENTIFIER LT expression GT LEFT_PAREN                        { $$ = new FunctionCallNode(pContext, @$, $1, $3, nullptr); }
     ;
 
 function_call_header:
       IDENTIFIER LEFT_PAREN fn_call_arg                             { $$ = new FunctionCallNode(pContext, @$, $1, nullptr, $3); }
-    | IDENTIFIER LT fully_specified_type GT LEFT_PAREN fn_call_arg  { $$ = new FunctionCallNode(pContext, @$, $1, $3, $6); }
+    | IDENTIFIER LT expression GT LEFT_PAREN fn_call_arg            { $$ = new FunctionCallNode(pContext, @$, $1, $3, $6); }
     | function_call_header COMMA fn_call_arg                        { $$ = $1; $$->AddNode($3); }
     ;
 

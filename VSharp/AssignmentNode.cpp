@@ -39,6 +39,12 @@ void AssignmentNode::VerifyNodeImpl()
     {
         GetContext()->ReportError(GetLocation(), "Not a valid LValue for assignment");
     }
+
+    // Must be not an input
+    if (pVarInfo->GetLocationType() == VariableLocationType::Input)
+    {
+        GetContext()->ReportError(GetLocation(), "Inputs are not valid LValue for assignment");
+    }
 }
 
 ASTNode* AssignmentNode::DuplicateNodeImpl()

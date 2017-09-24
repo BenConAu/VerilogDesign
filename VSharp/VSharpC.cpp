@@ -46,7 +46,7 @@ int main(int argc, char **argv)
 
 void yyerror(YYLTYPE* pLocation, void *, const char *pszError)
 {
-	printf("Error on line: %d with message: %s\n", pLocation->first_line, pszError);
+	printf("Error on line: %d and col: %d with message: %s\n", pLocation->first_line, pLocation->first_column, pszError);
 
     // might as well halt now:
     exit(-1);

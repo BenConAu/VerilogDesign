@@ -10,8 +10,8 @@ class BitSelectionNode : public ExpressionNode
         ParserContext *pContext,
         const YYLTYPE &location,
         ASTNode *pPostFix,
-        const UIntConstant &i1,
-        const UIntConstant &i2);
+        ASTNode *pInt1,
+        ASTNode *pInt2);
 
     BitSelectionNode(
       ParserContext *pContext,

@@ -17,7 +17,7 @@ class VariableInfo : public SymbolInfo
   public:
     VariableInfo(
         VSharpCompiler *pCompiler,      // The context that this variable lives in
-        ModuleDefinitionNode *pScope,   // The scope that the variable is declared in
+        ASTNode *pScope,                // The scope that the variable is declared in
         int symIndex,                   // The symbol index for the identifier for the variable
         VariableLocationType location,  // The location of the variable
         TypeModifier modifier,          // The type modifier
@@ -26,7 +26,7 @@ class VariableInfo : public SymbolInfo
 
     VariableLocationType GetLocationType() const { return _locationType; }
     TypeModifier GetModifier() const { return _modifier; }
-    ExpressionResult *CalculateResult(ModuleDefinitionNode *pScope);
+    ExpressionResult *CalculateResult();
 
     TypeInfo *GetTypeInfo() { return _pType; }
     void SetNameOverride(const char* pszName) { _nameOverride = pszName; }
@@ -40,6 +40,7 @@ class VariableInfo : public SymbolInfo
     TypeModifier _modifier;
     std::string _nameOverride;
     std::unique_ptr<UIntConstant> _InitValue;
+    ASTNode* _pScope;
 
     // C++ type of variable
     TypeInfo *_pType;

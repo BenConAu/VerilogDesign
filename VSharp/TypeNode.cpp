@@ -3,6 +3,8 @@
 #include "RegisterTypeInfo.h"
 #include "StructTypeInfo.h"
 #include "ModuleDefinitionNode.h"
+#include "ConstantNode.h"
+#include "IdentifierNode.h"
 #include <sstream>
 
 TypeNode::TypeNode(
@@ -31,10 +33,12 @@ TypeNode::TypeNode(
 TypeNode::TypeNode(
     ParserContext *pContext, 
     const YYLTYPE &location,
-    const UIntConstant &bitLength) : ASTNode(pContext, location)
+    ASTNode* pExpr) : ASTNode(pContext, location)
 {
-    _typeClass = TypeClass::Register;
-    _extra = bitLength._value;
+    AddNode(pExpr);
+
+    _typeClass = TypeClass::Unknown;
+    _extra = 0;
     _pTypeInfo = nullptr;
     _TypeModifier = TypeModifier::None;
 }
@@ -67,42 +71,66 @@ TypeInfo *TypeNode::GetTypeInfo()
 
         case TypeClass::Unknown:
         {
-            _pTypeInfo = GetContext()->GetTypeCollection()->GetEnumType(_extra);
-            if (_pTypeInfo == nullptr)
+            if (GetChildCount() == 1)
             {
-                _pTypeInfo = GetContext()->GetTypeCollection()->GetStructType(_extra);
-                if (_pTypeInfo == nullptr)
+                ConstantNode* pConstantNode = dynamic_cast<ConstantNode*>(GetChild(0));
+                if (pConstantNode != nullptr)
                 {
-                    _pTypeInfo = GetContext()->GetTypeCollection()->GetGenericType(_extra, pScope);    
-                    if (_pTypeInfo == nullptr)
-                    {
-                        _pTypeInfo = GetContext()->GetTypeCollection()->GetModuleType(_extra);
-                        if (_pTypeInfo == nullptr)
-                        {
-                            std::stringstream sstr;
-                            sstr << "Failed to find struct, enum, or generic type with name " << GetContext()->GetSymbolString(_extra);
-                            static std::string error = sstr.str();
-        
-                            GetContext()->ReportError(GetLocation(), sstr.str().c_str());    
-                        }
-                        else
-                        {
-                            _typeClass = TypeClass::Module;
-                        }
-                    }
-                    else
-                    {
-                        _typeClass = TypeClass::Generic;
-                    }
+                    _pTypeInfo = GetContext()->GetTypeCollection()->GetRegisterType(pConstantNode->GetUInt());
                 }
                 else
                 {
-                    _typeClass = TypeClass::Struct;
+                    IdentifierNode* pIdentifierNode = dynamic_cast<IdentifierNode*>(GetChild(0));
+                    int symIndex = pIdentifierNode->GetSymbolIndex();
+                    if (pIdentifierNode != nullptr)
+                    {
+                        _pTypeInfo = GetContext()->GetTypeCollection()->GetGenericType(symIndex, pScope);
+                    }
+                    else
+                    {
+                        throw "Generic type needs to be based on constant or identifier";
+                    }
                 }
             }
             else
             {
-                _typeClass = TypeClass::Enum;
+                _pTypeInfo = GetContext()->GetTypeCollection()->GetEnumType(_extra);
+                if (_pTypeInfo == nullptr)
+                {
+                    _pTypeInfo = GetContext()->GetTypeCollection()->GetStructType(_extra);
+                    if (_pTypeInfo == nullptr)
+                    {
+                        _pTypeInfo = GetContext()->GetTypeCollection()->GetGenericType(_extra, pScope);    
+                        if (_pTypeInfo == nullptr)
+                        {
+                            _pTypeInfo = GetContext()->GetTypeCollection()->GetModuleType(_extra);
+                            if (_pTypeInfo == nullptr)
+                            {
+                                std::stringstream sstr;
+                                sstr << "Failed to find struct, enum, or generic type with name " << GetContext()->GetSymbolString(_extra);
+                                static std::string error = sstr.str();
+            
+                                GetContext()->ReportError(GetLocation(), sstr.str().c_str());    
+                            }
+                            else
+                            {
+                                _typeClass = TypeClass::Module;
+                            }
+                        }
+                        else
+                        {
+                            _typeClass = TypeClass::Generic;
+                        }
+                    }
+                    else
+                    {
+                        _typeClass = TypeClass::Struct;
+                    }
+                }
+                else
+                {
+                    _typeClass = TypeClass::Enum;
+                }
             }
 
             break;

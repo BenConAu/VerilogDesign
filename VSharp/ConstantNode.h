@@ -14,8 +14,6 @@ public:
     ASTNode* DuplicateNodeImpl() override;
     VariableInfo* IsVariableExpression() override { return nullptr; }
     bool ConstEvaluate(UIntConstant* pVal) override;
-    
-private:
     unsigned int GetUInt();
 
 private:

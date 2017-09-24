@@ -9,13 +9,12 @@ BitSelectionNode::BitSelectionNode(
     ParserContext *pContext,
     const YYLTYPE &location,
     ASTNode *pPostFix,
-    const UIntConstant &i1,
-    const UIntConstant &i2) : ExpressionNode(pContext, location)
+    ASTNode *pInt1,
+    ASTNode *pInt2) : ExpressionNode(pContext, location)
 {
     AddNode(pPostFix);
-
-    _i1 = i1._value;
-    _i2 = i2._value;
+    AddNode(pInt1);
+    AddNode(pInt2);
 }
 
 BitSelectionNode::BitSelectionNode(
@@ -48,6 +47,30 @@ void BitSelectionNode::VerifyNodeImpl()
         {
             GetContext()->ReportError(GetLocation(), "Can only select bits from uint and struct types");            
         }
+    }
+
+    // Calculate the indices
+    ExpressionNode* pInt1 = dynamic_cast<ExpressionNode*>(GetChild(1));
+    ExpressionNode* pInt2 = dynamic_cast<ExpressionNode*>(GetChild(2));
+
+    UIntConstant constVal1;
+    if (pInt1->ConstEvaluate(&constVal1))
+    {
+        _i1 = constVal1._value;
+    }
+    else
+    {
+        GetContext()->ReportError(GetLocation(), "Bit selection must be done with constant indices");
+    }
+
+    UIntConstant constVal2;
+    if (pInt2->ConstEvaluate(&constVal2))
+    {
+        _i2 = constVal2._value;
+    }
+    else
+    {
+        GetContext()->ReportError(GetLocation(), "Bit selection must be done with constant indices");
     }
 
     if (_i1 < 0 || _i2 < 0)

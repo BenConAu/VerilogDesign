@@ -11,7 +11,8 @@ class VariableInfo;
 class FunctionInfo;
 class TypeInfo;
 class StateInfo;
-class GenericTypeInfo;
+class ExpressionNode;
+class ASTNode;
 class ModuleDefinitionNode;
 class FunctionDeclaratorNode;
 enum class VariableLocationType;
@@ -23,7 +24,7 @@ class SymbolTable
     void AddBuiltin();
 
     VariableInfo *AddVariable(
-        ModuleDefinitionNode *pScope,
+        ASTNode *pScope,
         int symIndex,
         VariableLocationType location,
         TypeModifier modifier,
@@ -32,18 +33,18 @@ class SymbolTable
     FunctionInfo *AddFunction(
         FunctionDeclaratorNode *pFuncDecl,
         int symIndex,
-        GenericTypeInfo *pGenType);
+        ExpressionNode *pGenericExpr);
 
     StateInfo *AddState(
         int symIndex,
-        ModuleDefinitionNode *pScope);
+        ASTNode *pScope);
 
     SymbolInfo *GetInfo(
         int symIndex,
-        ModuleDefinitionNode *pScope);
+        ASTNode *pScope);
 
     void GetFunctionVariables(
-        ModuleDefinitionNode *pScope, 
+        ASTNode *pScope, 
         std::vector<VariableInfo*> &varList
         );
 

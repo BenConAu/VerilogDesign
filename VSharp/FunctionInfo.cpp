@@ -6,10 +6,10 @@ FunctionInfo::FunctionInfo(
     VSharpCompiler *pCompiler,          // The context that this function lives in
     FunctionDeclaratorNode *pFunction,  // The scope that the variable is declared in
     int symIndex,                       // The symbol index for the identifier for the function
-    GenericTypeInfo *pGenInfo           // The type info for the generic of the function
+    ExpressionNode *pGenExpr            // The type info for the generic of the function
     ) : SymbolInfo(pCompiler, pFunction->GetTypedParent<ModuleDefinitionNode>(), symIndex)
 {
-    _pGenTypeInfo = pGenInfo;
+    _pGenericExpr = pGenExpr;
     _pFunctionDecl = pFunction;
     _paramCount = pFunction->GetParameterCount();
     _pReturnType = pFunction->GetReturnType()->GetTypeInfo();
@@ -23,7 +23,7 @@ FunctionInfo::FunctionInfo(
     const char* pszVerilogName          // What we call in Verilog to do this
     ) : SymbolInfo(pCompiler, nullptr, symIndex)
 {
-    _pGenTypeInfo = nullptr;
+    _pGenericExpr = nullptr;
     _pFunctionDecl = nullptr;
     _verilogName = pszVerilogName;
     _paramCount = numParam;

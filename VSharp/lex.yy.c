@@ -362,8 +362,8 @@ static void yy_fatal_error (yyconst char msg[] ,yyscan_t yyscanner );
 	*yy_cp = '\0'; \
 	yyg->yy_c_buf_p = yy_cp;
 
-#define YY_NUM_RULES 76
-#define YY_END_OF_BUFFER 77
+#define YY_NUM_RULES 77
+#define YY_END_OF_BUFFER 78
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -373,26 +373,26 @@ struct yy_trans_info
 	};
 static yyconst flex_int16_t yy_accept[189] =
     {   0,
-        0,    0,    0,    0,   77,   72,    2,   11,   71,   31,
-       15,   16,    4,    5,   30,    6,   29,   72,   65,   65,
-        8,   12,   27,    7,   28,   19,    3,   70,   17,   18,
-        9,   70,   70,   70,   70,   70,   70,   70,   70,   70,
-       70,   70,   70,   70,   70,   70,   70,   13,   10,   14,
-       75,   74,   73,   35,   32,   20,   23,    0,   65,    0,
-        0,    0,   21,   25,   34,   24,   26,   22,   70,   70,
-       70,   70,   70,   70,   70,   70,   70,   70,   70,   70,
-       54,   70,   70,   70,   70,   70,   70,   70,   70,   70,
-       70,   70,   33,    0,    1,   69,   66,   67,   70,   70,
+        0,    0,    0,    0,   78,   73,    2,   12,   72,   32,
+       16,   17,    4,    6,   31,    7,   30,    5,   66,   66,
+        9,   13,   28,    8,   29,   20,    3,   71,   18,   19,
+       10,   71,   71,   71,   71,   71,   71,   71,   71,   71,
+       71,   71,   71,   71,   71,   71,   71,   14,   11,   15,
+       76,   75,   74,   36,   33,   21,   24,    0,   66,    0,
+        0,    0,   22,   26,   35,   25,   27,   23,   71,   71,
+       71,   71,   71,   71,   71,   71,   71,   71,   71,   71,
+       55,   71,   71,   71,   71,   71,   71,   71,   71,   71,
+       71,   71,   34,    0,    1,   70,   67,   68,   71,   71,
 
-       70,   70,   70,   70,   70,   70,   70,   70,   70,   70,
-       70,   70,   36,   70,   70,   70,   70,   70,   70,   70,
-       70,   70,    0,   70,   70,   47,   61,   70,   70,   70,
-       70,   55,   56,   70,   70,   70,   70,   70,   70,   70,
-       70,   70,   63,   38,   43,   59,   68,   70,   70,   44,
-       57,   70,   49,   64,   70,   70,   70,   70,   37,   70,
-       70,   70,   70,   70,   70,   42,   70,   46,   70,   53,
-       70,   50,   52,   48,   60,   70,   41,   40,   39,   70,
-       62,   45,   70,   58,   70,   70,   51,    0
+       71,   71,   71,   71,   71,   71,   71,   71,   71,   71,
+       71,   71,   37,   71,   71,   71,   71,   71,   71,   71,
+       71,   71,    0,   71,   71,   48,   62,   71,   71,   71,
+       71,   56,   57,   71,   71,   71,   71,   71,   71,   71,
+       71,   71,   64,   39,   44,   60,   69,   71,   71,   45,
+       58,   71,   50,   65,   71,   71,   71,   71,   38,   71,
+       71,   71,   71,   71,   71,   43,   71,   47,   71,   54,
+       71,   51,   53,   49,   61,   71,   42,   41,   40,   71,
+       63,   46,   71,   59,   71,   71,   52,    0
     } ;
 
 static yyconst flex_int32_t yy_ec[256] =
@@ -566,12 +566,12 @@ static yyconst flex_int16_t yy_chk[310] =
     } ;
 
 /* Table of booleans, true if rule could match eol. */
-static yyconst flex_int32_t yy_rule_can_match_eol[77] =
+static yyconst flex_int32_t yy_rule_can_match_eol[78] =
     {   0,
 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,     };
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,     };
 
 /* The intent behind this definition is that it'll catch
  * any uses of REJECT which flex missed.
@@ -965,365 +965,370 @@ YY_RULE_SETUP
 case 5:
 YY_RULE_SETUP
 #line 26 "VSharp.l"
-{ return PLUS; }
+{ return SLASH; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 27 "VSharp.l"
-{ return MINUS; }
+{ return PLUS; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 28 "VSharp.l"
-{ return EQUAL; }
+{ return MINUS; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 29 "VSharp.l"
-{ return COLON; }
+{ return EQUAL; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
 #line 30 "VSharp.l"
-{ return HAT; }
+{ return COLON; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
 #line 31 "VSharp.l"
-{ return BAR; }
+{ return HAT; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
 #line 32 "VSharp.l"
-{ return BANG; }
+{ return BAR; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 33 "VSharp.l"
-{ return SEMICOLON; }
+{ return BANG; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 34 "VSharp.l"
-{ return LEFT_BRACE; }
+{ return SEMICOLON; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
 #line 35 "VSharp.l"
-{ return RIGHT_BRACE; }
+{ return LEFT_BRACE; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
 #line 36 "VSharp.l"
-{ return LEFT_PAREN; }
+{ return RIGHT_BRACE; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 37 "VSharp.l"
-{ return RIGHT_PAREN; }
+{ return LEFT_PAREN; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 38 "VSharp.l"
-{ return LEFT_BRACKET; }
+{ return RIGHT_PAREN; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
 #line 39 "VSharp.l"
-{ return RIGHT_BRACKET; }
+{ return LEFT_BRACKET; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
 #line 40 "VSharp.l"
-{ return QUESTION; }
+{ return RIGHT_BRACKET; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
 #line 41 "VSharp.l"
-{ return ARROW; }
+{ return QUESTION; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
 #line 42 "VSharp.l"
-{ return SHIFTLEFT; }
+{ return ARROW; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 43 "VSharp.l"
-{ return SHIFTRIGHT; }
+{ return SHIFTLEFT; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 44 "VSharp.l"
-{ return LT_OP; }
+{ return SHIFTRIGHT; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
 #line 45 "VSharp.l"
-{ return GT_OP; }
+{ return LT_OP; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
 #line 46 "VSharp.l"
-{ return LT_EQUAL_OP; }
+{ return GT_OP; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
 #line 47 "VSharp.l"
-{ return GT_EQUAL_OP; }
+{ return LT_EQUAL_OP; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
 #line 48 "VSharp.l"
-{ return LT; }
+{ return GT_EQUAL_OP; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
 #line 49 "VSharp.l"
-{ return GT; }
+{ return LT; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
 #line 50 "VSharp.l"
-{ return DOT; }
+{ return GT; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
 #line 51 "VSharp.l"
-{ return COMMA; }
+{ return DOT; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
 #line 52 "VSharp.l"
-{ return AMPERSAND; }
+{ return COMMA; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
 #line 53 "VSharp.l"
-{ return AND_OP; }
+{ return AMPERSAND; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
 #line 54 "VSharp.l"
-{ return OR_OP; }
+{ return AND_OP; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
 #line 55 "VSharp.l"
-{ return EQUAL_OP; }
+{ return OR_OP; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
 #line 56 "VSharp.l"
-{ return NOTEQUAL_OP; }
+{ return EQUAL_OP; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
 #line 57 "VSharp.l"
-{ return OUT_TOKEN; }
+{ return NOTEQUAL_OP; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
 #line 58 "VSharp.l"
-{ return STATE_TOKEN; }
+{ return OUT_TOKEN; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
 #line 59 "VSharp.l"
-{ return UINT_TOKEN; }
+{ return STATE_TOKEN; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
 #line 60 "VSharp.l"
-{ return UINT64_TOKEN; }
+{ return UINT_TOKEN; }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
 #line 61 "VSharp.l"
-{ return UINT32_TOKEN; }
+{ return UINT64_TOKEN; }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
 #line 62 "VSharp.l"
-{ return UINT16_TOKEN; }
+{ return UINT32_TOKEN; }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
 #line 63 "VSharp.l"
-{ return UINT8_TOKEN; }
+{ return UINT16_TOKEN; }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
 #line 64 "VSharp.l"
-{ return VOID_TOKEN; }
+{ return UINT8_TOKEN; }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
 #line 65 "VSharp.l"
-{ return CLOCK_TOKEN; }
+{ return VOID_TOKEN; }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
 #line 66 "VSharp.l"
-{ return INITIAL_TOKEN; }
+{ return CLOCK_TOKEN; }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
 #line 67 "VSharp.l"
-{ return ALWAYS_TOKEN; }
+{ return INITIAL_TOKEN; }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
 #line 68 "VSharp.l"
-{ return BOOL_TOKEN; }
+{ return ALWAYS_TOKEN; }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
 #line 69 "VSharp.l"
-{ return STRUCT_TOKEN; }
+{ return BOOL_TOKEN; }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
 #line 70 "VSharp.l"
-{ return DRIVE_TOKEN; }
+{ return STRUCT_TOKEN; }
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
 #line 71 "VSharp.l"
-{ return MODULE_TOKEN; }
+{ return DRIVE_TOKEN; }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
 #line 72 "VSharp.l"
-{ return TRANSITION_TOKEN; }
+{ return MODULE_TOKEN; }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
 #line 73 "VSharp.l"
-{ return RETURN_TOKEN; }
+{ return TRANSITION_TOKEN; }
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
 #line 74 "VSharp.l"
-{ return IMPORT_TOKEN; }
+{ return RETURN_TOKEN; }
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
 #line 75 "VSharp.l"
-{ return IF_TOKEN; }
+{ return IMPORT_TOKEN; }
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
 #line 76 "VSharp.l"
-{ return ELSE_TOKEN; }
+{ return IF_TOKEN; }
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
 #line 77 "VSharp.l"
-{ return ENUM_TOKEN; }
+{ return ELSE_TOKEN; }
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
 #line 78 "VSharp.l"
-{ return CONST_TOKEN; }
+{ return ENUM_TOKEN; }
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
 #line 79 "VSharp.l"
-{ return FINISH_TOKEN; }
+{ return CONST_TOKEN; }
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
 #line 80 "VSharp.l"
-{ return WIRE_TOKEN; }
+{ return FINISH_TOKEN; }
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
 #line 81 "VSharp.l"
-{ return SWITCH_TOKEN; }
+{ return WIRE_TOKEN; }
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
 #line 82 "VSharp.l"
-{ return CASE_TOKEN; }
+{ return SWITCH_TOKEN; }
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
 #line 83 "VSharp.l"
-{ return DEFAULT_TOKEN; }
+{ return CASE_TOKEN; }
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
 #line 84 "VSharp.l"
-{ yylval->constVal = UIntConstant((unsigned int)1, 1); return BOOLCONSTANT; }
+{ return DEFAULT_TOKEN; }
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
 #line 85 "VSharp.l"
-{ yylval->constVal = UIntConstant((unsigned int)0, 1); return BOOLCONSTANT; }
+{ yylval->constVal = UIntConstant((unsigned int)1, 1); return BOOLCONSTANT; }
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
 #line 86 "VSharp.l"
-{ yylval->constVal = { static_cast<unsigned int>(atoi(yytext)), 32 }; return INTCONSTANT; }
+{ yylval->constVal = UIntConstant((unsigned int)0, 1); return BOOLCONSTANT; }
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
 #line 87 "VSharp.l"
-{ yylval->constVal = UIntConstant(yytext, 10); return INTCONSTANT; }
+{ yylval->constVal = { static_cast<unsigned int>(atoi(yytext)), 32 }; return INTCONSTANT; }
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
 #line 88 "VSharp.l"
-{ yylval->constVal = { static_cast<unsigned int>(strtol(yytext + 2, nullptr, 16)), 32 }; return INTCONSTANT; }
+{ yylval->constVal = UIntConstant(yytext, 10); return INTCONSTANT; }
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
 #line 89 "VSharp.l"
-{ yylval->constVal = UIntConstant(yytext + 2, 16); return INTCONSTANT; }
+{ yylval->constVal = { static_cast<unsigned int>(strtol(yytext + 2, nullptr, 16)), 32 }; return INTCONSTANT; }
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
 #line 90 "VSharp.l"
-{ yylval->constVal = { static_cast<unsigned int>(strtol(yytext + 2, nullptr, 2)), static_cast<unsigned int>(strlen(yytext) - 2) }; return INTCONSTANT; }
+{ yylval->constVal = UIntConstant(yytext + 2, 16); return INTCONSTANT; }
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
 #line 91 "VSharp.l"
-{ yylval->symIndex = yyextra->AddSymbol(yytext); return IDENTIFIER; }
+{ yylval->constVal = { static_cast<unsigned int>(strtol(yytext + 2, nullptr, 2)), static_cast<unsigned int>(strlen(yytext) - 2) }; return INTCONSTANT; }
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
 #line 92 "VSharp.l"
-{ yy_push_state(STRING_LITERAL, yyscanner); yyextra->StartString(); }
+{ yylval->symIndex = yyextra->AddSymbol(yytext); return IDENTIFIER; }
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
 #line 93 "VSharp.l"
-;
+{ yy_push_state(STRING_LITERAL, yyscanner); yyextra->StartString(); }
 	YY_BREAK
 case 73:
 YY_RULE_SETUP
-#line 95 "VSharp.l"
-{ yy_pop_state(yyscanner); return STRINGLITERAL; }
+#line 94 "VSharp.l"
+;
 	YY_BREAK
 case 74:
-/* rule 74 can match eol */
 YY_RULE_SETUP
 #line 96 "VSharp.l"
-{ yyextra->ReportError(*yylloc, "String literal cannot span lines"); }
+{ yy_pop_state(yyscanner); return STRINGLITERAL; }
 	YY_BREAK
 case 75:
+/* rule 75 can match eol */
 YY_RULE_SETUP
 #line 97 "VSharp.l"
-{ yyextra->AppendString(yytext); }
+{ yyextra->ReportError(*yylloc, "String literal cannot span lines"); }
 	YY_BREAK
 case 76:
 YY_RULE_SETUP
-#line 99 "VSharp.l"
+#line 98 "VSharp.l"
+{ yyextra->AppendString(yytext); }
+	YY_BREAK
+case 77:
+YY_RULE_SETUP
+#line 100 "VSharp.l"
 ECHO;
 	YY_BREAK
-#line 1327 "lex.yy.c"
+#line 1332 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(STRING_LITERAL):
 	yyterminate();
@@ -2553,7 +2558,7 @@ void yyfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
-#line 99 "VSharp.l"
+#line 100 "VSharp.l"
 
 
 
