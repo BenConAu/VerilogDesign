@@ -117,7 +117,7 @@ ExpressionResult *FieldSelectionNode::CalculateResult()
             unsigned int base = _pStructTypeInfo->GetBaseLocation(_fieldSymIndex);
             unsigned int size = pMember->GetBitLength();
     
-            return new ExpressionResult(new FieldSelectResult(childResult->GetString().c_str(), base + size - 1, base));
+            return new ExpressionResult(new BitSelectResult(childResult->GetString().c_str(), base + size - 1, base));
         }
         else
         {

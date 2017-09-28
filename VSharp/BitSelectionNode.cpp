@@ -97,33 +97,25 @@ ExpressionResult *BitSelectionNode::CalculateResult()
     std::unique_ptr<ExpressionResult> exprResult(pExpr->TakeResult());
 
     char result[1024];
-    if (exprResult->GetFieldSelect() != nullptr)
+    if (exprResult->GetBitSelection() != nullptr)
     {
-        // Bit selecting a field selection needs to reformat the field
+        // Bit selecting an existing bit selection needs to reformat the bit
         // selection, rather than add a bit selection into the mix.
         //
         // We offset starting from the base of the expression that we
         // are starting with.
-        sprintf(
-            result,
-            "%s[%d:%d]",
-            exprResult->GetFieldSelect()->_structResult.c_str(),
-            exprResult->GetFieldSelect()->_i2 + _i1,
-            exprResult->GetFieldSelect()->_i2 + _i2);
+        return new ExpressionResult(new BitSelectResult(
+            exprResult->GetBitSelection()->_baseResult.c_str(),
+            exprResult->GetBitSelection()->_i2 + _i1,
+            exprResult->GetBitSelection()->_i2 + _i2));
     }
     else
     {
-        // Regular bit selection
-        sprintf(
-            result, 
-            "%s[%d:%d]", 
-            exprResult->GetString().c_str(),
-            _i1,
-            _i2);
-
+        return new ExpressionResult(new BitSelectResult(
+            exprResult->GetString().c_str(), 
+            _i1, 
+            _i2));            
     }
-
-    return new ExpressionResult(result);
 }
 
 VariableInfo* BitSelectionNode::IsVariableExpression()

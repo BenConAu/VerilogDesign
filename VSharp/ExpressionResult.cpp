@@ -26,17 +26,17 @@ ExpressionResult::ExpressionResult(const std::string& str, FunctionCallNode* pNo
     _pConstructorCall = pNode;
 }
 
-ExpressionResult::ExpressionResult(FieldSelectResult* pRes)
+ExpressionResult::ExpressionResult(BitSelectResult* pRes)
 {
-    _FieldSelect.reset(pRes);
+    _BitSelect.reset(pRes);
 
     char result[1024];
     sprintf(
         result,
         "%s[%u:%u]",
-        _FieldSelect->_structResult.c_str(),
-        _FieldSelect->_i1,
-        _FieldSelect->_i2);
+        _BitSelect->_baseResult.c_str(),
+        _BitSelect->_i1,
+        _BitSelect->_i2);
 
     _result = result;
     _IsConstant = false;

@@ -8,16 +8,17 @@
 class StaticTypeInfo;
 class FunctionCallNode;
 
-struct FieldSelectResult
+// A BitSelectResult represents selecting bits from another expression
+struct BitSelectResult
 {
-    FieldSelectResult(const char* r, unsigned int i1, unsigned int i2)
+    BitSelectResult(const char* r, unsigned int i1, unsigned int i2)
     {
-        _structResult = r;
+        _baseResult = r;
         _i1 = i1;
         _i2 = i2;
     }
 
-    std::string _structResult;
+    std::string _baseResult;
     unsigned int _i1;
     unsigned int _i2;
 };
@@ -32,7 +33,7 @@ struct ExpressionResult
     ExpressionResult(const std::string& str);
     ExpressionResult(StaticTypeInfo* pInfo);
     ExpressionResult(const std::string& str, FunctionCallNode* pNode);
-    ExpressionResult(FieldSelectResult* pRes);
+    ExpressionResult(BitSelectResult* pRes);
     ExpressionResult(const UIntConstant &ConstUInt);
 
     std::string DebugPrint();
@@ -41,13 +42,13 @@ struct ExpressionResult
     FunctionCallNode* GetConstructorNode() { return _pConstructorCall; }
     bool IsConstant() const { return _IsConstant; }
     bool GetConstantValue() const { return _ConstantValue; }
-    FieldSelectResult* GetFieldSelect() { return _FieldSelect.get(); }
+    BitSelectResult* GetBitSelection() { return _BitSelect.get(); }
 
 private:
     std::string _result;
     StaticTypeInfo* _pStaticInfo;
     FunctionCallNode* _pConstructorCall;
-    std::unique_ptr<FieldSelectResult> _FieldSelect;
+    std::unique_ptr<BitSelectResult> _BitSelect;
     bool _IsConstant;
     bool _ConstantValue;
 };

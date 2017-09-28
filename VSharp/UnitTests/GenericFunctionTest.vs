@@ -1,7 +1,14 @@
 // Counting a single bit is easy
 uint32 CLZ<1>(uint<1> in)
 {
-    return { 0u31, in };
+    if (in)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 // Counting power of two bits - break it down
