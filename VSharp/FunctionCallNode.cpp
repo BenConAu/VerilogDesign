@@ -169,18 +169,19 @@ FunctionCallNode::FunctionCallNode(
     ParserContext *pContext,
     const YYLTYPE &location,
     int symIndex,
-    ASTNode *pGenericType,
+    ASTNode *pGenericValue,
     ASTNode *pFirstArg) : ExpressionNode(pContext, location)
 {
     //printf("Creating function call %s\n", pContext->GetSymbolString(symIndex].c_str());
 
-    AddNode(pGenericType);
+    AddNode(pGenericValue);
 
     if (pFirstArg != nullptr)
     {
         AddNode(pFirstArg);
     }
 
+    _pFunctionInfo = nullptr;
     _symIndex = symIndex;
     _functionType = FunctionType::Unknown; // Until we learn otherwise
 }
@@ -189,10 +190,14 @@ FunctionCallNode::FunctionCallNode(
     ParserContext *pContext,
     const YYLTYPE &location,
     int symIndex,
-    FunctionType type) : ExpressionNode(pContext, location)
+    FunctionType type,
+    FunctionInfo* pInfo,
+    UIntConstant GenericParam) : ExpressionNode(pContext, location)
 {
+    _pFunctionInfo = pInfo;
     _symIndex = symIndex;
     _functionType = type;
+    _GenericParam = GenericParam;
 }
 
 void FunctionCallNode::DumpNodeImpl()
@@ -205,39 +210,51 @@ void FunctionCallNode::DumpNodeImpl()
     );    
 }
 
-ASTNode* FunctionCallNode::DuplicateNode()
+ASTNode* FunctionCallNode::DuplicateNode(DuplicateType type)
 {
-    // Find the statement that initiated the duplication - it might
-    // not be the first one up the tree.
-    //printf("Starting function call node duplication of %s %p\n", GetFunctionName(), this);
-    //GetContext()->DumpTree();
-    StatementNode* pStatementNode = GetTypedParent<StatementNode>(); 
-    while (pStatementNode != nullptr && pStatementNode->GetCallNode() == nullptr)
+    if (type == DuplicateType::ExpandFunction)
     {
-        pStatementNode = pStatementNode->GetTypedParent<StatementNode>();
-    }
+        // Find the statement that initiated the duplication - it might
+        // not be the first one up the tree.
+        //printf("Starting function call node duplication of %s %p\n", GetFunctionName(), this);
+        //GetContext()->DumpTree();
+        StatementNode* pStatementNode = GetTypedParent<StatementNode>(); 
+        while (pStatementNode != nullptr && pStatementNode->GetCallNode() == nullptr)
+        {
+            pStatementNode = pStatementNode->GetTypedParent<StatementNode>();
+        }
 
-    if (pStatementNode != nullptr && this == pStatementNode->GetCallNode())
-    {
-        //printf(
-            //"Duplicating function call %s by replacing with node %s\n", 
-            //GetFunctionName(), 
-            //pStatementNode->GetReplacementNode()->GetDebugName());
+        if (pStatementNode != nullptr && this == pStatementNode->GetCallNode())
+        {
+            //printf(
+                //"Duplicating function call %s by replacing with node %s\n", 
+                //GetFunctionName(), 
+                //pStatementNode->GetReplacementNode()->GetDebugName());
 
-        // Replace the call with the expression we were given from the return statement
-        return pStatementNode->GetReplacementNode()->DuplicateNode();
+            // Replace the call with the expression we were given from the return statement
+            return pStatementNode->GetReplacementNode()->DuplicateNode(type);
+        }
+        else
+        {
+            //printf("Duplicating function call %s, but not the one being expanded\n", GetFunctionName());
+
+            return ASTNode::DuplicateNode(type);
+        }    
     }
     else
     {
-        //printf("Duplicating function call %s, but not the one being expanded\n", GetFunctionName());
+        if (type != DuplicateType::ExpandGeneric)
+        {
+            throw "Wat";
+        }
 
-        return ASTNode::DuplicateNode();
-    }    
+        return ASTNode::DuplicateNode(type);
+    }
 }
 
-ASTNode* FunctionCallNode::DuplicateNodeImpl()
+ASTNode* FunctionCallNode::DuplicateNodeImpl(DuplicateType type)
 {
-    return new FunctionCallNode(GetContext(), GetLocation(), _symIndex, _functionType);
+    return new FunctionCallNode(GetContext(), GetLocation(), _symIndex, _functionType, _pFunctionInfo, _GenericParam);
 }
 
 const char* FunctionCallNode::GetFunctionName()
@@ -245,8 +262,85 @@ const char* FunctionCallNode::GetFunctionName()
     return GetContext()->GetSymbolString(_symIndex).c_str();
 }
 
+void FunctionCallNode::SearchFunctionInfo(
+    FunctionInfo** ppFunctionInfo,
+    FunctionInfo** ppGenericInfo
+    )
+{
+    ModuleDefinitionNode *pModule = GetTypedParent<ModuleDefinitionNode>();
+        
+    std::vector<FunctionInfo*> Functions;
+    GetContext()->GetSymbolTable()->GetSymbols(_symIndex, pModule, Functions);
+
+    // Find the one that matches
+    for (size_t i = 0; i < Functions.size(); i++)
+    {
+        if (GetChild(0) == nullptr)
+        {
+            if (Functions[i]->GetUIntConstant() == nullptr)
+            {
+                // We need a non-generic function and we found one
+                (*ppFunctionInfo) = Functions[i];
+            }
+            else
+            {
+                GetContext()->ReportError(GetLocation(), "Calling generic function without argument");
+            }
+        }
+        else
+        {
+            // Grab the expression that was the generic argument
+            ExpressionNode* pExpr = dynamic_cast<ExpressionNode*>(GetChild(0));
+            
+            // Evaluate the constant
+            if (!pExpr->ConstEvaluate(&_GenericParam))
+            {
+                GetContext()->ReportError(GetLocation(), "Non - constant expression not valid for generic expansion");
+            }
+
+            // If somebody passed a constant generic parameter, find the match
+            UIntConstant* pFunctionConstant = Functions[i]->GetUIntConstant();
+            if (pFunctionConstant == nullptr)
+            {
+                // Remember this in case we can't find it
+                (*ppGenericInfo) = Functions[i];
+            }
+            else
+            {
+                if (*pFunctionConstant == _GenericParam)
+                {
+                    // We have found a match
+                    (*ppFunctionInfo) = Functions[i];
+                }
+            }
+        }
+    }    
+}
+
 void FunctionCallNode::VerifyNodeImpl()
 {
+    // If we find the non-specialized version of the function anywhere, remember it
+    FunctionInfo* pGenericInfo = nullptr;
+    SearchFunctionInfo(&_pFunctionInfo, &pGenericInfo);
+
+    // If we have only found the function in generic form, then specialize it and use the specialization
+    if (_pFunctionInfo == nullptr && pGenericInfo != nullptr)
+    {
+        FunctionDeclaratorNode* pGenericFuncDecl = pGenericInfo->GetFunctionDeclarator();
+        
+        // First duplicate
+        ASTNode* pSpecificDecl = pGenericFuncDecl->ExpandFunction(this, _GenericParam);
+        
+        // Insert the specialization after the original
+        GetContext()->AddFunction(pSpecificDecl);
+
+        // Since it was a generic, it was not verified before. Now we can do so.
+        pSpecificDecl->VerifyNode(nullptr);
+
+        SearchFunctionInfo(&_pFunctionInfo, &pGenericInfo);
+    }
+
+    // The common logic for verifying things like functions is in a spec
     std::unique_ptr<FunctionCallSpec> CallSpec;
 
     if (GetFunctionInfo() == nullptr)
@@ -394,12 +488,6 @@ void FunctionCallNode::VerifyNodeImpl()
     }
 }
 
-FunctionInfo* FunctionCallNode::GetFunctionInfo()
-{
-    ModuleDefinitionNode *pModule = GetTypedParent<ModuleDefinitionNode>();
-    return dynamic_cast<FunctionInfo*>(GetContext()->GetSymbolTable()->GetInfo(_symIndex, pModule));
-}
-
 ASTNode* FunctionCallNode::ExpandFunction(StatementNode* pOwningStatement)
 {
     // We have been given the expression that this function call is inside of,
@@ -411,6 +499,12 @@ ASTNode* FunctionCallNode::ExpandFunction(StatementNode* pOwningStatement)
     if (pFuncDecl == nullptr)
     {
         GetContext()->ReportError(GetLocation(), "Internal compiler error - function calls that return values cannot be builtin functions");
+    }
+
+    // If the function is templated, then we need to duplicate the function to make
+    // a specific declaration, and then verify it, before doing the expansion.
+    if (pFuncDecl->GetGenericType() != GenericType::None)
+    {
     }
 
     //printf("Expanding function %s\n", GetContext()->GetSymbolString(_symIndex).c_str());
@@ -497,5 +591,17 @@ void FunctionCallNode::AppendParameterList(std::string& str)
 
         str.append(paramResult->GetString());
         _parameterResults.push_back(paramResult->GetString());
+    }
+}
+
+UIntConstant* FunctionCallNode::GetGenericValue()
+{
+    if (GetChild(0) == nullptr)
+    {
+        return nullptr;
+    }
+    else
+    {
+        return &_GenericParam;
     }
 }

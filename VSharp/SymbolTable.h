@@ -16,6 +16,7 @@ class ASTNode;
 class ModuleDefinitionNode;
 class FunctionDeclaratorNode;
 enum class VariableLocationType;
+struct UIntConstant;
 
 class SymbolTable
 {
@@ -33,15 +34,29 @@ class SymbolTable
     FunctionInfo *AddFunction(
         FunctionDeclaratorNode *pFuncDecl,
         int symIndex,
-        ExpressionNode *pGenericExpr);
+        UIntConstant* pConstant);
 
     StateInfo *AddState(
         int symIndex,
         ASTNode *pScope);
 
-    SymbolInfo *GetInfo(
+    template<typename T>
+    void GetSymbols(
         int symIndex,
-        ASTNode *pScope);
+        ASTNode *pScope,
+        std::vector<T*> &SymbolList)
+    {
+        //printf("Attempting GetInfo of symbol %s\n", _pCompiler->GetSymbolString(symIndex].c_str());
+
+        for (auto iter = _symbols.lower_bound(symIndex); iter != _symbols.upper_bound(symIndex); iter++)
+        {
+            T* pInfo = dynamic_cast<T*>(iter->second.get());
+            if (pInfo != nullptr && (pInfo->GetScope() == pScope || pInfo->GetScope() == nullptr))
+            {
+                SymbolList.push_back(pInfo);
+            }
+        }
+    }
 
     void GetFunctionVariables(
         ASTNode *pScope, 

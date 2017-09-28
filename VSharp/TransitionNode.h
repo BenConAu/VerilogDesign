@@ -14,7 +14,7 @@ class TransitionNode : public ASTNode
     }
 
     void PostProcessNodeImpl(OutputContext* pContext) override;
-    ASTNode* DuplicateNodeImpl() override;
+    ASTNode* DuplicateNodeImpl(DuplicateType type) override;
     
     const char *GetDebugName() override { return "TransitionNode"; }
 

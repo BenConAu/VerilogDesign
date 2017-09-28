@@ -13,8 +13,16 @@ public:
         _fOut = fOut;
     }
 
+    FunctionParameterNode(ParserContext* pContext, const YYLTYPE &location, int symIndex, bool fOut) : ASTNode(pContext, location)
+    {
+        _symIndex = symIndex;
+        _fOut = fOut;
+    }
+
     void VerifyNodeImpl() override;
     const char* GetDebugName() override { return "FunctionParameterNode"; }
+    ASTNode* DuplicateNodeImpl(DuplicateType type) override;
+    
     int GetSymbolIndex() const { return _symIndex; }
     bool IsOutParam() const { return _fOut; }
     TypeNode* GetTypeNode() { return dynamic_cast<TypeNode*>(GetChild(0)); }

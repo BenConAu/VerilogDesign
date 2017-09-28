@@ -11,7 +11,7 @@ public:
     void VerifyNodeImpl() override;
     ExpressionResult* CalculateResult() override;
     const char* GetDebugName() override { return "ConstantNode"; }
-    ASTNode* DuplicateNodeImpl() override;
+    ASTNode* DuplicateNodeImpl(DuplicateType type) override;
     VariableInfo* IsVariableExpression() override { return nullptr; }
     bool ConstEvaluate(UIntConstant* pVal) override;
     unsigned int GetUInt();

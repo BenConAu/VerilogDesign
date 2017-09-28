@@ -24,7 +24,7 @@ IdentifierNode::IdentifierNode(
     _pTypeInfo = pTypeInfo;
 }
 
-ASTNode* IdentifierNode::DuplicateNodeImpl()
+ASTNode* IdentifierNode::DuplicateNodeImpl(DuplicateType type)
 {
     //printf("Duplicating identifier %s\n", GetIdentifierName());
 
@@ -32,18 +32,15 @@ ASTNode* IdentifierNode::DuplicateNodeImpl()
     FunctionDeclaratorNode *pFuncDecl = GetTypedParent<FunctionDeclaratorNode>();
     if (pFuncDecl != nullptr)
     {
-        if (pFuncDecl->IsParameter(_symIndex))
+        if (type == DuplicateType::ExpandFunction && pFuncDecl->IsParameter(_symIndex))
         {
             // This was an identifier passed into the function, replace it
-            return pFuncDecl->DuplicateParameterIdentifier(_symIndex);
-        }        
-        else
+            return pFuncDecl->DuplicateParameterIdentifier(_symIndex);            
+        }
+        else if (type == DuplicateType::ExpandGeneric && pFuncDecl->IsGenericParameter(_symIndex))
         {
-            if (pFuncDecl->IsGenericParameter(_symIndex))
-            {
-                // This was a generic identifier passed into the function, replace it
-                return pFuncDecl->DuplicateGenericParameterIdentifier(_symIndex);
-            }
+            // This was a generic identifier passed into the function, replace it
+            return pFuncDecl->DuplicateGenericParameterIdentifier(_symIndex);
         }
     }
 
@@ -58,22 +55,28 @@ const char* IdentifierNode::GetIdentifierName()
 
 void IdentifierNode::VerifyNodeImpl()
 {
-    ModuleDefinitionNode *pScope = GetTypedParent<ModuleDefinitionNode>();
-    _pVarInfo = dynamic_cast<VariableInfo *>(GetContext()->GetSymbolTable()->GetInfo(_symIndex, pScope));
-    if (_pVarInfo == nullptr)
+    ModuleDefinitionNode *pModule = GetTypedParent<ModuleDefinitionNode>();
+
+    std::vector<VariableInfo*> Symbols;
+    GetContext()->GetSymbolTable()->GetSymbols(_symIndex, pModule, Symbols);
+
+    if (Symbols.size() == 0)
     {
         _pTypeInfo = GetContext()->GetTypeCollection()->GetEnumType(_symIndex);
         if (_pTypeInfo == nullptr)
         {
             // Check function scope for generic identifiers
             FunctionDeclaratorNode *pFuncScope = GetTypedParent<FunctionDeclaratorNode>();
-            _pVarInfo = dynamic_cast<VariableInfo*>(GetContext()->GetSymbolTable()->GetInfo(_symIndex, pFuncScope));
-            if (_pVarInfo == nullptr)
+            GetContext()->GetSymbolTable()->GetSymbols(_symIndex, pFuncScope, Symbols);
+
+            if (Symbols.size() == 0)
             {
                 char message[256];
                 sprintf(message, "Unknown variable, type or generic param %s", GetIdentifierName());
                 GetContext()->ReportError(GetLocation(), message);        
             }
+
+            _pVarInfo = Symbols[0];
 
             SetType(_pVarInfo->GetTypeInfo());
         }
@@ -85,6 +88,8 @@ void IdentifierNode::VerifyNodeImpl()
     }
     else
     {
+        _pVarInfo = Symbols[0];
+
         SetType(_pVarInfo->GetTypeInfo());
     }
 }

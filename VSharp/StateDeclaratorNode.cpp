@@ -40,14 +40,17 @@ void StateDeclaratorNode::VerifyNodeImpl()
 
 bool StateDeclaratorNode::PreProcessNodeImpl(OutputContext* pContext)
 {
-    ModuleDefinitionNode *pFunc = GetTypedParent<ModuleDefinitionNode>();
+    ModuleDefinitionNode *pModule = GetTypedParent<ModuleDefinitionNode>();
 
     SymbolInfo* pStateSymbolInfo = nullptr;
     switch (_KnownState)
     {
         case KnownStates::None:
         {
-            pStateSymbolInfo = GetContext()->GetSymbolTable()->GetInfo(_identifier, pFunc);
+            std::vector<SymbolInfo*> Symbols;
+            GetContext()->GetSymbolTable()->GetSymbols(_identifier, pModule, Symbols);
+            
+            pStateSymbolInfo = Symbols[0];
             pContext->OutputLine("`__%s: begin", pStateSymbolInfo->GetSymbol());
             break;
         }

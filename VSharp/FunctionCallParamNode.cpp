@@ -28,7 +28,7 @@ FunctionCallParamNode::FunctionCallParamNode(
     _literal = literal;
 }
 
-ASTNode* FunctionCallParamNode::DuplicateNodeImpl()
+ASTNode* FunctionCallParamNode::DuplicateNodeImpl(DuplicateType type)
 {
     return new FunctionCallParamNode(GetContext(), GetLocation(), _fOut, _literal);
 }

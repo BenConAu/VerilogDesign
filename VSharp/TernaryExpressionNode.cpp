@@ -19,7 +19,7 @@ TernaryExpressionNode::TernaryExpressionNode(
 {
 }
 
-ASTNode* TernaryExpressionNode::DuplicateNodeImpl()
+ASTNode* TernaryExpressionNode::DuplicateNodeImpl(DuplicateType type)
 {
     return new TernaryExpressionNode(GetContext(), GetLocation());
 }

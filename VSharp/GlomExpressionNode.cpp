@@ -33,7 +33,7 @@ void GlomExpressionNode::VerifyNodeImpl()
     SetType(GetContext()->GetTypeCollection()->GetRegisterType(bitLength));
 }
 
-ASTNode* GlomExpressionNode::DuplicateNodeImpl()
+ASTNode* GlomExpressionNode::DuplicateNodeImpl(DuplicateType type)
 {
     return new GlomExpressionNode(GetContext(), GetLocation());
 }

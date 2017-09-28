@@ -3,26 +3,48 @@
 #include "StatementNode.h"
 #include "VSharp.tab.h"
 
-ASTNode* ReturnNode::DuplicateNode()
+ASTNode* ReturnNode::DuplicateNodeImpl(DuplicateType type)
 {
-    // Find out what function declared this return statement
-    FunctionDeclaratorNode *pFuncDecl = GetTypedParent<FunctionDeclaratorNode>();
+    if (type == DuplicateType::ExpandFunction)
+    {
+        throw "You should not be duplicating return statements";
+    }
 
-    // Find out what assignment expression triggered the expansion of that function
-    StatementNode* pStatementNode = pFuncDecl->GetStatementNode();
+    return new ReturnNode(GetContext(), GetLocation());
+}
 
-    // Set the mapping that calls to the function are replaced with the child of this return
-    pStatementNode->SetCallReplacement(pFuncDecl->GetCallNode(), GetChild(0));
-
-    //printf("Duplicating return node %p, with function %s\n", this, pFuncDecl->GetFunctionName());
+ASTNode* ReturnNode::DuplicateNode(DuplicateType type)
+{
+    if (type == DuplicateType::ExpandFunction)
+    {
+        // Find out what function declared this return statement
+        FunctionDeclaratorNode *pFuncDecl = GetTypedParent<FunctionDeclaratorNode>();
     
-        // Replace the return statement with a duplicate of this assignment - function
-    // calls in this duplication will be replaced with a duplicate of what was
-    // returned in the return statement.
-    ASTNode* pReplacement = pStatementNode->DuplicateNode();
+        // Find out what assignment expression triggered the expansion of that function
+        StatementNode* pStatementNode = pFuncDecl->GetStatementNode();
+    
+        // Set the mapping that calls to the function are replaced with the child of this return
+        pStatementNode->SetCallReplacement(pFuncDecl->GetCallNode(), GetChild(0));
+    
+        //printf("Duplicating return node %p, with function %s\n", this, pFuncDecl->GetFunctionName());
+        
+            // Replace the return statement with a duplicate of this assignment - function
+        // calls in this duplication will be replaced with a duplicate of what was
+        // returned in the return statement.
+        ASTNode* pReplacement = pStatementNode->DuplicateNode(DuplicateType::ExpandFunction);
+    
+        // Undo the mapping so that debugging is not a nightmare
+        pStatementNode->SetCallReplacement(nullptr, nullptr);
+    
+        return pReplacement;
+    }
+    else
+    {
+        if (type != DuplicateType::ExpandGeneric)
+        {
+            throw "Wat";
+        }
 
-    // Undo the mapping so that debugging is not a nightmare
-    pStatementNode->SetCallReplacement(nullptr, nullptr);
-
-    return pReplacement;
+        return ASTNode::DuplicateNode(type);
+    }
 }

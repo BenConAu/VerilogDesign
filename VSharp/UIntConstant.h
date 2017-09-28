@@ -20,6 +20,11 @@ struct UIntConstant
 
     UIntConstant() = default;
 
+    bool operator== (const UIntConstant& other)
+    {
+        return (_value == other._value && _bitLength == other._bitLength);
+    }
+
     unsigned int _value;
     unsigned int _bitLength;
 };

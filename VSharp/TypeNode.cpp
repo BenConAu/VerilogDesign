@@ -43,6 +43,25 @@ TypeNode::TypeNode(
     _TypeModifier = TypeModifier::None;
 }
 
+TypeNode::TypeNode(
+    ParserContext *pContext, 
+    const YYLTYPE &location,
+    TypeClass typeClass,
+    TypeModifier TypeModifier,
+    int extra,
+    TypeInfo* pTypeInfo) : ASTNode(pContext, location)
+{
+    _typeClass = typeClass;
+    _TypeModifier = TypeModifier;
+    _extra = extra;
+    _pTypeInfo = pTypeInfo;
+}
+
+ASTNode* TypeNode::DuplicateNodeImpl(DuplicateType type)
+{
+    return new TypeNode(GetContext(), GetLocation(), _typeClass, _TypeModifier, _extra, _pTypeInfo);
+}
+
 void TypeNode::SetModifier(TypeModifier modifier)
 {
     _TypeModifier = modifier;

@@ -27,13 +27,31 @@ FunctionDeclaratorNode::FunctionDeclaratorNode(
     _pStatementNode = nullptr;
 }
 
-void FunctionDeclaratorNode::PreVerifyNodeImpl()
+FunctionDeclaratorNode::FunctionDeclaratorNode(
+    ParserContext* pContext,
+    const YYLTYPE &location,
+    int symIndex
+    ) : ASTNode(pContext, location)
+{
+    _GenericType = GenericType::None;
+    _symIndex = symIndex;
+    _pCallNode = nullptr;
+    _pStatementNode = nullptr;
+}
+
+ASTNode* FunctionDeclaratorNode::DuplicateNodeImpl(DuplicateType type)
+{
+    return new FunctionDeclaratorNode(GetContext(), GetLocation(), _symIndex);
+}
+
+bool FunctionDeclaratorNode::PreVerifyNodeImpl()
 {
     if (GetChild(1) != nullptr)
     {
         IdentifierNode* pIdentifierNode = dynamic_cast<IdentifierNode*>(GetChild(1));
         if (pIdentifierNode != nullptr)
         {
+            // The "Generic" version of the function is declared with an identifier
             _GenericType = GenericType::Identifier;
 
             // Add variable to collection
@@ -47,7 +65,18 @@ void FunctionDeclaratorNode::PreVerifyNodeImpl()
             if (pVarInfo == nullptr)
             {
                 GetContext()->ReportError(GetLocation(), "Duplicate generic parameter %s", GetContext()->GetSymbolString(pIdentifierNode->GetSymbolIndex()).c_str());
-            }            
+            }
+            
+            // Add the generic version of the function
+            GetContext()->GetSymbolTable()->AddFunction(
+                this,
+                _symIndex,
+                nullptr
+                );                    
+
+            // Don't try verifying templated functions, it is just madness. We will verify the template
+            // expanded version later on.
+            return false;
         }
         else
         {
@@ -60,8 +89,27 @@ void FunctionDeclaratorNode::PreVerifyNodeImpl()
             {
                 GetContext()->ReportError(GetLocation(), "Invalid expression for generic argument for function");
             }
+
+            UIntConstant Value;
+            pConstantNode->ConstEvaluate(&Value);
+
+            GetContext()->GetSymbolTable()->AddFunction(
+                this,
+                _symIndex,
+                &Value
+                );
         }
     }
+    else
+    {
+        GetContext()->GetSymbolTable()->AddFunction(
+            this,
+            _symIndex,
+            nullptr
+            );
+    }
+
+    return true;
 }
 
 void FunctionDeclaratorNode::VerifyNodeImpl()
@@ -75,13 +123,6 @@ void FunctionDeclaratorNode::VerifyNodeImpl()
 
         _passedArgs.emplace(std::make_pair(symIndex, i));
     }
-    
-    // Add function to module
-    GetContext()->GetSymbolTable()->AddFunction(
-        this,
-        _symIndex,
-        dynamic_cast<ExpressionNode*>(GetChild(1))
-        );
 }
 
 bool FunctionDeclaratorNode::IsParameter(int symIndex)
@@ -99,9 +140,10 @@ bool FunctionDeclaratorNode::IsGenericParameter(int symIndex)
 {
     if (_GenericType == GenericType::Identifier)
     {
-        VariableInfo* pInfo = dynamic_cast<VariableInfo*>(GetContext()->GetSymbolTable()->GetInfo(symIndex, this));
+        std::vector<VariableInfo*> Symbols;
+        GetContext()->GetSymbolTable()->GetSymbols(symIndex, this, Symbols);
 
-        if (pInfo->GetLocationType() == VariableLocationType::Generic)
+        if (Symbols.size() != 0 && Symbols[0]->GetLocationType() == VariableLocationType::Generic)
         {
             return true;
         }
@@ -126,7 +168,7 @@ ASTNode* FunctionDeclaratorNode::DuplicateParameterIdentifier(int symIndex)
     FunctionCallParamNode* pParamNode = _pCallNode->GetParameter(pIndex);
 
     // Duplicate that instead of the parameter
-    return pParamNode->DuplicateNode();
+    return pParamNode->DuplicateNode(DuplicateType::ExpandFunction);
 }
 
 ASTNode* FunctionDeclaratorNode::DuplicateGenericParameterIdentifier(int symIndex)
@@ -136,9 +178,13 @@ ASTNode* FunctionDeclaratorNode::DuplicateGenericParameterIdentifier(int symInde
         throw "Non-paramter symbol index given";
     }
 
-    ExpressionNode* pGenericParam = _pCallNode->GetGenericParameter();
+    UIntConstant* pGenericValue = _pCallNode->GetGenericValue();
+    if (pGenericValue == nullptr)
+    {
+        GetContext()->ReportError(GetLocation(), "Internal compiler error - no generic value");
+    }
 
-    return pGenericParam->DuplicateNode();
+    return new ConstantNode(GetContext(), GetLocation(), *pGenericValue);
 }
 
 ASTNode* FunctionDeclaratorNode::ExpandFunction(FunctionCallNode* pCall, StatementNode* pStatement)
@@ -156,10 +202,29 @@ ASTNode* FunctionDeclaratorNode::ExpandFunction(FunctionCallNode* pCall, Stateme
     ListNode* pListNode = dynamic_cast<ListNode*>(GetChild(GetChildCount() - 1));
 
     // Duplicate the list with appropriate replacements
-    ASTNode* pExpanded = pListNode->DuplicateNode();
+    ASTNode* pExpanded = pListNode->DuplicateNode(DuplicateType::ExpandFunction);
 
     _pCallNode = nullptr;
     _pStatementNode = nullptr;
+
+    return pExpanded;
+}
+
+ASTNode* FunctionDeclaratorNode::ExpandFunction(FunctionCallNode* pCall, UIntConstant Value)
+{
+    // Remember the call that we are expanding, but don't allow recursion
+    if (_pCallNode != nullptr)
+    {
+        throw "Recursion not allowed with function calls";
+    }
+
+    _pCallNode = pCall;
+    _genericValue = Value;
+
+    // Duplicate the list with appropriate replacements
+    ASTNode* pExpanded = DuplicateNode(DuplicateType::ExpandGeneric);
+
+    _pCallNode = nullptr;
 
     return pExpanded;
 }

@@ -4,15 +4,22 @@
 
 class ReturnNode : public ASTNode
 {
-  public:
-    ReturnNode(
-      ParserContext *pContext, 
-      const YYLTYPE &location, 
-      ASTNode *pChild) : ASTNode(pContext, location)
-    {
-        AddNode(pChild);
-    }
+    public:
+        ReturnNode(
+            ParserContext *pContext, 
+            const YYLTYPE &location, 
+            ASTNode *pChild) : ASTNode(pContext, location)
+        {
+          AddNode(pChild);
+        }
 
-    ASTNode* DuplicateNode() override;
-    const char* GetDebugName() override { return "ReturnNode"; }
+        ReturnNode(
+            ParserContext *pContext, 
+            const YYLTYPE &location) : ASTNode(pContext, location)
+        {
+        }
+
+        ASTNode* DuplicateNode(DuplicateType type) override;
+        const char* GetDebugName() override { return "ReturnNode"; }
+        ASTNode* DuplicateNodeImpl(DuplicateType type) override;
 };

@@ -17,7 +17,7 @@ module GenericFunctionTest(
     case(fsmState)
       `__initial: begin
         $monitor("TestVal = %h", CLZ_Handy);
-        CLZ_Handy <= 32'd32;
+        CLZ_Handy <= { 16'd0, HandyNum[31:16] };
       end
     endcase
   end

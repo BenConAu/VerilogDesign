@@ -17,7 +17,7 @@ ExpressionStatementNode::ExpressionStatementNode(
 {
 }
 
-ASTNode* ExpressionStatementNode::DuplicateNodeImpl()
+ASTNode* ExpressionStatementNode::DuplicateNodeImpl(DuplicateType type)
 {
     return new ExpressionStatementNode(GetContext(), GetLocation());
 }

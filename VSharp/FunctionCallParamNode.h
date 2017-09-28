@@ -17,7 +17,7 @@ public:
     void VerifyNodeImpl() override;
     const char* GetDebugName() override { return "FunctionCallParamNode"; }
     ExpressionResult* CalculateResult() override;
-    ASTNode* DuplicateNodeImpl() override;
+    ASTNode* DuplicateNodeImpl(DuplicateType type) override;
     VariableInfo* IsVariableExpression() override { return nullptr; }
     
     int IsOutParam() const { return _fOut; }

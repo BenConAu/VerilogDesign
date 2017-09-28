@@ -11,7 +11,7 @@ class ListNode : public ASTNode
         }
     }
 
-    ASTNode* DuplicateNodeImpl() override
+    ASTNode* DuplicateNodeImpl(DuplicateType type) override
     {
         return new ListNode(GetContext(), GetLocation(), nullptr);
     }

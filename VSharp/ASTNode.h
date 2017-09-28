@@ -12,6 +12,12 @@ class VSharpCompiler;
 class DebugContext;
 class OutputContext;
 
+enum class DuplicateType
+{
+    ExpandFunction,
+    ExpandGeneric,
+};
+
 class ASTNode
 {
 public:
@@ -73,13 +79,13 @@ public:
 
     virtual bool IsConstant() const { return false; }
     virtual const char* GetDebugName() = 0;
-    virtual void PreVerifyNodeImpl() {}
+    virtual bool PreVerifyNodeImpl() { return true; }
     virtual void VerifyNodeImpl() {}
     virtual bool PreProcessNodeImpl(OutputContext* pContext) { return true; }
     virtual void ProcessNodeImpl(OutputContext* pOutputContext);
     virtual void PostProcessNodeImpl(OutputContext* pContext) {}
-    virtual ASTNode* DuplicateNode();
-    virtual ASTNode* DuplicateNodeImpl();
+    virtual ASTNode* DuplicateNode(DuplicateType type);
+    virtual ASTNode* DuplicateNodeImpl(DuplicateType type);
 
     size_t GetChildCount() const { return _children.size(); }
     ASTNode* GetChild(size_t i) { return _children[i].get(); }

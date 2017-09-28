@@ -28,21 +28,28 @@ void ASTNode::VerifyNode(DebugContext* pContext)
 {
     //_pContext->PrintIndent();
     //printf("Begin verifying %s node %p\n", GetDebugName(), this);
-    pContext->_indent++;
-
-    PreVerifyNodeImpl();
-
-    for (size_t i = 0; i < _children.size(); i++)
+    if (pContext != nullptr)
     {
-        if (_children[i] != nullptr)
-        {
-            _children[i]->VerifyNode(pContext);
-        }
+        pContext->_indent++;        
     }
 
-    VerifyNodeImpl();
+    if (PreVerifyNodeImpl())
+    {
+        for (size_t i = 0; i < _children.size(); i++)
+        {
+            if (_children[i] != nullptr)
+            {
+                _children[i]->VerifyNode(pContext);
+            }
+        }
+    
+        VerifyNodeImpl();
+    }
 
-    pContext->_indent--;
+    if (pContext != nullptr)
+    {
+        pContext->_indent--;        
+    }
     //_pContext->PrintIndent();
     //printf("End verifying %s node %p\n", GetDebugName(), this);
 }
@@ -121,16 +128,16 @@ void ASTNode::InsertChild(size_t index, ASTNode* pChild)
     pChild->_pParent = this;
 }
 
-ASTNode* ASTNode::DuplicateNode()
+ASTNode* ASTNode::DuplicateNode(DuplicateType type)
 {
     //printf("Duplicating node %s %p\n", GetDebugName(), this);
 
-    ASTNode* pCopy = DuplicateNodeImpl();
+    ASTNode* pCopy = DuplicateNodeImpl(type);
     for (size_t i = 0; i < GetChildCount(); i++)
     {
         if (GetChild(i) != nullptr)
         {
-            pCopy->AddNode(GetChild(i)->DuplicateNode());            
+            pCopy->AddNode(GetChild(i)->DuplicateNode(type));            
         }
         else
         {
@@ -141,7 +148,7 @@ ASTNode* ASTNode::DuplicateNode()
     return pCopy;
 }
 
-ASTNode* ASTNode::DuplicateNodeImpl()
+ASTNode* ASTNode::DuplicateNodeImpl(DuplicateType type)
 {
     throw "Internal compiler error - unimplemented node duplicator";
 }

@@ -15,7 +15,7 @@ ParenNode::ParenNode(
 {
 }
 
-ASTNode* ParenNode::DuplicateNodeImpl()
+ASTNode* ParenNode::DuplicateNodeImpl(DuplicateType type)
 {
     return new ParenNode(GetContext(), GetLocation());
 }

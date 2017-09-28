@@ -21,7 +21,7 @@ OperatorInfo OperatorNode::_opTable[] = {
     { Operator::LogicalOr,          "||",   ResultTypeMethod::Bool },
 };
 
-ASTNode* OperatorNode::DuplicateNodeImpl()
+ASTNode* OperatorNode::DuplicateNodeImpl(DuplicateType type)
 {
     return new OperatorNode(GetContext(), GetLocation(), _op, _opInfo);
 }
@@ -120,7 +120,16 @@ bool OperatorNode::ConstEvaluate(UIntConstant* pVal)
                 pVal->_value = leftConstant._value + rightConstant._value;
                 break;
 
+            case Operator::Multiply:
+                pVal->_value = leftConstant._value * rightConstant._value;
+                break;
+
+            case Operator::Divide:
+                pVal->_value = leftConstant._value / rightConstant._value;
+                break;
+
             default:
+                GetContext()->ReportError(GetLocation(), "Unsupported operator in constant expression");
                 // Don't know how to do this yet
                 return false;
         }

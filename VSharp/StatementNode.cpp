@@ -24,6 +24,8 @@ bool StatementNode::PreProcessNodeImpl(OutputContext* pContext)
 {
     //printf("PreProcess for %p : %s\n", this, GetDebugName());
     
+    //GetContext()->DumpTree();
+    
     // We expand functions during pre-process so that we don't process until expansion is complete
     FunctionCallNode* pFunctionCallNode = GetFirstFunctionCall();
     if (pFunctionCallNode != nullptr)

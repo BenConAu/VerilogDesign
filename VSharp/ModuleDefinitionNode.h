@@ -26,7 +26,7 @@ public:
         AddNode(pList);
     }
 
-    void PreVerifyNodeImpl() override;
+    bool PreVerifyNodeImpl() override;
     void VerifyNodeImpl() override;
     bool PreProcessNodeImpl(OutputContext* pContext) override;
     void ProcessNodeImpl(OutputContext* pOutputContext) override;

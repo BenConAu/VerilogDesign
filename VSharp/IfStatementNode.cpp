@@ -15,7 +15,7 @@ IfStatementNode::IfStatementNode(ParserContext *pContext, YYLTYPE location) : St
 {
 }
 
-ASTNode* IfStatementNode::DuplicateNodeImpl()
+ASTNode* IfStatementNode::DuplicateNodeImpl(DuplicateType type)
 {
     return new IfStatementNode(GetContext(), GetLocation());
 }

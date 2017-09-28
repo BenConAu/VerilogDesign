@@ -73,16 +73,59 @@ VariableInfo *SymbolTable::AddVariable(
 FunctionInfo *SymbolTable::AddFunction(
     FunctionDeclaratorNode *pFuncDecl,
     int symIndex,
-    ExpressionNode *pGenericExpr)
+    UIntConstant* pConstant)
 {
-    for (auto iter = _symbols.lower_bound(symIndex); iter != _symbols.upper_bound(symIndex); iter++)
+    std::vector<FunctionInfo*> Functions;
+    GetSymbols(symIndex, nullptr, Functions);
+
+    // See if we are updating a forward declaration
+    for (size_t i = 0; i < Functions.size(); i++)
     {
-        // Caller can decide how to report this error
-        return nullptr;
+        if (Functions[i]->GetUIntConstant() == nullptr)
+        {
+            if (pConstant == nullptr)
+            {
+                // We are adding a generic version or non-generic function but it was forward declared
+                if (Functions[i]->GetFunctionDeclarator() == nullptr)
+                {
+                    // If somebody forward declares again, then nothing to do
+                    if (pFuncDecl != nullptr)
+                    {
+                        // Fine, update now
+                        Functions[i]->UpdateInfo(pFuncDecl);
+
+                        // We are done here
+                        return Functions[i];
+                    }
+                }
+                else
+                {
+                    throw "Cannot define functions twice - this needs to be an error";
+                }
+            }
+        }
+        else
+        {
+            if (pConstant != nullptr && pConstant == Functions[i]->GetUIntConstant())
+            {
+                // We are adding a specialized version that was forward declared
+                throw "Forward declaration of specialized generic functions not supported";
+            }
+        }
     }
 
-    FunctionInfo *pNewInfo = new FunctionInfo(_pCompiler, pFuncDecl, symIndex, pGenericExpr);
+    FunctionInfo *pNewInfo = new FunctionInfo(_pCompiler, pFuncDecl, symIndex, pConstant);
     _symbols.emplace(std::make_pair(symIndex, std::unique_ptr<SymbolInfo>(pNewInfo)));
+
+    // If we are adding a specialized function without adding the generic first, then
+    // forward declare the generic version now. Otherwise the function lookup won't
+    // work when somebody tries to call the specific version either.
+    if (Functions.size() == 0 && pConstant != nullptr)
+    {
+        pNewInfo = new FunctionInfo(_pCompiler, nullptr, symIndex, nullptr);
+        _symbols.emplace(std::make_pair(symIndex, std::unique_ptr<SymbolInfo>(pNewInfo)));
+    }
+
     return pNewInfo;
 }
 
@@ -99,26 +142,6 @@ StateInfo *SymbolTable::AddState(
     StateInfo *pNewInfo = new StateInfo(_pCompiler, pScope, symIndex);
     _symbols.emplace(std::make_pair(symIndex, std::unique_ptr<SymbolInfo>(pNewInfo)));
     return pNewInfo;
-}
-
-// Turns out this is for globals only
-SymbolInfo *SymbolTable::GetInfo(
-    int symIndex, 
-    ASTNode *pScope)
-{
-    //printf("Attempting GetInfo of symbol %s\n", _pCompiler->GetSymbolString(symIndex].c_str());
-
-    for (auto iter = _symbols.lower_bound(symIndex); iter != _symbols.upper_bound(symIndex); iter++)
-    {
-        SymbolInfo* pInfo = iter->second.get();
-
-        if (pInfo->GetScope() == pScope || pInfo->GetScope() == nullptr)
-        {
-            return pInfo;
-        }
-    }
-
-    return nullptr;
 }
 
 void SymbolTable::GetFunctionVariables(

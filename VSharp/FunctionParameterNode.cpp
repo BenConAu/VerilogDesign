@@ -1,11 +1,22 @@
+#include "FunctionDeclaratorNode.h"
 #include "FunctionParameterNode.h"
 #include "ModuleDefinitionNode.h"
 #include "TypeNode.h"
 #include "VariableInfo.h"
 
+ASTNode* FunctionParameterNode::DuplicateNodeImpl(DuplicateType type)
+{
+    if (type == DuplicateType::ExpandFunction)
+    {
+        throw "You should not be duplicating function parameters";
+    }
+
+    return new FunctionParameterNode(GetContext(), GetLocation(), _symIndex, _fOut);
+}
+
 void FunctionParameterNode::VerifyNodeImpl()
 {
-    ModuleDefinitionNode *pModule = GetTypedParent<ModuleDefinitionNode>();
+    FunctionDeclaratorNode *pFuncDecl = GetTypedParent<FunctionDeclaratorNode>();
 
     VariableLocationType location = VariableLocationType::Member;
     if (_fOut)
@@ -21,7 +32,7 @@ void FunctionParameterNode::VerifyNodeImpl()
 
     // Add variable to collection and mark first usage
     VariableInfo *pParamInfo = GetContext()->GetSymbolTable()->AddVariable(
-        pModule,
+        pFuncDecl,
         _symIndex,
         location,
         TypeModifier::None,

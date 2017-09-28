@@ -15,6 +15,6 @@ public:
         const YYLTYPE &location);
     
     const char* GetDebugName() override { return "ExpressionStatementNode"; }
-    ASTNode* DuplicateNodeImpl() override;
+    ASTNode* DuplicateNodeImpl(DuplicateType type) override;
     void PostProcessNodeImpl(OutputContext* pContext) override;
 };

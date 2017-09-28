@@ -21,5 +21,5 @@ public:
   void VerifyNodeImpl() override;
   void PostProcessNodeImpl(OutputContext* pContext) override;
   const char *GetDebugName() override { return "AssignmentNode"; }
-  ASTNode* DuplicateNodeImpl() override;
+  ASTNode* DuplicateNodeImpl(DuplicateType type) override;
 };

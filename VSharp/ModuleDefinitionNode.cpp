@@ -23,7 +23,7 @@ ModuleDefinitionNode::ModuleDefinitionNode(
     _pAlwaysState = nullptr;
 }
 
-void ModuleDefinitionNode::PreVerifyNodeImpl()
+bool ModuleDefinitionNode::PreVerifyNodeImpl()
 {
     // We need to add this here before the children look for it
     GenericTypeInfo *pGenType = nullptr;
@@ -97,6 +97,8 @@ void ModuleDefinitionNode::PreVerifyNodeImpl()
             _paramList.push_back(pParam);
         }
     }
+
+    return true;
 }
 
 void ModuleDefinitionNode::VerifyNodeImpl()
@@ -130,7 +132,7 @@ bool ModuleDefinitionNode::PreProcessNodeImpl(OutputContext* pContext)
 
                 pContext->OutputLine(
                     "%s%s", 
-                    GetContext()->GetSymbolTable()->GetInfo(pParam->GetSymbolIndex(), this)->GetSymbol(), 
+                    GetContext()->GetSymbolString(pParam->GetSymbolIndex()).c_str(), 
                     pszComma);
             }
 
@@ -142,7 +144,7 @@ bool ModuleDefinitionNode::PreProcessNodeImpl(OutputContext* pContext)
         pContext->OutputLine("// State definitions");
         for (size_t i = 0; i < _stateList.size(); i++)
         {
-            const char* pszStateName = (i == 0) ? "initial" : GetContext()->GetSymbolTable()->GetInfo(_stateList[i]->GetIdentifier(), this)->GetSymbol();
+            const char* pszStateName = (i == 0) ? "initial" : GetContext()->GetSymbolString(_stateList[i]->GetIdentifier()).c_str();
 
             pContext->OutputLine(
                 "`define __%s %d", 

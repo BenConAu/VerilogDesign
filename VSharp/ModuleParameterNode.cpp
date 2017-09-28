@@ -36,7 +36,11 @@ void ModuleParameterNode::PostProcessNodeImpl(OutputContext* pContext)
     ModuleDefinitionNode *pModule = GetTypedParent<ModuleDefinitionNode>();
 
     // Spit out the preamble
-    VariableInfo* pInfo = dynamic_cast<VariableInfo*>(GetContext()->GetSymbolTable()->GetInfo(_symIndex, pModule));
+    std::vector<VariableInfo*> Symbols;
+    GetContext()->GetSymbolTable()->GetSymbols(_symIndex, pModule, Symbols);
+
+    VariableInfo* pInfo = Symbols[0];
+
     const char* pszInOut = _fOut ? "output" : "input";
     const char* pszModifier = (pInfo->GetModifier() == TypeModifier::Wire || !_fOut) ? "wire" : "reg";
     

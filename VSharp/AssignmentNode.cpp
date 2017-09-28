@@ -47,7 +47,7 @@ void AssignmentNode::VerifyNodeImpl()
     }
 }
 
-ASTNode* AssignmentNode::DuplicateNodeImpl()
+ASTNode* AssignmentNode::DuplicateNodeImpl(DuplicateType type)
 {
     return new AssignmentNode(GetContext(), GetLocation());
 }
