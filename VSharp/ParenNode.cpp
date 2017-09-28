@@ -47,3 +47,10 @@ VariableInfo* ParenNode::IsVariableExpression()
     // Index selecting a variable expression will yield one
     return pExpr->IsVariableExpression();
 }  
+
+bool ParenNode::ConstEvaluate(UIntConstant* pVal)
+{
+    ExpressionNode *pExpr = dynamic_cast<ExpressionNode *>(GetChild(0));
+
+    return pExpr->ConstEvaluate(pVal);
+}

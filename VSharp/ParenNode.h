@@ -5,19 +5,20 @@
 
 class ParenNode : public ExpressionNode
 {
-  public:
+public:
     ParenNode(
         ParserContext *pContext,
         const YYLTYPE &location,
         ASTNode *pChild);
 
     ParenNode(
-      ParserContext *pContext,
-      const YYLTYPE &location);
-  
+        ParserContext *pContext,
+        const YYLTYPE &location);
+
     void VerifyNodeImpl() override;
     ASTNode* DuplicateNodeImpl(DuplicateType type) override;    
     ExpressionResult *CalculateResult() override;
     const char *GetDebugName() override { return "ParenNode"; }
     VariableInfo* IsVariableExpression() override;
-  };
+    bool ConstEvaluate(UIntConstant* pVal) override;
+};
