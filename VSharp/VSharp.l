@@ -70,6 +70,7 @@
 "struct"             { return STRUCT_TOKEN; }
 "drive"              { return DRIVE_TOKEN; }
 "module"             { return MODULE_TOKEN; }
+"stage"              { return STAGE_TOKEN; }
 "transition"         { return TRANSITION_TOKEN; }
 "return"             { return RETURN_TOKEN; }
 "import"             { return IMPORT_TOKEN; }

@@ -59,6 +59,7 @@ class ParserContext;
 %token CASE_TOKEN
 %token SWITCH_TOKEN
 %token DEFAULT_TOKEN
+%token STAGE_TOKEN
 
 %token <constVal> INTCONSTANT
 %token <constVal> BOOLCONSTANT
@@ -391,7 +392,8 @@ function_header_with_parameters:
 
 function_header:
       fully_specified_type IDENTIFIER LEFT_PAREN                    { $$ = new FunctionDeclaratorNode(pContext, @$, $1, $2, nullptr); }
-    | fully_specified_type IDENTIFIER LT expression GT LEFT_PAREN   { $$ = new FunctionDeclaratorNode(pContext, @$, $1, $2, $4); } 
+    | fully_specified_type IDENTIFIER LT expression GT LEFT_PAREN   { $$ = new FunctionDeclaratorNode(pContext, @$, $1, $2, $4); }
+    | STAGE_TOKEN IDENTIFIER LEFT_PAREN                             { $$ = new FunctionDeclaratorNode(pContext, @$, nullptr, $2, nullptr); }
     ;
 
 function_param_decl:
