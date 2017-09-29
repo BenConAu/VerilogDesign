@@ -61,14 +61,14 @@ public:
     ASTNode* ExpandFunction(FunctionCallNode* pCall, UIntConstant Value);
     StatementNode* GetStatementNode() { return _pStatementNode; }
     FunctionCallNode* GetCallNode() { return _pCallNode; }
-    GenericType GetGenericType() const { return _GenericType; }
+    FunctionType GetFunctionType() const { return _FunctionType; }
     
 private:
     // The symbol index of the function identifier
     int _symIndex;
 
     // The symbol index of the generic type
-    GenericType _GenericType;
+    FunctionType _FunctionType;
     
     // Arguments
     std::map<int, size_t> _passedArgs;

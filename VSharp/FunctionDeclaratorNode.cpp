@@ -21,7 +21,7 @@ FunctionDeclaratorNode::FunctionDeclaratorNode(
     AddNode(pRetType);
     AddNode(pGenericExpr);
 
-    _GenericType = GenericType::None;
+    _FunctionType = FunctionType::Standard;
     _symIndex = symIndex;
     _pCallNode = nullptr;
     _pStatementNode = nullptr;
@@ -33,7 +33,7 @@ FunctionDeclaratorNode::FunctionDeclaratorNode(
     int symIndex
     ) : ASTNode(pContext, location)
 {
-    _GenericType = GenericType::None;
+    _FunctionType = FunctionType::Standard;
     _symIndex = symIndex;
     _pCallNode = nullptr;
     _pStatementNode = nullptr;
@@ -46,67 +46,74 @@ ASTNode* FunctionDeclaratorNode::DuplicateNodeImpl(DuplicateType type)
 
 bool FunctionDeclaratorNode::PreVerifyNodeImpl()
 {
-    if (GetChild(1) != nullptr)
+    if (GetChild(0) != nullptr)
     {
-        IdentifierNode* pIdentifierNode = dynamic_cast<IdentifierNode*>(GetChild(1));
-        if (pIdentifierNode != nullptr)
+        if (GetChild(1) != nullptr)
         {
-            // The "Generic" version of the function is declared with an identifier
-            _GenericType = GenericType::Identifier;
-
-            // Add variable to collection
-            VariableInfo* pVarInfo = GetContext()->GetSymbolTable()->AddVariable(
-                this,
-                pIdentifierNode->GetSymbolIndex(),
-                VariableLocationType::Generic,
-                TypeModifier::None,
-                GetContext()->GetTypeCollection()->GetRegisterType(32));
-
-            if (pVarInfo == nullptr)
+            IdentifierNode* pIdentifierNode = dynamic_cast<IdentifierNode*>(GetChild(1));
+            if (pIdentifierNode != nullptr)
             {
-                GetContext()->ReportError(GetLocation(), "Duplicate generic parameter %s", GetContext()->GetSymbolString(pIdentifierNode->GetSymbolIndex()).c_str());
+                // The "Generic" version of the function is declared with an identifier
+                _FunctionType = FunctionType::GenericIdentifier;
+    
+                // Add variable to collection
+                VariableInfo* pVarInfo = GetContext()->GetSymbolTable()->AddVariable(
+                    this,
+                    pIdentifierNode->GetSymbolIndex(),
+                    VariableLocationType::Generic,
+                    TypeModifier::None,
+                    GetContext()->GetTypeCollection()->GetRegisterType(32));
+    
+                if (pVarInfo == nullptr)
+                {
+                    GetContext()->ReportError(GetLocation(), "Duplicate generic parameter %s", GetContext()->GetSymbolString(pIdentifierNode->GetSymbolIndex()).c_str());
+                }
+                
+                // Add the generic version of the function
+                GetContext()->GetSymbolTable()->AddFunction(
+                    this,
+                    _symIndex,
+                    nullptr
+                    );                    
+    
+                // Don't try verifying templated functions, it is just madness. We will verify the template
+                // expanded version later on.
+                return false;
             }
-            
-            // Add the generic version of the function
+            else
+            {
+                ConstantNode* pConstantNode = dynamic_cast<ConstantNode*>(GetChild(1));
+                if (pConstantNode != nullptr)
+                {
+                    _FunctionType = FunctionType::GenericConstant;
+                }
+                else
+                {
+                    GetContext()->ReportError(GetLocation(), "Invalid expression for generic argument for function");
+                }
+    
+                UIntConstant Value;
+                pConstantNode->ConstEvaluate(&Value);
+    
+                GetContext()->GetSymbolTable()->AddFunction(
+                    this,
+                    _symIndex,
+                    &Value
+                    );
+            }
+        }
+        else
+        {
             GetContext()->GetSymbolTable()->AddFunction(
                 this,
                 _symIndex,
                 nullptr
-                );                    
-
-            // Don't try verifying templated functions, it is just madness. We will verify the template
-            // expanded version later on.
-            return false;
-        }
-        else
-        {
-            ConstantNode* pConstantNode = dynamic_cast<ConstantNode*>(GetChild(1));
-            if (pConstantNode != nullptr)
-            {
-                _GenericType = GenericType::Constant;
-            }
-            else
-            {
-                GetContext()->ReportError(GetLocation(), "Invalid expression for generic argument for function");
-            }
-
-            UIntConstant Value;
-            pConstantNode->ConstEvaluate(&Value);
-
-            GetContext()->GetSymbolTable()->AddFunction(
-                this,
-                _symIndex,
-                &Value
                 );
         }
     }
     else
     {
-        GetContext()->GetSymbolTable()->AddFunction(
-            this,
-            _symIndex,
-            nullptr
-            );
+
     }
 
     return true;
@@ -138,7 +145,7 @@ bool FunctionDeclaratorNode::IsParameter(int symIndex)
 
 bool FunctionDeclaratorNode::IsGenericParameter(int symIndex)
 {
-    if (_GenericType == GenericType::Identifier)
+    if (_FunctionType == FunctionType::GenericIdentifier)
     {
         std::vector<VariableInfo*> Symbols;
         GetContext()->GetSymbolTable()->GetSymbols(symIndex, this, Symbols);

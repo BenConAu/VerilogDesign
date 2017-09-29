@@ -183,20 +183,20 @@ FunctionCallNode::FunctionCallNode(
 
     _pFunctionInfo = nullptr;
     _symIndex = symIndex;
-    _functionType = FunctionType::Unknown; // Until we learn otherwise
+    _FunctionCallType = FunctionCallType::Unknown; // Until we learn otherwise
 }
 
 FunctionCallNode::FunctionCallNode(
     ParserContext *pContext,
     const YYLTYPE &location,
     int symIndex,
-    FunctionType type,
+    FunctionCallType type,
     FunctionInfo* pInfo,
     UIntConstant GenericParam) : ExpressionNode(pContext, location)
 {
     _pFunctionInfo = pInfo;
     _symIndex = symIndex;
-    _functionType = type;
+    _FunctionCallType = type;
     _GenericParam = GenericParam;
 }
 
@@ -254,7 +254,7 @@ ASTNode* FunctionCallNode::DuplicateNode(DuplicateType type)
 
 ASTNode* FunctionCallNode::DuplicateNodeImpl(DuplicateType type)
 {
-    return new FunctionCallNode(GetContext(), GetLocation(), _symIndex, _functionType, _pFunctionInfo, _GenericParam);
+    return new FunctionCallNode(GetContext(), GetLocation(), _symIndex, _FunctionCallType, _pFunctionInfo, _GenericParam);
 }
 
 const char* FunctionCallNode::GetFunctionName()
@@ -351,7 +351,7 @@ void FunctionCallNode::VerifyNodeImpl()
         // of a module (which also looks just like a function call from the parser perspective).
         if (pVarDecl != nullptr)
         {
-            _functionType = FunctionType::ModuleDecl;
+            _FunctionCallType = FunctionCallType::ModuleDecl;
 
             // Should be a module type info
             TypeNode* pTypeNode = pVarDecl->GetTypeNode();
@@ -371,7 +371,7 @@ void FunctionCallNode::VerifyNodeImpl()
         }
         else
         {
-            _functionType = FunctionType::Constructor;
+            _FunctionCallType = FunctionCallType::Constructor;
 
             StructTypeInfo* pStructInfo = GetContext()->GetTypeCollection()->GetStructType(_symIndex);
             if (pStructInfo == nullptr)
@@ -400,11 +400,11 @@ void FunctionCallNode::VerifyNodeImpl()
         if (GetFunctionInfo()->GetParameterCount() == -1)
         {
             // Builtin functions have no parameters to key off right now
-            _functionType = FunctionType::BuiltIn;
+            _FunctionCallType = FunctionCallType::BuiltIn;
         }
         else
         {
-            _functionType = FunctionType::Defined;
+            _FunctionCallType = FunctionCallType::Defined;
 
             if (GetParameterCount() != GetFunctionInfo()->GetParameterCount())
             {
@@ -454,7 +454,7 @@ void FunctionCallNode::VerifyNodeImpl()
             if (CallSpec->IsParameterOut(i))
             {
                 // Modules need to be called with wires for out
-                if (_functionType == FunctionType::ModuleDecl)
+                if (_FunctionCallType == FunctionCallType::ModuleDecl)
                 {
                     VariableInfo* pVarInfo = pParamExpr->IsVariableExpression();
                     if (pVarInfo == nullptr)
@@ -501,24 +501,18 @@ ASTNode* FunctionCallNode::ExpandFunction(StatementNode* pOwningStatement)
         GetContext()->ReportError(GetLocation(), "Internal compiler error - function calls that return values cannot be builtin functions");
     }
 
-    // If the function is templated, then we need to duplicate the function to make
-    // a specific declaration, and then verify it, before doing the expansion.
-    if (pFuncDecl->GetGenericType() != GenericType::None)
-    {
-    }
-
     //printf("Expanding function %s\n", GetContext()->GetSymbolString(_symIndex).c_str());
     return pFuncDecl->ExpandFunction(this, pOwningStatement);
 }
 
 ExpressionResult *FunctionCallNode::CalculateResult()
 {
-    switch(_functionType)
+    switch(_FunctionCallType)
     {
-        case FunctionType::Unknown:
+        case FunctionCallType::Unknown:
             throw "Unexpected unknown function type during processing";
 
-        case FunctionType::ModuleDecl:
+        case FunctionCallType::ModuleDecl:
         {
             std::string resultString = "(";
             AppendParameterList(resultString);
@@ -528,7 +522,7 @@ ExpressionResult *FunctionCallNode::CalculateResult()
             return new ExpressionResult(resultString, this);
         }
 
-        case FunctionType::BuiltIn:
+        case FunctionCallType::BuiltIn:
         {
             std::string resultString;
 
@@ -540,7 +534,7 @@ ExpressionResult *FunctionCallNode::CalculateResult()
             return new ExpressionResult(resultString);
         }
 
-        case FunctionType::Constructor:
+        case FunctionCallType::Constructor:
         {
             // This should work even for enums, because a single thing in a concat list
             // is just that single thing.
@@ -552,7 +546,7 @@ ExpressionResult *FunctionCallNode::CalculateResult()
             return new ExpressionResult(resultString, this);
         }
 
-        case FunctionType::Defined:
+        case FunctionCallType::Defined:
             printf("Unexpected function call %p named %s\n", this, GetFunctionName());
             //GetContext()->DumpTree();
             return nullptr;

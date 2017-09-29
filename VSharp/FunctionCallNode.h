@@ -10,7 +10,7 @@ class FunctionDeclaratorNode;
 class FunctionInfo;
 class StatementNode;
 
-enum class FunctionType
+enum class FunctionCallType
 {
     Unknown,      // Don't know yet
     BuiltIn,      // __* functions that are built into the language
@@ -33,7 +33,7 @@ public:
       ParserContext *pContext,
       const YYLTYPE &location,
       int symIndex,
-      FunctionType type,
+      FunctionCallType type,
       FunctionInfo* pInfo,
       UIntConstant GenericParam);
 
@@ -75,7 +75,7 @@ private:
   FunctionInfo* _pFunctionInfo;
 
   // Type of function being called (filled in by Verify)
-  FunctionType _functionType;
+  FunctionCallType _FunctionCallType;
 
   // Generic value (filled in by Verify)
   UIntConstant _GenericParam;  
