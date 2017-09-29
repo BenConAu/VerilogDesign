@@ -8,8 +8,16 @@ module StagingExample(
         out uint16 up2
         )
     {
-        up1 = a[31:16];
-        up2 = a[15:0];
+        if (a >. 100)
+        {
+            up1 = a[31:16];
+            up2 = a[15:0];
+        }
+        else
+        {
+            up1 = 0u16;
+            up2 = 0u16;
+        }
     }
 
     stage Process(
@@ -18,7 +26,14 @@ module StagingExample(
         out uint16 middle
         )
     {
-        middle = up1 + up2;
+        if (up1 == 1u16)
+        {
+            middle = up1 + up2;
+        }
+        else
+        {
+            middle = 1u16;
+        }
     }
 
     stage Finalize(

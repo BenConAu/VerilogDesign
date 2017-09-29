@@ -113,7 +113,7 @@ bool FunctionDeclaratorNode::PreVerifyNodeImpl()
     }
     else
     {
-
+        _FunctionType = FunctionType::Stage;
     }
 
     return true;
@@ -257,6 +257,14 @@ void FunctionDeclaratorNode::ProcessNodeImpl(OutputContext* pContext)
         else
         {
             _lastResult.reset();
+        }
+    }
+    else
+    {
+        if (_FunctionType == FunctionType::Stage)
+        {
+            // Process the function and start expanding it out
+            ASTNode::ProcessNodeImpl(pContext);
         }
     }
 }

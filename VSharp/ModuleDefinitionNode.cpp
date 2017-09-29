@@ -23,6 +23,26 @@ ModuleDefinitionNode::ModuleDefinitionNode(
     _pAlwaysState = nullptr;
 }
 
+ModuleType ModuleDefinitionNode::GetModuleType()
+{
+    if (_stateList.size() == 1 && _stateList[0] == nullptr)
+    {
+        if (_stageList.size() != 0)
+        {
+            return ModuleType::DefinedStages;
+        }
+    }
+    else
+    {
+        if (_stageList.size() == 0)
+        {
+            return ModuleType::ExplicitStates;
+        }
+    }
+
+    return ModuleType::Error;
+}
+
 bool ModuleDefinitionNode::PreVerifyNodeImpl()
 {
     // We need to add this here before the children look for it
@@ -66,11 +86,16 @@ bool ModuleDefinitionNode::PreVerifyNodeImpl()
         _IsForward = true;
     }
 
+    return true;
+}
+
+void ModuleDefinitionNode::VerifyNodeImpl()
+{
     // Add all of the states into a list - the initial state has
     // value zero, but all other states start at this number and
     // work their way up.
     _stateList.push_back(nullptr);
-
+    
     for (size_t i = 0; i < GetChildCount(); i++)
     {
         StateDeclaratorNode* pState = dynamic_cast<StateDeclaratorNode*>(GetChild(i));
@@ -91,6 +116,15 @@ bool ModuleDefinitionNode::PreVerifyNodeImpl()
             }
         }
 
+        FunctionDeclaratorNode* pStage = dynamic_cast<FunctionDeclaratorNode*>(GetChild(i));
+        if (pStage != nullptr)
+        {
+            if (pStage->GetFunctionType() == FunctionType::Stage)
+            {
+                _stageList.push_back(pStage);
+            }
+        }
+
         ModuleParameterNode* pParam = dynamic_cast<ModuleParameterNode*>(GetChild(i));
         if (pParam != nullptr)
         {
@@ -98,11 +132,12 @@ bool ModuleDefinitionNode::PreVerifyNodeImpl()
         }
     }
 
-    return true;
-}
-
-void ModuleDefinitionNode::VerifyNodeImpl()
-{
+    // You can have stages or states but not both
+    if (GetModuleType() == ModuleType::Error)
+    {
+        GetContext()->ReportError(GetLocation(), "Cannot have both stages and states");
+    }
+            
     ModuleTypeInfo* pNewType = new ModuleTypeInfo(_symIndex, this);
     GetContext()->GetTypeCollection()->AddModuleType(_symIndex, pNewType);
 }
@@ -140,16 +175,19 @@ bool ModuleDefinitionNode::PreProcessNodeImpl(OutputContext* pContext)
 
         pContext->OutputLine(");");
 
-        // Define states so they are readable
-        pContext->OutputLine("// State definitions");
-        for (size_t i = 0; i < _stateList.size(); i++)
+        if (GetModuleType() == ModuleType::ExplicitStates)
         {
-            const char* pszStateName = (i == 0) ? "initial" : GetContext()->GetSymbolString(_stateList[i]->GetIdentifier()).c_str();
+            // Define states so they are readable
+            pContext->OutputLine("// State definitions");
+            for (size_t i = 0; i < _stateList.size(); i++)
+            {
+                const char* pszStateName = (i == 0) ? "initial" : GetContext()->GetSymbolString(_stateList[i]->GetIdentifier()).c_str();
 
-            pContext->OutputLine(
-                "`define __%s %d", 
-                pszStateName,
-                i);
+                pContext->OutputLine(
+                    "`define __%s %d", 
+                    pszStateName,
+                    i);
+            }
         }
 
         // All modules have a reset and a clock
@@ -167,55 +205,73 @@ void ModuleDefinitionNode::ProcessNodeImpl(OutputContext* pContext)
         bool fParamsDone = false;
         bool fVariablesDone = false;
 
-        // Do all non-state things first
+        // Do all non-state and non-stage things first
         for (size_t i = 0; i < GetChildCount(); i++)
         {
             // Figure out what we have here
             StateDeclaratorNode* pState = dynamic_cast<StateDeclaratorNode*>(GetChild(i));
-            if (pState == nullptr)
+            FunctionDeclaratorNode* pStage = dynamic_cast<FunctionDeclaratorNode*>(GetChild(i));
+
+            if (pState == nullptr && (pStage == nullptr || pStage->GetFunctionType() != FunctionType::Stage))
             {
                 GetChild(i)->ProcessNode(pContext);
             }
         }
 
-        // We have a register that we store the current state in
-        pContext->OutputLine("reg [7:0] fsmState = 0;");
-
-        // Start the always block
-        pContext->OutputLine("always @(posedge clk)");
-        pContext->OutputLine("begin");
-        pContext->IncreaseIndent();
-
-        // State case statement only if we have more than 1
-        // state in the list, or if we have an initial state
-        if (_stateList.size() > 1 || _stateList[0] != nullptr)
+        if (GetModuleType() == ModuleType::ExplicitStates)
         {
-            // Start the case statement
-            pContext->OutputLine("case(fsmState)");
+            // We have a register that we store the current state in
+            pContext->OutputLine("reg [7:0] fsmState = 0;");
+        
+            // Start the always block
+            pContext->OutputLine("always @(posedge clk)");
+            pContext->OutputLine("begin");
             pContext->IncreaseIndent();
-
-            for (size_t i = 0; i < _stateList.size(); i++)
+    
+            // State case statement only if we have more than 1
+            // state in the list, or if we have an initial state
+            if (_stateList.size() > 1 || _stateList[0] != nullptr)
             {
-                if (_stateList[i] != nullptr)
+                // Start the case statement
+                pContext->OutputLine("case(fsmState)");
+                pContext->IncreaseIndent();
+    
+                for (size_t i = 0; i < _stateList.size(); i++)
                 {
-                    _stateList[i]->ProcessNode(pContext);                
+                    if (_stateList[i] != nullptr)
+                    {
+                        _stateList[i]->ProcessNode(pContext);                
+                    }
                 }
+    
+                // End the case statement
+                pContext->DecreaseIndent();
+                pContext->OutputLine("endcase");
             }
-
-            // End the case statement
+    
+            // If we have an always state, put it here
+            if (_pAlwaysState != nullptr)
+            {
+                _pAlwaysState->ProcessNode(pContext);
+            }
+    
+            // End the always statement
             pContext->DecreaseIndent();
-            pContext->OutputLine("endcase");
+            pContext->OutputLine("end");    
         }
-
-        // If we have an always state, put it here
-        if (_pAlwaysState != nullptr)
+        else
         {
-            _pAlwaysState->ProcessNode(pContext);
-        }
+            // Start the always block
+            pContext->OutputLine("always @(posedge clk)");
+            pContext->OutputLine("begin");
+            pContext->IncreaseIndent();
+    
+            _stageList[_stageList.size() - 1]->ProcessNode(pContext);
 
-        // End the always statement
-        pContext->DecreaseIndent();
-        pContext->OutputLine("end");
+            // End the always statement
+            pContext->DecreaseIndent();
+            pContext->OutputLine("end");            
+        }
     }
 }
 
