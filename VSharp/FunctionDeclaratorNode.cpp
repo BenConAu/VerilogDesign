@@ -25,6 +25,7 @@ FunctionDeclaratorNode::FunctionDeclaratorNode(
     _symIndex = symIndex;
     _pCallNode = nullptr;
     _pStatementNode = nullptr;
+    _pStageInput = nullptr;
 }
 
 FunctionDeclaratorNode::FunctionDeclaratorNode(
@@ -37,6 +38,7 @@ FunctionDeclaratorNode::FunctionDeclaratorNode(
     _symIndex = symIndex;
     _pCallNode = nullptr;
     _pStatementNode = nullptr;
+    _pStageInput = nullptr;
 }
 
 ASTNode* FunctionDeclaratorNode::DuplicateNodeImpl(DuplicateType type)
@@ -192,6 +194,31 @@ ASTNode* FunctionDeclaratorNode::DuplicateGenericParameterIdentifier(int symInde
     }
 
     return new ConstantNode(GetContext(), GetLocation(), *pGenericValue);
+}
+
+ASTNode* FunctionDeclaratorNode::ExpandFunction(IdentifierNode* pStageInput, StatementNode* pStatement)
+{
+    DumpNode(GetContext()->GetDebugContext());
+
+    // Remember the call that we are expanding, but don't allow recursion
+    if (_pStageInput != nullptr)
+    {
+        throw "Recursion not allowed with function calls";
+    }
+
+    _pStageInput = pStageInput;
+    _pStatementNode = pStatement;
+
+    // Get the statement list for the function
+    ListNode* pListNode = dynamic_cast<ListNode*>(GetChild(GetChildCount() - 1));
+
+    // Duplicate the list with appropriate replacements
+    ASTNode* pExpanded = pListNode->DuplicateNode(DuplicateType::ExpandStageInput);
+
+    _pStageInput = nullptr;
+    _pStatementNode = nullptr;
+
+    return pExpanded;
 }
 
 ASTNode* FunctionDeclaratorNode::ExpandFunction(FunctionCallNode* pCall, StatementNode* pStatement)

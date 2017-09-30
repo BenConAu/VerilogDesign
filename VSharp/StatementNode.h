@@ -15,7 +15,9 @@ public:
     void DumpNodeImpl() override;
     
     void SetCallReplacement(FunctionCallNode* pCallNode, ASTNode* pReplacement);
+    void SetIdentifierReplacement(IdentifierNode* pIdentifier, ASTNode* pReplacement);
     FunctionCallNode* GetCallNode() { return _pCallNode; }
+    IdentifierNode* GetIdentifierNode() { return _pIdentifier; }
     ASTNode* GetReplacementNode() { return _pReplacement; }
     
 private:
@@ -32,5 +34,8 @@ private:
 private:
     bool _fProcessed;
     FunctionCallNode* _pCallNode;   // When duplicating, the call node to replace
+    IdentifierNode* _pIdentifier;   // When duplicating, the identifier to replace
     ASTNode* _pReplacement;         // When duplicating, the thing to replace with
+
+    static int _NumReplaced;
   };

@@ -284,3 +284,22 @@ void ModuleDefinitionNode::PostProcessNodeImpl(OutputContext* pContext)
         pContext->OutputLine("endmodule");
     }
 }
+
+size_t ModuleDefinitionNode::GetStageIndex(FunctionDeclaratorNode* pStage)
+{
+    for (size_t i = 0; i < _stageList.size(); i++)
+    {
+        if (_stageList[i] == pStage)
+        {
+            return i;
+        }
+    }
+
+    throw "Unknown stage passed to GetStageIndex";
+}
+
+FunctionDeclaratorNode* ModuleDefinitionNode::GetStage(size_t index)
+{
+    return _stageList[index];
+}
+

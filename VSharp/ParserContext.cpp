@@ -85,7 +85,7 @@ void ParserContext::Parse()
     // Verify the tree
     for (size_t i = 0; i < _rootNodes.size(); i++)
     {
-        _rootNodes[i]->VerifyNode(&_DebugContext);
+        _rootNodes[i]->VerifyNode(GetDebugContext());
     }
 }
 
@@ -126,7 +126,7 @@ void ParserContext::DumpTree()
     printf("Dumping tree\n");
     for (size_t i = 0; i < _rootNodes.size(); i++)
     {
-        _rootNodes[i]->DumpNode(&_DebugContext);
+        _rootNodes[i]->DumpNode(GetDebugContext());
     }    
 }
 
@@ -143,4 +143,9 @@ TypeCollection* ParserContext::GetTypeCollection()
 SymbolTable* ParserContext::GetSymbolTable() 
 { 
     return _pCompiler->GetSymbolTable(); 
+}
+
+DebugContext* ParserContext::GetDebugContext() 
+{ 
+    return _pCompiler->GetDebugContext(); 
 }

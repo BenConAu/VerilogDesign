@@ -1,45 +1,28 @@
 module StagingExample(
-    uint32 a,       // Some value going to the module
-    out uint32 b    // Some value going out of the module
+    uint32 moduleInput,         // Some value going to the module
+    out uint32 moduleOutput     // Some value going out of the module
     )
 {
-    stage Unpack(
-        out uint16 up1,
-        out uint16 up2
-        )
-    {
-        if (a >. 100)
-        {
-            up1 = a[31:16];
-            up2 = a[15:0];
-        }
-        else
-        {
-            up1 = 0u16;
-            up2 = 0u16;
-        }
-    }
+    clock clk;
 
-    stage Process(
-        uint16 up1,
-        uint16 up2,
-        out uint16 middle
+    stage Unpack(
+        out uint16 firstStageOutput
         )
     {
-        if (up1 == 1u16)
+        if (moduleInput >. 100)
         {
-            middle = up1 + up2;
+            firstStageOutput = moduleInput[31:16];
         }
         else
         {
-            middle = 1u16;
+            firstStageOutput = 0u16;
         }
     }
 
     stage Finalize(
-        uint16 middle
+        uint16 firstStageOutput
         )
     {
-        b = { middle, middle };
+        moduleOutput = { 1u16, firstStageOutput };
     }
 }

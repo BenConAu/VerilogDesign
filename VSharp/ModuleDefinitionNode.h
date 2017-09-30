@@ -46,6 +46,9 @@ public:
 
     ModuleType GetModuleType();
 
+    size_t GetStageIndex(FunctionDeclaratorNode* pStage);
+    FunctionDeclaratorNode* GetStage(size_t index);
+
 private:
     template<typename T>
     void MoveListChildren(ASTNode* pModuleChildList, size_t InsertPoint)

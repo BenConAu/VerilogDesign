@@ -20,20 +20,22 @@ ASTNode* ReturnNode::DuplicateNode(DuplicateType type)
         // Find out what function declared this return statement
         FunctionDeclaratorNode *pFuncDecl = GetTypedParent<FunctionDeclaratorNode>();
     
-        // Find out what assignment expression triggered the expansion of that function
+        // Find out what statement triggered the expansion of that function
         StatementNode* pStatementNode = pFuncDecl->GetStatementNode();
     
-        // Set the mapping that calls to the function are replaced with the child of this return
+        // We are going to duplicate that statement now, replacing the function call
+        // part of the statement with the value that this return statement has. So
+        // tell the statement what to use instead of the function call.
         pStatementNode->SetCallReplacement(pFuncDecl->GetCallNode(), GetChild(0));
     
         //printf("Duplicating return node %p, with function %s\n", this, pFuncDecl->GetFunctionName());
         
-            // Replace the return statement with a duplicate of this assignment - function
-        // calls in this duplication will be replaced with a duplicate of what was
-        // returned in the return statement.
+        // Now duplicate this original statement. It will replace function calls
+        // with the child of the return statement.
         ASTNode* pReplacement = pStatementNode->DuplicateNode(DuplicateType::ExpandFunction);
     
-        // Undo the mapping so that debugging is not a nightmare
+        // Undo the mapping so that debugging is not a nightmare for the next thing
+        // that needs to do this to the statement.
         pStatementNode->SetCallReplacement(nullptr, nullptr);
     
         return pReplacement;

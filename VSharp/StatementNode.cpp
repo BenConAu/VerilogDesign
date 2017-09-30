@@ -2,15 +2,19 @@
 #include "FunctionDeclaratorNode.h"
 #include "FunctionInfo.h"
 #include "IdentifierNode.h"
+#include "ModuleDefinitionNode.h"
 #include "ParserContext.h"
 #include "StatementNode.h"
 #include "VariableInfo.h"
+
+int StatementNode::_NumReplaced = 0;
 
 StatementNode::StatementNode(ParserContext* pContext, const YYLTYPE &location) : ASTNode(pContext, location)
 {
     _fProcessed = false;
     _pCallNode = nullptr;
     _pReplacement = nullptr;
+    _pIdentifier = nullptr;
 }
 
 void StatementNode::DumpNodeImpl()
@@ -60,9 +64,54 @@ bool StatementNode::PreProcessNodeImpl(OutputContext* pContext)
 
     // Outputs of stages are basically like function calls, so process them the same way
     IdentifierNode* pStageOutput = GetFirstStageOutput();
-    if (pStageOutput != nullptr)
+    if (pStageOutput != nullptr && _NumReplaced < 1)
     {
-        printf("Found replaceable identifier %s\n", pStageOutput->GetIdentifierName());
+        printf("Found stage output to replace\n");
+        DumpNode(GetContext()->GetDebugContext());
+
+        ModuleDefinitionNode* pModule = GetTypedParent<ModuleDefinitionNode>();
+
+        VariableInfo* pVarInfo = pStageOutput->GetVariableInfo();
+        FunctionDeclaratorNode* pScope = dynamic_cast<FunctionDeclaratorNode*>(pVarInfo->GetScope());
+
+        // We need to find the stage that outputs the given identifier so that we can make
+        // the appropriate replacement. Search backwards from the given one.
+        size_t CurrentIndex = pModule->GetStageIndex(pScope);
+        FunctionDeclaratorNode* pReplaceStage = nullptr;
+
+        if (CurrentIndex != 0)
+        {
+            for (size_t i = CurrentIndex - 1; ; i--)
+            {
+                FunctionDeclaratorNode* pCandidate = pModule->GetStage(i);
+                if (pCandidate->IsParameter(pVarInfo->GetSymbolIndex()))
+                {
+                    pReplaceStage = pCandidate;
+                    break;
+                }
+
+                if (i == 0)
+                {
+                    break;
+                }
+            }
+        }
+
+        if (pReplaceStage == nullptr)
+        {
+            GetContext()->ReportError(GetLocation(), "Cannot find stage that generates %s", pVarInfo->GetSymbol());
+        }
+
+        // Expand the function to replace the identifier
+        ASTNode* pReplacement = pReplaceStage->ExpandFunction(pStageOutput, this);
+
+        _NumReplaced++;
+
+        // Insert the node after this one
+        GetParent()->InsertChild(GetParent()->GetChildIndex(this) + 1, pReplacement);
+
+        // Mark this node as replaced so that it won't do anything further
+        return false;
     }
 
     _fProcessed = true;
@@ -79,6 +128,18 @@ void StatementNode::SetCallReplacement(FunctionCallNode* pCallNode, ASTNode* pRe
     }
 
     _pCallNode = pCallNode;
+    _pReplacement = pReplacement;
+}
+
+void StatementNode::SetIdentifierReplacement(IdentifierNode* pIdent, ASTNode* pReplacement)
+{
+    if (pIdent != nullptr && _pIdentifier != nullptr)
+    {
+        printf("Identifier is %p and replacementnode is %p\n", _pIdentifier, _pReplacement);
+        throw "Statement node should only be expanding with a single replacement at a time";
+    }
+
+    _pIdentifier = pIdent;
     _pReplacement = pReplacement;
 }
 
