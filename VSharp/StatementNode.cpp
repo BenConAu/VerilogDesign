@@ -64,7 +64,7 @@ bool StatementNode::PreProcessNodeImpl(OutputContext* pContext)
     IdentifierNode* pStageOutput = GetFirstStageOutput();
     if (pStageOutput != nullptr)
     {
-        printf("Found stage output %s to replace\n", pStageOutput->GetIdentifierName());
+        //printf("Found stage output %s to replace\n", pStageOutput->GetIdentifierName());
         //DumpNode(GetContext()->GetDebugContext());
 
         ModuleDefinitionNode* pModule = GetTypedParent<ModuleDefinitionNode>();
