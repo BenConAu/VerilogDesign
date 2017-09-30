@@ -7,8 +7,6 @@
 #include "StatementNode.h"
 #include "VariableInfo.h"
 
-int StatementNode::_NumReplaced = 0;
-
 StatementNode::StatementNode(ParserContext* pContext, const YYLTYPE &location) : ASTNode(pContext, location)
 {
     _fProcessed = false;
@@ -64,10 +62,10 @@ bool StatementNode::PreProcessNodeImpl(OutputContext* pContext)
 
     // Outputs of stages are basically like function calls, so process them the same way
     IdentifierNode* pStageOutput = GetFirstStageOutput();
-    if (pStageOutput != nullptr && _NumReplaced < 1)
+    if (pStageOutput != nullptr)
     {
-        printf("Found stage output to replace\n");
-        DumpNode(GetContext()->GetDebugContext());
+        printf("Found stage output %s to replace\n", pStageOutput->GetIdentifierName());
+        //DumpNode(GetContext()->GetDebugContext());
 
         ModuleDefinitionNode* pModule = GetTypedParent<ModuleDefinitionNode>();
 
@@ -104,8 +102,6 @@ bool StatementNode::PreProcessNodeImpl(OutputContext* pContext)
 
         // Expand the function to replace the identifier
         ASTNode* pReplacement = pReplaceStage->ExpandFunction(pStageOutput, this);
-
-        _NumReplaced++;
 
         // Insert the node after this one
         GetParent()->InsertChild(GetParent()->GetChildIndex(this) + 1, pReplacement);

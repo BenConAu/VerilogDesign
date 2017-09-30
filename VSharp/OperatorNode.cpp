@@ -129,7 +129,7 @@ bool OperatorNode::ConstEvaluate(UIntConstant* pVal)
                 break;
 
             default:
-                GetContext()->ReportError(GetLocation(), "Unsupported operator in constant expression");
+                //GetContext()->ReportError(GetLocation(), "Unsupported operator in constant expression");
                 // Don't know how to do this yet
                 return false;
         }

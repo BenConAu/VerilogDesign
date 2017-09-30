@@ -36,6 +36,4 @@ private:
     FunctionCallNode* _pCallNode;   // When duplicating, the call node to replace
     IdentifierNode* _pIdentifier;   // When duplicating, the identifier to replace
     ASTNode* _pReplacement;         // When duplicating, the thing to replace with
-
-    static int _NumReplaced;
-  };
+};

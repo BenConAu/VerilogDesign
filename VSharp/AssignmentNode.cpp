@@ -72,25 +72,33 @@ ASTNode* AssignmentNode::DuplicateNode(DuplicateType type)
             FunctionDeclaratorNode *pFuncDecl = GetTypedParent<FunctionDeclaratorNode>();
         
             // Is this the identifer we are expanding?
-            if (pFuncDecl->GetStageInput() != nullptr && pFuncDecl->GetStageInput()->GetSymbolIndex() == pInfo->GetSymbolIndex())
+            if (pFuncDecl->GetStageInput() != nullptr)
             {
-                // The LHS of this assignment is the out param that was being replaced, so this
-                // is equivalent to a return statement. So we duplicate the same set of steps
-                // here.
+                if (pFuncDecl->GetStageInput()->GetSymbolIndex() == pInfo->GetSymbolIndex())
+                {
+                    // The LHS of this assignment is the out param that was being replaced, so this
+                    // is equivalent to a return statement. So we duplicate the same set of steps
+                    // here.
 
-                // Find out what statement triggered the expansion of that stage function
-                StatementNode* pStatementNode = pFuncDecl->GetStatementNode();
-            
-                // Set the mapping that calls to the function are replaced with the RHS of this assignment
-                pStatementNode->SetIdentifierReplacement(pFuncDecl->GetStageInput(), GetChild(1));
-            
-                // Duplicate the statement that launched this
-                ASTNode* pReplacement = pStatementNode->DuplicateNode(DuplicateType::ExpandStageInput);
-            
-                // Undo the mapping so that debugging is not a nightmare
-                pStatementNode->SetIdentifierReplacement(nullptr, nullptr);
-            
-                return pReplacement;    
+                    // Find out what statement triggered the expansion of that stage function
+                    StatementNode* pStatementNode = pFuncDecl->GetStatementNode();
+                
+                    // Set the mapping that calls to the function are replaced with the RHS of this assignment
+                    pStatementNode->SetIdentifierReplacement(pFuncDecl->GetStageInput(), GetChild(1));
+                
+                    // Duplicate the statement that launched this
+                    ASTNode* pReplacement = pStatementNode->DuplicateNode(DuplicateType::ExpandStageInput);
+                
+                    // Undo the mapping so that debugging is not a nightmare
+                    pStatementNode->SetIdentifierReplacement(nullptr, nullptr);
+                
+                    return pReplacement;    
+                }
+                else
+                {
+                    // Assignments to things that are not the input we are expanding need to be dropped
+                    return nullptr;
+                }
             }
         }
 

@@ -198,7 +198,7 @@ ASTNode* FunctionDeclaratorNode::DuplicateGenericParameterIdentifier(int symInde
 
 ASTNode* FunctionDeclaratorNode::ExpandFunction(IdentifierNode* pStageInput, StatementNode* pStatement)
 {
-    DumpNode(GetContext()->GetDebugContext());
+    //DumpNode(GetContext()->GetDebugContext());
 
     // Remember the call that we are expanding, but don't allow recursion
     if (_pStageInput != nullptr)
