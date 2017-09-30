@@ -16,6 +16,7 @@ enum class DuplicateType
 {
     ExpandFunction,
     ExpandGeneric,
+    ExpandStageInput,
 };
 
 class ASTNode

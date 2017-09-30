@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SymbolInfo.h"
+#include "FunctionType.h"
 #include <string>
 
 class TypeInfo;
@@ -10,15 +11,6 @@ class FunctionDeclaratorNode;
 class VSharpCompiler;
 class ExpressionNode;
 struct UIntConstant;
-
-// Functions that are generic are defined either with a constant
-// or with an identifier. Constants are matched before identifers.
-enum class GenericType
-{
-  None,
-  Constant,
-  Identifier,
-};
 
 class FunctionInfo : public SymbolInfo
 {

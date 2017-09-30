@@ -8,8 +8,9 @@
 #include <stack>
 
 class FunctionCallNode;
-class StatementNode;
 class FunctionParameterNode;
+class IdentifierNode;
+class StatementNode;
 
 class FunctionDeclaratorNode : public ASTNode
 {
@@ -57,18 +58,20 @@ public:
     bool IsGenericParameter(int symIndex);
     ASTNode* DuplicateParameterIdentifier(int symIndex);
     ASTNode* DuplicateGenericParameterIdentifier(int symIndex);
+    ASTNode* ExpandFunction(IdentifierNode* pStageInput, StatementNode* pStatement);
     ASTNode* ExpandFunction(FunctionCallNode* pCall, StatementNode* pStatement);
     ASTNode* ExpandFunction(FunctionCallNode* pCall, UIntConstant Value);
     StatementNode* GetStatementNode() { return _pStatementNode; }
     FunctionCallNode* GetCallNode() { return _pCallNode; }
-    GenericType GetGenericType() const { return _GenericType; }
+    IdentifierNode* GetStageInput() { return _pStageInput; }
+    FunctionType GetFunctionType() const { return _FunctionType; }
     
 private:
     // The symbol index of the function identifier
     int _symIndex;
 
     // The symbol index of the generic type
-    GenericType _GenericType;
+    FunctionType _FunctionType;
     
     // Arguments
     std::map<int, size_t> _passedArgs;
@@ -81,6 +84,9 @@ private:
 
     // The constant value that we are speciating for (for generic expansion)
     UIntConstant _genericValue;
+
+    // The identifier that we are expanding for (for stage expansion)
+    IdentifierNode* _pStageInput;
 
     // The result from the last expansion
     std::unique_ptr<ExpressionResult> _lastResult;

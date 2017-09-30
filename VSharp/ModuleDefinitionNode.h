@@ -5,6 +5,14 @@
 
 class StateDeclaratorNode;
 class ModuleParameterNode;
+class FunctionDeclaratorNode;
+
+enum class ModuleType
+{
+    Error,
+    ExplicitStates,
+    DefinedStages,
+};
 
 class ModuleDefinitionNode : public ASTNode
 {
@@ -35,6 +43,11 @@ public:
 
     size_t GetParameterCount() { return _paramList.size(); }
     ModuleParameterNode* GetParameter(size_t index) { return _paramList[index]; }
+
+    ModuleType GetModuleType();
+
+    size_t GetStageIndex(FunctionDeclaratorNode* pStage);
+    FunctionDeclaratorNode* GetStage(size_t index);
 
 private:
     template<typename T>
@@ -83,6 +96,7 @@ private:
     bool _IsForward;
 
     std::vector<StateDeclaratorNode*> _stateList;
+    std::vector<FunctionDeclaratorNode*> _stageList;
     StateDeclaratorNode* _pAlwaysState;
 
     std::vector<ModuleParameterNode*> _paramList;

@@ -3,6 +3,7 @@
 #include "ParserContext.h"
 #include "ModuleDefinitionNode.h"
 #include "FunctionDeclaratorNode.h"
+#include "StatementNode.h"
 #include "StaticTypeInfo.h"
 
 IdentifierNode::IdentifierNode(ParserContext *pContext, const YYLTYPE &location, int symIndex) : ExpressionNode(pContext, location)
@@ -41,6 +42,27 @@ ASTNode* IdentifierNode::DuplicateNodeImpl(DuplicateType type)
         {
             // This was a generic identifier passed into the function, replace it
             return pFuncDecl->DuplicateGenericParameterIdentifier(_symIndex);
+        }
+        else if (type == DuplicateType::ExpandStageInput)
+        {
+            // Referring to the input of a stage has the same effect as calling
+            // the stage that produces this input as a function. So the logic here mirrors
+            // that of a function call when called for duplication.
+
+            // First find the statement that initiated the duplication in the first place  - 
+            // it might not be the first one up the tree.
+            StatementNode* pStatementNode = GetTypedParent<StatementNode>(); 
+            while (pStatementNode != nullptr && pStatementNode->GetIdentifierNode() == nullptr)
+            {
+                pStatementNode = pStatementNode->GetTypedParent<StatementNode>();
+            }
+
+            // Now make sure that it is the same identifier if we found a statement
+            if (pStatementNode != nullptr && this == pStatementNode->GetIdentifierNode())
+            {
+                // Replace the call with the expression we were given from the return statement
+                return pStatementNode->GetReplacementNode()->DuplicateNode(type);
+            }
         }
     }
 

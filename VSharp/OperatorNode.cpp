@@ -128,8 +128,13 @@ bool OperatorNode::ConstEvaluate(UIntConstant* pVal)
                 pVal->_value = leftConstant._value / rightConstant._value;
                 break;
 
+            case Operator::Equal:
+                pVal->_value = (leftConstant._value == rightConstant._value) ? 1 : 0;
+                pVal->_bitLength = 1;
+                break;
+
             default:
-                GetContext()->ReportError(GetLocation(), "Unsupported operator in constant expression");
+                //GetContext()->ReportError(GetLocation(), "Unsupported operator in constant expression");
                 // Don't know how to do this yet
                 return false;
         }

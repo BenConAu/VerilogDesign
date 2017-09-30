@@ -7,18 +7,19 @@
 
 class VSharpCompiler
 {
-  public:
+public:
     VSharpCompiler();
 
     int AddSymbol(const char *pszSymbol);    
     TypeCollection* GetTypeCollection();
     SymbolTable* GetSymbolTable();
     const std::string& GetSymbolString(int symIndex);
-    
+    DebugContext* GetDebugContext() { return &_DebugContext; }
+
     void ImportContext(ParserContext* pChildContext);
 
-  private:
-    ParserContext* _pParent;
+private:
+    DebugContext _DebugContext;
     SymbolTable _symbolTable;
     TypeCollection _typeCollection;
     std::vector<std::string> _symbols;

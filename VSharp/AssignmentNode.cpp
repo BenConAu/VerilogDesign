@@ -1,8 +1,10 @@
 #include "AssignmentNode.h"
-#include "ParserContext.h"
-#include "ModuleDefinitionNode.h"
 #include "DriveDefinitionNode.h"
+#include "FunctionDeclaratorNode.h"
+#include "IdentifierNode.h"
+#include "ModuleDefinitionNode.h"
 #include "OutputContext.h"
+#include "ParserContext.h"
 #include "VariableInfo.h"
 
 AssignmentNode::AssignmentNode(
@@ -19,6 +21,11 @@ AssignmentNode::AssignmentNode(
     ParserContext *pContext, 
     const YYLTYPE &location) : StatementNode(pContext, location)
 {
+}
+
+ASTNode* AssignmentNode::DuplicateNodeImpl(DuplicateType type)
+{
+    return new AssignmentNode(GetContext(), GetLocation());
 }
 
 void AssignmentNode::VerifyNodeImpl()
@@ -47,9 +54,60 @@ void AssignmentNode::VerifyNodeImpl()
     }
 }
 
-ASTNode* AssignmentNode::DuplicateNodeImpl(DuplicateType type)
+ASTNode* AssignmentNode::DuplicateNode(DuplicateType type)
 {
-    return new AssignmentNode(GetContext(), GetLocation());
+    if (type == DuplicateType::ExpandStageInput)
+    {
+        // For stages, an assignment to an out parameter is equivalent to a return
+        // statement and therefore handled in a similar way. So we see if the LHS
+        // of the assignment is to that out parameter.
+        ExpressionNode *pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));        
+
+        // See if the LHS is the thing we are replacing - it will be an output of the
+        // function that we are expanding.
+        VariableInfo* pInfo = pLeft->IsVariableExpression();
+        if (pInfo != nullptr && pInfo->GetLocationType() == VariableLocationType::Output)
+        {
+            // Find out what stage function has this assignment
+            FunctionDeclaratorNode *pFuncDecl = GetTypedParent<FunctionDeclaratorNode>();
+        
+            // Is this the identifer we are expanding?
+            if (pFuncDecl->GetStageInput() != nullptr)
+            {
+                if (pFuncDecl->GetStageInput()->GetSymbolIndex() == pInfo->GetSymbolIndex())
+                {
+                    // The LHS of this assignment is the out param that was being replaced, so this
+                    // is equivalent to a return statement. So we duplicate the same set of steps
+                    // here.
+
+                    // Find out what statement triggered the expansion of that stage function
+                    StatementNode* pStatementNode = pFuncDecl->GetStatementNode();
+                
+                    // Set the mapping that calls to the function are replaced with the RHS of this assignment
+                    pStatementNode->SetIdentifierReplacement(pFuncDecl->GetStageInput(), GetChild(1));
+                
+                    // Duplicate the statement that launched this
+                    ASTNode* pReplacement = pStatementNode->DuplicateNode(DuplicateType::ExpandStageInput);
+                
+                    // Undo the mapping so that debugging is not a nightmare
+                    pStatementNode->SetIdentifierReplacement(nullptr, nullptr);
+                
+                    return pReplacement;    
+                }
+                else
+                {
+                    // Assignments to things that are not the input we are expanding need to be dropped
+                    return nullptr;
+                }
+            }
+        }
+
+        return ASTNode::DuplicateNode(type);
+    }
+    else
+    {
+        return ASTNode::DuplicateNode(type);
+    }
 }
 
 void AssignmentNode::PostProcessNodeImpl(OutputContext* pContext)

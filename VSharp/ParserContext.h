@@ -60,7 +60,7 @@ public:
     VSharpCompiler* GetCompiler() { return _pCompiler; }
     TypeCollection* GetTypeCollection();
     SymbolTable* GetSymbolTable();
-    DebugContext* GetDebugContext() { return &_DebugContext; }
+    DebugContext* GetDebugContext();
     int AddSymbol(const char *pszSymbol);    
     
     // Called from nodes
@@ -83,7 +83,4 @@ private:
     std::deque<std::unique_ptr<ASTNode>> _rootNodes;
     size_t _numStructs;
     size_t _numGlobals;
-
-    // For debugging
-    DebugContext _DebugContext;
 };
