@@ -5,6 +5,11 @@ module StagingExample(
 {
     clock clk;
 
+	drive
+	{
+		100: __finish;
+	}
+
     stage Unpack(
         out uint16 firstStageOutput
         )
@@ -15,7 +20,7 @@ module StagingExample(
         }
         else
         {
-            firstStageOutput = 0u16;
+            firstStageOutput = 10u16;
         }
     }
 
@@ -23,6 +28,8 @@ module StagingExample(
         uint16 firstStageOutput
         )
     {
+        __monitor("Output = %h", moduleOutput);
+
         moduleOutput = { 1u16, firstStageOutput };
     }
 }
