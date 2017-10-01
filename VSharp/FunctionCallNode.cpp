@@ -243,11 +243,6 @@ ASTNode* FunctionCallNode::DuplicateNode(DuplicateType type)
     }
     else
     {
-        if (type != DuplicateType::ExpandGeneric)
-        {
-            throw "Wat";
-        }
-
         return ASTNode::DuplicateNode(type);
     }
 }

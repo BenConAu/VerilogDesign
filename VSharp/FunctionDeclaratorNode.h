@@ -65,6 +65,7 @@ public:
     FunctionCallNode* GetCallNode() { return _pCallNode; }
     IdentifierNode* GetStageInput() { return _pStageInput; }
     FunctionType GetFunctionType() const { return _FunctionType; }
+    DuplicateType GetDuplicateType() const { return _CurrentDuplicateType; }
     
 private:
     // The symbol index of the function identifier
@@ -75,6 +76,9 @@ private:
     
     // Arguments
     std::map<int, size_t> _passedArgs;
+
+    // The current expansion type
+    DuplicateType _CurrentDuplicateType;
 
     // The call that we are currently expanding
     FunctionCallNode* _pCallNode;

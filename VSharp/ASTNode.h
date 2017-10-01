@@ -14,6 +14,7 @@ class OutputContext;
 
 enum class DuplicateType
 {
+    None,
     ExpandFunction,
     ExpandGeneric,
     ExpandStageInput,

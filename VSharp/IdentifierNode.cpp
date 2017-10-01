@@ -29,16 +29,16 @@ ASTNode* IdentifierNode::DuplicateNodeImpl(DuplicateType type)
 {
     //printf("Duplicating identifier %s\n", GetIdentifierName());
 
-    // Are we in a function?
+    // Are we in a function that 
     FunctionDeclaratorNode *pFuncDecl = GetTypedParent<FunctionDeclaratorNode>();
     if (pFuncDecl != nullptr)
     {
-        if (type == DuplicateType::ExpandFunction && pFuncDecl->IsParameter(_symIndex))
+        if (type == DuplicateType::ExpandFunction && pFuncDecl->GetDuplicateType() == type && pFuncDecl->IsParameter(_symIndex))
         {
             // This was an identifier passed into the function, replace it
             return pFuncDecl->DuplicateParameterIdentifier(_symIndex);            
         }
-        else if (type == DuplicateType::ExpandGeneric && pFuncDecl->IsGenericParameter(_symIndex))
+        else if (type == DuplicateType::ExpandGeneric && pFuncDecl->GetDuplicateType() == type && pFuncDecl->IsGenericParameter(_symIndex))
         {
             // This was a generic identifier passed into the function, replace it
             return pFuncDecl->DuplicateGenericParameterIdentifier(_symIndex);

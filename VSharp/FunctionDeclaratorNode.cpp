@@ -23,6 +23,7 @@ FunctionDeclaratorNode::FunctionDeclaratorNode(
 
     _FunctionType = FunctionType::Standard;
     _symIndex = symIndex;
+    _CurrentDuplicateType = DuplicateType::None;
     _pCallNode = nullptr;
     _pStatementNode = nullptr;
     _pStageInput = nullptr;
@@ -36,6 +37,7 @@ FunctionDeclaratorNode::FunctionDeclaratorNode(
 {
     _FunctionType = FunctionType::Standard;
     _symIndex = symIndex;
+    _CurrentDuplicateType = DuplicateType::None;
     _pCallNode = nullptr;
     _pStatementNode = nullptr;
     _pStageInput = nullptr;
@@ -208,6 +210,7 @@ ASTNode* FunctionDeclaratorNode::ExpandFunction(IdentifierNode* pStageInput, Sta
 
     _pStageInput = pStageInput;
     _pStatementNode = pStatement;
+    _CurrentDuplicateType = DuplicateType::ExpandStageInput;
 
     // Get the statement list for the function
     ListNode* pListNode = dynamic_cast<ListNode*>(GetChild(GetChildCount() - 1));
@@ -217,6 +220,7 @@ ASTNode* FunctionDeclaratorNode::ExpandFunction(IdentifierNode* pStageInput, Sta
 
     _pStageInput = nullptr;
     _pStatementNode = nullptr;
+    _CurrentDuplicateType = DuplicateType::None;
 
     return pExpanded;
 }
@@ -231,7 +235,8 @@ ASTNode* FunctionDeclaratorNode::ExpandFunction(FunctionCallNode* pCall, Stateme
 
     _pCallNode = pCall;
     _pStatementNode = pStatement;
-
+    _CurrentDuplicateType = DuplicateType::ExpandFunction;
+    
     // Get the statement list for the function
     ListNode* pListNode = dynamic_cast<ListNode*>(GetChild(GetChildCount() - 1));
 
@@ -240,6 +245,7 @@ ASTNode* FunctionDeclaratorNode::ExpandFunction(FunctionCallNode* pCall, Stateme
 
     _pCallNode = nullptr;
     _pStatementNode = nullptr;
+    _CurrentDuplicateType = DuplicateType::None;
 
     return pExpanded;
 }
@@ -254,12 +260,14 @@ ASTNode* FunctionDeclaratorNode::ExpandFunction(FunctionCallNode* pCall, UIntCon
 
     _pCallNode = pCall;
     _genericValue = Value;
-
+    _CurrentDuplicateType = DuplicateType::ExpandGeneric;
+    
     // Duplicate the list with appropriate replacements
     ASTNode* pExpanded = DuplicateNode(DuplicateType::ExpandGeneric);
 
     _pCallNode = nullptr;
-
+    _CurrentDuplicateType = DuplicateType::None;
+    
     return pExpanded;
 }
 
