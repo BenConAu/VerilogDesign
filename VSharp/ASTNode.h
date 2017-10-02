@@ -17,7 +17,7 @@ enum class DuplicateType
     None,
     ExpandFunction,
     ExpandGeneric,
-    ExpandStageInput,
+    ExpandStageNonblocking,
 };
 
 class ASTNode

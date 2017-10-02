@@ -43,7 +43,7 @@ ASTNode* IdentifierNode::DuplicateNodeImpl(DuplicateType type)
             // This was a generic identifier passed into the function, replace it
             return pFuncDecl->DuplicateGenericParameterIdentifier(_symIndex);
         }
-        else if (type == DuplicateType::ExpandStageInput)
+        else if (type == DuplicateType::ExpandStageNonblocking)
         {
             // Referring to the input of a stage has the same effect as calling
             // the stage that produces this input as a function. So the logic here mirrors

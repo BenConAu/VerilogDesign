@@ -56,7 +56,7 @@ void AssignmentNode::VerifyNodeImpl()
 
 ASTNode* AssignmentNode::DuplicateNode(DuplicateType type)
 {
-    if (type == DuplicateType::ExpandStageInput)
+    if (type == DuplicateType::ExpandStageNonblocking)
     {
         // For stages, an assignment to an out parameter is equivalent to a return
         // statement and therefore handled in a similar way. So we see if the LHS
@@ -87,7 +87,7 @@ ASTNode* AssignmentNode::DuplicateNode(DuplicateType type)
                     pStatementNode->SetIdentifierReplacement(pFuncDecl->GetStageInput(), GetChild(1));
                 
                     // Duplicate the statement that launched this
-                    ASTNode* pReplacement = pStatementNode->DuplicateNode(DuplicateType::ExpandStageInput);
+                    ASTNode* pReplacement = pStatementNode->DuplicateNode(DuplicateType::ExpandStageNonblocking);
                 
                     // Undo the mapping so that debugging is not a nightmare
                     pStatementNode->SetIdentifierReplacement(nullptr, nullptr);

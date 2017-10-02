@@ -210,13 +210,13 @@ ASTNode* FunctionDeclaratorNode::ExpandFunction(IdentifierNode* pStageInput, Sta
 
     _pStageInput = pStageInput;
     _pStatementNode = pStatement;
-    _CurrentDuplicateType = DuplicateType::ExpandStageInput;
+    _CurrentDuplicateType = DuplicateType::ExpandStageNonblocking;
 
     // Get the statement list for the function
     ListNode* pListNode = dynamic_cast<ListNode*>(GetChild(GetChildCount() - 1));
 
     // Duplicate the list with appropriate replacements
-    ASTNode* pExpanded = pListNode->DuplicateNode(DuplicateType::ExpandStageInput);
+    ASTNode* pExpanded = pListNode->DuplicateNode(DuplicateType::ExpandStageNonblocking);
 
     _pStageInput = nullptr;
     _pStatementNode = nullptr;
