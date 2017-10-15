@@ -210,9 +210,9 @@ void FunctionCallNode::DumpNodeImpl()
     );    
 }
 
-ASTNode* FunctionCallNode::DuplicateNode(DuplicateType type)
+ASTNode* FunctionCallNode::DuplicateNode(FunctionExpandType type)
 {
-    if (type == DuplicateType::ExpandFunction)
+    if (type == FunctionExpandType::Function)
     {
         // Find the statement that initiated the duplication - it might
         // not be the first one up the tree.
@@ -247,7 +247,7 @@ ASTNode* FunctionCallNode::DuplicateNode(DuplicateType type)
     }
 }
 
-ASTNode* FunctionCallNode::DuplicateNodeImpl(DuplicateType type)
+ASTNode* FunctionCallNode::DuplicateNodeImpl(FunctionExpandType type)
 {
     return new FunctionCallNode(GetContext(), GetLocation(), _symIndex, _FunctionCallType, _pFunctionInfo, _GenericParam);
 }

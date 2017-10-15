@@ -24,7 +24,7 @@ void TransitionNode::PostProcessNodeImpl(OutputContext* pContext)
     pContext->OutputLine("fsmState <= `__%s;", pStateInfo->GetSymbol());
 }
 
-ASTNode* TransitionNode::DuplicateNodeImpl(DuplicateType type)
+ASTNode* TransitionNode::DuplicateNodeImpl(FunctionExpandType type)
 {
     return new TransitionNode(GetContext(), GetLocation(), _symIndex);
 }

@@ -57,7 +57,7 @@ TypeNode::TypeNode(
     _pTypeInfo = pTypeInfo;
 }
 
-ASTNode* TypeNode::DuplicateNodeImpl(DuplicateType type)
+ASTNode* TypeNode::DuplicateNodeImpl(FunctionExpandType type)
 {
     return new TypeNode(GetContext(), GetLocation(), _typeClass, _TypeModifier, _extra, _pTypeInfo);
 }

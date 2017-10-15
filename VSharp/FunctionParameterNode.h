@@ -21,7 +21,7 @@ public:
 
     void VerifyNodeImpl() override;
     const char* GetDebugName() override { return "FunctionParameterNode"; }
-    ASTNode* DuplicateNodeImpl(DuplicateType type) override;
+    ASTNode* DuplicateNodeImpl(FunctionExpandType type) override;
     
     int GetSymbolIndex() const { return _symIndex; }
     bool IsOutParam() const { return _fOut; }

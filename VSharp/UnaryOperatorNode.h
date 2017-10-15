@@ -22,7 +22,7 @@ class UnaryOperatorNode : public ExpressionNode
     virtual ExpressionResult *CalculateResult() override;
     const char* GetDebugName() override { return "UnaryOperatorNode"; }
     VariableInfo* IsVariableExpression() override { return nullptr; }
-    ASTNode* DuplicateNodeImpl(DuplicateType type) override;
+    ASTNode* DuplicateNodeImpl(FunctionExpandType type) override;
     
   private:
     Operator _op;

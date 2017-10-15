@@ -4,9 +4,9 @@
 #include "TypeNode.h"
 #include "VariableInfo.h"
 
-ASTNode* FunctionParameterNode::DuplicateNodeImpl(DuplicateType type)
+ASTNode* FunctionParameterNode::DuplicateNodeImpl(FunctionExpandType type)
 {
-    if (type == DuplicateType::ExpandFunction)
+    if (type == FunctionExpandType::Function)
     {
         throw "You should not be duplicating function parameters";
     }

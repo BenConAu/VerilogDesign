@@ -25,7 +25,7 @@ IdentifierNode::IdentifierNode(
     _pTypeInfo = pTypeInfo;
 }
 
-ASTNode* IdentifierNode::DuplicateNodeImpl(DuplicateType type)
+ASTNode* IdentifierNode::DuplicateNodeImpl(FunctionExpandType type)
 {
     //printf("Duplicating identifier %s\n", GetIdentifierName());
 
@@ -33,17 +33,17 @@ ASTNode* IdentifierNode::DuplicateNodeImpl(DuplicateType type)
     FunctionDeclaratorNode *pFuncDecl = GetTypedParent<FunctionDeclaratorNode>();
     if (pFuncDecl != nullptr)
     {
-        if (type == DuplicateType::ExpandFunction && pFuncDecl->GetDuplicateType() == type && pFuncDecl->IsParameter(_symIndex))
+        if (type == FunctionExpandType::Function && pFuncDecl->GetFunctionExpandType() == type && pFuncDecl->IsParameter(_symIndex))
         {
             // This was an identifier passed into the function, replace it
             return pFuncDecl->DuplicateParameterIdentifier(_symIndex);            
         }
-        else if (type == DuplicateType::ExpandGeneric && pFuncDecl->GetDuplicateType() == type && pFuncDecl->IsGenericParameter(_symIndex))
+        else if (type == FunctionExpandType::Generic && pFuncDecl->GetFunctionExpandType() == type && pFuncDecl->IsGenericParameter(_symIndex))
         {
             // This was a generic identifier passed into the function, replace it
             return pFuncDecl->DuplicateGenericParameterIdentifier(_symIndex);
         }
-        else if (type == DuplicateType::ExpandStageNonblocking)
+        else if (type == FunctionExpandType::StageNonblocking)
         {
             // Referring to the input of a stage has the same effect as calling
             // the stage that produces this input as a function. So the logic here mirrors

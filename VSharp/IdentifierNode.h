@@ -24,7 +24,7 @@ public:
     int GetSymbolIndex() const { return _symIndex; }
     VariableInfo* GetVariableInfo();
     ExpressionResult* CalculateResult() override;
-    ASTNode* DuplicateNodeImpl(DuplicateType type) override;
+    ASTNode* DuplicateNodeImpl(FunctionExpandType type) override;
     const char* GetDebugName() override { return "IdentifierNode"; }
     const char* GetIdentifierName();
     VariableInfo* IsVariableExpression() override;

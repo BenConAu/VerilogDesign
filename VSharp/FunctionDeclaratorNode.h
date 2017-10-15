@@ -52,7 +52,7 @@ public:
     void ProcessNodeImpl(OutputContext* pOutputContext) override;
     const char* GetDebugName() override { return "FunctionDeclaratorNode"; }
     const char* GetFunctionName() { return GetContext()->GetSymbolString(_symIndex).c_str(); }
-    ASTNode* DuplicateNodeImpl(DuplicateType type) override;
+    ASTNode* DuplicateNodeImpl(FunctionExpandType type) override;
     
     bool IsParameter(int symIndex);
     bool IsGenericParameter(int symIndex);
@@ -65,7 +65,7 @@ public:
     FunctionCallNode* GetCallNode() { return _pCallNode; }
     IdentifierNode* GetStageInput() { return _pStageInput; }
     FunctionType GetFunctionType() const { return _FunctionType; }
-    DuplicateType GetDuplicateType() const { return _CurrentDuplicateType; }
+    FunctionExpandType GetFunctionExpandType() const { return _CurrentFunctionExpandType; }
     
 private:
     // The symbol index of the function identifier
@@ -78,7 +78,7 @@ private:
     std::map<int, size_t> _passedArgs;
 
     // The current expansion type
-    DuplicateType _CurrentDuplicateType;
+    FunctionExpandType _CurrentFunctionExpandType;
 
     // The call that we are currently expanding
     FunctionCallNode* _pCallNode;

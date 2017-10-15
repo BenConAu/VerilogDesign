@@ -19,7 +19,7 @@ class ReturnNode : public ASTNode
         {
         }
 
-        ASTNode* DuplicateNode(DuplicateType type) override;
+        ASTNode* DuplicateNode(FunctionExpandType type) override;
         const char* GetDebugName() override { return "ReturnNode"; }
-        ASTNode* DuplicateNodeImpl(DuplicateType type) override;
+        ASTNode* DuplicateNodeImpl(FunctionExpandType type) override;
 };

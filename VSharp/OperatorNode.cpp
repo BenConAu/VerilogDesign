@@ -21,7 +21,7 @@ OperatorInfo OperatorNode::_opTable[] = {
     { Operator::LogicalOr,          "||",   ResultTypeMethod::Bool },
 };
 
-ASTNode* OperatorNode::DuplicateNodeImpl(DuplicateType type)
+ASTNode* OperatorNode::DuplicateNodeImpl(FunctionExpandType type)
 {
     return new OperatorNode(GetContext(), GetLocation(), _op, _opInfo);
 }

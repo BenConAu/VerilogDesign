@@ -21,8 +21,8 @@ public:
         ParserContext* pContext, 
         const YYLTYPE &location,
         int symIndex,
-        int genericSym
-        );
+        int genericSym,
+        FunctionExpandType ExpandType);
 
     void AddParameter(ASTNode* pNode)
     {
@@ -48,6 +48,7 @@ public:
 
     size_t GetStageIndex(FunctionDeclaratorNode* pStage);
     FunctionDeclaratorNode* GetStage(size_t index);
+    FunctionExpandType GetFunctionExpandType() const { return _ExpandType; }
 
 private:
     template<typename T>
@@ -94,6 +95,9 @@ private:
 
     // Is this a forward definition?
     bool _IsForward;
+
+    // What kind of expansion do we do?
+    FunctionExpandType _ExpandType;
 
     std::vector<StateDeclaratorNode*> _stateList;
     std::vector<FunctionDeclaratorNode*> _stageList;

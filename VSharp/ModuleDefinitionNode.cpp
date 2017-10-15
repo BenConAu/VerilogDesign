@@ -14,13 +14,15 @@ ModuleDefinitionNode::ModuleDefinitionNode(
     ParserContext* pContext, 
     const YYLTYPE &location,
     int symIndex,
-    int genericSym
+    int genericSym,
+    FunctionExpandType ExpandType
     ) : ASTNode(pContext, location)
 {
     _symIndex = symIndex;
     _genericIndex = genericSym;
     _IsForward = false;
     _pAlwaysState = nullptr;
+    _ExpandType = ExpandType;
 }
 
 ModuleType ModuleDefinitionNode::GetModuleType()
@@ -261,16 +263,42 @@ void ModuleDefinitionNode::ProcessNodeImpl(OutputContext* pContext)
         }
         else
         {
-            // Start the always block
-            pContext->OutputLine("always @(posedge clk)");
-            pContext->OutputLine("begin");
-            pContext->IncreaseIndent();
-    
-            _stageList[_stageList.size() - 1]->ProcessNode(pContext);
+            if (_ExpandType == FunctionExpandType::StageNonblocking)
+            {
+                // Expand all of the stages out like we do with functions - no
+                // intermediate registers or blocking assignments. This is probably
+                // not useful in many cases.
 
-            // End the always statement
-            pContext->DecreaseIndent();
-            pContext->OutputLine("end");            
+                // Start the always block
+                pContext->OutputLine("always @(posedge clk)");
+                pContext->OutputLine("begin");
+                pContext->IncreaseIndent();
+        
+                _stageList[_stageList.size() - 1]->ProcessNode(pContext);
+
+                // End the always statement
+                pContext->DecreaseIndent();
+                pContext->OutputLine("end");
+            }
+            else if (_ExpandType == FunctionExpandType::StageBlocking)
+            {
+                // Expand each of the stages out one by one, and assign to the
+                // intermediate registers when the assignments are done.
+
+                // Start the always block
+                pContext->OutputLine("always @(posedge clk)");
+                pContext->OutputLine("begin");
+                pContext->IncreaseIndent();
+        
+                for (size_t i = 0; i < _stageList.size(); i++)
+                {
+                    _stageList[i]->ProcessNode(pContext);
+                }
+
+                // End the always statement
+                pContext->DecreaseIndent();
+                pContext->OutputLine("end");
+            }
         }
     }
 }

@@ -18,9 +18,9 @@ public:
         ParserContext *pContext,
         const YYLTYPE &location);
   
-    ASTNode* DuplicateNode(DuplicateType type) override;
+    ASTNode* DuplicateNode(FunctionExpandType type) override;
     void VerifyNodeImpl() override;
     void PostProcessNodeImpl(OutputContext* pContext) override;
     const char *GetDebugName() override { return "AssignmentNode"; }
-    ASTNode* DuplicateNodeImpl(DuplicateType type) override;
+    ASTNode* DuplicateNodeImpl(FunctionExpandType type) override;
 };

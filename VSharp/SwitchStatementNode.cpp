@@ -17,7 +17,7 @@ SwitchStatementNode::SwitchStatementNode(ParserContext *pContext, YYLTYPE locati
 {
 }
 
-ASTNode* SwitchStatementNode::DuplicateNodeImpl(DuplicateType type)
+ASTNode* SwitchStatementNode::DuplicateNodeImpl(FunctionExpandType type)
 {
     return new SwitchStatementNode(GetContext(), GetLocation());
 }

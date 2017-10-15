@@ -23,6 +23,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 {
 #include "UIntConstant.h"
 #include "EnumItem.h"
+#include "FunctionExpandType.h"
 
 class ASTNode;
 class ParserContext;
@@ -34,6 +35,7 @@ class ParserContext;
     int symIndex;
     ASTNode* pNode;
     EnumItem _EnumItem;
+    FunctionExpandType _FunctionExpandType;
 }
 
 %locations
@@ -104,6 +106,8 @@ class ParserContext;
 %token IMPORT_TOKEN
 %token WIRE_TOKEN
 %token CONST_TOKEN
+%token BLOCKING_TOKEN
+%token NONBLOCKING_TOKEN
 %token <symIndex> IDENTIFIER
 %type <pNode> variable_identifier
 %type <pNode> primary_expression
@@ -169,6 +173,7 @@ class ParserContext;
 %type <pNode> case_statement
 %type <pNode> case_list
 %type <_EnumItem> enum_item
+%type <_FunctionExpandType> duplicate_type
 
 %%
 
@@ -369,8 +374,14 @@ module_header_with_parameters:
 	;
 
 module_header:
-      MODULE_TOKEN IDENTIFIER LEFT_PAREN                            { $$ = new ModuleDefinitionNode(pContext, @$, $2, -1); }
-    | MODULE_TOKEN IDENTIFIER LT IDENTIFIER GT LEFT_PAREN           { $$ = new ModuleDefinitionNode(pContext, @$, $2, $4); } 
+      MODULE_TOKEN IDENTIFIER LEFT_PAREN                            { $$ = new ModuleDefinitionNode(pContext, @$, $2, -1, FunctionExpandType::None); }
+    | MODULE_TOKEN IDENTIFIER LT IDENTIFIER GT LEFT_PAREN           { $$ = new ModuleDefinitionNode(pContext, @$, $2, $4, FunctionExpandType::None); }
+    | MODULE_TOKEN LEFT_PAREN duplicate_type RIGHT_PAREN IDENTIFIER LEFT_PAREN { $$ = new ModuleDefinitionNode(pContext, @$, $5, -1, $3); }
+    ;
+
+duplicate_type:
+      BLOCKING_TOKEN                                                { $$ = FunctionExpandType::StageBlocking; }
+    | NONBLOCKING_TOKEN                                             { $$ = FunctionExpandType::StageNonblocking; }
     ;
 
 module_param_decl:

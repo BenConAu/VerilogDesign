@@ -39,6 +39,7 @@ PSLcc: lex.yy.c \
 	   FunctionCallParamNode.cpp \
    	   FunctionDeclaratorNode.h \
    	   FunctionDeclaratorNode.cpp \
+	   FunctionExpandType.h \
 	   FunctionInfo.h \
 	   FunctionInfo.cpp \
 	   FunctionParameterNode.h \

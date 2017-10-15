@@ -10,7 +10,7 @@ public:
   SwitchStatementNode(ParserContext *pContext, YYLTYPE location);
   void VerifyNodeImpl() override;
   void ProcessNodeImpl(OutputContext* pOutputContext) override;
-  ASTNode* DuplicateNodeImpl(DuplicateType type) override;
+  ASTNode* DuplicateNodeImpl(FunctionExpandType type) override;
 
   void SetTest(ASTNode *pTest)
   {

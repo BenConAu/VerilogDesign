@@ -14,7 +14,7 @@ CaseStatementNode::CaseStatementNode(ParserContext *pContext, YYLTYPE location) 
 {
 }
 
-ASTNode* CaseStatementNode::DuplicateNodeImpl(DuplicateType type)
+ASTNode* CaseStatementNode::DuplicateNodeImpl(FunctionExpandType type)
 {
     return new CaseStatementNode(GetContext(), GetLocation());
 }

@@ -27,7 +27,7 @@ BitSelectionNode::BitSelectionNode(
     _i2 = i2;
 }
 
-ASTNode* BitSelectionNode::DuplicateNodeImpl(DuplicateType type)
+ASTNode* BitSelectionNode::DuplicateNodeImpl(FunctionExpandType type)
 {
     return new BitSelectionNode(GetContext(), GetLocation(), _i1, _i2);
 }
