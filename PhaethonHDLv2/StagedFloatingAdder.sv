@@ -1,19 +1,30 @@
 module FloatingAdd(
+  clk,
   OutValue,
-  debug,
-  a,
-  b,
+  inputA,
+  inputB,
   negate
   );
   // inputs / outputs
   input wire reset;
+  input wire[0:0] clk;
   output reg[31:0] OutValue;
-  output reg[31:0] debug;
-  input wire[31:0] a;
-  input wire[31:0] b;
+  input wire[31:0] inputA;
+  input wire[31:0] inputB;
   input wire[0:0] negate;
+  reg[31:0] a;
+  reg[31:0] b;
+  reg[39:0] UnpackedA;
+  reg[39:0] UnpackedB;
+  reg[31:0] TotalMantissa;
+  reg[31:0] SignedMantissa;
+  reg[0:0] Sign;
+  reg[31:0] LeadingZeroCount;
+  reg[31:0] PackedResult;
   always @(posedge clk)
   begin
+    a = { inputA[31:31], inputA[30:23], inputA[22:0] };
+    b = { inputB[31:31], inputB[30:23], inputB[22:0] };
     if (a[30:23] < b[30:23])
     begin
       if ((a[31:31] ^ 1'b0))
@@ -62,12 +73,12 @@ module FloatingAdd(
     end
     if (TotalMantissa[31:31])
     begin
-      OutValue[31:31] = 1'b1;
+      Sign = 1'b1;
       SignedMantissa = (TotalMantissa) + 32'd1;
     end
     else
     begin
-      OutValue[31:31] = 1'b0;
+      Sign = 1'b0;
       SignedMantissa = TotalMantissa;
     end
     if (SignedMantissa[31:16] == 32'd0)
@@ -512,14 +523,16 @@ module FloatingAdd(
         end
       end
     end
+    PackedResult[31:31] = Sign;
     if (LeadingZeroCount > 32'd8)
     begin
-      OutValue[22:0] = SignedMantissa << (LeadingZeroCount - 32'd8)[22:0];
+      PackedResult[22:0] = SignedMantissa << (LeadingZeroCount - 32'd8);
     end
     else
     begin
-      OutValue[22:0] = SignedMantissa >> (32'd8 - LeadingZeroCount)[22:0];
+      PackedResult[22:0] = SignedMantissa >> (32'd8 - LeadingZeroCount);
     end
-    OutValue[30:23] = UnpackedB[7:0] + (32'd8 - LeadingZeroCount);
+    PackedResult[30:23] = UnpackedB[7:0] + (32'd8 - LeadingZeroCount);
+    OutValue = { PackedResult[31:31], PackedResult[30:23], PackedResult[22:0] };
   end
 endmodule

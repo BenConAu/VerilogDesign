@@ -23,9 +23,11 @@ public:
     const char* GetDebugName() override { return "FunctionParameterNode"; }
     ASTNode* DuplicateNodeImpl(FunctionExpandType type) override;
     
-    int GetSymbolIndex() const { return _symIndex; }
-    bool IsOutParam() const { return _fOut; }
-    TypeNode* GetTypeNode() { return dynamic_cast<TypeNode*>(GetChild(0)); }
+    int GetSymbolIndex() const;
+    const char* GetSymbol();
+    bool IsOutParam() const;
+    TypeNode* GetTypeNode();
+    TypeInfo* GetTypeInfo();
 
 private:
     int _symIndex;

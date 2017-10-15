@@ -40,3 +40,27 @@ void FunctionParameterNode::VerifyNodeImpl()
         );
 }
 
+int FunctionParameterNode::GetSymbolIndex() const 
+{ 
+    return _symIndex; 
+}
+
+const char* FunctionParameterNode::GetSymbol() 
+{ 
+    return GetContext()->GetSymbolString(_symIndex).c_str(); 
+}
+
+bool FunctionParameterNode::IsOutParam() const 
+{ 
+    return _fOut; 
+}
+
+TypeNode* FunctionParameterNode::GetTypeNode() 
+{ 
+    return dynamic_cast<TypeNode*>(GetChild(0)); 
+}
+
+TypeInfo* FunctionParameterNode::GetTypeInfo() 
+{ 
+    return GetTypeNode()->GetTypeInfo(); 
+}

@@ -285,6 +285,26 @@ void ModuleDefinitionNode::ProcessNodeImpl(OutputContext* pContext)
                 // Expand each of the stages out one by one, and assign to the
                 // intermediate registers when the assignments are done.
 
+                // We need to declare registers for the intermediate values
+                for (size_t i = 0; i < _stageList.size(); i++)
+                {
+                    FunctionDeclaratorNode* pStage = _stageList[i];
+
+                    for (size_t j = 0; j < pStage->GetParameterCount(); j++)
+                    {
+                        FunctionParameterNode* pParam = pStage->GetParameter(j);
+
+                        // We only spit out the out parameters - they should all be declared only once
+                        if (pParam->IsOutParam())
+                        {
+                            pContext->OutputLine(
+                                "reg[%d:0] %s;",
+                                pParam->GetTypeInfo()->GetBitLength() - 1, 
+                                pParam->GetSymbol());               
+                        }
+                    }
+                }
+
                 // Start the always block
                 pContext->OutputLine("always @(posedge clk)");
                 pContext->OutputLine("begin");

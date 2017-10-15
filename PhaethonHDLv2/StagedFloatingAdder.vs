@@ -8,13 +8,23 @@ import "Verilog/FloatingHelper.vs";
 // Stage 4 - Adjust mantissa and exponent to correct leading bits -> OutValue
 
 module(blocking) FloatingAdd(
-    out PackedFloat OutValue,
-    out uint32 debug,
-    PackedFloat a,
-    PackedFloat b,
+    clock clk,
+    out uint32 OutValue,
+    uint32 inputA,
+    uint32 inputB,
     bool negate)
 {
+    stage ConvertInputs(
+        out PackedFloat a,
+        out PackedFloat b)
+    {
+        a = FromUInt(inputA);
+        b = FromUInt(inputB);
+    }
+
     stage Unpack(
+        PackedFloat a,
+        PackedFloat b,
         out UnpackedFloat UnpackedA,
         out UnpackedFloat UnpackedB)
     {
@@ -44,18 +54,19 @@ module(blocking) FloatingAdd(
 
     stage CalculateSign(
         uint32 TotalMantissa,
-        out uint32 SignedMantissa
+        out uint32 SignedMantissa,
+        out bool Sign
         )
     {
         // Figure out sign of total
         if (TotalMantissa[31:31])
         {
-            OutValue.Sign = true;
+            Sign = true;
             SignedMantissa = (~TotalMantissa) + 1;
         }
         else
         {
-            OutValue.Sign = false;
+            Sign = false;
             SignedMantissa = TotalMantissa;
         }
     }
@@ -70,14 +81,25 @@ module(blocking) FloatingAdd(
   
     stage Complete(
         UnpackedFloat UnpackedB,
+        bool Sign,
         uint32 SignedMantissa,
-        uint32 LeadingZeroCount
+        uint32 LeadingZeroCount,
+        out PackedFloat PackedResult
         )
     {
+        PackedResult.Sign = Sign;
+
         // Leading zeros should be 8, so shift to that
-        OutValue.Mantissa = NormalizeMantissa(SignedMantissa, LeadingZeroCount)[22:0];
+        PackedResult.Mantissa = NormalizeMantissa(SignedMantissa, LeadingZeroCount);
   
         // Repack the exponent
-        OutValue.Exponent = UnpackedB.Exponent + (8 - LeadingZeroCount);
+        PackedResult.Exponent = UnpackedB.Exponent + (8 - LeadingZeroCount);
+    }
+
+    stage FinishConvert(
+        PackedFloat PackedResult
+        )
+    {
+        OutValue = { PackedResult.Sign, PackedResult.Exponent, PackedResult.Mantissa };
     }
 }

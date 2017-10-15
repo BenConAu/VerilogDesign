@@ -17,6 +17,14 @@ struct UnpackedFloat
     uint8 Exponent;
 }
 
+PackedFloat FromUInt(uint32 inVal)
+{
+    return PackedFloat(
+        inVal[31:31], 
+        inVal[30:23], 
+        inVal[22:0]);
+}
+
 UnpackedFloat UnpackFloat(
   PackedFloat num,
   bool neg)
@@ -95,7 +103,7 @@ uint32 CLZ<N>(uint<N> in)
     }
 }
 
-uint32 NormalizeMantissa(uint32 Mantissa, uint32 LeadingZeroCount)
+uint<23> NormalizeMantissa(uint32 Mantissa, uint32 LeadingZeroCount)
 {
     // Leading zeros should be 8, so shift to that
     if (LeadingZeroCount >. 8)
