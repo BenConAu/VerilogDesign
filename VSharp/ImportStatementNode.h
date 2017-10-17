@@ -2,6 +2,7 @@
 
 #include "ExpressionNode.h"
 #include "ParserContext.h"
+#include <boost/filesystem.hpp>
 
 class ImportStatementNode : public ASTNode
 {
@@ -12,6 +13,6 @@ public:
     const char* GetDebugName() override { return "ImportStatementNode"; }
 
 private:
-    std::string _literal;
+    boost::filesystem::path _ImportPath;
     std::unique_ptr<ParserContext> _ImportedContext;
 };

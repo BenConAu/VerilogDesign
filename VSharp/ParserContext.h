@@ -66,7 +66,8 @@ public:
     // Called from nodes
     const std::string GetLastString() { return _currentString; }
     const std::string& GetSymbolString(int symIndex);
-
+    const std::string& GetCurrentFile() { return _currentFile; }
+    
     // Debugging
     void DumpTree();
             

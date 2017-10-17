@@ -1,4 +1,4 @@
-import "StagedFloatingAdder.vs";
+import "../StagedFloatingAdder.vs";
 
 module AdderTest(
 	out wire uint32 total

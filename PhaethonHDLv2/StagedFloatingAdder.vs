@@ -1,4 +1,4 @@
-import "Verilog/FloatingHelper.vs";
+import "FloatingHelper.vs";
 
 // Stages for adding numbers
 // Stage 1 - unpack into signed mantissas -> signedMantA, signedMantB
