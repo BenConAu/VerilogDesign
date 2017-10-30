@@ -30,17 +30,16 @@ module ControlUnit(
   );
   // State definitions
   `define __initial 0
-  `define __always 1
-  `define __InitialMode 2
-  `define __InstrReadComplete 3
-  `define __RegValueSet 4
-  `define __DataWordComplete 5
-  `define __RWRequest 6
-  `define __IORWWait 7
-  `define __MemRWComplete 8
-  `define __IORWComplete 9
-  `define __ProcessOpCode 10
-  `define __ErrorHalt 11
+  `define __InitialMode 1
+  `define __InstrReadComplete 2
+  `define __RegValueSet 3
+  `define __DataWordComplete 4
+  `define __RWRequest 5
+  `define __IORWWait 6
+  `define __MemRWComplete 7
+  `define __IORWComplete 8
+  `define __ProcessOpCode 9
+  `define __ErrorHalt 10
   // inputs / outputs
   input wire reset;
   input wire[0:0] clk;
@@ -95,11 +94,11 @@ module ControlUnit(
   wire[31:0] fDivResult;
   wire[31:0] floatDebug;
   wire[1:0] fCompareResult;
-  FloatingAdd fAdd0(regValue2[32'd0], regValue3[32'd0], 1'b0, fAddResult[32'd0], floatDebug, clk, fOpEnable[0:0]);
-  FloatingAdd fAdd1(regValue2[32'd1], regValue3[32'd1], 1'b0, fAddResult[32'd1], floatDebug, clk, fOpEnable[0:0]);
-  FloatingAdd fAdd2(regValue2[32'd2], regValue3[32'd2], 1'b0, fAddResult[32'd2], floatDebug, clk, fOpEnable[0:0]);
-  FloatingAdd fAdd3(regValue2[32'd3], regValue3[32'd3], 1'b0, fAddResult[32'd3], floatDebug, clk, fOpEnable[0:0]);
-  FloatingAdd fSub(regValue[32'd0], regValue2[32'd0], 1'b1, fSubResult, floatDebug, clk, fOpEnable[1:1]);
+  FloatingAdd fAdd0(clk, regValue2[32'd0], regValue3[32'd0], 1'b0, fAddResult[32'd0]);
+  FloatingAdd fAdd1(clk, regValue2[32'd1], regValue3[32'd1], 1'b0, fAddResult[32'd1]);
+  FloatingAdd fAdd2(clk, regValue2[32'd2], regValue3[32'd2], 1'b0, fAddResult[32'd2]);
+  FloatingAdd fAdd3(clk, regValue2[32'd3], regValue3[32'd3], 1'b0, fAddResult[32'd3]);
+  FloatingAdd fSub(clk, regValue[32'd0], regValue2[32'd0], 1'b1, fSubResult);
   wire[31:0] dbgBufDbg1;
   wire[31:0] dbgBufDbg2;
   reg[0:0] dbgBufferWriteReq;
@@ -135,17 +134,6 @@ module ControlUnit(
         regarray[32'd3] <= 32'd0;
         regarray[32'd4] <= 32'd0;
         initComplete <= 1'b1;
-      end
-      `__always: begin
-        r0 <= regarray[rPos];
-        r1 <= regarray[rPos + 32'd1];
-        r2 <= regarray[rPos + 32'd2];
-        r3 <= regarray[rPos + 32'd3];
-        r4 <= regarray[rPos + 32'd4];
-        r5 <= regarray[32'd0];
-        ptAddress <= regarray[32'd4];
-        debug2[11:0] <= ipointer[11:0];
-        debug2[31:12] <= { 14'd0, opCode };
       end
       `__InitialMode: begin
         readReq <= 1'b1;
@@ -765,5 +753,14 @@ module ControlUnit(
         debug <= errorHaltData;
       end
     endcase
+    r0 <= regarray[rPos];
+    r1 <= regarray[rPos + 32'd1];
+    r2 <= regarray[rPos + 32'd2];
+    r3 <= regarray[rPos + 32'd3];
+    r4 <= regarray[rPos + 32'd4];
+    r5 <= regarray[32'd0];
+    ptAddress <= regarray[32'd4];
+    debug2[11:0] <= ipointer[11:0];
+    debug2[31:12] <= { 14'd0, opCode };
   end
 endmodule

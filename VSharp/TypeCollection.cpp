@@ -91,9 +91,16 @@ void TypeCollection::AddStructType(int symIndex, StructTypeInfo* pInfo)
     _structTypes.insert(std::make_pair(symIndex, std::unique_ptr<StructTypeInfo>(pInfo)));
 }
 
-void TypeCollection::AddModuleType(int symIndex, ModuleTypeInfo* pInfo)
+void TypeCollection::SetModuleType(int symIndex, ModuleTypeInfo* pInfo)
 {
-    _moduleTypes.insert(std::make_pair(symIndex, std::unique_ptr<ModuleTypeInfo>(pInfo)));
+    if (_moduleTypes.find(symIndex) != _moduleTypes.end())
+    {
+        _moduleTypes[symIndex].reset(pInfo);
+    }
+    else
+    {
+        _moduleTypes.insert(std::make_pair(symIndex, std::unique_ptr<ModuleTypeInfo>(pInfo)));        
+    }
 }
 
 void TypeCollection::AddEnumType(int symIndex, EnumTypeInfo* pInfo)

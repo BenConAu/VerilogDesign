@@ -1,5 +1,6 @@
 import "../PhaethonISA/Generated/PhaethonOpCode.vs";
 import "MemoryController.vs";
+import "StagedFloatingAdder.vs";
 
 enum ErrorCode
 {
@@ -7,9 +8,6 @@ enum ErrorCode
   BadInstr2,
   BadMem,
 }
-
-// Forward declare stuff
-module FloatingAdd(uint32 a, uint32 b, bool negate, out uint32 outVal, out uint32 debug, clock clk, bool enable);
 
 module ControlUnit(
   clock clk,                  // [Input]  Clock driving the ALU
@@ -82,11 +80,11 @@ module ControlUnit(
   wire uint32 floatDebug;
   wire uint<2> fCompareResult;
 
-  FloatingAdd         fAdd0 = FloatingAdd(regValue2[0], regValue3[0], false, out fAddResult[0], out floatDebug, clk, fOpEnable[0:0]);
-  FloatingAdd         fAdd1 = FloatingAdd(regValue2[1], regValue3[1], false, out fAddResult[1], out floatDebug, clk, fOpEnable[0:0]);
-  FloatingAdd         fAdd2 = FloatingAdd(regValue2[2], regValue3[2], false, out fAddResult[2], out floatDebug, clk, fOpEnable[0:0]);
-  FloatingAdd         fAdd3 = FloatingAdd(regValue2[3], regValue3[3], false, out fAddResult[3], out floatDebug, clk, fOpEnable[0:0]);
-  FloatingAdd         fSub =  FloatingAdd(regValue[0], regValue2[0], true, out fSubResult, out floatDebug, clk, fOpEnable[1:1]);
+  FloatingAdd         fAdd0 = FloatingAdd(clk, regValue2[0], regValue3[0], false, out fAddResult[0]);
+  FloatingAdd         fAdd1 = FloatingAdd(clk, regValue2[1], regValue3[1], false, out fAddResult[1]);
+  FloatingAdd         fAdd2 = FloatingAdd(clk, regValue2[2], regValue3[2], false, out fAddResult[2]);
+  FloatingAdd         fAdd3 = FloatingAdd(clk, regValue2[3], regValue3[3], false, out fAddResult[3]);
+  FloatingAdd         fSub =  FloatingAdd(clk, regValue[0], regValue2[0], true, out fSubResult);
   //FloatingFromInt     fConv(regValue[0], fConvResult, floatDebug, clk, fOpEnable[2:2]);
   //FloatingMultiply    fMul(regValue2[0], regValue3[0], fMulResult, floatDebug, clk, fOpEnable[3:3]);
   //FloatingMultiplyAdd fMulAdd(regValue[0], regValue2[0], regValue3[0], fMulAddResult, floatDebug, clk, fOpEnable[4:4]);

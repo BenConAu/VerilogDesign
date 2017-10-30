@@ -45,6 +45,7 @@ public:
     ModuleParameterNode* GetParameter(size_t index) { return _paramList[index]; }
 
     ModuleType GetModuleType();
+    bool IsForward() const { return _IsForward; }
 
     size_t GetStageIndex(FunctionDeclaratorNode* pStage);
     FunctionDeclaratorNode* GetStage(size_t index);

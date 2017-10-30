@@ -28,7 +28,7 @@ public:
     ClockTypeInfo* GetClockType();
 
     void AddStructType(int symIndex, StructTypeInfo* pInfo);
-    void AddModuleType(int symIndex, ModuleTypeInfo* pInfo);
+    void SetModuleType(int symIndex, ModuleTypeInfo* pInfo);
     void AddEnumType(int symIndex, EnumTypeInfo* pInfo);
     void AddGenericType(int symIndex, ModuleDefinitionNode* pScope);
     

@@ -9,10 +9,10 @@ import "FloatingHelper.vs";
 
 module(blocking) FloatingAdd(
     clock clk,
-    out uint32 OutValue,
     uint32 inputA,
     uint32 inputB,
-    bool negate)
+    bool negate,
+    out uint32 OutValue)
 {
     stage ConvertInputs(
         out PackedFloat a,

@@ -51,6 +51,7 @@ public:
     ModuleDefinitionNode* GetModuleDefinition() { return _pModuleDef; }
     size_t GetParameterCount();
     ModuleParameterNode* GetParameter(size_t index);
+    bool IsForward() const;
 
 private:
     int _symIndex;

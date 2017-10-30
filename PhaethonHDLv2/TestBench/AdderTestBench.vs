@@ -9,7 +9,7 @@ module AdderTest(
 	uint32 a;
 	uint32 b;
 
-	FloatingAdd adder = FloatingAdd(clk, out total, a, b, false);
+	FloatingAdd adder = FloatingAdd(clk, a, b, false, out total);
 
 	drive
 	{

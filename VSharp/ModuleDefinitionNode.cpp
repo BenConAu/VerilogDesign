@@ -27,6 +27,14 @@ ModuleDefinitionNode::ModuleDefinitionNode(
 
 ModuleType ModuleDefinitionNode::GetModuleType()
 {
+    //printf(
+    //    "Determining module type for module %s with state list size %d and stage list size %d\n", 
+    //    GetContext()->GetSymbolString(_symIndex).c_str(), 
+    //    (int)_stateList.size(),
+    //    (int)_stageList.size());
+
+    //printf("First state is %p\n", _stateList[0]);
+    
     if (_stateList.size() == 1 && _stateList[0] == nullptr)
     {
         if (_stageList.size() != 0)
@@ -134,14 +142,31 @@ void ModuleDefinitionNode::VerifyNodeImpl()
         }
     }
 
-    // You can have stages or states but not both
-    if (GetModuleType() == ModuleType::Error)
+    if (!_IsForward)
     {
-        GetContext()->ReportError(GetLocation(), "Cannot have both stages and states");
+        // You can have stages or states but not both
+        if (GetModuleType() == ModuleType::Error)
+        {
+            GetContext()->ReportError(GetLocation(), "Cannot have both stages and states");
+        }
     }
-            
+
+    // If there is a forward declare then overwrite it
+    ModuleTypeInfo* pExisting = GetContext()->GetTypeCollection()->GetModuleType(_symIndex);
+    if (pExisting != nullptr)
+    {
+        if (pExisting->IsForward())
+        {
+            // TODO: Make sure forward declare matches
+        }
+        else
+        {
+            GetContext()->ReportError(GetLocation(), "Cannot multiply define modules");
+        }
+    }
+
     ModuleTypeInfo* pNewType = new ModuleTypeInfo(_symIndex, this);
-    GetContext()->GetTypeCollection()->AddModuleType(_symIndex, pNewType);
+    GetContext()->GetTypeCollection()->SetModuleType(_symIndex, pNewType);
 }
 
 bool ModuleDefinitionNode::PreProcessNodeImpl(OutputContext* pContext)

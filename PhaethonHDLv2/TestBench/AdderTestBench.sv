@@ -9,7 +9,7 @@ module AdderTest(
   reg clk = 0; always #5 clk = !clk;
   reg[31:0] a;
   reg[31:0] b;
-  FloatingAdd adder(clk, total, a, b, 1'b0);
+  FloatingAdd adder(clk, a, b, 1'b0, total);
   initial
   begin
     # 0 a = 32'd1065353216;
