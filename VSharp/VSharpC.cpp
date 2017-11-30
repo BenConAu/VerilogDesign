@@ -27,9 +27,6 @@ int main(int argc, char **argv)
         // Construct output file from input file
         boost::filesystem::path OutFilePath(argv[1]);
         
-        // Remove any directory from filename, output is in pwd
-        OutFilePath = OutFilePath.filename();
-
         // Need a new extension
         OutFilePath.replace_extension("sv");
 

@@ -10,7 +10,7 @@ default: AdderTestBench.sv StagedFloatingAdder.sv AdderTestBench.vvpo AdderTestB
 AdderTestBench.vvpo: \
 	AdderTestBench.sv \
 	StagedFloatingAdder.sv
-	iverilog -o AdderTestBench.vvpo AdderTestBench.sv StagedFloatingAdder.sv
+	iverilog -o AdderTestBench.vvpo AdderTestBench.sv ../StagedFloatingAdder.sv
 
 AdderTestBench.result: \
 	AdderTestBench.vvpo

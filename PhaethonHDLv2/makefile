@@ -1,4 +1,4 @@
-all: MemoryController.sv CPU.sv ControlUnit.sv CPU.vvpo
+all: TestBench/PhysicalRAM.sv MemoryController.sv CPU.sv CPU_tb.sv ControlUnit.sv StagedFloatingAdder.sv CPU_tb.vvpo
 
 %.sv : %.vs ../VSharp/VSharpC
 	../VSharp/VSharpC $<
