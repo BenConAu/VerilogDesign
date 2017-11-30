@@ -480,6 +480,7 @@ drive_statement_list:
 drive_definition:
       INTCONSTANT COLON assignment_statement                        { $$ = new DriveDefinitionNode(pContext, @$, $1, $3); }
     | INTCONSTANT COLON FINISH_TOKEN SEMICOLON                      { $$ = new DriveDefinitionNode(pContext, @$, $1, nullptr); }
+    | function_call SEMICOLON                                       { $$ = new ExpressionStatementNode(pContext, @$, $1); }
     ;
 
 module_state:

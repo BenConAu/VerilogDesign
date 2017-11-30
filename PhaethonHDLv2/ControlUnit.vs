@@ -177,6 +177,8 @@ module ControlUnit(
   //         out enable bits for auxillary modules.
   state InitialMode
   {
+    __display("Doing ControlUnit initial mode");
+
     // Begin RAM read for instruction data
     readReq = true;
     ramAddress = ipointer;
@@ -194,6 +196,8 @@ module ControlUnit(
   //         of the instruction and the affected registers.
   state InstrReadComplete
   {
+    __display("Doing ControlUnit InstrReadComplete mode");
+
     // Stop request
     readReq = false;
 
@@ -229,6 +233,8 @@ module ControlUnit(
   //         registers referenced by the instruction.
   state RegValueSet
   {
+    __display("Doing ControlUnit RegValueSet mode");
+
     // Read values from registers
     regValue[0] = regarray[regAddress[7:0]];
     if (opCode == OpCode.VfaddRRR)

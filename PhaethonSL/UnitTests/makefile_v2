@@ -1,0 +1,7 @@
+all: *.pao *.result
+
+%.pao : %.psl ../PSLcc
+	../PSLcc $<
+
+%.result: %.pao
+	vvp ../../PhaethonHDLv2/CPU_tb.vvpo +ROMFILE=$< > $@

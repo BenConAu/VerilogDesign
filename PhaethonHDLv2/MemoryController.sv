@@ -43,7 +43,7 @@ module MemoryController(
   reg[64:0] savedRequest;
   reg[31:0] savedPTReadAddr;
   reg[31:0] savedFirstWord;
-  reg[63:0] tlbEntries[63:0];
+  reg[63:0] tlbEntries[0:63];
   reg [7:0] fsmState = 0;
   always @(posedge clk)
   begin

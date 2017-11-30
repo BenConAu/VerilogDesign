@@ -41,6 +41,11 @@ ModuleType ModuleDefinitionNode::GetModuleType()
         {
             return ModuleType::DefinedStages;
         }
+        else
+        {
+            // No states and no stages, process like states
+            return ModuleType::ExplicitStates;
+        }
     }
     else
     {

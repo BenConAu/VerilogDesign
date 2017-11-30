@@ -61,6 +61,6 @@ std::string ArrayTypeInfo::GetDeclaration(VariableInfo* pInfo, ExpressionNode* p
     }
 
     char buffer[1024];
-    sprintf(buffer, "%s[%d:0]", GetBaseType()->GetDeclaration(pInfo, pInitExpr).c_str(), _arraySize - 1);
+    sprintf(buffer, "%s[0:%d]", GetBaseType()->GetDeclaration(pInfo, pInitExpr).c_str(), _arraySize - 1);
     return buffer;
 }

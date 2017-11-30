@@ -72,11 +72,11 @@ module ControlUnit(
   output reg[8:0] debug3;
   reg[31:0] counter = 32'd0;
   reg[0:0] initComplete = 1'b0;
-  reg[31:0] regarray[68:0];
+  reg[31:0] regarray[0:68];
   reg[31:0] ramValue;
-  reg[31:0] regValue[68:0];
-  reg[31:0] regValue2[68:0];
-  reg[31:0] regValue3[68:0];
+  reg[31:0] regValue[0:68];
+  reg[31:0] regValue2[0:68];
+  reg[31:0] regValue3[0:68];
   reg[31:0] opDataWord;
   reg[7:0] regAddress;
   reg[7:0] regAddress2;
@@ -86,7 +86,7 @@ module ControlUnit(
   reg[31:0] sentinel;
   reg[1:0] errorHaltCode;
   reg[31:0] errorHaltData;
-  wire[31:0] fAddResult[68:0];
+  wire[31:0] fAddResult[0:68];
   wire[31:0] fSubResult;
   wire[31:0] fConvResult;
   wire[31:0] fMulResult;
@@ -136,6 +136,7 @@ module ControlUnit(
         initComplete <= 1'b1;
       end
       `__InitialMode: begin
+        $display("Doing ControlUnit initial mode");
         readReq <= 1'b1;
         ramAddress <= ipointer;
         opDataWord <= 32'd195948557;
@@ -144,6 +145,7 @@ module ControlUnit(
         fsmState <= `__InstrReadComplete;
       end
       `__InstrReadComplete: begin
+        $display("Doing ControlUnit InstrReadComplete mode");
         readReq <= 1'b0;
         if (mcStatus == 2)
         begin
@@ -165,6 +167,7 @@ module ControlUnit(
         end
       end
       `__RegValueSet: begin
+        $display("Doing ControlUnit RegValueSet mode");
         regValue[32'd0] <= regarray[regAddress[7:0]];
         if (opCode == 46)
         begin

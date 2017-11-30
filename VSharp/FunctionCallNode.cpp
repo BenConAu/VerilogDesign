@@ -396,6 +396,9 @@ void FunctionCallNode::VerifyNodeImpl()
         {
             // Builtin functions have no parameters to key off right now
             _FunctionCallType = FunctionCallType::BuiltIn;
+
+            // But we need return types to work for them
+            SetType(GetFunctionInfo()->GetReturnType());
         }
         else
         {
