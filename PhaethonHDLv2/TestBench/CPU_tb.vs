@@ -1,5 +1,5 @@
-import "TestBench/PhysicalRAM.vs";
-import "CPU.vs";
+import "PhysicalRAM.vs";
+import "../CPU.vs";
 
 module CPUTestBench()
 {
