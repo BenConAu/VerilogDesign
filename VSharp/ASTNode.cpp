@@ -128,7 +128,7 @@ void ASTNode::InsertChild(size_t index, ASTNode* pChild)
     pChild->_pParent = this;
 }
 
-ASTNode* ASTNode::DuplicateNode(DuplicateType type)
+ASTNode* ASTNode::DuplicateNode(FunctionExpandType type)
 {
     //printf("Duplicating node %s %p\n", GetDebugName(), this);
 
@@ -148,7 +148,7 @@ ASTNode* ASTNode::DuplicateNode(DuplicateType type)
     return pCopy;
 }
 
-ASTNode* ASTNode::DuplicateNodeImpl(DuplicateType type)
+ASTNode* ASTNode::DuplicateNodeImpl(FunctionExpandType type)
 {
     throw "Internal compiler error - unimplemented node duplicator";
 }

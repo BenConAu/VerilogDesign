@@ -38,6 +38,14 @@ void SymbolTable::AddBuiltin()
         "$readmemh");
     _symbols.emplace(std::make_pair(pNewInfo->GetSymbolIndex(), std::unique_ptr<SymbolInfo>(pNewInfo)));
 
+    pNewInfo = new FunctionInfo(
+        _pCompiler, 
+        _pCompiler->AddSymbol("__valueargs"),
+        _pCompiler->GetTypeCollection()->GetRegisterType(1),
+        -1,
+        "$value$plusargs");
+    _symbols.emplace(std::make_pair(pNewInfo->GetSymbolIndex(), std::unique_ptr<SymbolInfo>(pNewInfo)));
+
     VariableInfo *pVarInfo = new VariableInfo(
         _pCompiler,
         nullptr,

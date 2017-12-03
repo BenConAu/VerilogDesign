@@ -4,9 +4,9 @@
 #include "TypeNode.h"
 #include "VariableInfo.h"
 
-ASTNode* FunctionParameterNode::DuplicateNodeImpl(DuplicateType type)
+ASTNode* FunctionParameterNode::DuplicateNodeImpl(FunctionExpandType type)
 {
-    if (type == DuplicateType::ExpandFunction)
+    if (type == FunctionExpandType::Function)
     {
         throw "You should not be duplicating function parameters";
     }
@@ -40,3 +40,27 @@ void FunctionParameterNode::VerifyNodeImpl()
         );
 }
 
+int FunctionParameterNode::GetSymbolIndex() const 
+{ 
+    return _symIndex; 
+}
+
+const char* FunctionParameterNode::GetSymbol() 
+{ 
+    return GetContext()->GetSymbolString(_symIndex).c_str(); 
+}
+
+bool FunctionParameterNode::IsOutParam() const 
+{ 
+    return _fOut; 
+}
+
+TypeNode* FunctionParameterNode::GetTypeNode() 
+{ 
+    return dynamic_cast<TypeNode*>(GetChild(0)); 
+}
+
+TypeInfo* FunctionParameterNode::GetTypeInfo() 
+{ 
+    return GetTypeNode()->GetTypeInfo(); 
+}

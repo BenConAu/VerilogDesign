@@ -39,3 +39,8 @@ ModuleParameterNode* ModuleTypeInfo::GetParameter(size_t index)
 {
     return _pModuleDef->GetParameter(index);
 }
+
+bool ModuleTypeInfo::IsForward() const 
+{ 
+    return _pModuleDef->IsForward(); 
+}

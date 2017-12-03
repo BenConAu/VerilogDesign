@@ -21,7 +21,7 @@ IndexSelectionNode::IndexSelectionNode(
 {
 }
 
-ASTNode* IndexSelectionNode::DuplicateNodeImpl(DuplicateType type)
+ASTNode* IndexSelectionNode::DuplicateNodeImpl(FunctionExpandType type)
 {
     return new IndexSelectionNode(GetContext(), GetLocation());
 }

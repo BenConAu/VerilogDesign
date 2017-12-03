@@ -27,7 +27,7 @@ UnaryOperatorNode::UnaryOperatorNode(
     _opInfo = opInfo;
 }
   
-ASTNode* UnaryOperatorNode::DuplicateNodeImpl(DuplicateType type)
+ASTNode* UnaryOperatorNode::DuplicateNodeImpl(FunctionExpandType type)
 {
     return new UnaryOperatorNode(GetContext(), GetLocation(), _op, _opInfo);
 }

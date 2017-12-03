@@ -22,10 +22,7 @@ module CPU(
   wire uint32  mcRamRead;
   wire ControllerStatus mcStatus;
   wire ControllerCommand mcCommand;
-  wire uint32  mcRamAddress;
-  wire uint32  mcRamWrite;
-  wire bool    mcReadReq;
-  wire bool    mcWriteReq;
+  wire MemoryRequest mcRequest;
   wire bool    mcAddrVirtual;
   wire bool    mcExecMode;
   wire uint32  ptAddress;
@@ -45,10 +42,8 @@ module CPU(
     clk,
     mcRamRead,
     mcStatus,
-    out mcRamAddress,
-    out mcRamWrite,
-    out mcReadReq,
-    out mcWriteReq,
+    out mcCommand,
+    out mcRequest,
     out mcAddrVirtual,
     out mcExecMode,
     out ptAddress,
@@ -76,10 +71,7 @@ module CPU(
     clk,              // Global clock
     out mcRamRead,    // [Output] RAM at requested address
     out mcStatus,     // [Output] RAM is ready to be picked up
-    MemoryRequest(    // [Input] Memory request
-      mcRamAddress,   // [Input] RAM address requested
-      mcRamWrite,     // [Input] RAM to write
-      mcWriteReq),    // [Input] RAM read request
+    mcRequest,        // [Input] Memory request
     mcCommand,        // [Input] Controller command
     mcAddrVirtual,    // [Input] Virtual flag for RAM
     mcExecMode,       // [Input] Exec mode
@@ -95,6 +87,7 @@ module CPU(
 
   state initial
   {
+    //__display("CPU Initial state");
   }
 //initial
   //$monitor("At time %t, ip = %h, opCode = %h, mcReadReq = %h, mcRamAddress = %h, mcStatus = %h, ramValue = %h, kptAddress = %h, uptAddress = %h, r[0:1:2:3:4:5] = %h:%h:%h:%h:%h:%h, rPos = %h, debug = %h",

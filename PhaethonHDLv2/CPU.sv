@@ -37,10 +37,7 @@ module CPU(
   wire[31:0] mcRamRead;
   wire[1:0] mcStatus;
   wire[0:0] mcCommand;
-  wire[31:0] mcRamAddress;
-  wire[31:0] mcRamWrite;
-  wire[0:0] mcReadReq;
-  wire[0:0] mcWriteReq;
+  wire[64:0] mcRequest;
   wire[0:0] mcAddrVirtual;
   wire[0:0] mcExecMode;
   wire[31:0] ptAddress;
@@ -54,8 +51,8 @@ module CPU(
   wire[31:0] r5;
   wire[7:0] rPos;
   wire[31:0] mcDebug;
-  ControlUnit control(clk, mcRamRead, mcStatus, mcRamAddress, mcRamWrite, mcReadReq, mcWriteReq, mcAddrVirtual, mcExecMode, ptAddress, uartReadReq, uartReadAck, uartReadData, uartWriteReq, uartWriteData, uartWriteReady, iPointer, opCode, r0, r1, r2, r3, r4, r5, rPos, debug, debug2, debug3);
-  MemoryController mc1(clk, mcRamRead, mcStatus, { mcRamAddress, mcRamWrite, mcWriteReq }, mcCommand, mcAddrVirtual, mcExecMode, phRamRead, phRamAddress, phRamWrite, phReadReq, phWriteReq, ptAddress, mcDebug);
+  ControlUnit control(clk, mcRamRead, mcStatus, mcCommand, mcRequest, mcAddrVirtual, mcExecMode, ptAddress, uartReadReq, uartReadAck, uartReadData, uartWriteReq, uartWriteData, uartWriteReady, iPointer, opCode, r0, r1, r2, r3, r4, r5, rPos, debug, debug2, debug3);
+  MemoryController mc1(clk, mcRamRead, mcStatus, mcRequest, mcCommand, mcAddrVirtual, mcExecMode, phRamRead, phRamAddress, phRamWrite, phReadReq, phWriteReq, ptAddress, mcDebug);
   reg [7:0] fsmState = 0;
   always @(posedge clk)
   begin

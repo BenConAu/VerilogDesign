@@ -8,6 +8,7 @@
 #include "lex.h"
 #include <cstdio>
 #include <iostream>
+#include <boost/filesystem.hpp>
 
 bool ends_with(std::string const &value, std::string const &ending)
 {
@@ -23,13 +24,16 @@ int main(int argc, char **argv)
 {
     try
     {
-        std::string base = argv[1];
-        base = base.substr(0, base.length() - 3);
+        // Construct output file from input file
+        boost::filesystem::path OutFilePath(argv[1]);
+        
+        // Need a new extension
+        OutFilePath.replace_extension("sv");
 
         //yydebug = 1;
         VSharpCompiler compiler;
         ParserContext context(argv[1], &compiler);
-        OutputContext outputContext((base + ".sv").c_str(), context.GetDebugContext());
+        OutputContext outputContext(OutFilePath.c_str(), context.GetDebugContext());
         context.Parse();
         context.Process(&outputContext);
         outputContext.Finish();

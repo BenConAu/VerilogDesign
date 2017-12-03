@@ -23,7 +23,7 @@ AssignmentNode::AssignmentNode(
 {
 }
 
-ASTNode* AssignmentNode::DuplicateNodeImpl(DuplicateType type)
+ASTNode* AssignmentNode::DuplicateNodeImpl(FunctionExpandType type)
 {
     return new AssignmentNode(GetContext(), GetLocation());
 }
@@ -54,9 +54,9 @@ void AssignmentNode::VerifyNodeImpl()
     }
 }
 
-ASTNode* AssignmentNode::DuplicateNode(DuplicateType type)
+ASTNode* AssignmentNode::DuplicateNode(FunctionExpandType type)
 {
-    if (type == DuplicateType::ExpandStageInput)
+    if (type == FunctionExpandType::StageNonblocking)
     {
         // For stages, an assignment to an out parameter is equivalent to a return
         // statement and therefore handled in a similar way. So we see if the LHS
@@ -87,7 +87,7 @@ ASTNode* AssignmentNode::DuplicateNode(DuplicateType type)
                     pStatementNode->SetIdentifierReplacement(pFuncDecl->GetStageInput(), GetChild(1));
                 
                     // Duplicate the statement that launched this
-                    ASTNode* pReplacement = pStatementNode->DuplicateNode(DuplicateType::ExpandStageInput);
+                    ASTNode* pReplacement = pStatementNode->DuplicateNode(FunctionExpandType::StageNonblocking);
                 
                     // Undo the mapping so that debugging is not a nightmare
                     pStatementNode->SetIdentifierReplacement(nullptr, nullptr);
@@ -112,7 +112,7 @@ ASTNode* AssignmentNode::DuplicateNode(DuplicateType type)
 
 void AssignmentNode::PostProcessNodeImpl(OutputContext* pContext)
 {
-    ModuleDefinitionNode *pFunc = GetTypedParent<ModuleDefinitionNode>();
+    ModuleDefinitionNode *pModule = GetTypedParent<ModuleDefinitionNode>();
     DriveDefinitionNode *pDrive = GetTypedParent<DriveDefinitionNode>();
 
     ExpressionNode *pLeft = dynamic_cast<ExpressionNode *>(GetChild(0));
@@ -134,8 +134,13 @@ void AssignmentNode::PostProcessNodeImpl(OutputContext* pContext)
 
     if (pDrive == nullptr)
     {
-        // Regular NBA somewhere
-        pContext->OutputLine("%s <= %s;", leftResult->GetString().c_str(), rightResult->GetString().c_str());
+        const char* pszAssigner = (pModule->GetFunctionExpandType() == FunctionExpandType::StageBlocking) ? "=" : "<=";
+
+        pContext->OutputLine(
+            "%s %s %s;", 
+            leftResult->GetString().c_str(), 
+            pszAssigner, 
+            rightResult->GetString().c_str());
     }
     else
     {

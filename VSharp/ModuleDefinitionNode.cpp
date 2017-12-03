@@ -14,22 +14,37 @@ ModuleDefinitionNode::ModuleDefinitionNode(
     ParserContext* pContext, 
     const YYLTYPE &location,
     int symIndex,
-    int genericSym
+    int genericSym,
+    FunctionExpandType ExpandType
     ) : ASTNode(pContext, location)
 {
     _symIndex = symIndex;
     _genericIndex = genericSym;
     _IsForward = false;
     _pAlwaysState = nullptr;
+    _ExpandType = ExpandType;
 }
 
 ModuleType ModuleDefinitionNode::GetModuleType()
 {
+    //printf(
+    //    "Determining module type for module %s with state list size %d and stage list size %d\n", 
+    //    GetContext()->GetSymbolString(_symIndex).c_str(), 
+    //    (int)_stateList.size(),
+    //    (int)_stageList.size());
+
+    //printf("First state is %p\n", _stateList[0]);
+    
     if (_stateList.size() == 1 && _stateList[0] == nullptr)
     {
         if (_stageList.size() != 0)
         {
             return ModuleType::DefinedStages;
+        }
+        else
+        {
+            // No states and no stages, process like states
+            return ModuleType::ExplicitStates;
         }
     }
     else
@@ -132,14 +147,31 @@ void ModuleDefinitionNode::VerifyNodeImpl()
         }
     }
 
-    // You can have stages or states but not both
-    if (GetModuleType() == ModuleType::Error)
+    if (!_IsForward)
     {
-        GetContext()->ReportError(GetLocation(), "Cannot have both stages and states");
+        // You can have stages or states but not both
+        if (GetModuleType() == ModuleType::Error)
+        {
+            GetContext()->ReportError(GetLocation(), "Cannot have both stages and states");
+        }
     }
-            
+
+    // If there is a forward declare then overwrite it
+    ModuleTypeInfo* pExisting = GetContext()->GetTypeCollection()->GetModuleType(_symIndex);
+    if (pExisting != nullptr)
+    {
+        if (pExisting->IsForward())
+        {
+            // TODO: Make sure forward declare matches
+        }
+        else
+        {
+            GetContext()->ReportError(GetLocation(), "Cannot multiply define modules");
+        }
+    }
+
     ModuleTypeInfo* pNewType = new ModuleTypeInfo(_symIndex, this);
-    GetContext()->GetTypeCollection()->AddModuleType(_symIndex, pNewType);
+    GetContext()->GetTypeCollection()->SetModuleType(_symIndex, pNewType);
 }
 
 bool ModuleDefinitionNode::PreProcessNodeImpl(OutputContext* pContext)
@@ -261,16 +293,62 @@ void ModuleDefinitionNode::ProcessNodeImpl(OutputContext* pContext)
         }
         else
         {
-            // Start the always block
-            pContext->OutputLine("always @(posedge clk)");
-            pContext->OutputLine("begin");
-            pContext->IncreaseIndent();
-    
-            _stageList[_stageList.size() - 1]->ProcessNode(pContext);
+            if (_ExpandType == FunctionExpandType::StageNonblocking)
+            {
+                // Expand all of the stages out like we do with functions - no
+                // intermediate registers or blocking assignments. This is probably
+                // not useful in many cases.
 
-            // End the always statement
-            pContext->DecreaseIndent();
-            pContext->OutputLine("end");            
+                // Start the always block
+                pContext->OutputLine("always @(posedge clk)");
+                pContext->OutputLine("begin");
+                pContext->IncreaseIndent();
+        
+                _stageList[_stageList.size() - 1]->ProcessNode(pContext);
+
+                // End the always statement
+                pContext->DecreaseIndent();
+                pContext->OutputLine("end");
+            }
+            else if (_ExpandType == FunctionExpandType::StageBlocking)
+            {
+                // Expand each of the stages out one by one, and assign to the
+                // intermediate registers when the assignments are done.
+
+                // We need to declare registers for the intermediate values
+                for (size_t i = 0; i < _stageList.size(); i++)
+                {
+                    FunctionDeclaratorNode* pStage = _stageList[i];
+
+                    for (size_t j = 0; j < pStage->GetParameterCount(); j++)
+                    {
+                        FunctionParameterNode* pParam = pStage->GetParameter(j);
+
+                        // We only spit out the out parameters - they should all be declared only once
+                        if (pParam->IsOutParam())
+                        {
+                            pContext->OutputLine(
+                                "reg[%d:0] %s;",
+                                pParam->GetTypeInfo()->GetBitLength() - 1, 
+                                pParam->GetSymbol());               
+                        }
+                    }
+                }
+
+                // Start the always block
+                pContext->OutputLine("always @(posedge clk)");
+                pContext->OutputLine("begin");
+                pContext->IncreaseIndent();
+        
+                for (size_t i = 0; i < _stageList.size(); i++)
+                {
+                    _stageList[i]->ProcessNode(pContext);
+                }
+
+                // End the always statement
+                pContext->DecreaseIndent();
+                pContext->OutputLine("end");
+            }
         }
     }
 }

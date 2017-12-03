@@ -12,7 +12,7 @@ ConstantNode::ConstantNode(
     _value = v;
 }
 
-ASTNode* ConstantNode::DuplicateNodeImpl(DuplicateType type)
+ASTNode* ConstantNode::DuplicateNodeImpl(FunctionExpandType type)
 {
     return new ConstantNode(GetContext(), GetLocation(), _value);
 }

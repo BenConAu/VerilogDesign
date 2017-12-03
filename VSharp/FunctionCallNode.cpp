@@ -210,9 +210,9 @@ void FunctionCallNode::DumpNodeImpl()
     );    
 }
 
-ASTNode* FunctionCallNode::DuplicateNode(DuplicateType type)
+ASTNode* FunctionCallNode::DuplicateNode(FunctionExpandType type)
 {
-    if (type == DuplicateType::ExpandFunction)
+    if (type == FunctionExpandType::Function)
     {
         // Find the statement that initiated the duplication - it might
         // not be the first one up the tree.
@@ -243,16 +243,11 @@ ASTNode* FunctionCallNode::DuplicateNode(DuplicateType type)
     }
     else
     {
-        if (type != DuplicateType::ExpandGeneric)
-        {
-            throw "Wat";
-        }
-
         return ASTNode::DuplicateNode(type);
     }
 }
 
-ASTNode* FunctionCallNode::DuplicateNodeImpl(DuplicateType type)
+ASTNode* FunctionCallNode::DuplicateNodeImpl(FunctionExpandType type)
 {
     return new FunctionCallNode(GetContext(), GetLocation(), _symIndex, _FunctionCallType, _pFunctionInfo, _GenericParam);
 }
@@ -401,6 +396,9 @@ void FunctionCallNode::VerifyNodeImpl()
         {
             // Builtin functions have no parameters to key off right now
             _FunctionCallType = FunctionCallType::BuiltIn;
+
+            // But we need return types to work for them
+            SetType(GetFunctionInfo()->GetReturnType());
         }
         else
         {

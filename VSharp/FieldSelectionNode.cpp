@@ -33,7 +33,7 @@ FieldSelectionNode::FieldSelectionNode(
     _pStructTypeInfo = pStructTypeInfo;
 }
 
-ASTNode* FieldSelectionNode::DuplicateNodeImpl(DuplicateType type)
+ASTNode* FieldSelectionNode::DuplicateNodeImpl(FunctionExpandType type)
 {
     return new FieldSelectionNode(GetContext(), GetLocation(), _fieldSymIndex, _pStaticTypeInfo, _pStructTypeInfo);
 }

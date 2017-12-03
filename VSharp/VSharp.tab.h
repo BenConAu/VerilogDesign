@@ -44,11 +44,12 @@ extern int yydebug;
 
 #include "UIntConstant.h"
 #include "EnumItem.h"
+#include "FunctionExpandType.h"
 
 class ASTNode;
 class ParserContext;
 
-#line 52 "VSharp.tab.h" /* yacc.c:1915  */
+#line 53 "VSharp.tab.h" /* yacc.c:1915  */
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
@@ -120,7 +121,9 @@ class ParserContext;
     IMPORT_TOKEN = 320,
     WIRE_TOKEN = 321,
     CONST_TOKEN = 322,
-    IDENTIFIER = 323
+    BLOCKING_TOKEN = 323,
+    NONBLOCKING_TOKEN = 324,
+    IDENTIFIER = 325
   };
 #endif
 
@@ -129,14 +132,15 @@ class ParserContext;
 
 union YYSTYPE
 {
-#line 32 "VSharp.y" /* yacc.c:1915  */
+#line 33 "VSharp.y" /* yacc.c:1915  */
 
     UIntConstant constVal;
     int symIndex;
     ASTNode* pNode;
     EnumItem _EnumItem;
+    FunctionExpandType _FunctionExpandType;
 
-#line 140 "VSharp.tab.h" /* yacc.c:1915  */
+#line 144 "VSharp.tab.h" /* yacc.c:1915  */
 };
 
 typedef union YYSTYPE YYSTYPE;

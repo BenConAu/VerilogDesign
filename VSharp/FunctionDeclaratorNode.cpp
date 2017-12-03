@@ -23,6 +23,7 @@ FunctionDeclaratorNode::FunctionDeclaratorNode(
 
     _FunctionType = FunctionType::Standard;
     _symIndex = symIndex;
+    _CurrentFunctionExpandType = FunctionExpandType::None;
     _pCallNode = nullptr;
     _pStatementNode = nullptr;
     _pStageInput = nullptr;
@@ -36,12 +37,13 @@ FunctionDeclaratorNode::FunctionDeclaratorNode(
 {
     _FunctionType = FunctionType::Standard;
     _symIndex = symIndex;
+    _CurrentFunctionExpandType = FunctionExpandType::None;
     _pCallNode = nullptr;
     _pStatementNode = nullptr;
     _pStageInput = nullptr;
 }
 
-ASTNode* FunctionDeclaratorNode::DuplicateNodeImpl(DuplicateType type)
+ASTNode* FunctionDeclaratorNode::DuplicateNodeImpl(FunctionExpandType type)
 {
     return new FunctionDeclaratorNode(GetContext(), GetLocation(), _symIndex);
 }
@@ -177,7 +179,7 @@ ASTNode* FunctionDeclaratorNode::DuplicateParameterIdentifier(int symIndex)
     FunctionCallParamNode* pParamNode = _pCallNode->GetParameter(pIndex);
 
     // Duplicate that instead of the parameter
-    return pParamNode->DuplicateNode(DuplicateType::ExpandFunction);
+    return pParamNode->DuplicateNode(FunctionExpandType::Function);
 }
 
 ASTNode* FunctionDeclaratorNode::DuplicateGenericParameterIdentifier(int symIndex)
@@ -208,15 +210,17 @@ ASTNode* FunctionDeclaratorNode::ExpandFunction(IdentifierNode* pStageInput, Sta
 
     _pStageInput = pStageInput;
     _pStatementNode = pStatement;
+    _CurrentFunctionExpandType = FunctionExpandType::StageNonblocking;
 
     // Get the statement list for the function
     ListNode* pListNode = dynamic_cast<ListNode*>(GetChild(GetChildCount() - 1));
 
     // Duplicate the list with appropriate replacements
-    ASTNode* pExpanded = pListNode->DuplicateNode(DuplicateType::ExpandStageInput);
+    ASTNode* pExpanded = pListNode->DuplicateNode(FunctionExpandType::StageNonblocking);
 
     _pStageInput = nullptr;
     _pStatementNode = nullptr;
+    _CurrentFunctionExpandType = FunctionExpandType::None;
 
     return pExpanded;
 }
@@ -231,15 +235,17 @@ ASTNode* FunctionDeclaratorNode::ExpandFunction(FunctionCallNode* pCall, Stateme
 
     _pCallNode = pCall;
     _pStatementNode = pStatement;
-
+    _CurrentFunctionExpandType = FunctionExpandType::Function;
+    
     // Get the statement list for the function
     ListNode* pListNode = dynamic_cast<ListNode*>(GetChild(GetChildCount() - 1));
 
     // Duplicate the list with appropriate replacements
-    ASTNode* pExpanded = pListNode->DuplicateNode(DuplicateType::ExpandFunction);
+    ASTNode* pExpanded = pListNode->DuplicateNode(FunctionExpandType::Function);
 
     _pCallNode = nullptr;
     _pStatementNode = nullptr;
+    _CurrentFunctionExpandType = FunctionExpandType::None;
 
     return pExpanded;
 }
@@ -254,12 +260,14 @@ ASTNode* FunctionDeclaratorNode::ExpandFunction(FunctionCallNode* pCall, UIntCon
 
     _pCallNode = pCall;
     _genericValue = Value;
-
+    _CurrentFunctionExpandType = FunctionExpandType::Generic;
+    
     // Duplicate the list with appropriate replacements
-    ASTNode* pExpanded = DuplicateNode(DuplicateType::ExpandGeneric);
+    ASTNode* pExpanded = DuplicateNode(FunctionExpandType::Generic);
 
     _pCallNode = nullptr;
-
+    _CurrentFunctionExpandType = FunctionExpandType::None;
+    
     return pExpanded;
 }
 

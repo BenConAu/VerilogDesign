@@ -3,9 +3,9 @@
 #include "StatementNode.h"
 #include "VSharp.tab.h"
 
-ASTNode* ReturnNode::DuplicateNodeImpl(DuplicateType type)
+ASTNode* ReturnNode::DuplicateNodeImpl(FunctionExpandType type)
 {
-    if (type == DuplicateType::ExpandFunction)
+    if (type == FunctionExpandType::Function)
     {
         throw "You should not be duplicating return statements";
     }
@@ -13,9 +13,9 @@ ASTNode* ReturnNode::DuplicateNodeImpl(DuplicateType type)
     return new ReturnNode(GetContext(), GetLocation());
 }
 
-ASTNode* ReturnNode::DuplicateNode(DuplicateType type)
+ASTNode* ReturnNode::DuplicateNode(FunctionExpandType type)
 {
-    if (type == DuplicateType::ExpandFunction)
+    if (type == FunctionExpandType::Function)
     {
         // Find out what function declared this return statement
         FunctionDeclaratorNode *pFuncDecl = GetTypedParent<FunctionDeclaratorNode>();
@@ -32,7 +32,7 @@ ASTNode* ReturnNode::DuplicateNode(DuplicateType type)
         
         // Now duplicate this original statement. It will replace function calls
         // with the child of the return statement.
-        ASTNode* pReplacement = pStatementNode->DuplicateNode(DuplicateType::ExpandFunction);
+        ASTNode* pReplacement = pStatementNode->DuplicateNode(FunctionExpandType::Function);
     
         // Undo the mapping so that debugging is not a nightmare for the next thing
         // that needs to do this to the statement.
@@ -42,7 +42,7 @@ ASTNode* ReturnNode::DuplicateNode(DuplicateType type)
     }
     else
     {
-        if (type != DuplicateType::ExpandGeneric)
+        if (type != FunctionExpandType::Generic)
         {
             throw "Wat";
         }

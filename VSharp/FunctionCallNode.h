@@ -41,8 +41,8 @@ public:
   void VerifyNodeImpl() override;
   ExpressionResult *CalculateResult() override;
   const char *GetDebugName() override { return "FunctionCallNode"; }
-  ASTNode* DuplicateNode(DuplicateType type) override;
-  ASTNode* DuplicateNodeImpl(DuplicateType type) override;
+  ASTNode* DuplicateNode(FunctionExpandType type) override;
+  ASTNode* DuplicateNodeImpl(FunctionExpandType type) override;
   void DumpNodeImpl() override;
   VariableInfo* IsVariableExpression() override { return nullptr; }
   

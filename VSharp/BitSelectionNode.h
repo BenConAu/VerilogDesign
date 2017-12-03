@@ -20,7 +20,7 @@ class BitSelectionNode : public ExpressionNode
       int i2);
   
     void VerifyNodeImpl() override;
-    ASTNode* DuplicateNodeImpl(DuplicateType type) override;    
+    ASTNode* DuplicateNodeImpl(FunctionExpandType type) override;    
     ExpressionResult *CalculateResult() override;
     const char *GetDebugName() override { return "BitSelectionNode"; }
     VariableInfo* IsVariableExpression() override;

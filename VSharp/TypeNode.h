@@ -35,7 +35,7 @@ public:
     TypeInfo* GetTypeInfo();
     void VerifyNodeImpl() override;
     const char* GetDebugName() override { return "TypeNode"; }
-    ASTNode* DuplicateNodeImpl(DuplicateType type) override;
+    ASTNode* DuplicateNodeImpl(FunctionExpandType type) override;
 
     TypeModifier GetModifier() const { return _TypeModifier; }
     void SetModifier(TypeModifier modifier);

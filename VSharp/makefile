@@ -39,6 +39,7 @@ PSLcc: lex.yy.c \
 	   FunctionCallParamNode.cpp \
    	   FunctionDeclaratorNode.h \
    	   FunctionDeclaratorNode.cpp \
+	   FunctionExpandType.h \
 	   FunctionInfo.h \
 	   FunctionInfo.cpp \
 	   FunctionParameterNode.h \
@@ -111,7 +112,7 @@ PSLcc: lex.yy.c \
 	   VSharpC.cpp \
 	   VSharpCompiler.cpp \
 	   VSharpCompiler.h
-	clang++ -std=c++14 -Wno-deprecated-register -g lex.yy.c \
+	clang++ -std=c++1z -Wno-deprecated-register -g -lboost_system -lboost_filesystem-mt lex.yy.c \
 	   VSharp.tab.c \
 	   ArrayTypeInfo.cpp \
 	   ASTNode.cpp \

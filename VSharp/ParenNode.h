@@ -16,7 +16,7 @@ public:
         const YYLTYPE &location);
 
     void VerifyNodeImpl() override;
-    ASTNode* DuplicateNodeImpl(DuplicateType type) override;    
+    ASTNode* DuplicateNodeImpl(FunctionExpandType type) override;    
     ExpressionResult *CalculateResult() override;
     const char *GetDebugName() override { return "ParenNode"; }
     VariableInfo* IsVariableExpression() override;

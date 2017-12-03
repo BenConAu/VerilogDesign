@@ -10,7 +10,7 @@ public:
   CaseStatementNode(ParserContext *pContext, YYLTYPE location);
   void VerifyNodeImpl() override;
   void ProcessNodeImpl(OutputContext* pOutputContext) override;
-  ASTNode* DuplicateNodeImpl(DuplicateType type) override;
+  ASTNode* DuplicateNodeImpl(FunctionExpandType type) override;
 
   const char *GetDebugName() override { return "CaseStatementNode"; }
 };

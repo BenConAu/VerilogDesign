@@ -181,12 +181,20 @@ module MemoryController(
 
   state Ready
   {
+    //__display("Memory controller ready, command is %h", mcCommand);
+    
     // Only initiate requests when ready and request line is high
     if (mcCommand == ControllerCommand.Request)
     {
+      //__display("Controller ready, request made");
+
       if (!mcAddrVirtual)
       {
-        //__display("Physical access, mcWriteEnable is %h, addr is %h, ramIn is %h", mcWriteEnable, mcRamAddress, mcRamIn);
+        //__display(
+        //  "Physical access, RequestIn.WriteEnable is %h, addr is %h, ramIn is %h", 
+        //  RequestIn.WriteEnable, 
+        //  RequestIn.Address, 
+        //  RequestIn.WriteData);
 
         // This is a request for a physical address, so pass the request directly
         RequestPhysicalAddress(RequestIn);
@@ -264,7 +272,7 @@ module MemoryController(
     }
     else
     {
-      //$display("Finish PRWait2 with isRead not set");
+      //__display("Finish PRWait2 with isRead not set");
     }
 
     mcStatus = ControllerStatus.Ready;
@@ -273,7 +281,7 @@ module MemoryController(
 
   state VPTWait1
   {
-    //$display("Waiting for read of page table");
+    //__display("Waiting for read of page table");
 
     // Wait for read to complete
     phRequest = false;

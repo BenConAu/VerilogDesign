@@ -28,7 +28,7 @@ class OperatorNode : public ExpressionNode
         _opInfo = opInfo;
     }
     
-    ASTNode* DuplicateNodeImpl(DuplicateType type) override;
+    ASTNode* DuplicateNodeImpl(FunctionExpandType type) override;
 
     void VerifyNodeImpl() override;
     virtual ExpressionResult *CalculateResult() override;

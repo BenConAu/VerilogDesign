@@ -1,4 +1,4 @@
-module StagingExample(
+module(nonblocking) StagingExample(
     uint32 moduleInput,         // Some value going to the module
     out uint32 moduleOutput     // Some value going out of the module
     )

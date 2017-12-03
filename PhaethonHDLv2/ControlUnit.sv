@@ -2,10 +2,8 @@ module ControlUnit(
   clk,
   ramIn,
   mcStatus,
-  ramAddress,
-  ramOut,
-  readReq,
-  writeReq,
+  mcCommand,
+  request,
   addrVirtual,
   execMode,
   ptAddress,
@@ -30,26 +28,23 @@ module ControlUnit(
   );
   // State definitions
   `define __initial 0
-  `define __always 1
-  `define __InitialMode 2
-  `define __InstrReadComplete 3
-  `define __RegValueSet 4
-  `define __DataWordComplete 5
-  `define __RWRequest 6
-  `define __IORWWait 7
-  `define __MemRWComplete 8
-  `define __IORWComplete 9
-  `define __ProcessOpCode 10
-  `define __ErrorHalt 11
+  `define __InitialMode 1
+  `define __InstrReadComplete 2
+  `define __RegValueSet 3
+  `define __DataWordComplete 4
+  `define __RWRequest 5
+  `define __IORWWait 6
+  `define __MemRWComplete 7
+  `define __IORWComplete 8
+  `define __ProcessOpCode 9
+  `define __ErrorHalt 10
   // inputs / outputs
   input wire reset;
   input wire[0:0] clk;
   input wire[31:0] ramIn;
   input wire[1:0] mcStatus;
-  output reg[31:0] ramAddress;
-  output reg[31:0] ramOut;
-  output reg[0:0] readReq;
-  output reg[0:0] writeReq;
+  output reg[0:0] mcCommand;
+  output reg[64:0] request;
   output reg[0:0] addrVirtual;
   output reg[0:0] execMode;
   output reg[31:0] ptAddress;
@@ -73,11 +68,11 @@ module ControlUnit(
   output reg[8:0] debug3;
   reg[31:0] counter = 32'd0;
   reg[0:0] initComplete = 1'b0;
-  reg[31:0] regarray[68:0];
+  reg[31:0] regarray[0:68];
   reg[31:0] ramValue;
-  reg[31:0] regValue[68:0];
-  reg[31:0] regValue2[68:0];
-  reg[31:0] regValue3[68:0];
+  reg[31:0] regValue[0:68];
+  reg[31:0] regValue2[0:68];
+  reg[31:0] regValue3[0:68];
   reg[31:0] opDataWord;
   reg[7:0] regAddress;
   reg[7:0] regAddress2;
@@ -87,7 +82,7 @@ module ControlUnit(
   reg[31:0] sentinel;
   reg[1:0] errorHaltCode;
   reg[31:0] errorHaltData;
-  wire[31:0] fAddResult[68:0];
+  wire[31:0] fAddResult[0:68];
   wire[31:0] fSubResult;
   wire[31:0] fConvResult;
   wire[31:0] fMulResult;
@@ -95,11 +90,11 @@ module ControlUnit(
   wire[31:0] fDivResult;
   wire[31:0] floatDebug;
   wire[1:0] fCompareResult;
-  FloatingAdd fAdd0(regValue2[32'd0], regValue3[32'd0], 1'b0, fAddResult[32'd0], floatDebug, clk, fOpEnable[0:0]);
-  FloatingAdd fAdd1(regValue2[32'd1], regValue3[32'd1], 1'b0, fAddResult[32'd1], floatDebug, clk, fOpEnable[0:0]);
-  FloatingAdd fAdd2(regValue2[32'd2], regValue3[32'd2], 1'b0, fAddResult[32'd2], floatDebug, clk, fOpEnable[0:0]);
-  FloatingAdd fAdd3(regValue2[32'd3], regValue3[32'd3], 1'b0, fAddResult[32'd3], floatDebug, clk, fOpEnable[0:0]);
-  FloatingAdd fSub(regValue[32'd0], regValue2[32'd0], 1'b1, fSubResult, floatDebug, clk, fOpEnable[1:1]);
+  FloatingAdd fAdd0(clk, regValue2[32'd0], regValue3[32'd0], 1'b0, fAddResult[32'd0]);
+  FloatingAdd fAdd1(clk, regValue2[32'd1], regValue3[32'd1], 1'b0, fAddResult[32'd1]);
+  FloatingAdd fAdd2(clk, regValue2[32'd2], regValue3[32'd2], 1'b0, fAddResult[32'd2]);
+  FloatingAdd fAdd3(clk, regValue2[32'd3], regValue3[32'd3], 1'b0, fAddResult[32'd3]);
+  FloatingAdd fSub(clk, regValue[32'd0], regValue2[32'd0], 1'b1, fSubResult);
   wire[31:0] dbgBufDbg1;
   wire[31:0] dbgBufDbg2;
   reg[0:0] dbgBufferWriteReq;
@@ -116,9 +111,8 @@ module ControlUnit(
         debug <= 32'd0;
         debug2 <= 32'd0;
         debug3 <= 9'd1;
-        writeReq <= 1'b0;
+        mcCommand <= 0;
         uartReadReq <= 1'b0;
-        readReq <= 1'b0;
         opDataWord <= 32'd4294967295;
         opCode <= 0;
         fOpEnable <= 7'd0;
@@ -135,28 +129,19 @@ module ControlUnit(
         regarray[32'd3] <= 32'd0;
         regarray[32'd4] <= 32'd0;
         initComplete <= 1'b1;
-      end
-      `__always: begin
-        r0 <= regarray[rPos];
-        r1 <= regarray[rPos + 32'd1];
-        r2 <= regarray[rPos + 32'd2];
-        r3 <= regarray[rPos + 32'd3];
-        r4 <= regarray[rPos + 32'd4];
-        r5 <= regarray[32'd0];
-        ptAddress <= regarray[32'd4];
-        debug2[11:0] <= ipointer[11:0];
-        debug2[31:12] <= { 14'd0, opCode };
+        fsmState <= `__InitialMode;
       end
       `__InitialMode: begin
-        readReq <= 1'b1;
-        ramAddress <= ipointer;
+        mcCommand <= 1;
+        request[64:33] <= ipointer;
+        request[0:0] <= 1'b0;
         opDataWord <= 32'd195948557;
         fOpEnable <= 7'd0;
         condJump <= 1'b0;
         fsmState <= `__InstrReadComplete;
       end
       `__InstrReadComplete: begin
-        readReq <= 1'b0;
+        mcCommand <= 0;
         if (mcStatus == 2)
         begin
           opCode <= { ramIn[5:0] };
@@ -171,7 +156,7 @@ module ControlUnit(
           begin
             $display("Memory controller error when reading instruction, halting");
             errorHaltCode <= 0;
-            errorHaltData <= ramAddress;
+            errorHaltData <= request[64:33];
             fsmState <= `__ErrorHalt;
           end
         end
@@ -248,8 +233,9 @@ module ControlUnit(
         end
         if (opCode == 2 || opCode == 4 || opCode == 5 || opCode == 6 || opCode == 7 || opCode == 8 || opCode == 9 || opCode == 14 || opCode == 19 || opCode == 20 || opCode == 21 || opCode == 22 || opCode == 23 || opCode == 26 || opCode == 28 || opCode == 30 || opCode == 32 || opCode == 55)
         begin
-          readReq <= 1'b1;
-          ramAddress <= ipointer + 32'd4;
+          mcCommand <= 1;
+          request[64:33] <= ipointer + 32'd4;
+          request[0:0] <= 1'b0;
           fsmState <= `__DataWordComplete;
         end
         else
@@ -307,7 +293,7 @@ module ControlUnit(
         end
       end
       `__DataWordComplete: begin
-        readReq <= 1'b0;
+        mcCommand <= 0;
         if (mcStatus == 2)
         begin
           opDataWord <= ramIn;
@@ -366,8 +352,9 @@ module ControlUnit(
         begin
           if (mcStatus == 0)
           begin
+            $display("DataWordComplete, MMU returned error");
             errorHaltCode <= 1;
-            errorHaltData <= ramAddress;
+            errorHaltData <= request[64:33];
             fsmState <= `__ErrorHalt;
           end
         end
@@ -375,59 +362,72 @@ module ControlUnit(
       `__RWRequest: begin
         if (opCode == 3 || opCode == 4 || opCode == 5 || opCode == 6 || opCode == 7 || opCode == 8 || opCode == 9 || opCode == 11 || opCode == 12 || opCode == 24 || opCode == 25 || opCode == 56)
         begin
+          $display("RWRequest for RAM opcode");
           case (opCode)
             6: begin
-              readReq <= 1'b1;
-              ramAddress <= opDataWord;
+              mcCommand <= 1;
+              request[64:33] <= opDataWord;
+              request[0:0] <= 1'b0;
             end
             4: begin
-              readReq <= 1'b1;
-              ramAddress <= opDataWord + regValue2[32'd0];
+              mcCommand <= 1;
+              request[64:33] <= opDataWord + regValue2[32'd0];
+              request[0:0] <= 1'b0;
             end
             5: begin
-              readReq <= 1'b1;
-              ramAddress <= regValue2[32'd0] + opDataWord * regValue3[32'd0];
+              mcCommand <= 1;
+              request[64:33] <= regValue2[32'd0] + opDataWord * regValue3[32'd0];
+              request[0:0] <= 1'b0;
             end
             3: begin
-              readReq <= 1'b1;
-              ramAddress <= regValue2[32'd0];
+              mcCommand <= 1;
+              request[64:33] <= regValue2[32'd0];
+              request[0:0] <= 1'b0;
             end
             12: begin
-              readReq <= 1'b1;
-              ramAddress <= regarray[32'd0] - 32'd4;
+              mcCommand <= 1;
+              request[64:33] <= regarray[32'd0] - 32'd4;
+              request[0:0] <= 1'b0;
             end
             25: begin
-              readReq <= 1'b1;
-              ramAddress <= regarray[32'd0] - 32'd4;
+              mcCommand <= 1;
+              request[64:33] <= regarray[32'd0] - 32'd4;
+              request[0:0] <= 1'b0;
             end
             7: begin
-              writeReq <= 1'b1;
-              ramAddress <= opDataWord;
-              ramOut <= regValue2[32'd0];
+              mcCommand <= 1;
+              request[64:33] <= opDataWord;
+              request[0:0] <= 1'b1;
+              request[32:1] <= regValue2[32'd0];
             end
             8: begin
-              writeReq <= 1'b1;
-              ramAddress <= opDataWord + regValue[32'd0];
-              ramOut <= regValue2[32'd0];
+              mcCommand <= 1;
+              request[64:33] <= opDataWord + regValue[32'd0];
+              request[0:0] <= 1'b1;
+              request[32:1] <= regValue2[32'd0];
             end
             9: begin
-              writeReq <= 1'b1;
-              ramAddress <= regValue[32'd0] + opDataWord * regValue2[32'd0];
-              ramOut <= regValue3[32'd0];
+              mcCommand <= 1;
+              request[64:33] <= regValue[32'd0] + opDataWord * regValue2[32'd0];
+              request[0:0] <= 1'b1;
+              request[32:1] <= regValue3[32'd0];
             end
             11: begin
-              writeReq <= 1'b1;
-              ramAddress <= regarray[32'd0];
-              ramOut <= regValue[32'd0];
+              mcCommand <= 1;
+              request[64:33] <= regarray[32'd0];
+              request[0:0] <= 1'b1;
+              request[32:1] <= regValue[32'd0];
             end
             24: begin
-              writeReq <= 1'b1;
-              ramAddress <= regarray[32'd0];
-              ramOut <= ipointer;
+              mcCommand <= 1;
+              request[64:33] <= regarray[32'd0];
+              request[0:0] <= 1'b1;
+              request[32:1] <= ipointer;
             end
             56: begin
-              readReq <= 1'b1;
-              ramAddress <= regValue[32'd0];
+              mcCommand <= 1;
+              request[64:33] <= regValue[32'd0];
+              request[0:0] <= 1'b0;
             end
           endcase
           fsmState <= `__MemRWComplete;
@@ -436,7 +436,7 @@ module ControlUnit(
         begin
           if (opCode == 47 || opCode == 48 || opCode == 50 || opCode == 51)
           begin
-            readReq <= 1'b0;
+            mcCommand <= 0;
             case (opCode)
               50: begin
                 case (regValue2[32'd0])
@@ -475,8 +475,7 @@ module ControlUnit(
         fsmState <= `__IORWComplete;
       end
       `__MemRWComplete: begin
-        readReq <= 1'b0;
-        writeReq <= 1'b0;
+        mcCommand <= 0;
         if (mcStatus == 2)
         begin
           if (opCode == 6 || opCode == 4 || opCode == 5 || opCode == 3 || opCode == 12 || opCode == 25)
@@ -494,7 +493,7 @@ module ControlUnit(
               $display("Memory controller says access to protected page from kernel mode, execMode = %h", execMode);
               fsmState <= `__ErrorHalt;
               errorHaltCode <= 2;
-              errorHaltData <= ramAddress;
+              errorHaltData <= request[64:33];
             end
             else
             begin
@@ -765,5 +764,14 @@ module ControlUnit(
         debug <= errorHaltData;
       end
     endcase
+    r0 <= regarray[rPos];
+    r1 <= regarray[rPos + 32'd1];
+    r2 <= regarray[rPos + 32'd2];
+    r3 <= regarray[rPos + 32'd3];
+    r4 <= regarray[rPos + 32'd4];
+    r5 <= regarray[32'd0];
+    ptAddress <= regarray[32'd4];
+    debug2[11:0] <= ipointer[11:0];
+    debug2[31:12] <= { 14'd0, opCode };
   end
 endmodule
