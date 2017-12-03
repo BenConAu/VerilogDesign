@@ -4,4 +4,4 @@ all: *.pao *.result
 	../PSLcc $<
 
 %.result: %.pao
-	vvp ../../PhaethonHDLv2/CPU_tb.vvpo +ROMFILE=$< > $@
+	vvp ../../PhaethonHDLv2/testBench/CPU_tb.vvpo +ROMFILE=$< > $@
