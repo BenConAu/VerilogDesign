@@ -362,7 +362,6 @@ module ControlUnit(
       `__RWRequest: begin
         if (opCode == 3 || opCode == 4 || opCode == 5 || opCode == 6 || opCode == 7 || opCode == 8 || opCode == 9 || opCode == 11 || opCode == 12 || opCode == 24 || opCode == 25 || opCode == 56)
         begin
-          $display("RWRequest for RAM opcode");
           case (opCode)
             6: begin
               mcCommand <= 1;
@@ -576,6 +575,12 @@ module ControlUnit(
           3: begin
             regarray[regAddress[7:0]] <= ramValue;
           end
+          7: begin
+          end
+          8: begin
+          end
+          9: begin
+          end
           55: begin
             regarray[regAddress[7:0]] <= regValue2[32'd0] + opDataWord * regValue3[32'd0];
           end
@@ -636,6 +641,14 @@ module ControlUnit(
           19: begin
             ipointer <= opDataWord;
             debug3 <= 9'd7;
+          end
+          20: begin
+          end
+          21: begin
+          end
+          22: begin
+          end
+          23: begin
           end
           38: begin
             regarray[regAddress[7:0]] <= fAddResult[32'd0];

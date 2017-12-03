@@ -363,7 +363,7 @@ module ControlUnit(
   {
     if (IsRAMOpcode(opCode))
     {
-      __display("RWRequest for RAM opcode");
+      //__display("RWRequest for RAM opcode");
 
       switch (opCode)
       {
@@ -460,7 +460,7 @@ module ControlUnit(
           request.WriteEnable = true;
           request.WriteData = regValue3[0];
         
-          //$display("Reqesting write %h to address value %h", regValue2[0], regValue[0] + opDataWord * regValue2[0]);
+          //__display("Reqesting MovdRoRR write %h to address value %h", regValue3[0], regValue[0] + opDataWord * regValue2[0]);
         }
 
         case OpCode.PushR: 
@@ -680,9 +680,9 @@ module ControlUnit(
       case OpCode.MovRdRo:  { regarray[regAddress[7:0]] = ramValue; }              // mov reg, [reg + const]
       case OpCode.MovRdRoR: { regarray[regAddress[7:0]] = ramValue; }              // mov reg, [reg + const * reg]
       case OpCode.MovRdR:   { regarray[regAddress[7:0]] = ramValue; }              // mov reg, [reg]
-      //case MovdCR:   { } // Done above
-      //case MovdRoR:  { } // Done above
-      //case MovdRoRR: { } // Done above
+      case OpCode.MovdCR:   { } // Done above
+      case OpCode.MovdRoR:  { } // Done above
+      case OpCode.MovdRoRR: { } // Done above
 
       case OpCode.LeaRRoR: 
       {
@@ -798,10 +798,10 @@ module ControlUnit(
         debug3 = 7u9;
       }
 
-      //OpCode.JneC: { } // Done above
-      //OpCode.JeC: { }   // Done above
-      //OpCode.JzRC: { } // Done above
-      //OpCode.JnzRC: { }   // Done above
+      case OpCode.JneC:       { } // Done above
+      case OpCode.JeC:        { } // Done above
+      case OpCode.JzRC:       { } // Done above
+      case OpCode.JnzRC:      { } // Done above
 
       case OpCode.FaddRRR:    { regarray[regAddress[7:0]] = fAddResult[0]; }        // fadd reg, reg, reg
       case OpCode.FsubRR:     { regarray[regAddress[7:0]] = fSubResult;     }        // fsub reg, reg

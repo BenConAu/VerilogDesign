@@ -5,8 +5,8 @@ module CPU(
   uint32 phRamRead,         // [Input]  RAM at requested address
   out wire uint32 phRamAddress,  // [Output] RAM address requested
   out wire uint32 phRamWrite,     // [Output] RAM to write
-  out wire bool phReadReq,       // [Output] RAM read request
-  out wire bool phWriteReq,      // [Output] RAM write request  
+  out wire bool phWriteEnable,
+  out wire bool phRequest,
   out wire bool uartReadReq,     // [Output] uart read requested
   bool uartReadAck,         // [Input]  Flag to indicate read success
   uint8 uartReadData,       // [Input]  Actual data read 
@@ -78,8 +78,8 @@ module CPU(
     phRamRead,        // [Input]  RAM at requested address
     out phRamAddress, // [Output] RAM address requested
     out phRamWrite,   // [Output] RAM to write
-    out phReadReq,    // [Output] RAM read request
-    out phWriteReq,   // [Output] RAM write request
+    out phRequest,    // [Output] RAM request line
+    out phWriteEnable,// [Output] RAM read request
     ptAddress,        // [Input] Page table address
     out mcDebug       // [Output] Debug port
   );

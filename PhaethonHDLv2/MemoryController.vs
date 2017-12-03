@@ -272,7 +272,7 @@ module MemoryController(
     }
     else
     {
-      //__display("Finish PRWait2 with isRead not set");
+      //__display("Finish PRWait2 with WriteEnable set");
     }
 
     mcStatus = ControllerStatus.Ready;

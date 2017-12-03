@@ -40,8 +40,11 @@ void CaseStatementNode::ProcessNodeImpl(OutputContext* pContext)
 
     pContext->IncreaseIndent();
 
-    ListNode *pList = dynamic_cast<ListNode *>(GetChild(1));
-    pList->ProcessNode(pContext);
+    if (GetChild(1) != nullptr)
+    {
+        ListNode *pList = dynamic_cast<ListNode *>(GetChild(1));
+        pList->ProcessNode(pContext);
+    }
 
     pContext->DecreaseIndent();
     pContext->OutputLine("end");

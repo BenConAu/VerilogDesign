@@ -53,7 +53,7 @@ module PhysicalRAM(
 
     if (WriteEnable)
     {
-      //$display("Writing %h into %h", phRamWrite, phRamAddress);
+      //__display("Writing %h into %h", WriteValue, address);
       fileRam[address] = WriteValue[7:0];
       fileRam[address + 1] = WriteValue[15:8];
       fileRam[address + 2] = WriteValue[23:16];

@@ -237,6 +237,7 @@ case_list:
 case_statement:
       CASE_TOKEN expression COLON LEFT_BRACE statement_list RIGHT_BRACE   
                                                                     { $$ = new CaseStatementNode(pContext, @$, $2, $5); }
+    | CASE_TOKEN expression COLON LEFT_BRACE RIGHT_BRACE            { $$ = new CaseStatementNode(pContext, @$, $2, nullptr); }
     | DEFAULT_TOKEN COLON LEFT_BRACE statement_list RIGHT_BRACE     { $$ = new CaseStatementNode(pContext, @$, nullptr, $4); }
     ;
 

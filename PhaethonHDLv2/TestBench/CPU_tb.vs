@@ -12,6 +12,7 @@ module CPUTestBench()
 
   wire uint32 phRamAddress;
   wire bool  phWriteEnable;
+  wire bool phRequest;
   wire uint32 phRamWrite;
   
   // The value that we want to write to physical RAM
@@ -25,8 +26,6 @@ module CPUTestBench()
     out phRamRead);
 
   wire bool  uartReadReq;
-  wire bool  phReadReq;
-  wire bool  phWriteReq;
   wire uint32 debug;
   wire uint32 debug2;
   wire uint<9> debug3;
@@ -43,8 +42,8 @@ module CPUTestBench()
     phRamRead,          // [Input]  RAM at requested address
     out phRamAddress,   // [Output] RAM address requested
     out phRamWrite,     // [Output] RAM to write
-    out phReadReq,      // [Output] RAM read request
-    out phWriteReq,     // [Output] RAM write request  
+    out phWriteEnable,  // [Output] RAM read request
+    out phRequest,      // [Output] RAM write request  
     out uartReadReq,    // [Output] uart read requested
     uartReadAck,        // [Input]  Flag to indicate read success
     uartReadData,       // [Input]  Actual data read 
