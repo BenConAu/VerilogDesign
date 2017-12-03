@@ -13,10 +13,8 @@ module ControlUnit(
   clock clk,                  // [Input]  Clock driving the ALU
   uint32 ramIn,               // [Input]  RAM at requested address
   ControllerStatus mcStatus,  // [Input]  RAM ready signal
-  out uint32 ramAddress,      // [Output] RAM address requested
-  out uint32 ramOut,          // [Output] RAM to write
-  out bool readReq,           // [Output] RAM read request
-  out bool writeReq,          // [Output] RAM write request
+  out ControllerCommand mcCommand, // [Output] RAM controller command
+  out MemoryRequest request,  // [Output] Memory request
   out bool addrVirtual,       // [Output] Virtual flag for RAM
   out bool execMode,          // [Output] Whether we are in user or kernel
   out uint32 ptAddress,       // [Output] Page Table Address
@@ -119,6 +117,8 @@ module ControlUnit(
 
   state initial
   {
+    //__display("Doing ControlUnit initial state");
+
     // We initialize most stuff here because it can be done once
     // here and work both with the reset input and with an initializer
     // for the registers.
@@ -126,9 +126,8 @@ module ControlUnit(
     debug2 = 0;
     debug3 = 1u9;
     
-    writeReq = false;
+    mcCommand = ControllerCommand.None;
     uartReadReq = false;
-    readReq = false;
     opDataWord = 0xffffffff;
     opCode = OpCode.Unknown;
     fOpEnable = 0b0000000;
@@ -151,6 +150,8 @@ module ControlUnit(
 
     // Mark initialization as complete
     initComplete = true;
+
+    transition InitialMode;
   }
 
   state always
@@ -177,17 +178,19 @@ module ControlUnit(
   //         out enable bits for auxillary modules.
   state InitialMode
   {
-    __display("Doing ControlUnit initial mode");
-
     // Begin RAM read for instruction data
-    readReq = true;
-    ramAddress = ipointer;
+    mcCommand = ControllerCommand.Request;
+    request.Address = ipointer;
+    request.WriteEnable = false;
+
     opDataWord = 0x0badf00d;
 
     // Clear out stuff for the pipeline
     fOpEnable = 0b0000000;
     condJump = false;
-    
+
+    //__display("Doing ControlUnit initial mode");
+ 
     transition InstrReadComplete;
   }
 
@@ -196,15 +199,13 @@ module ControlUnit(
   //         of the instruction and the affected registers.
   state InstrReadComplete
   {
-    __display("Doing ControlUnit InstrReadComplete mode");
-
     // Stop request
-    readReq = false;
+    mcCommand = ControllerCommand.None;
 
     if (mcStatus == ControllerStatus.Ready)
     {
       // If ramReady is high then we have received something
-      //$display("Receiving instr1 value %h from MemoryController", ramIn);
+      //__display("Doing ControlUnit InstrReadComplete mode, read complete, address is %h, instr RAM is %h", request.Address, ramIn);
 
       opCode = OpCode(ramIn[5:0]);
       regAddress =  (ramIn[15:8] >= 64)  ? (ramIn[15:8] - 64)  : (ramIn[15:8] + rPos);
@@ -222,7 +223,7 @@ module ControlUnit(
 
         // Set error condition
         errorHaltCode = ErrorCode.BadInstr1;
-        errorHaltData = ramAddress;
+        errorHaltData = request.Address;
         transition ErrorHalt;
       }
     }
@@ -233,7 +234,7 @@ module ControlUnit(
   //         registers referenced by the instruction.
   state RegValueSet
   {
-    __display("Doing ControlUnit RegValueSet mode");
+    //__display("Doing ControlUnit RegValueSet mode");
 
     // Read values from registers
     regValue[0] = regarray[regAddress[7:0]];
@@ -278,9 +279,12 @@ module ControlUnit(
 
     if (Is8ByteOpcode(opCode))
     {
+      //__display("Transition to DataWordComplete");
+
       // Read values from ram requested by instruction
-      readReq = true;
-      ramAddress = ipointer + 4;
+      mcCommand = ControllerCommand.Request;
+      request.Address = ipointer + 4;
+      request.WriteEnable = false;
 
       // We need to move into further modes
       transition DataWordComplete;
@@ -289,12 +293,16 @@ module ControlUnit(
     {
       if (IsRAMOpcode(opCode) || IsIOOpcode(opCode))
       {
+        //__display("Transition to RWRequest");
+
         // We are not reading a constant, but we might still be
         // doing a RAM operation, move into the mode where we do that
         transition RWRequest;
       }
       else
       {
+        //__display("Transition to ProcessOpCode");
+
         // Since there is no word data, there is no need
         // to wait for that word data to come back, and there
         // can be no further reads or writes since the word
@@ -310,12 +318,14 @@ module ControlUnit(
   //         the opCode.
   state DataWordComplete
   {
+    //__display("Entering DataWordComplete");
+
     // Stop request
-    readReq = false;
+    mcCommand = ControllerCommand.None;
 
     if (mcStatus == ControllerStatus.Ready)
     {
-      //$display("DataWordComplete with word %h", ramIn);
+      //__display("DataWordComplete with word %h", ramIn);
 
       // Store ram values requested
       opDataWord = ramIn;
@@ -335,11 +345,15 @@ module ControlUnit(
     }
     else 
     {
+      //__display("DataWordComplete, MMU not ready");
+
       if (mcStatus == ControllerStatus.Error)
       {
+        __display("DataWordComplete, MMU returned error");
+
         // Set error condition
         errorHaltCode = ErrorCode.BadInstr2;
-        errorHaltData = ramAddress;
+        errorHaltData = request.Address;
         transition ErrorHalt;
       }
     }        
@@ -349,15 +363,16 @@ module ControlUnit(
   {
     if (IsRAMOpcode(opCode))
     {
-      //$display("RWRequest for RAM opcode");
+      __display("RWRequest for RAM opcode");
 
       switch (opCode)
       {
         case OpCode.MovRdC: 
         {
           // Read values from address encoded in code
-          readReq = true;
-          ramAddress = opDataWord;
+          mcCommand = ControllerCommand.Request;
+          request.Address = opDataWord;
+          request.WriteEnable = false;
 
           //$display("Requesting RdC read from %h", opDataWord);
         }
@@ -366,8 +381,9 @@ module ControlUnit(
         {
           // First register is destination, second register is base address, 
           // constant stores offset in bytes.
-          readReq = true;
-          ramAddress = opDataWord + regValue2[0];
+          mcCommand = ControllerCommand.Request;
+          request.Address = opDataWord + regValue2[0];
+          request.WriteEnable = false;
 
           //$display("Requesting read from %h", opDataWord + regValue2);
         }
@@ -376,8 +392,9 @@ module ControlUnit(
         {
           // First register is destination, second register is base address, 
           // constant stores size of item, and third register stores index of item.
-          readReq = true;
-          ramAddress = regValue2[0] + opDataWord * regValue3[0];
+          mcCommand = ControllerCommand.Request;
+          request.Address = regValue2[0] + opDataWord * regValue3[0];
+          request.WriteEnable = false;
 
           //$display("Requesting read from %h", regValue2[0] + opDataWord * regValue3[0]);
         }
@@ -385,8 +402,9 @@ module ControlUnit(
         case OpCode.MovRdR: 
         {
           // Read values from address encoded in code
-          readReq = true;
-          ramAddress = regValue2[0];
+          mcCommand = ControllerCommand.Request;
+          request.Address = regValue2[0];
+          request.WriteEnable = false;
 
           //$display("Requesting read from %h", opDataWord + regValue2);
         }
@@ -394,8 +412,9 @@ module ControlUnit(
         case OpCode.PopR: 
         {
           // Read value from stack
-          readReq = true;
-          ramAddress = regarray[`StackPointerReg] - 4;
+          mcCommand = ControllerCommand.Request;
+          request.Address = regarray[`StackPointerReg] - 4;
+          request.WriteEnable = false;
 
           //$display("Requesting read from %h - 4", regarray[`StackPointerReg]);
         }
@@ -403,8 +422,9 @@ module ControlUnit(
         case OpCode.Ret: 
         {
           // Read value from stack
-          readReq = true;
-          ramAddress = regarray[`StackPointerReg] - 4;
+          mcCommand = ControllerCommand.Request;
+          request.Address = regarray[`StackPointerReg] - 4;
+          request.WriteEnable = false;
         
           //$display("Requesting read from %h - 4", regarray[`StackPointerReg]);
         }
@@ -412,9 +432,10 @@ module ControlUnit(
         case OpCode.MovdCR: 
         {
           // Write values to ram requested by instruction
-          writeReq = true;
-          ramAddress = opDataWord;
-          ramOut = regValue2[0];
+          mcCommand = ControllerCommand.Request;
+          request.Address = opDataWord;
+          request.WriteEnable = true;
+          request.WriteData = regValue2[0];
         
           //$display("Reqesting write %h to address value %h", regValue2[0], opDataWord);
         }
@@ -422,9 +443,10 @@ module ControlUnit(
         case OpCode.MovdRoR: 
         {
           // Write values to ram requested by instruction
-          writeReq = true;
-          ramAddress = opDataWord + regValue[0];
-          ramOut = regValue2[0];
+          mcCommand = ControllerCommand.Request;
+          request.Address = opDataWord + regValue[0];
+          request.WriteEnable = true;
+          request.WriteData = regValue2[0];
         
           //$display("Reqesting write %h to address value %h", regValue2[0], opDataWord + regValue[0]);
         }
@@ -433,9 +455,10 @@ module ControlUnit(
         {
           // first register is base address, constant stores size of items, 
           // second register stores index of item, third register is destination, 
-          writeReq = true;
-          ramAddress = regValue[0] + opDataWord * regValue2[0];
-          ramOut = regValue3[0];
+          mcCommand = ControllerCommand.Request;
+          request.Address = regValue[0] + opDataWord * regValue2[0];
+          request.WriteEnable = true;
+          request.WriteData = regValue3[0];
         
           //$display("Reqesting write %h to address value %h", regValue2[0], regValue[0] + opDataWord * regValue2[0]);
         }
@@ -443,9 +466,10 @@ module ControlUnit(
         case OpCode.PushR: 
         {
           // Write register value to stack
-          writeReq = true;
-          ramAddress = regarray[`StackPointerReg];
-          ramOut = regValue[0];
+          mcCommand = ControllerCommand.Request;
+          request.Address = regarray[`StackPointerReg];
+          request.WriteEnable = true;
+          request.WriteData = regValue[0];
         
           //$display("Reqesting push %h", regValue);
         }
@@ -453,9 +477,10 @@ module ControlUnit(
         case OpCode.CallR: 
         {
           // Write ip to stack
-          writeReq = true;
-          ramAddress = regarray[`StackPointerReg];
-          ramOut = ipointer;
+          mcCommand = ControllerCommand.Request;
+          request.Address = regarray[`StackPointerReg];
+          request.WriteEnable = true;
+          request.WriteData = ipointer;
         
           //$display("Reqesting push %h", regValue);
         }
@@ -463,8 +488,9 @@ module ControlUnit(
         case OpCode.SysCallRRR: 
         {
           // Read function address from register
-          readReq = true;
-          ramAddress = regValue[0];
+          mcCommand = ControllerCommand.Request;
+          request.Address = regValue[0];
+          request.WriteEnable = false;
         }
       }
 
@@ -477,7 +503,7 @@ module ControlUnit(
         //$display("IO opcode");
 
         // Stop request
-        readReq = false;
+        mcCommand = ControllerCommand.None;
 
         switch (opCode)
         {
@@ -543,8 +569,7 @@ module ControlUnit(
   state MemRWComplete
   {
     // Stop request
-    readReq = false;
-    writeReq = false;
+    mcCommand = ControllerCommand.None;
 
     if (mcStatus == ControllerStatus.Ready)
     {
@@ -569,7 +594,7 @@ module ControlUnit(
           // Set error condition if supervisor hits this
           transition ErrorHalt;
           errorHaltCode = ErrorCode.BadMem;
-          errorHaltData = ramAddress;
+          errorHaltData = request.Address;
         }
         else
         {

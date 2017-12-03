@@ -5,7 +5,7 @@ module CPUTestBench()
 {
 	drive
 	{
-		300: __finish;
+		3000: __finish;
 	}
 
   clock clk;

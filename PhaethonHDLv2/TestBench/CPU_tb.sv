@@ -24,7 +24,7 @@ module CPUTestBench(
   CPU cpu1(clk, phRamRead, phRamAddress, phRamWrite, phReadReq, phWriteReq, uartReadReq, uartReadAck, uartReadData, uartWriteReq, uartWriteData, uartWriteReady, debug, debug2, debug3);
   initial
   begin
-    # 300 $finish;
+    # 3000 $finish;
   end
   reg [7:0] fsmState = 0;
   always @(posedge clk)

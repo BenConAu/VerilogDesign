@@ -7,7 +7,7 @@ ImportStatementNode::ImportStatementNode(ParserContext* pContext, const YYLTYPE 
     // Save the literal that was given in the source code
     _ImportPath = boost::filesystem::path(pContext->GetLastString());
 
-    printf("Creating import with path %s\n", _ImportPath.c_str());    
+    //printf("Creating import with path %s\n", _ImportPath.c_str());    
 
     // If it is relative, then adjust based on the parent path
     if (_ImportPath.is_relative())
@@ -22,7 +22,7 @@ ImportStatementNode::ImportStatementNode(ParserContext* pContext, const YYLTYPE 
         _ImportPath = IncludingPath.append(_ImportPath.string());
     }
 
-    printf("Path after adjustment is %s\n", _ImportPath.c_str());
+    //printf("Path after adjustment is %s\n", _ImportPath.c_str());
 }
 
 void ImportStatementNode::VerifyNodeImpl()  

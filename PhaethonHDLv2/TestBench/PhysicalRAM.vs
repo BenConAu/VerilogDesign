@@ -10,7 +10,7 @@ module PhysicalRAM(
   uint8 fileRam[65536];
 
   // Filename that we get the RAM init from
-  uint<128> testName;
+  uint<1024> testName;
 
   state initial
   {
@@ -61,7 +61,7 @@ module PhysicalRAM(
     }
     else
     {
-      __display("Retrieving address %h", address);
+      //__display("Retrieving address %h", address);
 
       ReadValue[7:0] = fileRam[address];
       ReadValue[15:8] = fileRam[address + 1];
