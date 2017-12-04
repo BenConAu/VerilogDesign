@@ -96,7 +96,7 @@ enum class OpCode
     FsubRR = 39,
     FconvR = 40,
     FmulRRR = 41,
-    FdivRR = 42,
+    FdivRRR = 42,
     FmuladdRRR = 43,
     FminRR = 44,
     FmaxRR = 45,

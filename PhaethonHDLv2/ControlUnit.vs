@@ -1,6 +1,7 @@
 import "../PhaethonISA/Generated/PhaethonOpCode.vs";
 import "MemoryController.vs";
 import "StagedFloatingAdder.vs";
+import "StagedFloatingDivide.vs";
 
 enum ErrorCode
 {
@@ -87,7 +88,7 @@ module ControlUnit(
   //FloatingMultiply    fMul(regValue2[0], regValue3[0], fMulResult, floatDebug, clk, fOpEnable[3:3]);
   //FloatingMultiplyAdd fMulAdd(regValue[0], regValue2[0], regValue3[0], fMulAddResult, floatDebug, clk, fOpEnable[4:4]);
   //FloatingCompare     fComp(regValue[0], regValue2[0], fCompareResult, floatDebug, clk, fOpEnable[5:5]);
-  //FloatingDivide      fDiv(regValue[0], regValue2[0], fDivResult, floatDebug, clk, fOpEnable[6:6]);
+  FloatingDivide      fDiv = FloatingDivide(clk, regValue2[0], regValue3[0], out fDivResult);
 
   wire uint32 dbgBufDbg1;
   wire uint32 dbgBufDbg2;
@@ -269,7 +270,7 @@ module ControlUnit(
     if (opCode == OpCode.FmuladdRRR) { fOpEnable[4:4] = true; }
     if (opCode == OpCode.FminRR) { fOpEnable[5:5] = true; }
     if (opCode == OpCode.FmaxRR) { fOpEnable[5:5] = true; }
-    if (opCode == OpCode.FdivRR) { fOpEnable[6:6] = true; }
+    if (opCode == OpCode.FdivRRR) { fOpEnable[6:6] = true; }
 
     // Determine if a conditional jump needs to happen
     if (opCode == OpCode.JneC && regarray[FlagsReg][0:0] == false) { condJump = true; }
@@ -807,7 +808,7 @@ module ControlUnit(
       case OpCode.FsubRR:     { regarray[regAddress[7:0]] = fSubResult;     }        // fsub reg, reg
       case OpCode.FconvR:     { regarray[regAddress[7:0]] = fConvResult;    }        // fconv reg
       case OpCode.FmulRRR:    { regarray[regAddress[7:0]] = fMulResult;     }        // fmul reg, reg, reg
-      case OpCode.FdivRR:     { regarray[regAddress[7:0]] = fDivResult;     }
+      case OpCode.FdivRRR:    { regarray[regAddress[7:0]] = fDivResult;     }
       case OpCode.FmuladdRRR: { regarray[regAddress[7:0]] = fMulAddResult;   }       // fmul reg, reg
       case OpCode.FminRR:     { regarray[regAddress[7:0]] = (fCompareResult == 0b01 ? regValue2[0] : regValue[0]); }
       case OpCode.FmaxRR:     { regarray[regAddress[7:0]] = (fCompareResult == 0b11 ? regValue2[0] : regValue[0]); }

@@ -92,7 +92,7 @@ OpCodeData OpCodeData::s_data[] = {
     { Instructions::Fsub      , OpCode::FsubRR         , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "FsubRR" },
     { Instructions::Fconv     , OpCode::FconvR         , { OperandType::Register              , OperandType::None                  , OperandType::None         }, -1, "FconvR" },
     { Instructions::Fmul      , OpCode::FmulRRR        , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "FmulRRR" },
-    { Instructions::Fdiv      , OpCode::FdivRR         , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "FdivRR" },
+    { Instructions::Fdiv      , OpCode::FdivRRR        , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "FdivRRR" },
     { Instructions::Fmuladd   , OpCode::FmuladdRRR     , { OperandType::Register              , OperandType::Register              , OperandType::Register     }, -1, "FmuladdRRR" },
     { Instructions::Fmin      , OpCode::FminRR         , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "FminRR" },
     { Instructions::Fmax      , OpCode::FmaxRR         , { OperandType::Register              , OperandType::Register              , OperandType::None         }, -1, "FmaxRR" },

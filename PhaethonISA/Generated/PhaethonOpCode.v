@@ -39,7 +39,7 @@
 `define FsubRR 39
 `define FconvR 40
 `define FmulRRR 41
-`define FdivRR 42
+`define FdivRRR 42
 `define FmuladdRRR 43
 `define FminRR 44
 `define FmaxRR 45

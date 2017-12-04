@@ -1,5 +1,6 @@
 #include "ImportStatementNode.h"
 #include "ParserContext.h"
+#include "VSharpCompiler.h"
 #include <libgen.h>
 
 ImportStatementNode::ImportStatementNode(ParserContext* pContext, const YYLTYPE &location) : ASTNode(pContext, location)
@@ -27,6 +28,9 @@ ImportStatementNode::ImportStatementNode(ParserContext* pContext, const YYLTYPE 
 
 void ImportStatementNode::VerifyNodeImpl()  
 {
-    _ImportedContext.reset(new ParserContext(_ImportPath.c_str(), GetContext()->GetCompiler()));
-    _ImportedContext->Parse();
+    if (GetContext()->GetCompiler()->EnsureImport(_ImportPath.c_str()))
+    {
+        _ImportedContext.reset(new ParserContext(_ImportPath.c_str(), GetContext()->GetCompiler()));
+        _ImportedContext->Parse();
+    }
 }

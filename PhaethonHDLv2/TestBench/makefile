@@ -1,6 +1,7 @@
 default: PhysicalRAM.sv \
 	AdderTestBench.sv \
 	StagedFloatingAdder.sv \
+	StagedFloatingDivide.sv \
 	../CPU.sv \
 	../MemoryController.sv \
 	../ControlUnit.sv \
@@ -10,6 +11,7 @@ default: PhysicalRAM.sv \
 
 %.sv: \
 	../StagedFloatingAdder.vs \
+	../StagedFloatingDivide.vs \
 	../FloatingHelper.vs \
 	../CPU.vs \
 	../MemoryController.vs \
@@ -20,6 +22,7 @@ default: PhysicalRAM.sv \
 	../../VSharp/VSharpC AdderTestBench.vs
 	../../VSharp/VSharpC PhysicalRAM.vs
 	../../VSharp/VSharpC ../StagedFloatingAdder.vs
+	../../VSharp/VSharpC ../StagedFloatingDivide.vs
 	../../VSharp/VSharpC ../CPU.vs
 	../../VSharp/VSharpC ../MemoryController.vs
 	../../VSharp/VSharpC ../ControlUnit.vs
@@ -30,6 +33,7 @@ CPU_tb.vvpo: \
 	../CPU.sv \
 	../ControlUnit.sv \
 	../StagedFloatingAdder.sv \
+	../StagedFloatingDivide.sv \
 	PhysicalRAM.sv \
 	CPU_tb.sv \
 	../../VSharp/VSharpC
@@ -38,6 +42,7 @@ CPU_tb.vvpo: \
 	../CPU.sv \
 	../ControlUnit.sv \
 	../StagedFloatingAdder.sv \
+	../StagedFloatingDivide.sv \
 	PhysicalRAM.sv \
 	CPU_tb.sv
 

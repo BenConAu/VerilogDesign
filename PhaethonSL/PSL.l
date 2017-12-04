@@ -20,6 +20,7 @@
 "\n"                 ;
 "@"                  { return AT; }
 "*"                  { return STAR; }
+"/"                  { return SLASH; }
 "+"                  { return PLUS; }
 "-"                  { return MINUS; }
 "="                  { return EQUAL; }

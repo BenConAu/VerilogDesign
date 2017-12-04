@@ -4,6 +4,7 @@
 
 OperatorInfo OperatorNode::_opTable[] = {
     {Operator::Multiply,    OpCode::Unknown,   OpCode::FmulRRR, ResultTypeMethod::Both},
+    {Operator::Divide,      OpCode::Unknown,   OpCode::FdivRRR, ResultTypeMethod::Both},
     {Operator::Add,         OpCode::AddRRR,    OpCode::FaddRRR, ResultTypeMethod::Both},
     {Operator::Subtract,    OpCode::SubRRR,    OpCode::Unknown, ResultTypeMethod::Both},
     {Operator::ShiftLeft,   OpCode::ShlRRR,    OpCode::Unknown, ResultTypeMethod::Both},

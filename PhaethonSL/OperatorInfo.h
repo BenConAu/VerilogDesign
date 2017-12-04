@@ -3,6 +3,7 @@
 enum class Operator
 {
     Multiply,
+    Divide,
     Add,
     Subtract,
     ShiftLeft,

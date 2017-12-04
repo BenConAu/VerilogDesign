@@ -95,6 +95,7 @@ module ControlUnit(
   FloatingAdd fAdd2(clk, regValue2[32'd2], regValue3[32'd2], 1'b0, fAddResult[32'd2]);
   FloatingAdd fAdd3(clk, regValue2[32'd3], regValue3[32'd3], 1'b0, fAddResult[32'd3]);
   FloatingAdd fSub(clk, regValue[32'd0], regValue2[32'd0], 1'b1, fSubResult);
+  FloatingDivide fDiv(clk, regValue2[32'd0], regValue3[32'd0], fDivResult);
   wire[31:0] dbgBufDbg1;
   wire[31:0] dbgBufDbg2;
   reg[0:0] dbgBufferWriteReq;

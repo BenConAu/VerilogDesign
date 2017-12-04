@@ -20,6 +20,14 @@ int VSharpCompiler::AddSymbol(const char *pszSymbol)
     return (_symbols.size() - 1);
 }
 
+bool VSharpCompiler::EnsureImport(const char *pszImport)
+{
+    _imports[pszImport]++;
+
+    // We return if this is the first time this is imported
+    return (_imports[pszImport] == 1);
+}
+
 const std::string& VSharpCompiler::GetSymbolString(int symIndex) 
 {
     return _symbols[symIndex];         

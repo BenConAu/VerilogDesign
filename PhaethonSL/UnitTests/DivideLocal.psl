@@ -1,0 +1,10 @@
+void main()
+{
+    float c;
+    c = f10.0;
+    float d;
+    d = f2.0;
+    float res;
+    res = c / d;
+    __emit(doutr, res);
+}

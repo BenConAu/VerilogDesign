@@ -38,6 +38,7 @@ void yyerror(YYLTYPE*, void*, const char *s);
 %token SEMICOLON
 %token EQUAL
 %token STAR
+%token SLASH
 %token PLUS
 %token MINUS
 %token LEFT_PAREN
@@ -223,6 +224,7 @@ additive_expression:
 multiplicative_expression:
       unary_expression                                              { $$ = $1; }
     | multiplicative_expression STAR unary_expression               { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::Multiply); }
+    | multiplicative_expression SLASH unary_expression              { $$ = new OperatorNode(pContext, @$, $1, $3, Operator::Divide); }
     ;
 
 unary_expression:

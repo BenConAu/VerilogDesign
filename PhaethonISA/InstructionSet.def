@@ -39,7 +39,7 @@ Fadd        Register              Register              Register  NoFlags
 Fsub        Register              Register              None      NoFlags
 Fconv       Register              None                  None      NoFlags
 Fmul        Register              Register              Register  NoFlags
-Fdiv        Register              Register              None      NoFlags
+Fdiv        Register              Register              Register  NoFlags
 Fmuladd     Register              Register              Register  NoFlags
 Fmin        Register              Register              None      NoFlags
 Fmax        Register              Register              None      NoFlags
