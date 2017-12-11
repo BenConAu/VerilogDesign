@@ -6,6 +6,17 @@ at the ALU level to move the needle. By building a good enough stack, you can ex
 with new instructions that could drastically increase memory bandwidth efficiency or
 scheduling.
 
+At a high level this contains:
+
+- A hardware design for the GPU (both in Verilog and V#)
+- An assembler for the GPU architecture
+- A compiler for a new language for the GPU architecture
+- A compiler for V# that transpiles into Verilog
+- A simulator for debugging binaries without running the verilog
+
+This has been used by iverilog on MacOS and by Quartus on Windows. An effort is made
+to allow as much verification outside of real hardware as is practical.
+
 Directory Structure
 
 In order of grokking:
@@ -16,12 +27,22 @@ structures can be consistent between the object format and the Verilog.
 
 PhaethonHDL - this contains the Verilog modules that define the hardware.
 
+VSharp - this contains the V# compiler. V# is a HDL language that enables more efficient
+development of both FSMs and combinatorial modules.
+
+PhaethonHDLv2 - this contains the original PhaethonHDL ported to V#. It is currently
+functional with most of the tests in PhaethonSL, with the exception of modules not yet
+ported to V#.
+
 PhaethonObjWriter - this is the code for outputting the object format that Phaethon runs
 on. It is shared by both the assembler and high level language.
 
 PhaethonAsm - this is an assembler for the Phaethon assembly language.
 
-PhaethonSL - this is a compiler for the Phaethon high level shading language.
+PhaethonSL - this is a compiler for the Phaethon high level shading language. This is meant
+to be a hybrid of a shading language and an OS programming language like BCPL or C. The unit
+tests for PhaethonSL serve as both verification for the PhaethonSL compiler and for the 
+hardware unit itself.
 
 PhaethonEmu - this is an emulator for the Phaethon hardware. It is out of date, but
 valuable to debug some things that the verilog simulator makes it hard to verify.
@@ -54,7 +75,7 @@ the opcodes and operand forms for the instruction set.
 Shader Language Overview
 
 The shader language is not meant to be a high level language like C# or Java but rather 
-a very low level procedural language in the spirit of B. Structure types are added on 
+a very low level procedural language in the spirit of BCPL or C. Structure types are added on 
 top of the register represented types of the hardware.
 
 Expressions therefore output either a structure or a member of a structure. The only
