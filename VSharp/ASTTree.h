@@ -12,6 +12,7 @@
 #include "FunctionDeclaratorNode.h"
 #include "FunctionCallParamNode.h"
 #include "FunctionParameterNode.h"
+#include "GenericParameterNode.h"
 #include "GlomExpressionNode.h"
 #include "IdentifierNode.h"
 #include "IfStatementNode.h"

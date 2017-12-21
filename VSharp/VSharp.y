@@ -108,6 +108,7 @@ class ParserContext;
 %token CONST_TOKEN
 %token BLOCKING_TOKEN
 %token NONBLOCKING_TOKEN
+%token TYPENAME_TOKEN
 %token <symIndex> IDENTIFIER
 %type <pNode> variable_identifier
 %type <pNode> primary_expression
@@ -172,6 +173,9 @@ class ParserContext;
 %type <pNode> switch_statement
 %type <pNode> case_statement
 %type <pNode> case_list
+%type <pNode> generic_param_list
+%type <pNode> generic_param
+%type <pNode> function_call_generic_list
 %type <_EnumItem> enum_item
 %type <_FunctionExpandType> duplicate_type
 
@@ -375,9 +379,19 @@ module_header_with_parameters:
 	;
 
 module_header:
-      MODULE_TOKEN IDENTIFIER LEFT_PAREN                            { $$ = new ModuleDefinitionNode(pContext, @$, $2, -1, FunctionExpandType::None); }
-    | MODULE_TOKEN IDENTIFIER LT IDENTIFIER GT LEFT_PAREN           { $$ = new ModuleDefinitionNode(pContext, @$, $2, $4, FunctionExpandType::None); }
-    | MODULE_TOKEN LEFT_PAREN duplicate_type RIGHT_PAREN IDENTIFIER LEFT_PAREN { $$ = new ModuleDefinitionNode(pContext, @$, $5, -1, $3); }
+      MODULE_TOKEN IDENTIFIER LEFT_PAREN                            { $$ = new ModuleDefinitionNode(pContext, @$, $2, nullptr, FunctionExpandType::None); }
+    | MODULE_TOKEN IDENTIFIER LT generic_param_list GT LEFT_PAREN   { $$ = new ModuleDefinitionNode(pContext, @$, $2, $4, FunctionExpandType::None); }
+    | MODULE_TOKEN LEFT_PAREN duplicate_type RIGHT_PAREN IDENTIFIER LEFT_PAREN { $$ = new ModuleDefinitionNode(pContext, @$, $5, nullptr, $3); }
+    ;
+
+generic_param_list:
+      generic_param                                                 { $$ = new ListNode(pContext, @$, $1); }
+    | generic_param_list COMMA generic_param                        { $$ = $1; dynamic_cast<ListNode*>($1)->AddNode($3); }
+    ;
+
+generic_param:
+      fully_specified_type IDENTIFIER                               { $$ = new GenericParameterNode(pContext, @$, $1, $2); }
+    | TYPENAME_TOKEN IDENTIFIER                                     { $$ = new GenericParameterNode(pContext, @$, nullptr, $2); }
     ;
 
 duplicate_type:
@@ -517,13 +531,19 @@ function_call:
 
 function_call_header_no_param:
       IDENTIFIER LEFT_PAREN                                         { $$ = new FunctionCallNode(pContext, @$, $1, nullptr, nullptr); }
-    | IDENTIFIER LT expression GT LEFT_PAREN                        { $$ = new FunctionCallNode(pContext, @$, $1, $3, nullptr); }
+    | IDENTIFIER LT function_call_generic_list GT LEFT_PAREN        { $$ = new FunctionCallNode(pContext, @$, $1, $3, nullptr); }
     ;
 
 function_call_header:
       IDENTIFIER LEFT_PAREN fn_call_arg                             { $$ = new FunctionCallNode(pContext, @$, $1, nullptr, $3); }
-    | IDENTIFIER LT expression GT LEFT_PAREN fn_call_arg            { $$ = new FunctionCallNode(pContext, @$, $1, $3, $6); }
+    | IDENTIFIER LT function_call_generic_list GT LEFT_PAREN fn_call_arg            
+                                                                    { $$ = new FunctionCallNode(pContext, @$, $1, $3, $6); }
     | function_call_header COMMA fn_call_arg                        { $$ = $1; $$->AddNode($3); }
+    ;
+
+function_call_generic_list:
+      expression                                                    { $$ = new ListNode(pContext, @$, $1); }
+    | function_call_generic_list COMMA expression                   { $$ = $1; dynamic_cast<ListNode*>($1)->AddNode($3); }
     ;
 
 fn_call_arg:

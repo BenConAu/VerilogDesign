@@ -10,7 +10,7 @@ module ArrayTest(
   input wire[31:0] in1;
   output reg[31:0] out1;
   reg clk = 0; always #5 clk = !clk;
-  reg[31:0] arr[3:0];
+  reg[31:0] arr[0:3];
   reg[31:0] index;
   initial
   begin

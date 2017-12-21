@@ -31,9 +31,10 @@ class SymbolTable
         TypeModifier modifier,
         TypeInfo *pTypeInfo);
 
-    FunctionInfo *AddFunction(
+    void AddFunction(
         FunctionDeclaratorNode *pFuncDecl,
         int symIndex,
+        bool fGeneric,
         UIntConstant* pConstant);
 
     StateInfo *AddState(

@@ -9,6 +9,7 @@
 #include "StatementNode.h"
 #include "VariableDeclarationNode.h"
 #include "IdentifierNode.h"
+#include "ListNode.h"
 #include "EnumTypeInfo.h"
 #include "VSharp.tab.h"
 
@@ -272,7 +273,7 @@ void FunctionCallNode::SearchFunctionInfo(
     {
         if (GetChild(0) == nullptr)
         {
-            if (Functions[i]->GetUIntConstant() == nullptr)
+            if (Functions[i]->GetUIntConstantCount() == 0)
             {
                 // We need a non-generic function and we found one
                 (*ppFunctionInfo) = Functions[i];
@@ -284,29 +285,42 @@ void FunctionCallNode::SearchFunctionInfo(
         }
         else
         {
-            // Grab the expression that was the generic argument
-            ExpressionNode* pExpr = dynamic_cast<ExpressionNode*>(GetChild(0));
-            
-            // Evaluate the constant
-            if (!pExpr->ConstEvaluate(&_GenericParam))
-            {
-                GetContext()->ReportError(GetLocation(), "Non - constant expression not valid for generic expansion");
-            }
+            // Grab the expression generic list
+            ListNode* pGenericList = dynamic_cast<ListNode*>(GetChild(0));
 
-            // If somebody passed a constant generic parameter, find the match
-            UIntConstant* pFunctionConstant = Functions[i]->GetUIntConstant();
-            if (pFunctionConstant == nullptr)
+            if (Functions[i]->GetUIntConstantCount() == 0)
             {
                 // Remember this in case we can't find it
                 (*ppGenericInfo) = Functions[i];
             }
             else
             {
-                if (*pFunctionConstant == _GenericParam)
+                size_t Matches = 0;
+
+                for (size_t p = 0; p < pGenericList->GetChildCount(); p++)
+                {
+                    // Grab the expression that was the generic argument
+                    ExpressionNode* pExpr = dynamic_cast<ExpressionNode*>(pGenericList->GetChild(p));
+                
+                    // Evaluate the constant
+                    if (!pExpr->ConstEvaluate(&_GenericParam))
+                    {
+                        GetContext()->ReportError(GetLocation(), "Non - constant expression not valid for generic expansion");
+                    }
+
+                    // If somebody passed a constant generic parameter, find the match
+                    UIntConstant FunctionConstant = Functions[i]->GetUIntConstant(p);
+                    if (FunctionConstant == _GenericParam)
+                    {
+                        Matches++;
+                    }
+                }
+
+                if (Matches == pGenericList->GetChildCount())
                 {
                     // We have found a match
                     (*ppFunctionInfo) = Functions[i];
-                }
+                }                
             }
         }
     }    

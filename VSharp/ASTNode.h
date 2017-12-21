@@ -20,6 +20,7 @@ public:
         _pContext = pContext;
         _location = location;
         _pParent = nullptr;
+        _fVerified = false;
     }
 
     virtual ~ASTNode()
@@ -102,4 +103,5 @@ private:
     YYLTYPE _location;    
     ASTNode* _pParent;
     std::vector<std::unique_ptr<ASTNode> > _children;
+    bool _fVerified;
 };

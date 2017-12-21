@@ -21,7 +21,7 @@ public:
         ParserContext* pContext, 
         const YYLTYPE &location,
         int symIndex,
-        int genericSym,
+        ASTNode* pGenericList,
         FunctionExpandType ExpandType);
 
     void AddParameter(ASTNode* pNode)
@@ -91,8 +91,8 @@ private:
     // The symbol index of the function identifier
     int _symIndex;
 
-    // The symbol index of the generic type
-    int _genericIndex;
+    // The symbol indices of the generic types
+    std::vector<int> _genericIndices;
 
     // Is this a forward definition?
     bool _IsForward;

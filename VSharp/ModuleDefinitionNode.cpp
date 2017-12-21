@@ -8,18 +8,20 @@
 #include "VariableDeclarationNode.h"
 #include "StateDeclaratorNode.h"
 #include "FunctionDeclaratorNode.h"
+#include "IdentifierNode.h"
 #include "OutputContext.h"
 
 ModuleDefinitionNode::ModuleDefinitionNode(
     ParserContext* pContext, 
     const YYLTYPE &location,
     int symIndex,
-    int genericSym,
+    ASTNode* pGenericList,
     FunctionExpandType ExpandType
     ) : ASTNode(pContext, location)
 {
+    AddNode(pGenericList);
+
     _symIndex = symIndex;
-    _genericIndex = genericSym;
     _IsForward = false;
     _pAlwaysState = nullptr;
     _ExpandType = ExpandType;
@@ -60,13 +62,16 @@ ModuleType ModuleDefinitionNode::GetModuleType()
 
 bool ModuleDefinitionNode::PreVerifyNodeImpl()
 {
-    // We need to add this here before the children look for it
-    GenericTypeInfo *pGenType = nullptr;
-    if (_genericIndex != -1)
+    // We need to add these here before the children look for it
+    ListNode* pGenericArgList = dynamic_cast<ListNode*>(GetChild(0));
+    if (pGenericArgList != nullptr)
     {
-        /*pGenType = GetContext()->GetTypeCollection()->AddGenericType(
-            _genericIndex,
-            this);*/
+        for (size_t i = 0; i < pGenericArgList->GetChildCount(); i++)
+        {
+            IdentifierNode* pIdent = dynamic_cast<IdentifierNode*>(pGenericArgList->GetChild(i));
+            GenericTypeInfo *pGenType = new GenericTypeInfo(pIdent->GetSymbolIndex(), this);
+            GetContext()->GetTypeCollection()->AddGenericType(pIdent->GetSymbolIndex(), pGenType);
+        }
     }
 
     ListNode* pModuleChildList = GetTypedChild<ListNode>();
@@ -187,22 +192,18 @@ bool ModuleDefinitionNode::PreProcessNodeImpl(OutputContext* pContext)
 
         bool first = true;
 
-        for (size_t i = 0; i < GetChildCount(); i++)
+        for (size_t i = 0; i < GetParameterCount(); i++)
         {
-            ModuleParameterNode* pParam = dynamic_cast<ModuleParameterNode*>(GetChild(i));
-            if (pParam != nullptr)
-            {
-                const char* pszComma = (i != _paramList.size() - 1) ? "," : "";
+            ModuleParameterNode* pParam = GetParameter(i);
+            const char* pszComma = (i != GetParameterCount() - 1) ? "," : "";
 
-                // Only the first can be the first
-                first = false;
+            // Only the first can be the first
+            first = false;
 
-                pContext->OutputLine(
-                    "%s%s", 
-                    GetContext()->GetSymbolString(pParam->GetSymbolIndex()).c_str(), 
-                    pszComma);
-            }
-
+            pContext->OutputLine(
+                "%s%s", 
+                GetContext()->GetSymbolString(pParam->GetSymbolIndex()).c_str(), 
+                pszComma);
         }
 
         pContext->OutputLine(");");
@@ -238,7 +239,7 @@ void ModuleDefinitionNode::ProcessNodeImpl(OutputContext* pContext)
         bool fVariablesDone = false;
 
         // Do all non-state and non-stage things first
-        for (size_t i = 0; i < GetChildCount(); i++)
+        for (size_t i = 1; i < GetChildCount(); i++)
         {
             // Figure out what we have here
             StateDeclaratorNode* pState = dynamic_cast<StateDeclaratorNode*>(GetChild(i));

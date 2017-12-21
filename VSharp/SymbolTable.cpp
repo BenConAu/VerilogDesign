@@ -78,63 +78,69 @@ VariableInfo *SymbolTable::AddVariable(
     return pNewInfo;
 }
 
-FunctionInfo *SymbolTable::AddFunction(
+void SymbolTable::AddFunction(
     FunctionDeclaratorNode *pFuncDecl,
     int symIndex,
+    bool fGeneric,
     UIntConstant* pConstant)
 {
+    // Find all the functions with this symbol that are already there
     std::vector<FunctionInfo*> Functions;
     GetSymbols(symIndex, nullptr, Functions);
 
-    // See if we are updating a forward declaration
+    // Find if there is already a forward declaration that we can
+    // update. While we do that, make sure that invalid versions
+    // of the function don't make their way in.
     for (size_t i = 0; i < Functions.size(); i++)
     {
-        if (Functions[i]->GetUIntConstant() == nullptr)
+        if (Functions[i]->IsGeneric() != fGeneric)
         {
-            if (pConstant == nullptr)
-            {
-                // We are adding a generic version or non-generic function but it was forward declared
-                if (Functions[i]->GetFunctionDeclarator() == nullptr)
-                {
-                    // If somebody forward declares again, then nothing to do
-                    if (pFuncDecl != nullptr)
-                    {
-                        // Fine, update now
-                        Functions[i]->UpdateInfo(pFuncDecl);
+            // Somebody has a generic arg on something that is a non-generic function
+            throw "Cannot mix overloads of generic and non-generic functions";            
+        }
 
-                        // We are done here
-                        return Functions[i];
-                    }
-                }
-                else
-                {
-                    throw "Cannot define functions twice - this needs to be an error";
-                }
+        if (Functions[i]->GetUIntConstantCount() > 1)
+        {
+            // We are adding a specialized version that was forward declared
+            throw "Functions with more than one generic parameter not supported";
+        }
+
+        // We are adding a generic version or non-generic function but it was forward declared
+        if (Functions[i]->GetFunctionDeclarator() == nullptr)
+        {
+            // If somebody forward declares again, then nothing to do
+            if (pFuncDecl != nullptr)
+            {
+                // Fine, update now
+                Functions[i]->UpdateInfo(pFuncDecl);
+
+                // We are done here
+                return;
             }
         }
         else
         {
-            if (pConstant != nullptr && pConstant == Functions[i]->GetUIntConstant())
+            // We can make a new function if we don't have this specifiv one done yet
+            if (!fGeneric || 
+                (pConstant != nullptr && Functions[i]->GetUIntConstantCount() != 0 && Functions[i]->GetUIntConstant(0) == *pConstant)
+                )
             {
-                // We are adding a specialized version that was forward declared
-                throw "Forward declaration of specialized generic functions not supported";
+                throw "Cannot define functions twice - this needs to be an error";
             }
         }
     }
 
-    FunctionInfo *pNewInfo = new FunctionInfo(_pCompiler, pFuncDecl, symIndex, pConstant);
+    FunctionInfo *pNewInfo = new FunctionInfo(_pCompiler, pFuncDecl, symIndex, fGeneric, pConstant);
     _symbols.emplace(std::make_pair(symIndex, std::unique_ptr<SymbolInfo>(pNewInfo)));
 
     // If we are adding a specialized function without adding the generic first, then
     // forward declare the generic version now. Otherwise the function lookup won't
     // work when somebody tries to call the specific version either.
-    if (Functions.size() == 0 && pConstant != nullptr)
+    if (Functions.size() == 0 && fGeneric && pConstant != nullptr)
     {
-        pNewInfo = new FunctionInfo(_pCompiler, nullptr, symIndex, nullptr);
-        _symbols.emplace(std::make_pair(symIndex, std::unique_ptr<SymbolInfo>(pNewInfo)));
+        FunctionInfo* pGenericInfo = new FunctionInfo(_pCompiler, nullptr, symIndex, true, nullptr);
+        _symbols.emplace(std::make_pair(symIndex, std::unique_ptr<SymbolInfo>(pGenericInfo)));
     }
-
-    return pNewInfo;
 }
 
 StateInfo *SymbolTable::AddState(

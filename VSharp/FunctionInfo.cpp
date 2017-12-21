@@ -5,24 +5,16 @@
 FunctionInfo::FunctionInfo(
     VSharpCompiler *pCompiler,          // The context that this function lives in
     FunctionDeclaratorNode *pFunction,  // The scope that the variable is declared in
-    int symIndex                        // The symbol index for the identifier for the function
-    ) : SymbolInfo(pCompiler, pFunction->GetTypedParent<ModuleDefinitionNode>(), symIndex)
-{
-    _pFunctionDecl = pFunction;
-    _paramCount = pFunction->GetParameterCount();
-    _pReturnType = pFunction->GetReturnType()->GetTypeInfo();
-}
-
-FunctionInfo::FunctionInfo(
-    VSharpCompiler *pCompiler,          // The context that this function lives in
-    FunctionDeclaratorNode *pFunction,  // The scope that the variable is declared in
     int symIndex,                       // The symbol index for the identifier for the function
+    bool fGeneric,
     UIntConstant* pGenValue             // The value of the generic symbol (nullptr)
   ) : SymbolInfo(pCompiler, pFunction != nullptr ? pFunction->GetTypedParent<ModuleDefinitionNode>() : nullptr, symIndex)
 {
+    _fGeneric = fGeneric; 
+
     if (pGenValue != nullptr)
     {
-        _spGenValue.reset(new UIntConstant(*pGenValue));  
+        _spGenValues.push_back(*pGenValue); 
     }
 
     _pFunctionDecl = pFunction;

@@ -123,7 +123,8 @@ class ParserContext;
     CONST_TOKEN = 322,
     BLOCKING_TOKEN = 323,
     NONBLOCKING_TOKEN = 324,
-    IDENTIFIER = 325
+    TYPENAME_TOKEN = 325,
+    IDENTIFIER = 326
   };
 #endif
 
@@ -140,7 +141,7 @@ union YYSTYPE
     EnumItem _EnumItem;
     FunctionExpandType _FunctionExpandType;
 
-#line 144 "VSharp.tab.h" /* yacc.c:1915  */
+#line 145 "VSharp.tab.h" /* yacc.c:1915  */
 };
 
 typedef union YYSTYPE YYSTYPE;

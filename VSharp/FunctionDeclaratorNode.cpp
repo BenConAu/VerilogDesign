@@ -50,6 +50,8 @@ ASTNode* FunctionDeclaratorNode::DuplicateNodeImpl(FunctionExpandType type)
 
 bool FunctionDeclaratorNode::PreVerifyNodeImpl()
 {
+    //printf("PreVerify on node %p\n", this);
+
     if (GetChild(0) != nullptr)
     {
         if (GetChild(1) != nullptr)
@@ -77,6 +79,7 @@ bool FunctionDeclaratorNode::PreVerifyNodeImpl()
                 GetContext()->GetSymbolTable()->AddFunction(
                     this,
                     _symIndex,
+                    true,
                     nullptr
                     );                    
     
@@ -102,6 +105,7 @@ bool FunctionDeclaratorNode::PreVerifyNodeImpl()
                 GetContext()->GetSymbolTable()->AddFunction(
                     this,
                     _symIndex,
+                    true,
                     &Value
                     );
             }
@@ -111,6 +115,7 @@ bool FunctionDeclaratorNode::PreVerifyNodeImpl()
             GetContext()->GetSymbolTable()->AddFunction(
                 this,
                 _symIndex,
+                false,
                 nullptr
                 );
         }

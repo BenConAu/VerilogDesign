@@ -2,7 +2,9 @@
 
 #include "SymbolInfo.h"
 #include "FunctionType.h"
+#include "UIntConstant.h"
 #include <string>
+#include <vector>
 
 class TypeInfo;
 class GenericTypeInfo;
@@ -10,7 +12,6 @@ class ModuleDefinitionNode;
 class FunctionDeclaratorNode;
 class VSharpCompiler;
 class ExpressionNode;
-struct UIntConstant;
 
 class FunctionInfo : public SymbolInfo
 {
@@ -18,13 +19,8 @@ class FunctionInfo : public SymbolInfo
     FunctionInfo(
       VSharpCompiler *pCompiler,          // The context that this function lives in
       FunctionDeclaratorNode *pFunction,  // The scope that the variable is declared in
-      int symIndex                        // The symbol index for the identifier for the function
-      );
-
-    FunctionInfo(
-      VSharpCompiler *pCompiler,          // The context that this function lives in
-      FunctionDeclaratorNode *pFunction,  // The scope that the variable is declared in
       int symIndex,                       // The symbol index for the identifier for the function
+      bool fGeneric,
       UIntConstant* pGenValue             // The value of the generic symbol (nullptr)
       );
   
@@ -44,10 +40,13 @@ class FunctionInfo : public SymbolInfo
     const std::string& GetVerilogName() { return _verilogName; }
     size_t GetParameterCount() const { return _paramCount; }
     TypeInfo* GetReturnType() { return _pReturnType; }
-    UIntConstant* GetUIntConstant() { return _spGenValue.get(); }
+    UIntConstant GetUIntConstant(int index) { return _spGenValues[index]; }
+    size_t GetUIntConstantCount() { return _spGenValues.size(); }
+    bool IsGeneric() const { return _fGeneric; }
 
   private:
-    std::unique_ptr<UIntConstant> _spGenValue;
+    bool _fGeneric;
+    std::vector<UIntConstant> _spGenValues;
     FunctionDeclaratorNode* _pFunctionDecl;
     TypeInfo* _pReturnType;
     std::string _verilogName;

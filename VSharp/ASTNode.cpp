@@ -26,6 +26,12 @@ void ASTNode::DumpNode(DebugContext* pContext)
 
 void ASTNode::VerifyNode(DebugContext* pContext)
 {
+    if (_fVerified)
+    {
+        // Double verify could go badly
+        return;
+    }
+
     //_pContext->PrintIndent();
     //printf("Begin verifying %s node %p\n", GetDebugName(), this);
     if (pContext != nullptr)
@@ -52,6 +58,8 @@ void ASTNode::VerifyNode(DebugContext* pContext)
     }
     //_pContext->PrintIndent();
     //printf("End verifying %s node %p\n", GetDebugName(), this);
+
+    _fVerified = true;
 }
 
 void ASTNode::AddNode(ASTNode *pNode)

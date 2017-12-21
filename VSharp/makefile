@@ -44,6 +44,8 @@ PSLcc: lex.yy.c \
 	   FunctionInfo.cpp \
 	   FunctionParameterNode.h \
 	   FunctionParameterNode.cpp \
+	   GenericParameterNode.h \
+	   GenericParameterNode.cpp \
 	   GenericTypeInfo.h \
 	   GlomExpressionNode.cpp \
 	   GlomExpressionNode.h \
@@ -134,6 +136,7 @@ PSLcc: lex.yy.c \
    	   FunctionDeclaratorNode.cpp \
 	   FunctionInfo.cpp \
 	   FunctionParameterNode.cpp \
+	   GenericParameterNode.cpp \
 	   GlomExpressionNode.cpp \
 	   IdentifierNode.cpp \
 	   IfStatementNode.cpp \

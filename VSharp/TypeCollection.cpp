@@ -81,9 +81,9 @@ GenericTypeInfo* TypeCollection::GetGenericType(int symIndex, ModuleDefinitionNo
     return nullptr;
 }
 
-void TypeCollection::AddGenericType(int symIndex, ModuleDefinitionNode* pScope)
+void TypeCollection::AddGenericType(int symIndex, GenericTypeInfo* pInfo)
 {
-    _genericTypes.emplace_back(new GenericTypeInfo(symIndex, pScope));
+    _genericTypes.emplace_back(pInfo);
 }
 
 void TypeCollection::AddStructType(int symIndex, StructTypeInfo* pInfo)

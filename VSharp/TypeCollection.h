@@ -30,7 +30,7 @@ public:
     void AddStructType(int symIndex, StructTypeInfo* pInfo);
     void SetModuleType(int symIndex, ModuleTypeInfo* pInfo);
     void AddEnumType(int symIndex, EnumTypeInfo* pInfo);
-    void AddGenericType(int symIndex, ModuleDefinitionNode* pScope);
+    void AddGenericType(int symIndex, GenericTypeInfo* pInfo);
     
 private:
     std::map<int, std::unique_ptr<StructTypeInfo> > _structTypes;
