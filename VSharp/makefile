@@ -7,6 +7,8 @@ PSLcc: lex.yy.c \
 	   ASTTree.h \
 	   AssignmentNode.cpp \
 	   AssignmentNode.h \
+	   AttachModuleNode.cpp \
+	   AttachModuleNode.h \
 	   BitSelectionNode.cpp \
 	   BitSelectionNode.h \
 	   CaseStatementNode.cpp \
@@ -44,8 +46,6 @@ PSLcc: lex.yy.c \
 	   FunctionInfo.cpp \
 	   FunctionParameterNode.h \
 	   FunctionParameterNode.cpp \
-	   GenericParameterNode.h \
-	   GenericParameterNode.cpp \
 	   GenericTypeInfo.h \
 	   GlomExpressionNode.cpp \
 	   GlomExpressionNode.h \
@@ -119,6 +119,7 @@ PSLcc: lex.yy.c \
 	   ArrayTypeInfo.cpp \
 	   ASTNode.cpp \
 	   AssignmentNode.cpp \
+	   AttachModuleNode.cpp \
 	   BitSelectionNode.cpp \
 	   CaseStatementNode.cpp \
 	   ClockTypeInfo.cpp \
@@ -136,7 +137,6 @@ PSLcc: lex.yy.c \
    	   FunctionDeclaratorNode.cpp \
 	   FunctionInfo.cpp \
 	   FunctionParameterNode.cpp \
-	   GenericParameterNode.cpp \
 	   GlomExpressionNode.cpp \
 	   IdentifierNode.cpp \
 	   IfStatementNode.cpp \

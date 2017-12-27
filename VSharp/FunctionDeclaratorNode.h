@@ -86,9 +86,6 @@ private:
     // The expression that the function was in (for function expansion)
     StatementNode* _pStatementNode;
 
-    // The constant value that we are speciating for (for generic expansion)
-    UIntConstant _genericValue;
-
     // The identifier that we are expanding for (for stage expansion)
     IdentifierNode* _pStageInput;
 

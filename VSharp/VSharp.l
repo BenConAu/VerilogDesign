@@ -80,6 +80,7 @@
 "const"              { return CONST_TOKEN; }
 "__finish"           { return FINISH_TOKEN; }
 "wire"               { return WIRE_TOKEN; }
+"attach"             { return ATTACH_TOKEN; }
 "blocking"                  { return BLOCKING_TOKEN; }
 "nonblocking"               { return NONBLOCKING_TOKEN; }
 "switch"                    { return SWITCH_TOKEN; }

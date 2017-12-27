@@ -56,7 +56,13 @@ bool FunctionDeclaratorNode::PreVerifyNodeImpl()
     {
         if (GetChild(1) != nullptr)
         {
-            IdentifierNode* pIdentifierNode = dynamic_cast<IdentifierNode*>(GetChild(1));
+            ListNode* pGenericList = dynamic_cast<ListNode*>(GetChild(1));
+            if (pGenericList->GetChildCount() != 1)
+            {
+                GetContext()->ReportError(GetLocation(), "Only single generic param supported");                
+            }
+
+            IdentifierNode* pIdentifierNode = dynamic_cast<IdentifierNode*>(pGenericList->GetChild(0));
             if (pIdentifierNode != nullptr)
             {
                 // The "Generic" version of the function is declared with an identifier
@@ -89,7 +95,7 @@ bool FunctionDeclaratorNode::PreVerifyNodeImpl()
             }
             else
             {
-                ConstantNode* pConstantNode = dynamic_cast<ConstantNode*>(GetChild(1));
+                ConstantNode* pConstantNode = dynamic_cast<ConstantNode*>(pGenericList->GetChild(0));
                 if (pConstantNode != nullptr)
                 {
                     _FunctionType = FunctionType::GenericConstant;
@@ -264,7 +270,6 @@ ASTNode* FunctionDeclaratorNode::ExpandFunction(FunctionCallNode* pCall, UIntCon
     }
 
     _pCallNode = pCall;
-    _genericValue = Value;
     _CurrentFunctionExpandType = FunctionExpandType::Generic;
     
     // Duplicate the list with appropriate replacements

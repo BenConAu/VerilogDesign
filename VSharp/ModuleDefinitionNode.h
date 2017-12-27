@@ -12,6 +12,7 @@ enum class ModuleType
     Error,
     ExplicitStates,
     DefinedStages,
+    GenericIdentifier,
 };
 
 class ModuleDefinitionNode : public ASTNode
@@ -50,6 +51,7 @@ public:
     size_t GetStageIndex(FunctionDeclaratorNode* pStage);
     FunctionDeclaratorNode* GetStage(size_t index);
     FunctionExpandType GetFunctionExpandType() const { return _ExpandType; }
+    ASTNode* ExpandModule(UIntConstant Value);
 
 private:
     template<typename T>
@@ -99,6 +101,8 @@ private:
 
     // What kind of expansion do we do?
     FunctionExpandType _ExpandType;
+
+    UIntConstant _genericValue;
 
     std::vector<StateDeclaratorNode*> _stateList;
     std::vector<FunctionDeclaratorNode*> _stageList;

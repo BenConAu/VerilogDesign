@@ -9,6 +9,7 @@
 #include "StatementNode.h"
 #include "VariableDeclarationNode.h"
 #include "IdentifierNode.h"
+#include "AttachModuleNode.h"
 #include "ListNode.h"
 #include "EnumTypeInfo.h"
 #include "VSharp.tab.h"
@@ -347,6 +348,11 @@ void FunctionCallNode::VerifyNodeImpl()
         pSpecificDecl->VerifyNode(nullptr);
 
         SearchFunctionInfo(&_pFunctionInfo, &pGenericInfo);
+
+        if (_pFunctionInfo == nullptr)
+        {
+            GetContext()->ReportError(GetLocation(), "Internal compiler error - generic function not found after adding");            
+        }
     }
 
     // The common logic for verifying things like functions is in a spec
@@ -354,17 +360,16 @@ void FunctionCallNode::VerifyNodeImpl()
 
     if (GetFunctionInfo() == nullptr)
     {
-        VariableDeclarationNode* pVarDecl = dynamic_cast<VariableDeclarationNode*>(GetParent());
+        AttachModuleNode* pAttach = dynamic_cast<AttachModuleNode*>(GetParent());
 
         // If there is no function info, then it could be a constructor of a struct or a declaration
         // of a module (which also looks just like a function call from the parser perspective).
-        if (pVarDecl != nullptr)
+        if (pAttach != nullptr)
         {
             _FunctionCallType = FunctionCallType::ModuleDecl;
 
             // Should be a module type info
-            TypeNode* pTypeNode = pVarDecl->GetTypeNode();
-            ModuleTypeInfo* pModuleInfo = dynamic_cast<ModuleTypeInfo*>(pTypeNode->GetTypeInfo());
+            ModuleTypeInfo* pModuleInfo = pAttach->GetModuleInfo();
             if (pModuleInfo == nullptr)
             {
                 GetContext()->ReportError(GetLocation(), "Not a module type");

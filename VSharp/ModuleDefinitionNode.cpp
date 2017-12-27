@@ -36,7 +36,11 @@ ModuleType ModuleDefinitionNode::GetModuleType()
     //    (int)_stageList.size());
 
     //printf("First state is %p\n", _stateList[0]);
-    
+    if (GetChild(0) != nullptr)
+    {
+        return ModuleType::ExplicitStates;
+    }
+
     if (_stateList.size() == 1 && _stateList[0] == nullptr)
     {
         if (_stageList.size() != 0)
@@ -68,9 +72,9 @@ bool ModuleDefinitionNode::PreVerifyNodeImpl()
     {
         for (size_t i = 0; i < pGenericArgList->GetChildCount(); i++)
         {
-            IdentifierNode* pIdent = dynamic_cast<IdentifierNode*>(pGenericArgList->GetChild(i));
-            GenericTypeInfo *pGenType = new GenericTypeInfo(pIdent->GetSymbolIndex(), this);
-            GetContext()->GetTypeCollection()->AddGenericType(pIdent->GetSymbolIndex(), pGenType);
+            IdentifierNode* pParam = dynamic_cast<IdentifierNode*>(pGenericArgList->GetChild(i));
+            GenericTypeInfo *pGenType = new GenericTypeInfo(pParam->GetSymbolIndex(), this);
+            GetContext()->GetTypeCollection()->AddGenericType(pParam->GetSymbolIndex(), pGenType);
         }
     }
 
@@ -382,3 +386,12 @@ FunctionDeclaratorNode* ModuleDefinitionNode::GetStage(size_t index)
     return _stageList[index];
 }
 
+ASTNode* ModuleDefinitionNode::ExpandModule(UIntConstant Value)
+{
+    _genericValue = Value;
+    
+    // Duplicate the list with appropriate replacements
+    ASTNode* pExpanded = DuplicateNode(FunctionExpandType::Generic);
+    
+    return pExpanded;
+}

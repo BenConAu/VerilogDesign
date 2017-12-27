@@ -109,6 +109,7 @@ class ParserContext;
 %token BLOCKING_TOKEN
 %token NONBLOCKING_TOKEN
 %token TYPENAME_TOKEN
+%token ATTACH_TOKEN
 %token <symIndex> IDENTIFIER
 %type <pNode> variable_identifier
 %type <pNode> primary_expression
@@ -175,7 +176,8 @@ class ParserContext;
 %type <pNode> case_list
 %type <pNode> generic_param_list
 %type <pNode> generic_param
-%type <pNode> function_call_generic_list
+%type <pNode> generic_arg_list
+%type <pNode> attach_module
 %type <_EnumItem> enum_item
 %type <_FunctionExpandType> duplicate_type
 
@@ -197,6 +199,7 @@ external_declaration:
 
 import_statement:
       IMPORT_TOKEN STRINGLITERAL SEMICOLON                          { $$ = new ImportStatementNode(pContext, @$); }
+    ;
 
 enum_definition:
       ENUM_TOKEN IDENTIFIER LEFT_BRACE enum_list RIGHT_BRACE        { $$ = $4; dynamic_cast<EnumDefinitionNode*>($$)->SetIdentifier($2); }
@@ -362,6 +365,7 @@ glom_list:
 
 declaration:
       init_declarator_list SEMICOLON                                { $$ = $1; }
+    | attach_module SEMICOLON                                       { $$ = $1; }
     ;
 
 variable_identifier:
@@ -389,9 +393,10 @@ generic_param_list:
     | generic_param_list COMMA generic_param                        { $$ = $1; dynamic_cast<ListNode*>($1)->AddNode($3); }
     ;
 
+// When defining a generic, you have to use either an identifier or a number
 generic_param:
-      fully_specified_type IDENTIFIER                               { $$ = new GenericParameterNode(pContext, @$, $1, $2); }
-    | TYPENAME_TOKEN IDENTIFIER                                     { $$ = new GenericParameterNode(pContext, @$, nullptr, $2); }
+      INTCONSTANT                                                   { $$ = new ConstantNode(pContext, @$, $1); }
+    | IDENTIFIER                                                    { $$ = new IdentifierNode(pContext, @$, $1); }
     ;
 
 duplicate_type:
@@ -418,7 +423,8 @@ function_header_with_parameters:
 
 function_header:
       fully_specified_type IDENTIFIER LEFT_PAREN                    { $$ = new FunctionDeclaratorNode(pContext, @$, $1, $2, nullptr); }
-    | fully_specified_type IDENTIFIER LT expression GT LEFT_PAREN   { $$ = new FunctionDeclaratorNode(pContext, @$, $1, $2, $4); }
+    | fully_specified_type IDENTIFIER LT generic_param_list GT LEFT_PAREN   
+                                                                    { $$ = new FunctionDeclaratorNode(pContext, @$, $1, $2, $4); }
     | STAGE_TOKEN IDENTIFIER LEFT_PAREN                             { $$ = new FunctionDeclaratorNode(pContext, @$, nullptr, $2, nullptr); }
     ;
 
@@ -504,6 +510,11 @@ module_state:
     | STATE_TOKEN ALWAYS_TOKEN compound_statement                   { $$ = new StateDeclaratorNode(pContext, @$, KnownStates::Always, $3); }
     ;
 
+// Attaching a module looks a lot like a function call
+attach_module:
+      ATTACH_TOKEN function_call                                    { $$ = new AttachModuleNode(pContext, @$, $2); }
+    ;
+
 init_declarator_list:
       single_declaration                                            { $$ = $1; }
     ;
@@ -531,20 +542,19 @@ function_call:
 
 function_call_header_no_param:
       IDENTIFIER LEFT_PAREN                                         { $$ = new FunctionCallNode(pContext, @$, $1, nullptr, nullptr); }
-    | IDENTIFIER LT function_call_generic_list GT LEFT_PAREN        { $$ = new FunctionCallNode(pContext, @$, $1, $3, nullptr); }
+    | IDENTIFIER LT generic_arg_list GT LEFT_PAREN                  { $$ = new FunctionCallNode(pContext, @$, $1, $3, nullptr); }
     ;
 
 function_call_header:
       IDENTIFIER LEFT_PAREN fn_call_arg                             { $$ = new FunctionCallNode(pContext, @$, $1, nullptr, $3); }
-    | IDENTIFIER LT function_call_generic_list GT LEFT_PAREN fn_call_arg            
-                                                                    { $$ = new FunctionCallNode(pContext, @$, $1, $3, $6); }
+    | IDENTIFIER LT generic_arg_list GT LEFT_PAREN fn_call_arg      { $$ = new FunctionCallNode(pContext, @$, $1, $3, $6); }
     | function_call_header COMMA fn_call_arg                        { $$ = $1; $$->AddNode($3); }
     ;
 
-function_call_generic_list:
+// When expanding a generic, you can use an expression to make a constant expression (like N/2)
+generic_arg_list:
       expression                                                    { $$ = new ListNode(pContext, @$, $1); }
-    | function_call_generic_list COMMA expression                   { $$ = $1; dynamic_cast<ListNode*>($1)->AddNode($3); }
-    ;
+    | generic_arg_list COMMA expression                             { $$ = $1; dynamic_cast<ListNode*>($1)->AddNode($3); }
 
 fn_call_arg:
       expression                                                    { $$ = new FunctionCallParamNode(pContext, @$, false, $1); }
